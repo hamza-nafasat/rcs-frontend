@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+:root {
+  --color-primary: #777777;
+  --color-secondary: #1d3557;
+
+  --font-heading: "Archivo", sans-serif;
+  --font-body: "Work Sans", sans-serif;
+}
+
+@font-face {
+  font-family: "Archivo";
+  src: url("./assets/fonts/Archivo/Archivo_Expanded-SemiBold.ttf")
+    format("truetype");
+}
+
+@font-face {
+  font-family: "Work Sans";
+  src: url(./assets/fonts/WorkSans/WorkSans-VariableFont_wdth,wght.ttf)
+    format("truetype");
+}
+
+@font-face {
+  font-family: "Bricolage Gratesque";
+  src: url(./assets/fonts/BricolageGratesque/Bricolage_Gratesque-VariableFont_wdth,wght.ttf)
+    format("truetype");
+}
+
+.heading-xl {
+  font-family: "Archivo", sans-serif;
+  font-weight: 600;
+  font-size: 54px;
+  line-height: 120%;
+  color: var(--color-primary);
+}
+
+.company {
+  font-family: "Bricolage Gratesque", sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 120%;
+  color: var(--color-primary);
+}
+
+.company-name {
+  font-family: "Bricolage Gratesque", sans-serif;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 120%;
+  color: var(--color-primary);
+}
+
+.body {
+  font-family: "Work Sans", sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 150%;
+  color: var(--color-primary);
+}
