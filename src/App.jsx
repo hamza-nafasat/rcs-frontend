@@ -1,8 +1,10 @@
+import AuthLayout from "./features/auth/components/AuthLayout";
+
 const App = () => {
   return (
-    <div>
-      <h1>Hello, welcome to my React app!</h1>
-    </div>
+    <>
+      <AuthLayout />
+    </>
   );
 };
 

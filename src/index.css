@@ -1,59 +1,56 @@
 @import "tailwindcss";
 
 :root {
-  --color-primary: #777777;
-  --color-secondary: #1d3557;
+  --color-primary: #f97316;
+  --color-secondary: #9ca3af;
 
-  --font-heading: "Archivo", sans-serif;
-  --font-body: "Work Sans", sans-serif;
-}
+  --color-info: #2563eb;
+  --color-info-bg: #eff6ff;
 
-@font-face {
-  font-family: "Archivo";
-  src: url("./assets/fonts/Archivo/Archivo_Expanded-SemiBold.ttf")
-    format("truetype");
-}
+  --color-success: #06b6d4;
+  --color-success-bg: #ecfeff;
 
-@font-face {
-  font-family: "Work Sans";
-  src: url(./assets/fonts/WorkSans/WorkSans-VariableFont_wdth,wght.ttf)
-    format("truetype");
-}
+  --color-revenue: #22c55e;
+  --color-revenue-bg: #f0fdf4;
 
-@font-face {
-  font-family: "Bricolage Gratesque";
-  src: url(./assets/fonts/BricolageGratesque/Bricolage_Gratesque-VariableFont_wdth,wght.ttf)
-    format("truetype");
+  /* Backgrounds */
+  --color-bg-dark: #0f0f0f;
+  --color-bg-primary: #f9731626;
+  --color-bg-active: #fafafa;
+  /* Text */
+  --color-text-primary: #f97316;
+  --color-text-secondary: #6b7280;
+  --color-text-tertiary: #111111;
+  --color-text-white: #ffffff;
+  --color-text-muted: #9ca3af;
+
+  /* Sidebar */
+  --color-sidebar-section: #4b5563;
+
+  /* Border */
+  --color-border-primary: #f973164d;
+  --color-border: #e8e8e8;
 }
 
 .heading-xl {
-  font-family: "Archivo", sans-serif;
-  font-weight: 600;
-  font-size: 54px;
-  line-height: 120%;
-  color: var(--color-primary);
-}
-
-.company {
-  font-family: "Bricolage Gratesque", sans-serif;
+  font-family: sans-serif;
   font-weight: 700;
-  font-size: 24px;
-  line-height: 120%;
-  color: var(--color-primary);
+  font-size: 36px;
+  line-height: 45%;
 }
 
-.company-name {
-  font-family: "Bricolage Gratesque", sans-serif;
-  font-weight: 400;
-  font-size: 24px;
-  line-height: 120%;
-  color: var(--color-primary);
-}
-
-.body {
-  font-family: "Work Sans", sans-serif;
+.card-heading {
+  font-family: sans-serif;
   font-weight: 600;
   font-size: 16px;
-  line-height: 150%;
-  color: var(--color-primary);
+  line-height: 24px;
+  color: var(--color-text-tertiary);
+}
+
+.card-subheading {
+  font-family: sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--color-text-secondary);
 }
