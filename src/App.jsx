@@ -4,6 +4,7 @@ import Login from "./pages/auth/Login";
 import Singup from "./pages/auth/Singup";
 import ForgetPassword from "./pages/auth/ForgetPassword";
 import CheckEmail from "./pages/auth/CheckEmail";
+import PasswordReset from "./pages/auth/PasswordReset";
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
         <Route path="/signup" element={<Singup />} />
         <Route path="/forget-password" element={<ForgetPassword />} />
         <Route path="/check-email" element={<CheckEmail />} />
+        <Route path="/password-reset" element={<PasswordReset />} />
       </Routes>
     </BrowserRouter>
   );
