@@ -36,7 +36,7 @@
   font-family: sans-serif;
   font-weight: 700;
   font-size: 36px;
-  line-height: 45%;
+  line-height: 45px;
 }
 
 .card-heading {
@@ -53,4 +53,22 @@
   font-size: 12px;
   line-height: 16px;
   color: var(--color-text-secondary);
+}
+
+.primary {
+  color: var(--color-primary);
+}
+
+.border-primary {
+  border-color: var(--color-border-primary);
+}
+
+.bg-primary {
+  background-color: var(--color-bg-primary);
+}
+.text-muted {
+  color: var(--color-text-muted);
+}
+.text-white {
+  color: var(--color-text-white);
 }
