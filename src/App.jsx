@@ -5,6 +5,7 @@ import Singup from "./pages/auth/Singup";
 import ForgetPassword from "./pages/auth/ForgetPassword";
 import CheckEmail from "./pages/auth/CheckEmail";
 import PasswordReset from "./pages/auth/PasswordReset";
+import Dashboard from "./components/layouts/Dashboard";
 
 const App = () => {
   return (
@@ -16,6 +17,15 @@ const App = () => {
         <Route path="/forget-password" element={<ForgetPassword />} />
         <Route path="/check-email" element={<CheckEmail />} />
         <Route path="/password-reset" element={<PasswordReset />} />
+
+        <Route path="/dashboard" element={<Dashboard />}>
+          <Route index element={<h2 className="heading-lg">Dashboard</h2>} />
+        </Route>
+
+        <Route
+          path="*"
+          element={<h2 className="heading-lg">404 Not Found</h2>}
+        />
       </Routes>
     </BrowserRouter>
   );
