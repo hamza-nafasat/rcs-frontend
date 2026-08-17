@@ -5,6 +5,7 @@ import Input from "../../components/shared/Input";
 import ResetPasswordIcon from "../../assets/SVGs/ResetPasswordIcon.svg";
 import AuthLayout from "./components/AuthLayout";
 import AuthHeading from "./components/AuthHeading";
+import { Link } from "react-router-dom";
 
 const SignIn = () => {
   const [showNew, setShowNew] = useState(false);
@@ -77,14 +78,15 @@ const SignIn = () => {
                 </button>
               </div>
             </div>
-
-            <Button
-              icon={<img src={ResetPasswordIcon} alt="" />}
-              iconPosition="right"
-              className="mt-1 h-10 w-full rounded-xl text-sm font-medium"
-            >
-              Reset password
-            </Button>
+            <Link to="//password-reset">
+              <Button
+                icon={<img src={ResetPasswordIcon} alt="" />}
+                iconPosition="right"
+                className="mt-1 h-10 w-full rounded-xl text-sm font-medium"
+              >
+                Reset password
+              </Button>
+            </Link>
           </form>
         </div>
       </div>

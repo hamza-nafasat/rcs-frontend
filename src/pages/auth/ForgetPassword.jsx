@@ -3,6 +3,7 @@ import Button from "../../components/shared/Button";
 import Input from "../../components/shared/Input";
 import AuthHeading from "./components/AuthHeading";
 import AuthLayout from "./components/AuthLayout";
+import BackLink from "./components/BackLink";
 
 const ForgetPassword = () => {
   return (
@@ -34,9 +35,10 @@ const ForgetPassword = () => {
                   iconPosition="right"
                   className="mt-6 h-10 w-full rounded-xl text-sm font-medium"
                 >
-                  Reset password
+                  Send reset link
                 </Button>
               </Link>
+              <BackLink to="/login" text="Back to sign in" className="mt-6" />
             </div>
           </form>
         </div>

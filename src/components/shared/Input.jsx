@@ -23,7 +23,7 @@ const Input = ({
         />
 
         {icon && (
-          <div className="absolute right-3 top-1/2 -translate-y-1/2 ">
+          <div className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary ">
             {icon}
           </div>
         )}

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import Button from "../../components/shared/Button";
 import Input from "../../components/shared/Input";
-import GreaterIcon from "../../assets/SVGs/GreaterIcon.svg";
+// import GreaterIcon from "../../assets/SVGs/GreaterIcon.svg";
 import AuthLayout from "./components/AuthLayout";
 import AuthHeading from "./components/AuthHeading";
 
@@ -13,12 +13,12 @@ const Login = () => {
   return (
     <AuthLayout>
       <div className="flex min-h-full items-center justify-center px-6">
-        <div className="w-full rounded-2xl bg-white px-5 py-10 shadow-sm sm:px-6">
+        <div className="w-full md:w-106.5 rounded-2xl bg-white px-5 py-10 shadow-sm sm:px-6">
           {/* Heading */}
           <div className="mb-7">
             <AuthHeading
               heading="Welcome back"
-              subheading="Welcome back! Please enter your details."
+              subheading="Sign in to your RCS dashboard"
             />
           </div>
           {/* Form */}
@@ -34,13 +34,13 @@ const Login = () => {
               </div>
             </div>
 
-            {/* Confirm Password */}
+            {/* Password */}
             <div>
               <div className="relative">
                 <Input
-                  label="Confirm Password"
+                  label="Password"
                   type={showConfirm ? "text" : "password"}
-                  placeholder="Confirm your password"
+                  placeholder="••••••••"
                   icon={
                     <button
                       type="button"
@@ -63,7 +63,7 @@ const Login = () => {
             </div>
 
             <Button
-              icon={<img src={GreaterIcon} alt="" />}
+              // icon={<img src={GreaterIcon} alt="" />}
               iconPosition="right"
               className="mt-1 h-10 w-full rounded-xl text-sm font-medium"
             >

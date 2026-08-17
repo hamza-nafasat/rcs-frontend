@@ -15,7 +15,15 @@ const CheckEmail = () => {
             <img src={CheckEmailIcon} alt="Check email" className="mb-4" />
             <AuthHeading
               heading="Check your email"
-              subheading="We've sent a password reset link to anna@rcs.com. Click the link in the email to reset your password."
+              subheading={
+                <>
+                  We've sent a password reset link to{" "}
+                  <span className="font-medium text-tertiary">
+                    {/* {user?.email} */} email@
+                  </span>
+                  . Click the link in the email to reset your password.
+                </>
+              }
             />
           </div>
 
@@ -36,7 +44,7 @@ const CheckEmail = () => {
                 Resend
               </Link>
             </div>
-            <BackLink text="Back to login" to="/" />
+            <BackLink text="Back to login" to="/" className="mt-6" />
           </div>
         </div>
       </div>
