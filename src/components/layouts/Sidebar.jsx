@@ -17,8 +17,12 @@ const navItems = [
   { label: "Clients", to: "/dashboard/analytics", icon: BarChart3 },
   { label: "Messages", to: "/dashboard/targets", icon: Target },
   { label: "Moderators", to: "/dashboard/badges", icon: Award },
-  { label: "FDD", to: "/dashboard/settings", icon: Settings },
-  { label: "Franchise Pipeline", to: "/dashboard/settings", icon: Settings },
+  { label: "FDD", to: "/dashboard/fdd", icon: Settings },
+  {
+    label: "Franchise Pipeline",
+    to: "/dashboard/franchise-pipeline",
+    icon: Settings,
+  },
 ];
 
 const profileItems = [

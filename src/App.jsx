@@ -6,6 +6,7 @@ import ForgetPassword from "./pages/auth/ForgetPassword";
 import CheckEmail from "./pages/auth/CheckEmail";
 import PasswordReset from "./pages/auth/PasswordReset";
 import Dashboard from "./components/layouts/Dashboard";
+import DashboardNotFound from "./components/layouts/DashboardNotFound";
 
 const App = () => {
   return (
@@ -20,12 +21,8 @@ const App = () => {
 
         <Route path="/dashboard" element={<Dashboard />}>
           <Route index element={<h2 className="heading-lg">Dashboard</h2>} />
+          <Route path="*" element={<DashboardNotFound />} />
         </Route>
-
-        <Route
-          path="*"
-          element={<h2 className="heading-lg">404 Not Found</h2>}
-        />
       </Routes>
     </BrowserRouter>
   );
