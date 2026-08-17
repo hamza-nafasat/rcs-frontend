@@ -1,6 +1,11 @@
 import { Menu, Bell } from "lucide-react";
+import UserMenu from "../shared/UserMenu";
 
-const Header = ({ onMenuClick, title = "Dashboard" }) => {
+const Header = ({
+  onMenuClick,
+  title = "Dashboard",
+  hasNotifications = true,
+}) => {
   return (
     <header
       className="sticky top-0 z-20 flex h-16 items-center gap-4 border-b bg-white px-4 lg:px-6"
@@ -18,15 +23,22 @@ const Header = ({ onMenuClick, title = "Dashboard" }) => {
       <h1 className="card-heading truncate">{title}</h1>
 
       <div className="ml-auto flex items-center gap-3">
+        {/* Notifications */}
         <button
           type="button"
-          className="text-secondary"
+          className="relative cursor-pointer rounded-xl border border-[#E8E8E8] p-2 text-secondary hover:bg-gray-50"
           aria-label="Notifications"
+          title="Notifications"
         >
           <Bell size={20} />
+
+          {hasNotifications && (
+            <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-red-500" />
+          )}
         </button>
 
-        <div className="h-9 w-9 rounded-full bg-(--color-bg-active)" />
+        {/* User Menu */}
+        <UserMenu name="Ahmed" />
       </div>
     </header>
   );
