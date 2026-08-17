@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import Logo from "../../assets/SVGs/Logo.svg";
 import Icon from "../../assets/SVGs/Icon.svg";
+import Avatar from "../shared/Avatar";
 
 const navItems = [
   { label: "Dashboard", to: "/dashboard", icon: LayoutDashboard },
@@ -31,12 +32,6 @@ const profileItems = [
   { label: "Settings", to: "/dashboard/settings", icon: Settings },
 ];
 
-const currentUser = {
-  name: "Maram ",
-  email: "maram.com",
-  avatar: "https://i.pravatar.cc/80?img=12",
-};
-
 const linkClass = ({ isActive }) =>
   `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
     isActive
@@ -53,7 +48,7 @@ const SectionTitle = ({ children }) => (
   </p>
 );
 
-const Sidebar = ({ isOpen, onClose }) => {
+const Sidebar = ({ isOpen, onClose, user }) => {
   return (
     <>
       <div
@@ -81,7 +76,7 @@ const Sidebar = ({ isOpen, onClose }) => {
           </button>
         </div>
 
-        <nav className="flex-1 overflow-y-auto px-3 py-4">
+        <nav className="min-h-0 flex-1 overflow-y-auto px-3 py-4">
           <SectionTitle>Menu</SectionTitle>
           <div className="space-y-1">
             {navItems.map(({ label, to, icon: Icon }) => (
@@ -120,17 +115,15 @@ const Sidebar = ({ isOpen, onClose }) => {
           className="border-t px-3 py-4"
           style={{ borderColor: "var(--color-border)" }}
         >
-          <div className="flex items-center gap-3 rounded-lg px-2 py-2 hover:bg-(--color-bg-primary)">
-            <img
-              src={currentUser.avatar}
-              alt={currentUser.name}
-              className="h-9 w-9 shrink-0 rounded-full object-cover"
-            />
+          <div className="flex items-center gap-3 rounded-lg px-2 py-2 hover:bg-(--color-bg-primary) cursor-pointer">
+            <Avatar name={user?.name || "Faiza"} size={34} />
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium text-white">
-                {currentUser.name}
+                {user?.name || "Faiza"}
               </p>
-              <p className="truncate text-xs text-muted">{currentUser.email}</p>
+              <p className="truncate text-xs text-muted">
+                {user?.email || "faiza@example.com"}
+              </p>
             </div>
             <button
               type="button"
