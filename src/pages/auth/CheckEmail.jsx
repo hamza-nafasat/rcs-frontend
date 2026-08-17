@@ -44,7 +44,7 @@ const CheckEmail = () => {
                 Resend
               </Link>
             </div>
-            <BackLink text="Back to login" to="/" className="mt-6" />
+            <BackLink text="Back to sign in" to="/login" className="mt-6" />
           </div>
         </div>
       </div>

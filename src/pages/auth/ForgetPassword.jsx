@@ -30,7 +30,7 @@ const ForgetPassword = () => {
                   placeholder="Enter your email"
                 />
               </div>
-              <Link to="/password-reset">
+              <Link to="/check-email">
                 <Button
                   iconPosition="right"
                   className="mt-6 h-10 w-full rounded-xl text-sm font-medium"

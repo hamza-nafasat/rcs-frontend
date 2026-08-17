@@ -78,7 +78,7 @@ const SignIn = () => {
                 </button>
               </div>
             </div>
-            <Link to="//password-reset">
+            <Link to="/reset-password">
               <Button
                 icon={<img src={ResetPasswordIcon} alt="" />}
                 iconPosition="right"
