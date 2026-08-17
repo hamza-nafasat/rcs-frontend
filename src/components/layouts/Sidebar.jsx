@@ -15,7 +15,7 @@ import Avatar from "../shared/Avatar";
 
 const navItems = [
   { label: "Dashboard", to: "/dashboard", icon: LayoutDashboard },
-  { label: "Clients", to: "/dashboard/analytics", icon: BarChart3 },
+  { label: "Clients", to: "/dashboard/clients", icon: BarChart3 },
   { label: "Messages", to: "/dashboard/targets", icon: Target },
   { label: "Moderators", to: "/dashboard/badges", icon: Award },
   { label: "FDD", to: "/dashboard/fdd", icon: Settings },

@@ -1,7 +1,14 @@
-const Button = ({ children, icon, iconPosition = "left", className = "" }) => {
+const Button = ({
+  children,
+  icon,
+  iconPosition = "left",
+  className = "",
+  ...props
+}) => {
   return (
     <button
       className={`inline-flex items-center justify-center gap-2 bg-(--color-primary) text-white py-4 rounded-xl cursor-pointer ${className}`}
+      {...props}
     >
       {icon && iconPosition === "left" && icon}
 
