@@ -31,24 +31,31 @@
   --color-border-primary: #f973164d;
   --color-border: #e8e8e8;
 }
+html {
+  font-size: 14px;
+}
+
+button:hover {
+  cursor: pointer;
+}
 
 .heading-xl {
   font-family: sans-serif;
   font-weight: 700;
-  font-size: 36px;
+  font-size: 2.25rem;
   line-height: 45px;
 }
 
 .heading-lg {
   font-weight: 700;
-  font-size: 24px;
+  font-size: 1.5rem;
   line-height: 32px;
 }
 
 .card-heading {
   font-family: sans-serif;
   font-weight: 600;
-  font-size: 16px;
+  font-size: 1rem;
   line-height: 24px;
   color: var(--color-text-tertiary);
 }
@@ -56,7 +63,7 @@
 .card-subheading {
   font-family: sans-serif;
   font-weight: 400;
-  font-size: 12px;
+  font-size: 0.875rem;
   line-height: 16px;
   color: var(--color-text-secondary);
 }
