@@ -27,7 +27,7 @@ const MessageWrite = ({ onSend }) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="border-t border-gray-200 px-5 py-4"
+      className="border-t border-gray-200 px-4 py-3 sm:px-5 sm:py-4"
     >
       {/* Attachment and emoji options */}
       <div className="mb-2 flex items-center gap-3">

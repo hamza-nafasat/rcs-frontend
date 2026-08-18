@@ -23,7 +23,7 @@ const MessageEmoji = ({ onEmojiSelect }) => {
 
       {isOpen && (
         <div className="absolute bottom-10 left-0 z-10">
-          <EmojiPicker onEmojiClick={handleEmojiClick} height={350} width={300} />
+          <EmojiPicker onEmojiClick={handleEmojiClick} height={320} width={280} />
         </div>
       )}
     </div>

@@ -90,7 +90,11 @@ const Messages = () => {
       {/* Messages Content */}
       <div className="flex min-h-0 flex-1">
         {/* Conversations Sidebar */}
-        <aside className="w-70 shrink-0 border-r border-gray-200">
+        <aside
+          className={`w-full shrink-0 border-gray-200 md:block md:w-70 md:border-r ${
+            selectedConversation ? "hidden" : "block"
+          }`}
+        >
           {/* ConversationSidebar will come here */}
           <ConversationSidebar
             conversations={conversations}
@@ -100,13 +104,18 @@ const Messages = () => {
         </aside>
 
         {/* Chat Area */}
-        <main className="min-w-0 flex-1">
+        <main
+          className={`min-w-0 flex-1 md:block ${
+            selectedConversation ? "block" : "hidden"
+          }`}
+        >
           {/* ChatPanel will come here */}
           <ChatPanel
             conversation={selectedConversation}
             messages={messages}
             currentUserId={currentUserId}
             onSend={handleSendMessage}
+            onBack={() => setSelectedConversationId(null)}
           />
         </main>
       </div>
