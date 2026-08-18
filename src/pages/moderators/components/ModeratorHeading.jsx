@@ -6,7 +6,7 @@ const ModeratorHeading = ({ heading, subheading, text }) => {
         <p className=" text-muted">{subheading}</p>
       </div>
 
-      <span className="ml-auto shrink-0 rounded-full bg-primary px-4 py-1.5 text-sm font-medium text-primary">
+      <span className="ml-auto shrink-0 rounded-full border border-moderator bg-moderator px-4 py-1.5 text-sm  text-moderator">
         {text}
       </span>
     </div>

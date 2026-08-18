@@ -18,6 +18,7 @@
   --color-bg-primary: #f9731626;
   --color-bg-active: #fafafa;
   --color-bg-muted: #f9fafb;
+  --color-bg-moderator: #fff7ed;
   /* Text */
   --color-text-primary: #f97316;
   --color-text-secondary: #6b7280;
@@ -25,6 +26,9 @@
   --color-text-white: #ffffff;
   --color-text-muted: #9ca3af;
   --color-text-info: #1447e6;
+  --color-text-remove: #dc2626;
+  --color-text-moderator: #f54900;
+  --color-text-cancel: #344054;
 
   /* Sidebar */
   --color-sidebar-section: #4b5563;
@@ -33,6 +37,8 @@
   --color-border-primary: #f973164d;
   --color-border: #e8e8e8;
   --color-border-muted: #dbeafe;
+  --color-border-moderator: #ffedd4;
+  --color-border-cancel: #d0d5dd;
 }
 html {
   font-size: 14px;
@@ -84,6 +90,9 @@ button:hover {
 .border-muted {
   border-color: var(--color-border-muted);
 }
+.border-moderator {
+  border-color: var(--color-border-moderator);
+}
 
 .bg-primary {
   background-color: var(--color-bg-primary);
@@ -93,6 +102,12 @@ button:hover {
 }
 .bg-info {
   background-color: var(--color-info-bg);
+}
+.bg-moderator {
+  background-color: var(--color-bg-moderator);
+}
+.border-cancel {
+  border-color: var(--color-border-cancel);
 }
 
 .text-muted {
@@ -112,6 +127,18 @@ button:hover {
 }
 .text-primary {
   color: var(--color-primary);
+}
+.text-remove {
+  color: var(--color-text-remove);
+  font-weight: 600;
+}
+.text-moderator {
+  color: var(--color-text-moderator);
+  font-weight: 600;
+}
+.text-cancel {
+  color: var(--color-text-cancel);
+  font-weight: 600;
 }
 
 .bg-dark {

@@ -1,6 +1,9 @@
+import { useState } from "react";
 import { Shield } from "lucide-react";
 import UserListItem from "./UserListItem";
+import ManageAccountsModal from "./ManageAccountsModal";
 import Button from "../../../components/shared/Button";
+import DeleteModal from "../../../components/modals/DeleteModal";
 
 const MODERATORS = [
   {
@@ -34,9 +37,20 @@ const MODERATORS = [
 ];
 
 const UserList = () => {
+  const [moderators, setModerators] = useState(MODERATORS);
+  const [isManageOpen, setIsManageOpen] = useState(false);
+  const [memberToRemove, setMemberToRemove] = useState(null);
+
+  const handleConfirmRemove = () => {
+    setModerators((prev) =>
+      prev.filter((member) => member.id !== memberToRemove.id)
+    );
+    setMemberToRemove(null);
+  };
+
   return (
     <div className="flex flex-col gap-3">
-      {MODERATORS.map((user) => (
+      {moderators.map((user) => (
         <UserListItem
           key={user.id}
           name={user.name}
@@ -56,7 +70,29 @@ const UserList = () => {
         </p>
       </div>
 
-      <Button className="px-4! py-2! self-end">Manage Accounts</Button>
+      <Button
+        className="px-4! py-2! self-end"
+        onClick={() => setIsManageOpen(true)}
+      >
+        Manage Accounts
+      </Button>
+
+      <ManageAccountsModal
+        isOpen={isManageOpen}
+        onClose={() => setIsManageOpen(false)}
+        members={moderators}
+        onRemove={setMemberToRemove}
+      />
+
+      <DeleteModal
+        isOpen={Boolean(memberToRemove)}
+        onClose={() => setMemberToRemove(null)}
+        onConfirm={handleConfirmRemove}
+        heading="Remove Member"
+        text={`Are you sure you want to remove ${
+          memberToRemove?.name ?? "this member"
+        }? This action cannot be undone.`}
+      />
     </div>
   );
 };
