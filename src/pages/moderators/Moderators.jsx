@@ -1,5 +1,4 @@
 import ModeratorHeading from "./components/ModeratorHeading";
-import InvitationByEmail from "./components/InvitationByEmail";
 import ModeratorTable from "./components/ModeratorTable";
 
 const Moderators = () => {
@@ -11,9 +10,7 @@ const Moderators = () => {
           subheading="Manage your moderators and their information"
           text="4 Members"
         />
-        <div className="mt-6">
-          <InvitationByEmail />
-        </div>
+
         <div className="mt-6">
           <ModeratorTable />
         </div>
