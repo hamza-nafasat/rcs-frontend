@@ -11,6 +11,7 @@ import DashboardNotFound from "../components/layouts/DashboardNotFound";
 import AdminDashboard from "../pages/dashboard/AdminDashboard";
 import { Navigate } from "react-router-dom";
 import ClientManagement from "../pages/client-management/ClientManagement";
+import Messages from "../pages/messages/Messages";
 
 const AppRoutes = () => {
   return (
@@ -27,6 +28,7 @@ const AppRoutes = () => {
         <Route path="/dashboard" element={<Dashboard />}>
           <Route index element={<AdminDashboard />} />
           <Route path="clients" element={<ClientManagement />} />
+          <Route path="messages" element={<Messages />} />
           <Route path="*" element={<DashboardNotFound />} />
         </Route>
         <Route path="*" element={<DashboardNotFound />} />
