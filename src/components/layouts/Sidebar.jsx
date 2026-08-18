@@ -92,24 +92,24 @@ const Sidebar = ({ isOpen, onClose, user }) => {
               </NavLink>
             ))}
           </div>
-
-          <div className="pt-6">
-            <SectionTitle>Profile</SectionTitle>
-            <div className="space-y-1">
-              {profileItems.map(({ label, to, icon: Icon }) => (
-                <NavLink
-                  key={label}
-                  to={to}
-                  onClick={onClose}
-                  className={linkClass}
-                >
-                  <Icon size={18} />
-                  {label}
-                </NavLink>
-              ))}
-            </div>
-          </div>
         </nav>
+
+        <div className="px-3 pb-4">
+          <SectionTitle>Profile</SectionTitle>
+          <div className="space-y-1">
+            {profileItems.map(({ label, to, icon: Icon }) => (
+              <NavLink
+                key={label}
+                to={to}
+                onClick={onClose}
+                className={linkClass}
+              >
+                <Icon size={18} />
+                {label}
+              </NavLink>
+            ))}
+          </div>
+        </div>
 
         <div
           className="border-t px-3 py-4"
