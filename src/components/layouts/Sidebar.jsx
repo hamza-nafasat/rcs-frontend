@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import {
   LayoutDashboard,
   BarChart3,
-  Target,
+  MessageSquare,
   Award,
   Settings,
   Bell,
@@ -16,7 +16,7 @@ import Avatar from "../shared/Avatar";
 const navItems = [
   { label: "Dashboard", to: "/dashboard", icon: LayoutDashboard },
   { label: "Clients", to: "/dashboard/clients", icon: BarChart3 },
-  { label: "Messages", to: "/dashboard/targets", icon: Target },
+  { label: "Messages", to: "/dashboard/messages", icon: MessageSquare },
   { label: "Moderators", to: "/dashboard/badges", icon: Award },
   { label: "FDD", to: "/dashboard/fdd", icon: Settings },
   {
