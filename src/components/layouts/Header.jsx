@@ -1,11 +1,8 @@
 import { Menu, Bell } from "lucide-react";
 import UserMenu from "../shared/UserMenu";
+import Breadcrumb from "../shared/Breadcrumb";
 
-const Header = ({
-  onMenuClick,
-  title = "Dashboard",
-  hasNotifications = true,
-}) => {
+const Header = ({ onMenuClick, hasNotifications = true }) => {
   return (
     <header
       className="sticky top-0 z-20 flex h-16 items-center gap-4 border-b bg-white px-4 lg:px-6"
@@ -20,7 +17,11 @@ const Header = ({
         <Menu size={22} />
       </button>
 
-      <h1 className="card-heading truncate">{title}</h1>
+      <div className="min-w-0">
+        <div className="mt-0.5 card-heading hidden sm:block">
+          <Breadcrumb />
+        </div>
+      </div>
 
       <div className="ml-auto flex items-center gap-3">
         {/* Notifications */}
