@@ -17,7 +17,7 @@ const navItems = [
   { label: "Dashboard", to: "/dashboard", icon: LayoutDashboard },
   { label: "Clients", to: "/dashboard/clients", icon: BarChart3 },
   { label: "Messages", to: "/dashboard/messages", icon: MessageSquare },
-  { label: "Moderators", to: "/dashboard/badges", icon: Award },
+  { label: "Moderators", to: "/dashboard/moderators", icon: Award },
   { label: "FDD", to: "/dashboard/fdd", icon: Settings },
   {
     label: "Franchise Pipeline",

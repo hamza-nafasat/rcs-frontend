@@ -12,6 +12,7 @@ import AdminDashboard from "../pages/dashboard/AdminDashboard";
 import { Navigate } from "react-router-dom";
 import ClientManagement from "../pages/client-management/ClientManagement";
 import Messages from "../pages/messages/Messages";
+import Moderators from "../pages/moderators/Moderators";
 
 const AppRoutes = () => {
   return (
@@ -29,6 +30,7 @@ const AppRoutes = () => {
           <Route index element={<AdminDashboard />} />
           <Route path="clients" element={<ClientManagement />} />
           <Route path="messages" element={<Messages />} />
+          <Route path="moderators" element={<Moderators />} />
           <Route path="*" element={<DashboardNotFound />} />
         </Route>
         <Route path="*" element={<DashboardNotFound />} />
