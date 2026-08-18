@@ -1,6 +1,6 @@
 import ModeratorHeading from "./components/ModeratorHeading";
 import InvitationByEmail from "./components/InvitationByEmail";
-import UserList from "./components/UserList";
+import ModeratorTable from "./components/ModeratorTable";
 
 const Moderators = () => {
   return (
@@ -15,7 +15,7 @@ const Moderators = () => {
           <InvitationByEmail />
         </div>
         <div className="mt-6">
-          <UserList />
+          <ModeratorTable />
         </div>
       </div>
     </section>
