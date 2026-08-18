@@ -17,12 +17,14 @@
   --color-bg-dark: #0f0f0f;
   --color-bg-primary: #f9731626;
   --color-bg-active: #fafafa;
+  --color-bg-muted: #f9fafb;
   /* Text */
   --color-text-primary: #f97316;
   --color-text-secondary: #6b7280;
   --color-text-tertiary: #111111;
   --color-text-white: #ffffff;
   --color-text-muted: #9ca3af;
+  --color-text-info: #1447e6;
 
   /* Sidebar */
   --color-sidebar-section: #4b5563;
@@ -30,6 +32,7 @@
   /* Border */
   --color-border-primary: #f973164d;
   --color-border: #e8e8e8;
+  --color-border-muted: #dbeafe;
 }
 html {
   font-size: 14px;
@@ -75,10 +78,23 @@ button:hover {
 .border-primary {
   border-color: var(--color-border-primary);
 }
+.color-border {
+  border-color: var(--color-border);
+}
+.border-muted {
+  border-color: var(--color-border-muted);
+}
 
 .bg-primary {
   background-color: var(--color-bg-primary);
 }
+.bg-muted {
+  background-color: var(--color-bg-muted);
+}
+.bg-info {
+  background-color: var(--color-info-bg);
+}
+
 .text-muted {
   color: var(--color-text-muted);
 }
@@ -91,9 +107,16 @@ button:hover {
 .text-secondary {
   color: var(--color-text-secondary);
 }
+.text-info {
+  color: var(--color-text-info);
+}
 .text-primary {
   color: var(--color-primary);
 }
+
 .bg-dark {
   background-color: var(--color-bg-dark);
+}
+.bg-active {
+  background-color: var(--color-bg-active);
 }
