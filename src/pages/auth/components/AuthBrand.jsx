@@ -1,7 +1,10 @@
 import AuthBackground from "../../../assets/SVGs/AuthBackground.svg";
 import Logo from "../../../assets/SVGs/Logo.svg";
 import Badge from "../../../components/shared/Badge";
-import BadgeIcon from "../../../assets/SVGs/BadgeIcon.svg";
+import OrangeCircleIcon from "../../../assets/SVGs/svg-components/OrangeCircleIcon";
+import OrangeBarsIcon from "../../../assets/SVGs/svg-components/OrangeBarsIcon";
+import OrangeBriefcaseIcon from "../../../assets/SVGs/svg-components/OrangeBriefcaseIcon";
+import OrangeDocumentIcon from "../../../assets/SVGs/svg-components/OrangeDocumentIcon";
 
 const authContent = {
   client: {
@@ -16,6 +19,13 @@ const authContent = {
 
     description:
       "Manage clients, consulting projects, reports, and business growth from one centralized platform built for restaurant consulting firms.",
+
+    icons: [
+      <OrangeCircleIcon />,
+      <OrangeBarsIcon />,
+      <OrangeBriefcaseIcon />,
+      <OrangeDocumentIcon />,
+    ],
 
     features: [
       "CRM & Client Success Management",
@@ -43,6 +53,13 @@ const authContent = {
 
     description:
       "Manage users, permissions, reports, and platform operations from one centralized admin dashboard.",
+
+    icons: [
+      <OrangeCircleIcon />,
+      <OrangeBarsIcon />,
+      <OrangeBriefcaseIcon />,
+      <OrangeDocumentIcon />,
+    ],
 
     features: [
       "User & Role Management",
@@ -85,10 +102,12 @@ const AuthBrand = ({ type = "client" }) => {
 
           {/* Features */}
           <div className="mt-2 flex flex-col gap-4">
-            {content.features.map((feature) => (
+            {content.features.map((feature, index) => (
               <div key={feature} className="flex items-center gap-3">
-                <img src={BadgeIcon} alt="" />
-
+                {/* icons */}
+                <span className="flex h-6 w-6 items-center justify-center ">
+                  {content.icons[index]}
+                </span>
                 <span className="text-muted">{feature}</span>
               </div>
             ))}

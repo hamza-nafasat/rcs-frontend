@@ -1,0 +1,19 @@
+const OrangeCircleIcon = () => {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 18 18"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <circle cx="9" cy="9" r="7.5" stroke="#F97316" strokeWidth="2" />
+
+      <circle cx="9" cy="9" r="4.5" stroke="#F97316" strokeWidth="2" />
+
+      <circle cx="9" cy="9" r="2.5" fill="#F97316" />
+    </svg>
+  );
+};
+
+export default OrangeCircleIcon;
