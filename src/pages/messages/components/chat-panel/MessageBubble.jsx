@@ -8,7 +8,11 @@ const MessageBubble = ({ message, isOwnMessage }) => {
             : "rounded-bl-md bg-gray-100 text-gray-900"
         }`}
       >
-        <p className="text-sm leading-5">{message.text}</p>
+        {message.text && <p className="text-sm leading-5">{message.text}</p>}
+
+        {message.attachment && (
+          <p className="mt-1 text-xs underline">{message.attachment}</p>
+        )}
 
         <p
           className={`mt-1 text-[10px] ${

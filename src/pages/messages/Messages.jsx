@@ -70,11 +70,12 @@ const Messages = () => {
 
   const currentUserId = "admin-1"; // This would come from authentication
 
-  const handleSendMessage = (text) => {
+  const handleSendMessage = (text, file) => {
     const newMessage = {
       id: crypto.randomUUID(),
       senderId: currentUserId,
       text,
+      attachment: file ? file.name : null,
       time: new Date().toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit",
