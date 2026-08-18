@@ -1,5 +1,5 @@
 import Avatar from "../../../components/shared/Avatar";
-import ProgressBar from "./ProgressBar";
+import ProgressBar from "../../../components/shared/ProgressBar";
 
 const ClientsNeedingAttention = ({
   clients = [],

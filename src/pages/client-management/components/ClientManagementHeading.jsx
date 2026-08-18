@@ -22,7 +22,7 @@ const ClientManagementHeading = ({ heading, subheading, emoji }) => {
         onClick={() => setIsModalOpen(true)}
         iconPosition="left"
         icon={<Plus size={18} />}
-        className="px-2! py-4!"
+        className="px-4! py-2.5!"
       >
         Add Client
       </Button>

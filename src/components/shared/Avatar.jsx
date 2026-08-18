@@ -26,7 +26,14 @@ function getColorFromName(name = "") {
   return COLORS[index];
 }
 
-export default function Avatar({ src, name = "", size = 40, className = "" }) {
+export default function Avatar({
+  src,
+  name = "",
+  size = 40,
+  rounded = "rounded-full",
+  color,
+  className = "",
+}) {
   const [imgError, setImgError] = useState(false);
 
   const initials = (name || "")
@@ -43,12 +50,17 @@ export default function Avatar({ src, name = "", size = 40, className = "" }) {
   const fontSize = initials.length > 2 ? `${size * 0.3}px` : `${size * 0.38}px`;
 
   if (!src || imgError) {
-    const bgColor = getColorFromName(name);
+    const bgClass = color ? "" : getColorFromName(name);
 
     return (
       <div
-        style={{ width: dimension, height: dimension, fontSize }}
-        className={`shrink-0 ${bgColor} ring-2 ring-white text-white rounded-full flex items-center justify-center font-semibold ${className}`}
+        style={{
+          width: dimension,
+          height: dimension,
+          fontSize,
+          backgroundColor: color,
+        }}
+        className={`shrink-0 ${bgClass} ring-2 ring-white text-white ${rounded} flex items-center justify-center font-semibold ${className}`}
       >
         {initials || "?"}
       </div>
@@ -60,7 +72,7 @@ export default function Avatar({ src, name = "", size = 40, className = "" }) {
       src={src}
       alt={name}
       style={{ width: dimension, height: dimension }}
-      className={`shrink-0 rounded-full object-cover bg-gray-200 ${className}`}
+      className={`shrink-0 ${rounded} object-cover bg-gray-200 ${className}`}
       onError={() => setImgError(true)}
     />
   );

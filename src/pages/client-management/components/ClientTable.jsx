@@ -1,0 +1,305 @@
+import DataTable from "react-data-table-component";
+import Avatar from "../../../components/shared/Avatar";
+import Dropdown from "../../../components/shared/Dropdown";
+import ProgressBar from "../../../components/shared/ProgressBar";
+import {
+  Eye,
+  MessageSquare,
+  MoreHorizontal,
+  Pencil,
+  Trash2,
+} from "lucide-react";
+import { useState } from "react";
+import ClientDetailsModal from "./ClientDetailsModal";
+import AddEditClientModal from "./AddEditClientModal";
+
+const STATUS_STYLES = {
+  Active: { pill: "bg-green-50 text-green-700", dot: "bg-green-500" },
+  Inactive: { pill: "bg-gray-100 text-gray-600", dot: "bg-gray-400" },
+  "At Risk": { pill: "bg-red-50 text-red-600", dot: "bg-red-500" },
+  Pending: { pill: "bg-amber-50 text-amber-700", dot: "bg-amber-500" },
+};
+
+const HEALTH_COLORS = [
+  { min: 80, color: "#22C55E" },
+  { min: 60, color: "#FBBF24" },
+  { min: 0, color: "#EF4444" },
+];
+
+const getHealthColor = (score) =>
+  HEALTH_COLORS.find(({ min }) => score >= min).color;
+
+const initialData = [
+  {
+    id: 1,
+    ownerName: "John Doe",
+    clientEmail: "john@example.com",
+    restaurantName: "The Harbor Kitchen",
+    restaurantCuisine: "Seafood",
+    status: "Active",
+    healthScore: 92,
+    franchise: "KFC",
+    balance: "$1,200",
+    nextMeeting: "2023-08-15",
+  },
+  {
+    id: 2,
+    ownerName: "Jane Smith",
+    clientEmail: "jane@example.com",
+    restaurantName: "Sunset Grill",
+    restaurantCuisine: "American",
+    status: "Inactive",
+    healthScore: 48,
+    franchise: "Burger King",
+    balance: "$800",
+    nextMeeting: "2023-08-20",
+  },
+  {
+    id: 3,
+    ownerName: "Marcus Williams",
+    clientEmail: "marcus@example.com",
+    restaurantName: "The Rustic Table",
+    restaurantCuisine: "Italian",
+    status: "At Risk",
+    healthScore: 55,
+    franchise: "Subway",
+    balance: "$2,400",
+    nextMeeting: "2023-08-18",
+  },
+  {
+    id: 4,
+    ownerName: "Priya Patel",
+    clientEmail: "priya@example.com",
+    restaurantName: "Spice Route",
+    restaurantCuisine: "Indian",
+    status: "Pending",
+    healthScore: 71,
+    franchise: "Domino's",
+    balance: "$540",
+    nextMeeting: "2023-08-22",
+  },
+  {
+    id: 5,
+    ownerName: "Ana Torres",
+    clientEmail: "ana@example.com",
+    restaurantName: "Coastal Bistro",
+    restaurantCuisine: "Mediterranean",
+    status: "Active",
+    healthScore: 84,
+    franchise: "KFC",
+    balance: "$1,800",
+    nextMeeting: "2023-08-25",
+  },
+];
+
+const ClientTable = () => {
+  const [clients, setClients] = useState(initialData);
+  const [selectedClient, setSelectedClient] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [viewClient, setViewClient] = useState(null);
+
+  const handleViewClient = (client) => {
+    setViewClient({
+      name: client.restaurantName,
+      type: client.franchise,
+      status: client.status,
+      location: client.location ?? "—",
+      owner: client.ownerName,
+      email: client.clientEmail,
+      phone: client.phone ?? "—",
+      healthScore: client.healthScore,
+      outstandingBalance: String(client.balance ?? "").replace("$", ""),
+    });
+  };
+
+  const handleEditClient = (client) => {
+    setSelectedClient(client);
+    setIsModalOpen(true);
+  };
+
+  const handleUpdateClient = (formData) => {
+    setClients((prev) =>
+      prev.map((client) =>
+        client.id === selectedClient?.id
+          ? {
+              ...client,
+              ownerName: formData.ownerName,
+              clientEmail: formData.clientEmail,
+              restaurantName: formData.restaurantName,
+            }
+          : client,
+      ),
+    );
+
+    setIsModalOpen(false);
+    setSelectedClient(null);
+  };
+
+  const columns = [
+    {
+      name: "Restaurant",
+      selector: (row) => row.restaurantName,
+      sortable: true,
+      minWidth: "220px",
+      cell: (row) => (
+        <div className="flex items-center gap-2">
+          <Avatar
+            name={row.restaurantName}
+            size={32}
+            rounded="rounded-md"
+            color="#F97316"
+          />
+          <div className="min-w-0">
+            <p className="truncate text-sm text-gray-900">
+              {row.restaurantName}
+            </p>
+            <p className="truncate text-xs text-gray-500">
+              {row.restaurantCuisine}
+            </p>
+          </div>
+        </div>
+      ),
+    },
+    {
+      name: "Owner",
+      selector: (row) => row.ownerName,
+      sortable: true,
+    },
+    {
+      name: "Status",
+      selector: (row) => row.status,
+      sortable: true,
+      cell: (row) => {
+        const { pill, dot } =
+          STATUS_STYLES[row.status] ?? STATUS_STYLES.Inactive;
+
+        return (
+          <span
+            className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1 text-xs font-medium ${pill}`}
+          >
+            <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />
+            {row.status}
+          </span>
+        );
+      },
+    },
+    {
+      name: "Health Score",
+      selector: (row) => row.healthScore,
+      sortable: true,
+      minWidth: "160px",
+      cell: (row) => (
+        <div className="flex w-full items-center gap-2">
+          <ProgressBar
+            value={row.healthScore}
+            color={getHealthColor(row.healthScore)}
+          />
+          <span
+            className="shrink-0 whitespace-nowrap text-xs font-medium"
+            style={{ color: getHealthColor(row.healthScore) }}
+          >
+            {row.healthScore}%
+          </span>
+        </div>
+      ),
+    },
+    {
+      name: "Franchise",
+      selector: (row) => row.franchise,
+      sortable: true,
+    },
+    // {
+    //   name: "Balance",
+    //   selector: (row) => row.balance,
+    //   sortable: true,
+    // },
+
+    {
+      name: "Actions",
+      cell: (row) => (
+        <div className="flex justify-end">
+          <Dropdown
+            align="right"
+            trigger={
+              <button
+                type="button"
+                className="rounded-md p-2 text-gray-500 transition hover:bg-gray-100 hover:text-gray-700"
+                aria-label="Open actions menu"
+              >
+                <MoreHorizontal size={18} />
+              </button>
+            }
+          >
+            <button
+              type="button"
+              className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-gray-700 transition hover:bg-gray-100"
+              onClick={() => handleEditClient(row)}
+            >
+              <Pencil size={16} className="shrink-0" />
+              Edit
+            </button>
+
+            <button
+              type="button"
+              className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm  text-gray-700 transition hover:bg-gray-100"
+              onClick={() => handleViewClient(row)}
+            >
+              <Eye size={16} className="shrink-0" />
+              View
+            </button>
+            {/* send message */}
+            <button
+              type="button"
+              className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-gray-700 transition hover:bg-gray-100"
+            >
+              <MessageSquare size={16} className="shrink-0" />
+              Send Message
+            </button>
+            <button
+              type="button"
+              className="flex w-full items-center gap-2 border-t border-gray-300 px-3 py-2 text-left text-sm text-red-600 transition hover:bg-red-50"
+            >
+              <Trash2 size={16} className="shrink-0" />
+              Delete
+            </button>
+          </Dropdown>
+        </div>
+      ),
+      ignoreRowClick: true,
+      allowOverflow: true,
+      button: true,
+    },
+  ];
+
+  return (
+    <div className="">
+      <DataTable
+        columns={columns}
+        data={clients}
+        pagination
+        highlightOnHover
+        responsive
+      />
+      {isModalOpen && selectedClient && (
+        <AddEditClientModal
+          isOpen={isModalOpen}
+          onClose={() => {
+            setIsModalOpen(false);
+            setSelectedClient(null);
+          }}
+          onSubmit={handleUpdateClient}
+          initialData={selectedClient}
+          mode="edit"
+        />
+      )}
+
+      <ClientDetailsModal
+        isOpen={Boolean(viewClient)}
+        onClose={() => setViewClient(null)}
+        client={viewClient}
+      />
+    </div>
+  );
+};
+
+export default ClientTable;
