@@ -5,10 +5,16 @@ import Sidebar from "./Sidebar";
 
 const Dashboard = ({ children, title }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
     <div className="flex h-screen overflow-hidden bg-(--color-bg-active)">
-      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+      <Sidebar
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+        isCollapsed={isCollapsed}
+        onToggleCollapse={() => setIsCollapsed((v) => !v)}
+      />
 
       <div className="flex min-w-0 min-h-0 flex-1 flex-col">
         <Header title={title} onMenuClick={() => setIsSidebarOpen(true)} />
