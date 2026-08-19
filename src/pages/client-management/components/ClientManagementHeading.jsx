@@ -10,12 +10,12 @@ const ClientManagementHeading = ({ heading, subheading, emoji }) => {
     setIsModalOpen(false);
   };
   return (
-    <div className="flex items-center justify-between gap-4">
-      <div className="">
+    <section className="flex items-center justify-between gap-4">
+      <div>
         <h1 className="heading-lg text-tertiary">
           {heading} <span className="ml-1">{emoji}</span>
         </h1>
-        <p className=" text-muted">{subheading}</p>
+        <p className="text-muted">{subheading}</p>
       </div>
 
       <Button
@@ -35,7 +35,7 @@ const ClientManagementHeading = ({ heading, subheading, emoji }) => {
           mode="add"
         />
       )}
-    </div>
+    </section>
   );
 };
 

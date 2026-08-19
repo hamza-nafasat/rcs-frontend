@@ -27,39 +27,31 @@ const cardData = [
 
 const ClientManagement = () => {
   return (
-    <section className="">
-      <div className="">
+    <>
+      <section className="">
         <ClientManagementHeading
           heading="Client Management"
           subheading="Manage your clients and their information"
         />
-      </div>
+      </section>
 
-      <div className="mt-6 flex flex-wrap gap-4 sm:grid lg:grid-cols-4">
+      <section className="mt-6 flex flex-wrap gap-4 sm:grid lg:grid-cols-4">
         {cardData.map((card, index) => (
           <Card key={index} className="h-full">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2
-                  className="text-lg font-semibold"
-                  style={{ color: card.valueColor }}
-                >
-                  {card.value}
-                </h2>
-                <p className="text-sm font-medium text-muted">{card.label}</p>
-              </div>
-              <span className="text-sm font-medium text-success">
-                {card.comparison}
-              </span>
+            <div className="flex flex-col gap-1">
+              <h2
+                className="text-lg font-semibold"
+                style={{ color: card.valueColor }}
+              >
+                {card.value}
+              </h2>
+              <p className="text-sm font-medium text-muted">{card.label}</p>
             </div>
           </Card>
         ))}
-      </div>
-
-      <div className="mt-6">
-        <ClientTable />
-      </div>
-    </section>
+      </section>
+      <ClientTable className="mt-5" />
+    </>
   );
 };
 

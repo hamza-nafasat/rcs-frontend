@@ -12,6 +12,7 @@ import {
 import { useState } from "react";
 import ClientDetailsModal from "./ClientDetailsModal";
 import AddEditClientModal from "./AddEditClientModal";
+import Button from "../../../components/shared/Button";
 
 const STATUS_STYLES = {
   Active: { pill: "bg-green-50 text-green-700", dot: "bg-green-500" },
@@ -92,7 +93,7 @@ const initialData = [
   },
 ];
 
-const ClientTable = () => {
+const ClientTable = ({ className }) => {
   const [clients, setClients] = useState(initialData);
   const [selectedClient, setSelectedClient] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -208,60 +209,60 @@ const ClientTable = () => {
       selector: (row) => row.franchise,
       sortable: true,
     },
-    // {
-    //   name: "Balance",
-    //   selector: (row) => row.balance,
-    //   sortable: true,
-    // },
-
     {
       name: "Actions",
       cell: (row) => (
         <div className="flex justify-end">
           <Dropdown
             align="right"
+            portalClassName="max-w-12"
             trigger={
-              <button
-                type="button"
-                className="rounded-md p-2 text-gray-500 transition hover:bg-gray-100 hover:text-gray-700"
-                aria-label="Open actions menu"
+              <Button
+                type="icon"
+                className="w-full py-2! px-3!"
+                textClassName="flex w-full item-center h-full gap-2 text-sm text-gray-700 transition hover:bg-gray-100  "
               >
                 <MoreHorizontal size={18} />
-              </button>
+              </Button>
             }
           >
-            <button
-              type="button"
-              className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-gray-700 transition hover:bg-gray-100"
+            <Button
+              type="icon"
+              className="w-full py-0! px-0!"
+              textClassName="flex py-2 px-3 w-full item-center h-full gap-2 text-sm text-gray-700 transition hover:bg-gray-100  "
               onClick={() => handleEditClient(row)}
             >
-              <Pencil size={16} className="shrink-0" />
+              <Pencil size={16} className="mt-0.5" />
               Edit
-            </button>
-
-            <button
-              type="button"
-              className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm  text-gray-700 transition hover:bg-gray-100"
+            </Button>
+            <Button
+              type="icon"
+              className="w-full py-0! px-0!"
+              textClassName="flex w-full px-3 py-2 item-center h-full gap-2 text-sm text-gray-700 transition hover:bg-gray-100  "
               onClick={() => handleViewClient(row)}
             >
-              <Eye size={16} className="shrink-0" />
+              <Eye size={16} className="mt-0.5" />
               View
-            </button>
-            {/* send message */}
-            <button
-              type="button"
-              className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-gray-700 transition hover:bg-gray-100"
+            </Button>
+            <Button
+              type="icon"
+              className="w-full py-0! px-0!"
+              textClassName="flex w-full px-3 py-2 item-center h-full gap-2 text-sm text-gray-700 transition hover:bg-gray-100  "
+              onClick={() => handleEditClient(row)}
             >
-              <MessageSquare size={16} className="shrink-0" />
+              <MessageSquare size={14} className="mt-0.5" />
               Send Message
-            </button>
-            <button
-              type="button"
-              className="flex w-full items-center gap-2 border-t border-gray-300 px-3 py-2 text-left text-sm text-red-600 transition hover:bg-red-50"
+            </Button>
+
+            <Button
+              type="icon"
+              className="w-full py-0! px-0! border-t border-gray-300 rounded-none!"
+              textClassName="flex w-full py-2 px-3 item-center h-full gap-2 text-sm text-gray-700 transition hover:bg-gray-100 border-gray-300 text-left text-sm text-red-600 transition hover:bg-red-50 "
+              onClick={() => handleEditClient(row)}
             >
               <Trash2 size={16} className="shrink-0" />
               Delete
-            </button>
+            </Button>
           </Dropdown>
         </div>
       ),
@@ -272,7 +273,7 @@ const ClientTable = () => {
   ];
 
   return (
-    <div className="">
+    <div className={className}>
       <DataTable
         columns={columns}
         data={clients}

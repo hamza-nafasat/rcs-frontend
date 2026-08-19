@@ -8,6 +8,7 @@ import {
   Globe,
 } from "lucide-react";
 import Avatar from "../../../components/shared/Avatar";
+import Button from "../../../components/shared/Button";
 
 const ClientDetailsModal = ({ isOpen, onClose, client }) => {
   if (!isOpen || !client) return null;
@@ -39,8 +40,8 @@ const ClientDetailsModal = ({ isOpen, onClose, client }) => {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
       <div className="max-h-[90vh] w-full max-w-125 overflow-y-auto rounded-2xl bg-white p-6 shadow-xl">
         {/* Header */}
-        <div className="mb-6 flex items-start justify-between">
-          <div className="flex items-center gap-3">
+        <article className="mb-6 flex items-start justify-between">
+          <section className="flex items-center gap-3">
             <Avatar name={client.name} />
 
             <div>
@@ -57,21 +58,21 @@ const ClientDetailsModal = ({ isOpen, onClose, client }) => {
                 {client.status}
               </span>
             </div>
-          </div>
+          </section>
 
-          <button
-            type="button"
+          <Button
+            type="icon"
             onClick={onClose}
-            className="rounded-full p-1 text-gray-500 hover:bg-gray-100"
+            className="p-1! m-1! text-gray-500 hover:bg-gray-100 transition rounded-full! "
           >
             <X size={20} />
-          </button>
-        </div>
+          </Button>
+        </article>
 
         {/* Content */}
-        <div className="space-y-4">
+        <article className="space-y-4">
           {/* Health Score */}
-          <div className="rounded-xl border border-gray-200 bg-gray-50 p-4">
+          <section className="rounded-xl border border-gray-200 bg-gray-50 p-4">
             <div className="mb-3 flex items-center justify-between">
               <h3 className="text-sm font-semibold text-gray-900">
                 Health Score
@@ -88,7 +89,7 @@ const ClientDetailsModal = ({ isOpen, onClose, client }) => {
                 style={{ width: `${client.healthScore}%` }}
               />
             </div>
-          </div>
+          </section>
 
           {/* Contact Information */}
           <section>
@@ -141,24 +142,28 @@ const ClientDetailsModal = ({ isOpen, onClose, client }) => {
             </h3>
 
             <div className="grid grid-cols-2 gap-3">
-              <button
-                type="button"
-                className="flex h-16 flex-col items-center justify-center gap-1 rounded-xl border border-gray-200 text-sm text-gray-500 transition hover:bg-gray-50"
+              <Button
+                type="icon"
+                className="flex h-16 flex-col w-full items-center justify-center gap-1 rounded-xl border border-gray-200 text-sm text-gray-500 transition hover:bg-gray-50"
               >
-                <MessageSquare size={18} />
-                <span>Message</span>
-              </button>
+                <span className="flex flex-col items-center gap-1 ">
+                  <MessageSquare size={18} />
+                  <span>Message</span>
+                </span>
+              </Button>
 
-              <button
-                type="button"
-                className="flex h-16 flex-col items-center justify-center gap-1 rounded-xl border border-gray-200 text-sm text-gray-500 transition hover:bg-gray-50"
+              <Button
+                type="icon"
+                className="flex h-16 flex-col w-full items-center justify-center gap-1 rounded-xl border border-gray-200 text-sm text-gray-500 transition hover:bg-gray-50"
               >
-                <Globe size={18} />
-                <span>Website</span>
-              </button>
+                <span className="flex flex-col items-center gap-1 ">
+                  <Globe size={18} />
+                  <span>Website</span>
+                </span>
+              </Button>
             </div>
           </section>
-        </div>
+        </article>
       </div>
     </div>
   );

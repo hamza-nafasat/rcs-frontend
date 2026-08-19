@@ -4,6 +4,7 @@ const Button = ({
   iconPosition = "left",
   className = "",
   type = "button",
+  textClassName = "",
   ...props
 }) => {
   return (
@@ -14,7 +15,7 @@ const Button = ({
     >
       {icon && iconPosition === "left" && icon}
 
-      <span>{children}</span>
+      <span className={textClassName}>{children}</span>
 
       {icon && iconPosition === "right" && icon}
     </button>
