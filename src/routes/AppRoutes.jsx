@@ -14,6 +14,7 @@ import Moderators from "../pages/moderators/Moderators";
 import FDD from "../pages/fdd/FDD";
 import ResetPasswordSuccess from "../pages/auth/ResetPasswordSuccess";
 import Support from "../pages/support/Support";
+import Settings from "../pages/settings/Settings";
 
 const AppRoutes = () => {
   return (
@@ -36,6 +37,7 @@ const AppRoutes = () => {
           <Route path="moderators" element={<Moderators />} />
           <Route path="fdd" element={<FDD />} />
           <Route path="support" element={<Support />} />
+          <Route path="settings" element={<Settings />} />
         </Route>
         <Route path="*" element={<DashboardNotFound />} />
       </Routes>
