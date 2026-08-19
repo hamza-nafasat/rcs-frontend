@@ -1,4 +1,10 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import {
+  useState,
+  useRef,
+  useEffect,
+  useLayoutEffect,
+  useCallback,
+} from "react";
 import { createPortal } from "react-dom";
 
 const MENU_MARGIN = 8;
@@ -11,7 +17,7 @@ const Dropdown = ({
   portalClassName = "",
 }) => {
   const [open, setOpen] = useState(false);
-  const [position, setPosition] = useState({ top: 0, left: 0 });
+  const [position, setPosition] = useState(null);
   const triggerRef = useRef(null);
   const menuRef = useRef(null);
 
@@ -34,9 +40,13 @@ const Dropdown = ({
     setPosition({ top, left });
   }, [align]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!open) return;
     updatePosition();
+  }, [open, updatePosition]);
+
+  useEffect(() => {
+    if (!open) return;
     const handleClickOutside = (event) => {
       if (
         !triggerRef.current?.contains(event.target) &&
@@ -65,7 +75,13 @@ const Dropdown = ({
 
   return (
     <div ref={triggerRef} className={`relative ${className}`}>
-      <button type="button" onClick={() => setOpen((prev) => !prev)}>
+      <button
+        type="button"
+        onClick={() => {
+          setPosition(null);
+          setOpen((prev) => !prev);
+        }}
+      >
         {trigger}
       </button>
 
@@ -73,7 +89,11 @@ const Dropdown = ({
         createPortal(
           <div
             ref={menuRef}
-            style={{ top: position.top, left: position.left }}
+            style={{
+              top: position?.top ?? 0,
+              left: position?.left ?? 0,
+              visibility: position ? "visible" : "hidden",
+            }}
             onClick={() => setOpen(false)}
             className={`fixed z-50 min-w-48 rounded-xl border border-gray-100 bg-white p-1 shadow-lg ${portalClassName}`}
           >
