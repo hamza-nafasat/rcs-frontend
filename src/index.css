@@ -41,7 +41,7 @@
   --color-border-cancel: #d0d5dd;
 }
 html {
-  font-size: 14px;
+  /* font-size: 14px; */
 }
 
 button:hover {

@@ -16,6 +16,7 @@ import ResetPasswordSuccess from "../pages/auth/ResetPasswordSuccess";
 import Support from "../pages/support/Support";
 import Settings from "../pages/settings/Settings";
 import Notification from "../pages/notifications/Notification";
+import FranchisePipeline from "../pages/franchise-pipeline/FranchisePipeline";
 
 const AppRoutes = () => {
   return (
@@ -40,6 +41,7 @@ const AppRoutes = () => {
           <Route path="support" element={<Support />} />
           <Route path="settings" element={<Settings />} />
           <Route path="notifications" element={<Notification />} />
+          <Route path="franchise-pipeline" element={<FranchisePipeline />} />
         </Route>
         <Route path="*" element={<DashboardNotFound />} />
       </Routes>
