@@ -38,7 +38,7 @@ const AddEditClientModal = ({
         {/* Header */}
         <div className="mb-6 flex items-center justify-between">
           <h2 className="text-xl font-semibold text-gray-900">
-            {mode === "edit" ? "Edit Client" : "Add Client"}
+            {mode === "edit" ? "Edit Client" : "Add New Client"}
           </h2>
 
           <button
@@ -89,7 +89,7 @@ const AddEditClientModal = ({
             </Button>
 
             <Button type="submit" className="w-1/2">
-              {mode === "edit" ? "Update" : "Add"}
+              {mode === "edit" ? "Update" : "Send Invite"}
             </Button>
           </div>
         </form>

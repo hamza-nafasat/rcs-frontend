@@ -1,7 +1,8 @@
 import DataTable from "react-data-table-component";
-import { ChevronDown, Eye, MoreHorizontal, Trash2 } from "lucide-react";
+import { ChevronDown, Eye, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
 import ManageAccountsModal from "./ManageAccountsModal";
+import AddEditModeratorModal from "./AddEditModeratorModal";
 import DeleteModal from "../../../components/modals/DeleteModal";
 import Avatar from "../../../components/shared/Avatar";
 import Dropdown from "../../../components/shared/Dropdown";
@@ -13,45 +14,43 @@ const STATUS_STYLES = {
   Pending: { pill: "bg-amber-50 text-amber-700", dot: "bg-amber-500" },
 };
 
-const initialData = [
-  {
-    id: 1,
-    name: "Sarah Chen",
-    email: "sarah.chen@example.com",
-    status: "Owner",
-    role: "Account Owner",
-    joined: "Added 2 days ago",
+const tableStyles = {
+  table: { style: { width: "100%" } },
+  tableWrapper: { style: { width: "100%", height: "100%" } },
+  responsiveWrapper: {
+    style: { width: "100%", flex: "1 1 auto", minHeight: 0, overflowY: "auto" },
   },
-  {
-    id: 2,
-    name: "Marcus Lee",
-    email: "marcus.lee@example.com",
-    status: "Active",
-    role: "Moderator",
-    joined: "Added 1 week ago",
+  pagination: {
+    style: {
+      marginTop: "auto",
+      flex: "0 0 auto",
+      borderTop: "1px solid #E5E7EB",
+    },
   },
-  {
-    id: 3,
-    name: "Priya Sharma",
-    email: "priya.sharma@example.com",
-    status: "Pending",
-    role: "Moderator",
-    joined: "Invited 3 days ago",
-  },
-  {
-    id: 4,
-    name: "David Okafor",
-    email: "david.okafor@example.com",
-    status: "Active",
-    role: "Moderator",
-    joined: "Added 1 month ago",
-  },
-];
+};
 
-const ModeratorTable = () => {
-  const [moderators, setModerators] = useState(initialData);
+const ModeratorTable = ({ moderators, setModerators }) => {
   const [viewMember, setViewMember] = useState(null);
   const [memberToRemove, setMemberToRemove] = useState(null);
+  const [memberToEdit, setMemberToEdit] = useState(null);
+
+  const handleUpdateMember = (formData) => {
+    setModerators((prev) =>
+      prev.map((member) =>
+        member.id === memberToEdit?.id
+          ? {
+              ...member,
+              name: formData.name,
+              email: formData.email,
+              role: formData.role,
+              status: formData.status,
+            }
+          : member,
+      ),
+    );
+
+    setMemberToEdit(null);
+  };
 
   const handleConfirmRemove = () => {
     setModerators((prev) =>
@@ -66,6 +65,7 @@ const ModeratorTable = () => {
       selector: (row) => row.name,
       sortable: true,
       minWidth: "240px",
+      grow: 2,
       cell: (row) => (
         <div className="flex items-center gap-2">
           <Avatar
@@ -86,11 +86,13 @@ const ModeratorTable = () => {
       name: "Role",
       selector: (row) => row.role,
       sortable: true,
+      grow: 1,
     },
     {
       name: "Status",
       selector: (row) => row.status,
       sortable: true,
+      grow: 1,
       cell: (row) => {
         const { pill, dot } =
           STATUS_STYLES[row.status] ?? STATUS_STYLES.Inactive;
@@ -110,9 +112,12 @@ const ModeratorTable = () => {
       selector: (row) => row.joined,
       sortable: true,
       minWidth: "160px",
+      grow: 1,
     },
     {
       name: "Actions",
+      width: "90px",
+      right: true,
       cell: (row) => (
         <div className="flex justify-end">
           <Dropdown
@@ -127,6 +132,15 @@ const ModeratorTable = () => {
               </button>
             }
           >
+            <button
+              type="button"
+              className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-gray-700 transition hover:bg-gray-100"
+              onClick={() => setMemberToEdit(row)}
+            >
+              <Pencil size={16} className="shrink-0" />
+              Edit
+            </button>
+
             <button
               type="button"
               className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-gray-700 transition hover:bg-gray-100"
@@ -155,16 +169,29 @@ const ModeratorTable = () => {
   ];
 
   return (
-    <div className="">
+    <div className="flex h-full w-full min-h-0 flex-col">
       <DataTable
         columns={columns}
         data={moderators}
         pagination
         highlightOnHover
         responsive
+        fixedHeader
+        fixedHeaderScrollHeight="100%"
         sortIcon={<ChevronDown size={14} />}
-        content=""
+        customStyles={tableStyles}
+        className="flex min-h-0 flex-1 flex-col"
       />
+
+      {memberToEdit && (
+        <AddEditModeratorModal
+          isOpen={Boolean(memberToEdit)}
+          onClose={() => setMemberToEdit(null)}
+          onSubmit={handleUpdateMember}
+          initialData={memberToEdit}
+          mode="edit"
+        />
+      )}
 
       <ManageAccountsModal
         isOpen={Boolean(viewMember)}
