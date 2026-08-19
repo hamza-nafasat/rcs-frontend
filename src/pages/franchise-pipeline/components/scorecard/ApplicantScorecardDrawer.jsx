@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { X, DollarSign, Briefcase, Scale, MapPin } from "lucide-react";
 import Button from "../../../../components/shared/Button";
 import Badge from "../../../../components/shared/Badge";
@@ -12,19 +12,38 @@ import {
   getRecommendation,
 } from "./scorecardData";
 
+const CLOSE_DURATION = 250;
+
 const ApplicantScorecardDrawer = ({
   isOpen,
   applicant,
   onClose,
   onStageChange,
 }) => {
+  const [isClosing, setIsClosing] = useState(false);
+  const closeTimer = useRef(null);
+
+  // Play the slide-out animation before unmounting.
+  const handleClose = useCallback(() => {
+    if (closeTimer.current) return;
+
+    setIsClosing(true);
+
+    closeTimer.current = setTimeout(() => {
+      closeTimer.current = null;
+      onClose?.();
+    }, CLOSE_DURATION);
+  }, [onClose]);
+
+  useEffect(() => () => clearTimeout(closeTimer.current), []);
+
   useEffect(() => {
-    const onKeyDown = (event) => event.key === "Escape" && onClose?.();
+    const onKeyDown = (event) => event.key === "Escape" && handleClose();
 
     document.addEventListener("keydown", onKeyDown);
 
     return () => document.removeEventListener("keydown", onKeyDown);
-  }, [onClose]);
+  }, [handleClose]);
 
   if (!isOpen || !applicant) return null;
 
@@ -37,12 +56,14 @@ const ApplicantScorecardDrawer = ({
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
       <div
-        className="absolute inset-0 bg-black/40"
-        onClick={onClose}
+        className={`absolute inset-0 bg-black/40 ${isClosing ? "drawer-overlay-closing" : "drawer-overlay"}`}
+        onClick={handleClose}
         aria-hidden="true"
       />
 
-      <aside className="relative flex h-full w-full max-w-105 flex-col overflow-y-auto bg-gray-50 shadow-xl">
+      <aside
+        className={`relative flex h-full w-full max-w-105 flex-col overflow-y-auto bg-gray-50 shadow-xl ${isClosing ? "drawer-panel-closing" : "drawer-panel"}`}
+      >
         {/* Header */}
         <article className="sticky top-0 z-10 flex items-start justify-between gap-3 border-b border-gray-200 bg-white px-5 py-4">
           <section>
@@ -63,7 +84,7 @@ const ApplicantScorecardDrawer = ({
 
           <Button
             type="icon"
-            onClick={onClose}
+            onClick={handleClose}
             aria-label="Close scorecard"
             className="p-1! text-gray-500 hover:bg-gray-100 rounded-full!"
           >

@@ -201,6 +201,7 @@ const FranchisePipelineTable = () => {
       </section>
 
       <ApplicantScorecardDrawer
+        key={selected?.id}
         isOpen={Boolean(selected)}
         applicant={selected}
         onClose={() => setSelected(null)}
