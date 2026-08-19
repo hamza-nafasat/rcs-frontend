@@ -1,0 +1,116 @@
+import { useState } from "react";
+import FddHeading from "./components/FddHeading";
+import FddFilter from "./components/FddFilter";
+import FddTable from "./components/FddTable";
+
+const initialDocuments = [
+  {
+    id: 1,
+    document: "Burger Hub FDD 2025.pdf",
+    version: "3.1",
+    brand: "Burger Hub",
+    country: "United States",
+    state: "California",
+    status: "Approved",
+  },
+  {
+    id: 2,
+    document: "Burger Hub FDD 2024.pdf",
+    version: "2.4",
+    brand: "Burger Hub",
+    country: "United States",
+    state: "Texas",
+    status: "Expired",
+  },
+  {
+    id: 3,
+    document: "Pizza Corner Disclosure.pdf",
+    version: "1.0",
+    brand: "Pizza Corner",
+    country: "Canada",
+    state: "Ontario",
+    status: "Pending",
+  },
+  {
+    id: 4,
+    document: "Sushi Place FDD.pdf",
+    version: "1.2",
+    brand: "Sushi Place",
+    country: "United Kingdom",
+    state: "London",
+    status: "Draft",
+  },
+  {
+    id: 5,
+    document: "Pizza Corner FDD 2025.pdf",
+    version: "2.0",
+    brand: "Pizza Corner",
+    country: "Canada",
+    state: "Quebec",
+    status: "Approved",
+  },
+];
+
+const initialFilters = {
+  country: "all",
+  state: "",
+  brand: "all",
+  document: "",
+};
+
+const FDD = () => {
+  const [documents] = useState(initialDocuments);
+  const [filters, setFilters] = useState(initialFilters);
+
+  // these lists will come from the backend later
+  const countries = [...new Set(documents.map((doc) => doc.country))];
+  const brands = [...new Set(documents.map((doc) => doc.brand))];
+
+  const filteredDocuments = documents.filter((doc) => {
+    const matchCountry =
+      filters.country === "all" || doc.country === filters.country;
+
+    const matchBrand = filters.brand === "all" || doc.brand === filters.brand;
+
+    const matchState = doc.state
+      .toLowerCase()
+      .includes(filters.state.trim().toLowerCase());
+
+    const matchDocument = doc.document
+      .toLowerCase()
+      .includes(filters.document.trim().toLowerCase());
+
+    return matchCountry && matchBrand && matchState && matchDocument;
+  });
+
+  return (
+    <section className="flex h-full min-h-0 flex-col">
+      <div className="border-b color-border py-4">
+        <FddHeading
+          heading="FDD Document"
+          subheading="Manage your Franchise Disclosure Documents versions."
+        />
+      </div>
+
+      <div className="mt-6">
+        <FddFilter
+          filters={filters}
+          setFilters={setFilters}
+          countries={countries}
+          brands={brands}
+        />
+      </div>
+
+      <div className="mt-6 min-h-0 flex-1">
+        <FddTable
+          documents={filteredDocuments}
+          onReview={(row) => console.log("Review", row)}
+          onESign={(row) => console.log("E-sign", row)}
+          onDownload={(row) => console.log("Download", row)}
+        />
+      </div>
+    </section>
+  );
+};
+
+export default FDD;
