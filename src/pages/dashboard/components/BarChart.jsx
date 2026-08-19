@@ -19,10 +19,8 @@ const BarChart = ({ labels, data }) => {
 
     chartInstance.current = new Chart(ctx, {
       type: "bar",
-
       data: {
         labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-
         datasets: [
           {
             data: [20, 35, 28, 50, 45, 70],
@@ -36,21 +34,10 @@ const BarChart = ({ labels, data }) => {
           },
         ],
       },
-
       options: {
         responsive: true,
-
-        plugins: {
-          legend: {
-            display: false,
-          },
-        },
-
-        scales: {
-          y: {
-            beginAtZero: true,
-          },
-        },
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true } },
       },
     });
 

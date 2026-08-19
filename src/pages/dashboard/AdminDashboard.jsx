@@ -84,133 +84,128 @@ const cardData = [
     comparison: "↑ 15% vs last month",
   },
 ];
+
 const AdminDashboard = () => {
   return (
-    <section>
-      <div className="flex flex-col gap-4">
-        {/* Page Heading */}
-        <DashboardHeading
-          heading="Good morning, Faiza"
-          emoji="👋"
-          subheading="Monday, August 3, 2026 · You had 0 leads yesterday and 8 messages awaiting response."
-        />
+    <article className="flex flex-col gap-4">
+      {/* Page Heading */}
+      <DashboardHeading
+        emoji="👋"
+        heading="Good morning, marrrram"
+        subheading="Monday, August 3, 2026 · You had 0 leads yesterday and 8 messages awaiting response."
+      />
 
-        {/* Stats */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-          {cardData.map((card, index) => (
-            <StatsCard key={index} {...card} />
-          ))}
-        </div>
+      {/* Stats */}
+      <section className="grid grid-cols-1 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        {cardData.map((card, index) => (
+          <StatsCard key={index} {...card} />
+        ))}
+      </section>
 
-        {/* Revenue & Clients */}
-        <div className="grid grid-cols-1 items-stretch gap-4 lg:grid-cols-5">
-          <div className="lg:col-span-3">
-            <Card className="h-full">
-              <DashboardHeading
-                heading="Revenue"
-                subheading="Compared with last month"
-              />
+      {/* Revenue & Clients */}
+      <section className="grid grid-cols-1 items-stretch gap-4 lg:grid-cols-5">
+        <Card className="h-full lg:col-span-3 ">
+          <DashboardHeading
+            heading="Revenue"
+            subheading="Compared with last month"
+          />
 
-              <LineChart
-                labels={["Jan", "Feb", "Mar", "Apr", "May", "Jun"]}
-                data={[20, 35, 28, 50, 45, 70]}
-              />
-            </Card>
-          </div>
+          <LineChart
+            labels={["Jan", "Feb", "Mar", "Apr", "May", "Jun"]}
+            data={[20, 35, 28, 50, 45, 70]}
+          />
+        </Card>
 
-          <div className="lg:col-span-2">
-            <Card className="h-full">
-              <DashboardHeading
-                heading="Client Overview"
-                subheading="Current client distribution"
-              />
+        <Card className="h-full lg:col-span-2">
+          <DashboardHeading
+            heading="Client Overview"
+            subheading="Current client distribution"
+          />
 
-              <DonutChart
-                labels={[
-                  "Clients",
-                  "Leads",
-                  "Pending",
-                  "Active",
-                  "Inactive",
-                  "Completed",
-                  "Cancelled",
-                ]}
-                data={[25, 20, 15, 12, 10, 10, 8]}
-                colors={[
-                  "#6366F1",
-                  "#22C55E",
-                  "#EF4444",
-                  "#F59E0B",
-                  "#06B6D4",
-                  "#8B5CF6",
-                  "#F97316",
-                ]}
-              />
-            </Card>
-          </div>
-        </div>
+          <DonutChart
+            labels={[
+              "Clients",
+              "Leads",
+              "Pending",
+              "Active",
+              "Inactive",
+              "Completed",
+              "Cancelled",
+            ]}
+            data={[25, 20, 15, 12, 10, 10, 8]}
+            colors={[
+              "#6366F1",
+              "#22C55E",
+              "#EF4444",
+              "#F59E0B",
+              "#06B6D4",
+              "#8B5CF6",
+              "#F97316",
+            ]}
+          />
+        </Card>
+      </section>
 
-        {/* Bar & Multi Line */}
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-          <Card
-            header={
-              <DashboardHeading
-                heading="Revenue"
-                subheading="Compared with last month"
-              />
-            }
-          >
-            <BarChart
-              labels={["Jan", "Feb", "Mar", "Apr", "May", "Jun"]}
-              data={[20, 35, 28, 50, 45, 70]}
+      {/* Bar & Multi Line */}
+      <section className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <Card
+          header={
+            <DashboardHeading
+              heading="Revenue"
+              subheading="Compared with last month"
             />
-          </Card>
+          }
+        >
+          <BarChart
+            labels={["Jan", "Feb", "Mar", "Apr", "May", "Jun"]}
+            data={[20, 35, 28, 50, 45, 70]}
+          />
+        </Card>
 
-          <Card
-            header={
-              <DashboardHeading
-                heading="Performance"
-                subheading="Clients vs leads"
-              />
-            }
-          >
-            <MultiLineChart
-              labels={["Jan", "Feb", "Mar", "Apr", "May", "Jun"]}
-              datasets={[
-                {
-                  label: "Clients",
-                  data: [20, 35, 30, 50, 45, 65],
-                  borderColor: "#F97316",
-                  backgroundColor: "transparent",
-                  tension: 0.4,
-                },
-                {
-                  label: "Leads",
-                  data: [15, 25, 40, 35, 55, 60],
-                  borderColor: "#2563EB",
-                  backgroundColor: "transparent",
-                  tension: 0.4,
-                },
-              ]}
+        <Card
+          header={
+            <DashboardHeading
+              heading="Performance"
+              subheading="Clients vs leads"
             />
-          </Card>
-        </div>
+          }
+        >
+          <MultiLineChart
+            labels={["Jan", "Feb", "Mar", "Apr", "May", "Jun"]}
+            datasets={[
+              {
+                label: "Clients",
+                data: [20, 35, 30, 50, 45, 65],
+                borderColor: "#F97316",
+                backgroundColor: "transparent",
+                tension: 0.4,
+              },
+              {
+                label: "Leads",
+                data: [15, 25, 40, 35, 55, 60],
+                borderColor: "#2563EB",
+                backgroundColor: "transparent",
+                tension: 0.4,
+              },
+            ]}
+          />
+        </Card>
+      </section>
 
-        {/* Activity & Attention */}
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-          <Card>
-            <RecentActivity
-              activities={activities}
-              onAction={() => console.log("View all")}
-            />
-          </Card>
+      {/* Activity & Attention */}
+      <section className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <Card>
+          <RecentActivity
+            activities={activities}
+            onAction={() => console.log("View all")}
+          />
+        </Card>
 
-          <Card>
-            <ClientsNeedingAttention clients={clients} />
-          </Card>
-        </div>
-      </div>
-    </section>
+        <Card>
+          <ClientsNeedingAttention clients={clients} />
+        </Card>
+      </section>
+    </article>
   );
 };
 export default AdminDashboard;
