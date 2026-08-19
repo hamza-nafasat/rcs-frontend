@@ -15,6 +15,7 @@ import FDD from "../pages/fdd/FDD";
 import ResetPasswordSuccess from "../pages/auth/ResetPasswordSuccess";
 import Support from "../pages/support/Support";
 import Settings from "../pages/settings/Settings";
+import Notification from "../pages/notifications/Notification";
 
 const AppRoutes = () => {
   return (
@@ -38,6 +39,7 @@ const AppRoutes = () => {
           <Route path="fdd" element={<FDD />} />
           <Route path="support" element={<Support />} />
           <Route path="settings" element={<Settings />} />
+          <Route path="notifications" element={<Notification />} />
         </Route>
         <Route path="*" element={<DashboardNotFound />} />
       </Routes>
