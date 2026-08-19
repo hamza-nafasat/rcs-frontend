@@ -3,6 +3,9 @@ import Avatar from "../../../components/shared/Avatar";
 import Badge from "../../../components/shared/Badge";
 import ProgressBar from "../../../components/shared/ProgressBar";
 import DataTable from "react-data-table-component";
+import { useState } from "react";
+import ApplicantScorecardDrawer from "./scorecard/ApplicantScorecardDrawer";
+import { STAGE_COLORS } from "./scorecard/scorecardData";
 
 const scoreColor = (score) => {
   if (score >= 75) return "#22c55e";
@@ -10,8 +13,9 @@ const scoreColor = (score) => {
   return "#dc2626";
 };
 
-const applicants = [
+const initialApplicants = [
   {
+    id: "FR-001",
     name: "Sarah Mitchell",
     email: "sarah.mitchell@mail.com",
     avatar: "",
@@ -23,6 +27,7 @@ const applicants = [
     submitted: "12 Aug 2026",
   },
   {
+    id: "FR-002",
     name: "David Chen",
     email: "d.chen@mail.com",
     avatar: "",
@@ -34,6 +39,7 @@ const applicants = [
     submitted: "10 Aug 2026",
   },
   {
+    id: "FR-003",
     name: "Priya Nair",
     email: "priya.nair@mail.com",
     avatar: "",
@@ -45,6 +51,7 @@ const applicants = [
     submitted: "08 Aug 2026",
   },
   {
+    id: "FR-004",
     name: "Marcus Reid",
     email: "m.reid@mail.com",
     avatar: "",
@@ -56,6 +63,7 @@ const applicants = [
     submitted: "05 Aug 2026",
   },
   {
+    id: "FR-005",
     name: "Elena Duarte",
     email: "elena.duarte@mail.com",
     avatar: "",
@@ -104,7 +112,9 @@ const columns = [
     name: "Stage",
     selector: (row) => row.stage,
     sortable: true,
-    cell: (row) => <Badge text={row.stage} />,
+    cell: (row) => (
+      <Badge text={row.stage} dotColor={STAGE_COLORS[row.stage]} />
+    ),
   },
   {
     name: "Score",
@@ -162,6 +172,18 @@ const customStyles = {
 };
 
 const FranchisePipelineTable = () => {
+  const [applicants, setApplicants] = useState(initialApplicants);
+  const [selected, setSelected] = useState(null);
+  const handleStageChange = (applicant, stage) => {
+    setApplicants((rows) =>
+      rows.map((row) => (row.id === applicant.id ? { ...row, stage } : row)),
+    );
+
+    setSelected((current) =>
+      current && current.id === applicant.id ? { ...current, stage } : current,
+    );
+  };
+
   return (
     <article className="flex flex-col gap-4">
       <h2 className="heading-lg text-tertiary">Applicant Scorecard</h2>
@@ -173,8 +195,17 @@ const FranchisePipelineTable = () => {
           customStyles={customStyles}
           pagination
           highlightOnHover
+          pointerOnHover
+          onRowClicked={(row) => setSelected(row)}
         />
       </section>
+
+      <ApplicantScorecardDrawer
+        isOpen={Boolean(selected)}
+        applicant={selected}
+        onClose={() => setSelected(null)}
+        onStageChange={handleStageChange}
+      />
     </article>
   );
 };

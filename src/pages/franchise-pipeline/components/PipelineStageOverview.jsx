@@ -1,10 +1,15 @@
 const stages = [
-  { value: "128", label: "Applications", color: "#2563eb", bg: "#eff6ff" },
-  { value: "86", label: "Screening", color: "#06b6d4", bg: "#ecfeff" },
-  { value: "54", label: "Interview", color: "#f97316", bg: "#fff7ed" },
-  { value: "31", label: "Discovery Day", color: "#a855f7", bg: "#faf5ff" },
+  { value: "128", label: "New Application", color: "#2563eb", bg: "#eff6ff" },
+  {
+    value: "86",
+    label: "Document Collection",
+    color: "#06b6d4",
+    bg: "#ecfeff",
+  },
+  { value: "54", label: "Under Review", color: "#f97316", bg: "#fff7ed" },
+  { value: "31", label: "Committee Review", color: "#a855f7", bg: "#faf5ff" },
   { value: "18", label: "Approved", color: "#22c55e", bg: "#f0fdf4" },
-  { value: "9", label: "Signed", color: "#dc2626", bg: "#fef2f2" },
+  { value: "9", label: "Denied", color: "#dc2626", bg: "#fef2f2" },
 ];
 
 const PipelineStageOverview = () => {
