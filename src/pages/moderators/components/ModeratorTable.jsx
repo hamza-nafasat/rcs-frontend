@@ -6,6 +6,7 @@ import AddEditModeratorModal from "./AddEditModeratorModal";
 import DeleteModal from "../../../components/modals/DeleteModal";
 import Avatar from "../../../components/shared/Avatar";
 import Dropdown from "../../../components/shared/Dropdown";
+import Button from "../../../components/shared/Button";
 
 const STATUS_STYLES = {
   Owner: { pill: "bg-blue-50 text-blue-700", dot: "bg-blue-500" },
@@ -122,43 +123,45 @@ const ModeratorTable = ({ moderators, setModerators }) => {
         <div className="flex justify-end">
           <Dropdown
             align="right"
+            portalClassName="max-w-12"
             trigger={
-              <button
-                type="button"
-                className="rounded-md p-2 text-gray-500 transition hover:bg-gray-100 hover:text-gray-700"
-                aria-label="Open actions menu"
+              <Button
+                type="icon"
+                className="w-full py-2! px-3!"
+                textClassName="flex w-full item-center h-full gap-2 text-sm text-gray-700 transition hover:bg-gray-100  "
               >
                 <MoreHorizontal size={18} />
-              </button>
+              </Button>
             }
           >
-            <button
-              type="button"
-              className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-gray-700 transition hover:bg-gray-100"
+            <Button
+              type="icon"
+              className="w-full py-0! px-0!"
+              textClassName="flex py-2 px-3 w-full item-center h-full gap-2 text-sm text-gray-700 transition hover:bg-gray-100  "
               onClick={() => setMemberToEdit(row)}
             >
-              <Pencil size={16} className="shrink-0" />
+              <Pencil size={16} className="mt-0.5" />
               Edit
-            </button>
-
-            <button
-              type="button"
-              className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-gray-700 transition hover:bg-gray-100"
+            </Button>
+            <Button
+              type="icon"
+              className="w-full py-0! px-0!"
+              textClassName="flex w-full px-3 py-2 item-center h-full gap-2 text-sm text-gray-700 transition hover:bg-gray-100  "
               onClick={() => setViewMember(row)}
             >
-              <Eye size={16} className="shrink-0" />
+              <Eye size={16} className="mt-0.5" />
               View
-            </button>
-
-            <button
-              type="button"
-              className="flex w-full items-center gap-2 border-t border-gray-300 px-3 py-2 text-left text-sm text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+            </Button>
+            <Button
+              type="icon"
+              className="w-full py-0! px-0! border-t border-gray-300 rounded-none!"
+              textClassName="flex w-full py-2 px-3 item-center h-full gap-2 text-sm text-gray-700 transition hover:bg-gray-100 border-gray-300 text-left text-sm text-red-600 transition hover:bg-red-50 "
               disabled={row.status === "Owner"}
               onClick={() => setMemberToRemove(row)}
             >
               <Trash2 size={16} className="shrink-0" />
               Delete
-            </button>
+            </Button>
           </Dropdown>
         </div>
       ),

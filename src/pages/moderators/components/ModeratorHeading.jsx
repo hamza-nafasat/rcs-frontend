@@ -13,7 +13,7 @@ const ModeratorHeading = ({ heading, subheading, emoji, onAddModerator }) => {
 
   return (
     <div className="flex items-center justify-between gap-4">
-      <div className="">
+      <div>
         <h1 className="heading-lg text-tertiary">
           {heading} <span className="ml-1">{emoji}</span>
         </h1>

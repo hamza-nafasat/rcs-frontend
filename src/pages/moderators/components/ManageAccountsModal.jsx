@@ -10,7 +10,6 @@ const ManageAccountsModal = ({
   subheading = "Remove other profiles you want ",
 }) => {
   if (!isOpen) return null;
-
   const visibleMembers = members.filter((member) => member.status !== "Owner");
 
   return (
