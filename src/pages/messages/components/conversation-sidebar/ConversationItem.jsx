@@ -23,7 +23,6 @@ const ConversationItem = ({ conversation, isSelected, onSelect }) => {
       {/* Avatar */}
       <div className="relative shrink-0">
         <Avatar src={avatar} name={name} size={40} rounded="rounded-full" />
-
         {status === "online" && (
           <span className="absolute right-0 bottom-0 h-2.5 w-2.5 rounded-full border-2 border-white bg-green-500" />
         )}
@@ -33,14 +32,11 @@ const ConversationItem = ({ conversation, isSelected, onSelect }) => {
       <div className="min-w-0 flex-1">
         <div className="flex items-center justify-between gap-2">
           <p className="truncate text-sm font-semibold text-gray-900">{name}</p>
-
           <span className="shrink-0 text-xs text-gray-400">
             {lastMessageTime}
           </span>
         </div>
-
         <p className="truncate text-xs text-gray-500">{company}</p>
-
         <p className="mt-0.5 truncate text-xs text-gray-400">{lastMessage}</p>
       </div>
 

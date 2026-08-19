@@ -68,7 +68,7 @@ const Messages = () => {
     (conversation) => conversation.id === selectedConversationId,
   );
 
-  const currentUserId = "admin-1"; // This would come from authentication
+  const currentUserId = "admin-1";
 
   const handleSendMessage = (text, file) => {
     const newMessage = {
@@ -86,30 +86,27 @@ const Messages = () => {
   };
 
   return (
-    <div className="flex h-full min-h-0 flex-col">
-      {/* Messages Content */}
+    <div className="flex h-full flex-col">
       <div className="flex min-h-0 flex-1">
-        {/* Conversations Sidebar */}
-        <aside
+        {/* message list  */}
+        <section
           className={`w-full shrink-0 border-gray-200 md:block md:w-70 md:border-r ${
             selectedConversation ? "hidden" : "block"
           }`}
         >
-          {/* ConversationSidebar will come here */}
           <ConversationSidebar
             conversations={conversations}
             selectedConversationId={selectedConversationId}
             onSelectConversation={setSelectedConversationId}
           />
-        </aside>
+        </section>
 
         {/* Chat Area */}
-        <main
-          className={`min-w-0 flex-1 md:block ${
+        <section
+          className={`flex-1 md:block ${
             selectedConversation ? "block" : "hidden"
           }`}
         >
-          {/* ChatPanel will come here */}
           <ChatPanel
             conversation={selectedConversation}
             messages={messages}
@@ -117,7 +114,7 @@ const Messages = () => {
             onSend={handleSendMessage}
             onBack={() => setSelectedConversationId(null)}
           />
-        </main>
+        </section>
       </div>
     </div>
   );
