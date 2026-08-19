@@ -3,12 +3,14 @@ const Button = ({
   icon,
   iconPosition = "left",
   className = "",
+  type = "button",
   ...props
 }) => {
   return (
     <button
-      className={`inline-flex items-center justify-center gap-2 bg-(--color-primary) text-white py-4 rounded-xl cursor-pointer ${className}`}
+      className={`inline-flex items-center justify-center py-4 gap-2 rounded-xl cursor-pointer ${className} ${type != "icon" && "bg-(--color-primary) text-white py-4"}`}
       {...props}
+      type={type}
     >
       {icon && iconPosition === "left" && icon}
 

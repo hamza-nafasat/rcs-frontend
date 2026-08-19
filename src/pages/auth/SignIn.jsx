@@ -1,92 +1,52 @@
 import { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import { Link } from "react-router-dom";
 import Button from "../../components/shared/Button";
 import Input from "../../components/shared/Input";
-import ResetPasswordIcon from "../../assets/SVGs/ResetPasswordIcon.svg";
-import AuthLayout from "./components/AuthLayout";
 import AuthHeading from "./components/AuthHeading";
-import { Link } from "react-router-dom";
+import AuthLayout from "./components/AuthLayout";
 
-const SignIn = () => {
-  const [showNew, setShowNew] = useState(false);
+const Login = () => {
   const [showConfirm, setShowConfirm] = useState(false);
 
   return (
     <AuthLayout>
       <div className="flex min-h-full items-center justify-center px-6">
-        <div className="w-full max-w-106.5 rounded-2xl bg-white px-5 py-10 shadow-sm sm:px-6">
+        <div className="w-full md:w-106.5 rounded-2xl bg-white px-5 py-10 shadow-xs sm:px-6 flex flex-col gap-1">
           {/* Heading */}
-          <div className="mb-7">
-            <AuthHeading
-              heading="Set new password"
-              subheading="Your new password must be different from your previous password."
-            />
-          </div>
-
+          <AuthHeading
+            heading="Welcome back"
+            subheading="Sign in to your RCS dashboard"
+          />
           {/* Form */}
-          <form className="space-y-5">
-            {/* New Password */}
-            <div>
-              <label
-                htmlFor="new-password"
-                className="mb-2 block text-sm font-medium text-[#111111]"
-              >
-                New password
-              </label>
+          <form className="flex flex-col gap-5">
+            <Input
+              label="Email address"
+              id="email"
+              type="email"
+              placeholder="ahmed@rcs.com"
+            />
+            <Input
+              label="Password"
+              type={showConfirm ? "text" : "password"}
+              placeholder="••••••••"
+              isEyeButton={true}
+              showConfirm={showConfirm}
+              setShowConfirm={setShowConfirm}
+            />
 
-              <div className="relative">
-                <Input
-                  id="new-password"
-                  type={showNew ? "text" : "password"}
-                  placeholder="••••••••"
-                />
-
-                <button
-                  type="button"
-                  onClick={() => setShowNew((v) => !v)}
-                  aria-label={showNew ? "Hide password" : "Show password"}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6B7280]"
-                >
-                  {showNew ? <EyeOff size={14} /> : <Eye size={14} />}
-                </button>
-              </div>
-            </div>
-
-            {/* Confirm Password */}
-            <div>
-              <label
-                htmlFor="confirm-password"
-                className="mb-2 block text-sm font-medium text-[#111111]"
-              >
-                Confirm password
-              </label>
-
-              <div className="relative">
-                <Input
-                  id="confirm-password"
-                  type={showConfirm ? "text" : "password"}
-                  placeholder="••••••••"
-                />
-
-                <button
-                  type="button"
-                  onClick={() => setShowConfirm((v) => !v)}
-                  aria-label={showConfirm ? "Hide password" : "Show password"}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6B7280]"
-                >
-                  {showConfirm ? <EyeOff size={14} /> : <Eye size={14} />}
-                </button>
-              </div>
-            </div>
-            <Link to="/reset-password">
-              <Button
-                icon={<img src={ResetPasswordIcon} alt="" />}
-                iconPosition="right"
-                className="mt-1 h-10 w-full rounded-xl text-sm font-medium"
-              >
-                Reset password
-              </Button>
+            <Link
+              to="/forget-password"
+              className="self-end text-sm font-medium text-primary hover:text-primary/10 hover:cursor-pointer bg-transparent hover:bg-transparent hover:underline"
+            >
+              Forgot your password
             </Link>
+
+            <Button
+              iconPosition="right"
+              className="mt-1 h-10 w-full rounded-xl text-sm font-medium"
+            >
+              Sign in
+            </Button>
           </form>
         </div>
       </div>
@@ -94,4 +54,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default Login;

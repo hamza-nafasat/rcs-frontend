@@ -2,7 +2,7 @@ import AuthBrand from "./AuthBrand";
 
 const AuthLayout = ({ children }) => {
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen bg-active ">
       <section className="hidden w-1/2 shrink-0 lg:block">
         <AuthBrand type="client" />
       </section>

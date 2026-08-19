@@ -1,15 +1,20 @@
+import { Eye, EyeOff } from "lucide-react";
+
 const Input = ({
   label,
   type = "text",
   placeholder = "",
   icon,
   className = "",
+  isEyeButton = false,
+  showConfirm = false,
+  setShowConfirm,
   ...rest
 }) => {
   return (
-    <div className="w-full">
+    <section className="w-full">
       {label && (
-        <label className="mb-2 block text-sm font-medium text-[#111111]">
+        <label className="mb-1 block text-sm font-medium text-[#111111]">
           {label}
         </label>
       )}
@@ -27,8 +32,17 @@ const Input = ({
             {icon}
           </div>
         )}
+        {isEyeButton && (
+          <button
+            type="button"
+            onClick={() => setShowConfirm(!showConfirm)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary"
+          >
+            {showConfirm ? <EyeOff size={14} /> : <Eye size={14} />}
+          </button>
+        )}
       </div>
-    </div>
+    </section>
   );
 };
 
