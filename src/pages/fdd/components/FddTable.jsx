@@ -3,7 +3,6 @@ import {
   ChevronDown,
   Download,
   Eye,
-  FileText,
   MoreHorizontal,
   PenLine,
 } from "lucide-react";
@@ -41,9 +40,6 @@ const FddTable = ({ documents, onReview, onESign, onDownload }) => {
       grow: 2,
       cell: (row) => (
         <div className="flex items-center gap-2">
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gray-100 text-gray-500">
-            <FileText size={16} />
-          </span>
           <div className="min-w-0">
             <p className="truncate text-sm text-gray-900">{row.document}</p>
             <p className="truncate text-xs text-gray-500">

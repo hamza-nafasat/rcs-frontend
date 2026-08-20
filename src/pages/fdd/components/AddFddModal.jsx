@@ -41,8 +41,8 @@ const AddFddModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-      <article className="w-full max-w-150 rounded-2xl bg-white p-6 shadow-xl">
+    <article className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/40 px-4 py-4 sm:items-center sm:py-6">
+      <article className="max-h-[calc(100dvh-2rem)] w-full max-w-150 overflow-y-auto rounded-2xl bg-white p-4 shadow-xl sm:max-h-[calc(100dvh-3rem)] sm:p-6">
         {/* Header */}
         <section className="mb-6 flex items-start justify-between gap-4">
           <div>
@@ -142,18 +142,21 @@ const AddFddModal = ({
               type="button"
               variant="secondary"
               onClick={onClose}
-              className="w-1/2 text-gray-700! bg-gray-100!"
+              className="w-1/2 text-gray-700! bg-gray-100! px-3! py-2! sm:px-4! sm:py-2.5!"
             >
               Cancel
             </Button>
 
-            <Button type="submit" className="w-1/2">
+            <Button
+              type="submit"
+              className="w-1/2 px-3! py-2! sm:px-4! sm:py-2.5!"
+            >
               Upload
             </Button>
           </section>
         </form>
       </article>
-    </div>
+    </article>
   );
 };
 
