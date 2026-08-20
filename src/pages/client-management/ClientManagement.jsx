@@ -6,27 +6,24 @@ const cardData = [
   {
     label: "Total Clients",
     value: "8",
+    valueColor: "#2563EB",
   },
   {
-    label: "Active",
+    label: "Total Messages",
     value: "2",
+    valueColor: "#22C55E",
   },
   {
-    label: "At Risk",
+    label: "Total Leads",
     value: "7",
+    valueColor: "#EF4444",
   },
   {
-    label: "On Hold",
+    label: "Converted Leads",
     value: "6",
+    valueColor: "#F59E0B",
   },
 ];
-
-const valueColor = {
-  totalClients: "#2563EB",
-  totalMessages: "#22C55E",
-  totalLeads: "#EF4444",
-  convertedLeads: "#F59E0B",
-};
 
 const ClientManagement = () => {
   return (
@@ -44,11 +41,13 @@ const ClientManagement = () => {
             <div className="flex flex-col gap-1">
               <h2
                 className="text-lg font-semibold"
-                style={{ color: valueColor }}
+                style={{ color: card.valueColor }}
               >
                 {card.value}
               </h2>
-              <p className="text-xs text-muted">{card.label}</p>
+              <p className="text-xs sm:text-sm font-medium text-muted">
+                {card.label}
+              </p>
             </div>
           </Card>
         ))}
