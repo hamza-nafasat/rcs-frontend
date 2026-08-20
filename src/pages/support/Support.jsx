@@ -44,6 +44,36 @@ const initialTickets = [
     receivedOn: "01 Aug 2026",
     lastUpdated: "03 Aug 2026",
   },
+  {
+    id: 5,
+    ticketId: "TKT-1005",
+    subject: "Request to update restaurant brand name",
+    category: "General",
+    priority: "Low",
+    status: "Closed",
+    receivedOn: "05 Aug 2026",
+    lastUpdated: "08 Aug 2026",
+  },
+  {
+    id: 6,
+    ticketId: "TKT-1006",
+    subject: "Request to update restaurant brand name",
+    category: "General",
+    priority: "Low",
+    status: "Closed",
+    receivedOn: "01 Aug 2026",
+    lastUpdated: "03 Aug 2026",
+  },
+  {
+    id: 7,
+    ticketId: "TKT-1003",
+    subject: "Payment receipt not generated",
+    category: "Billing",
+    priority: "Medium",
+    status: "Resolved",
+    receivedOn: "05 Aug 2026",
+    lastUpdated: "08 Aug 2026",
+  },
 ];
 
 const Support = () => {
@@ -60,22 +90,22 @@ const Support = () => {
   });
 
   return (
-    <section className="flex h-full min-h-0 flex-col">
-      <div className="border-b color-border py-4">
+    <article className="flex h-full min-h-0 flex-col">
+      <section className="border-b color-border py-4">
         <SupportHeading
           heading="Support Tickets"
           subheading="Monitor, track, and manage all incoming support requests for the franchise platform."
         />
-      </div>
+      </section>
 
-      <div className="mt-6">
+      <section className="mt-6">
         <SupportSearch search={search} setSearch={setSearch} />
-      </div>
+      </section>
 
-      <div className="mt-6 min-h-0 flex-1">
+      <section className="mt-6 min-h-0 flex-1">
         <SupportTable tickets={filteredTickets} />
-      </div>
-    </section>
+      </section>
+    </article>
   );
 };
 

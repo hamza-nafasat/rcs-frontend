@@ -5,6 +5,7 @@ const Input = ({
   type = "text",
   placeholder = "",
   icon,
+  iconPosition = "right",
   className = "",
   isEyeButton = false,
   showConfirm = false,
@@ -23,12 +24,18 @@ const Input = ({
         <input
           type={type}
           placeholder={placeholder}
-          className={`h-10 w-full rounded-xl border border-[#E5E7EB] bg-white px-4 pr-10 text-sm outline-none focus:border-primary ${className}`}
+          className={`h-10 w-full rounded-xl border border-[#E5E7EB] bg-white px-4 text-sm outline-none focus:border-primary ${
+            icon && iconPosition === "left" ? "pl-10" : "pr-10"
+          } ${className}`}
           {...rest}
         />
 
         {icon && (
-          <div className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary ">
+          <div
+            className={`absolute top-1/2 -translate-y-1/2 text-secondary ${
+              iconPosition === "left" ? "left-3" : "right-3"
+            }`}
+          >
             {icon}
           </div>
         )}

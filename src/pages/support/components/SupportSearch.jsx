@@ -10,6 +10,7 @@ const SupportSearch = ({ search, setSearch }) => {
         onChange={(e) => setSearch(e.target.value)}
         placeholder="Search by Ticket ID or Subject"
         icon={<Search size={16} />}
+        iconPosition="left"
       />
     </section>
   );

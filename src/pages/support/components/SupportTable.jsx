@@ -1,5 +1,4 @@
 import DataTable from "react-data-table-component";
-import { ChevronDown } from "lucide-react";
 
 const PRIORITY_STYLES = {
   Urgent: { pill: "bg-red-50 text-red-700", dot: "bg-red-500" },
@@ -20,6 +19,18 @@ const tableStyles = {
   tableWrapper: { style: { width: "100%", height: "100%" } },
   responsiveWrapper: {
     style: { width: "100%", flex: "1 1 auto", minHeight: 0, overflowY: "auto" },
+  },
+  headRow: {
+    style: {
+      backgroundColor: "#FAFAFA",
+    },
+  },
+  headCells: {
+    style: {
+      color: "#4B5563",
+      fontSize: "12px",
+      fontWeight: "600",
+    },
   },
   pagination: {
     style: {
@@ -51,7 +62,9 @@ const SupportTable = ({ tickets }) => {
       sortable: true,
       minWidth: "130px",
       cell: (row) => (
-        <span className="text-sm font-medium text-gray-900">{row.ticketId}</span>
+        <span className="text-sm font-semibold text-primary">
+          {row.ticketId}
+        </span>
       ),
     },
     {
@@ -60,15 +73,14 @@ const SupportTable = ({ tickets }) => {
       sortable: true,
       minWidth: "240px",
       grow: 2,
-      cell: (row) => (
-        <p className="truncate text-sm text-gray-900">{row.subject}</p>
-      ),
+      cell: (row) => <p className="truncate text-subject">{row.subject}</p>,
     },
     {
       name: "Category",
       selector: (row) => row.category,
       sortable: true,
       minWidth: "150px",
+      cell: (row) => <p className="text-tablecell">{row.category}</p>,
     },
     {
       name: "Priority",
@@ -89,17 +101,20 @@ const SupportTable = ({ tickets }) => {
       selector: (row) => row.receivedOn,
       sortable: true,
       minWidth: "150px",
+      cell: (row) => <p className="text-tablecell">{row.receivedOn}</p>,
     },
     {
       name: "Last Updated",
       selector: (row) => row.lastUpdated,
       sortable: true,
       minWidth: "150px",
+      cell: (row) => <p className="text-tablecell">{row.lastUpdated}</p>,
     },
   ];
 
   return (
-    <div className="flex h-full w-full min-h-0 flex-col">
+    <section className="flex h-full w-full min-h-0 flex-col overflow-hidden rounded-lg border color-border">
+      {" "}
       <DataTable
         columns={columns}
         data={tickets}
@@ -108,14 +123,19 @@ const SupportTable = ({ tickets }) => {
         responsive
         fixedHeader
         fixedHeaderScrollHeight="100%"
-        sortIcon={<ChevronDown size={14} />}
         customStyles={tableStyles}
+        conditionalRowStyles={[
+          {
+            when: (row) => tickets.indexOf(row) % 2 === 1,
+            style: { backgroundColor: "#FAFAFA" },
+          },
+        ]}
         className="flex min-h-0 flex-1 flex-col"
         noDataComponent={
-          <p className="py-8 text-sm text-gray-500">No tickets found</p>
+          <p className="py-8 text-sm text-secondary">No tickets found</p>
         }
       />
-    </div>
+    </section>
   );
 };
 

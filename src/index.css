@@ -29,6 +29,8 @@
   --color-text-remove: #dc2626;
   --color-text-moderator: #f54900;
   --color-text-cancel: #344054;
+  --color-text-subject: #111827;
+  --color-text-tablecell: #4b5563;
 
   /* Sidebar */
   --color-sidebar-section: #4b5563;
@@ -142,6 +144,16 @@ button:hover {
 .text-cancel {
   color: var(--color-text-cancel);
   font-weight: 600;
+}
+.text-subject {
+  color: var(--color-text-subject);
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+.text-tablecell {
+  color: var(--color-text-tablecell);
+  font-weight: 400;
+  font-size: 0.875rem;
 }
 
 .bg-dark {
