@@ -19,9 +19,7 @@ const StatsCard = ({ icon, badge, value, label, comparison }) => {
 
       {/* Figure */}
       <section className="mt-5">
-        <h3 className="text-xl sm:text-2xl font-semibold text-gray-900">
-          {value}
-        </h3>
+        <h3 className="text-xl font-semibold text-gray-900">{value}</h3>
         <p className="mt-1 text-xs sm:text-sm text-gray-500">{label}</p>
       </section>
 
