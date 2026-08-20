@@ -12,7 +12,7 @@ const ModeratorHeading = ({ heading, subheading, emoji, onAddModerator }) => {
   };
 
   return (
-    <div className="flex items-center justify-between gap-4">
+    <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4">
       <div>
         <h1 className="heading-lg text-tertiary">
           {heading} <span className="ml-1">{emoji}</span>
@@ -24,7 +24,7 @@ const ModeratorHeading = ({ heading, subheading, emoji, onAddModerator }) => {
         onClick={() => setIsModalOpen(true)}
         iconPosition="left"
         icon={<Plus size={18} />}
-        className="px-4! py-2.5!"
+        className="shrink-0 text-sm whitespace-nowrap px-3! py-2! sm:px-4! sm:py-2.5! sm:text-base w-full sm:w-auto"
       >
         Add Moderator
       </Button>

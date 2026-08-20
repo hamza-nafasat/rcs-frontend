@@ -7,7 +7,7 @@ const NotificationHeading = ({
   onMarkAllRead,
 }) => {
   return (
-    <div className="flex items-center justify-between gap-4">
+    <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4">
       <div>
         <h1 className="heading-lg text-tertiary">{heading}</h1>
         <p className=" text-muted">{subheading}</p>
@@ -16,7 +16,7 @@ const NotificationHeading = ({
       <Button
         onClick={onMarkAllRead}
         disabled={unreadCount === 0}
-        className="px-4! py-2.5! disabled:cursor-not-allowed disabled:opacity-50"
+        className="shrink-0 text-sm whitespace-nowrap px-3! py-2! sm:px-4! sm:py-2.5! sm:text-base w-full sm:w-auto disabled:cursor-not-allowed disabled:opacity-50"
       >
         Mark all as read
       </Button>

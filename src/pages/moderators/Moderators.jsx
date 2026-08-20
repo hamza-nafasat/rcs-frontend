@@ -87,22 +87,17 @@ const Moderators = () => {
   };
 
   return (
-    <section className="flex h-full min-h-0 flex-col bg-white p-6 rounded-2xl border color-border">
-      <div className="flex min-h-0 flex-1 flex-col">
-        <ModeratorHeading
-          heading="Moderators"
-          subheading="Manage your moderators and their information"
-          text={`${moderators.length} Members`}
-          onAddModerator={handleAddModerator}
-        />
+    <section className="flex h-full min-h-0 flex-col">
+      <ModeratorHeading
+        heading="Moderators"
+        subheading="Manage your moderators and their information"
+        text={`${moderators.length} Members`}
+        onAddModerator={handleAddModerator}
+      />
 
-        <div className="mt-6 min-h-0 flex-1">
-          <ModeratorTable
-            moderators={moderators}
-            setModerators={setModerators}
-          />
-        </div>
-      </div>
+      <section className="mt-6 min-h-0 flex-1">
+        <ModeratorTable moderators={moderators} setModerators={setModerators} />
+      </section>
     </section>
   );
 };
