@@ -43,19 +43,73 @@ const activities = [
     text: "Invoice INV-2026-088 paid by Coastal Bistro — $1,800",
     time: "3 hours ago",
   },
-  {
-    id: 4,
-    text: "Invoice INV-2026-088 paid by Coastal Bistro — $1,800",
-    time: "3 hours ago",
-  },
-  {
-    id: 4,
-    text: "Invoice INV-2026-088 paid by Coastal Bistro — $1,800",
-    time: "3 hours ago",
-  },
 ];
 
 const clients = [
+  {
+    id: 1,
+    initials: "SR",
+    name: "Spice Route",
+    personName: "Priya Patel",
+    progress: 61,
+    progressColor: "#EF4444",
+  },
+  {
+    id: 2,
+    initials: "RT",
+    name: "The Rustic Table",
+    personName: "Marcus Williams",
+    progress: 70,
+    progressColor: "#FBBF24",
+  },
+  {
+    id: 1,
+    initials: "SR",
+    name: "Spice Route",
+    personName: "Priya Patel",
+    progress: 61,
+    progressColor: "#EF4444",
+  },
+  {
+    id: 2,
+    initials: "RT",
+    name: "The Rustic Table",
+    personName: "Marcus Williams",
+    progress: 70,
+    progressColor: "#FBBF24",
+  },
+  {
+    id: 1,
+    initials: "SR",
+    name: "Spice Route",
+    personName: "Priya Patel",
+    progress: 61,
+    progressColor: "#EF4444",
+  },
+  {
+    id: 2,
+    initials: "RT",
+    name: "The Rustic Table",
+    personName: "Marcus Williams",
+    progress: 70,
+    progressColor: "#FBBF24",
+  },
+  {
+    id: 1,
+    initials: "SR",
+    name: "Spice Route",
+    personName: "Priya Patel",
+    progress: 61,
+    progressColor: "#EF4444",
+  },
+  {
+    id: 2,
+    initials: "RT",
+    name: "The Rustic Table",
+    personName: "Marcus Williams",
+    progress: 70,
+    progressColor: "#FBBF24",
+  },
   {
     id: 1,
     initials: "SR",
@@ -214,14 +268,14 @@ const AdminDashboard = () => {
 
       {/* Activity & Attention */}
       <section className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <Card>
+        <Card className="flex h-full flex-col">
           <RecentActivity
             activities={activities}
             onAction={() => console.log("View all")}
           />
         </Card>
 
-        <Card>
+        <Card className="flex h-full flex-col">
           <ClientsNeedingAttention clients={clients} />
         </Card>
       </section>
