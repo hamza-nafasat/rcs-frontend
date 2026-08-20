@@ -10,7 +10,7 @@ const ClientManagementHeading = ({ heading, subheading, emoji }) => {
     setIsModalOpen(false);
   };
   return (
-    <section className="flex items-center justify-between gap-4">
+    <section className="flex flex-wrap items-center justify-between gap-3 sm:gap-4">
       <div>
         <h1 className="heading-lg text-tertiary">
           {heading} <span className="ml-1">{emoji}</span>
@@ -22,7 +22,7 @@ const ClientManagementHeading = ({ heading, subheading, emoji }) => {
         onClick={() => setIsModalOpen(true)}
         iconPosition="left"
         icon={<Plus size={18} />}
-        className="px-4! py-2.5!"
+        className="ml-auto shrink-0 px-3! py-2! text-sm whitespace-nowrap sm:px-4! sm:py-2.5! sm:text-base self-end!"
       >
         Add Client
       </Button>
