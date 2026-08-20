@@ -7,6 +7,7 @@ const Input = ({
   icon,
   iconPosition = "right",
   className = "",
+  labelClassName = "",
   isEyeButton = false,
   showConfirm = false,
   setShowConfirm,
@@ -15,7 +16,9 @@ const Input = ({
   return (
     <section className="w-full">
       {label && (
-        <label className="mb-1 block text-sm font-medium text-[#111111]">
+        <label
+          className={`mb-1 block text-sm font-medium text-[#111111] ${labelClassName}`}
+        >
           {label}
         </label>
       )}
