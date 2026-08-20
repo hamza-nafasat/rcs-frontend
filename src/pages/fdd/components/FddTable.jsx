@@ -94,6 +94,9 @@ const FddTable = ({ documents, onReview, onESign, onDownload }) => {
     {
       name: <div className="pr-5">Actions</div>,
       width: "90px",
+      style: {
+        paddingRight: "20px",
+      },
       right: true,
       cell: (row) => (
         <div className="flex justify-end">
