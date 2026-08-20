@@ -10,7 +10,7 @@ const ClientManagementHeading = ({ heading, subheading, emoji }) => {
     setIsModalOpen(false);
   };
   return (
-    <section className="flex items-center justify-between gap-3 sm:gap-4">
+    <section className="flex flex-wrap items-center justify-between gap-3 sm:gap-4">
       <div>
         <h1 className="heading-lg text-tertiary">
           {heading} <span className="ml-1">{emoji}</span>
@@ -21,10 +21,8 @@ const ClientManagementHeading = ({ heading, subheading, emoji }) => {
       <Button
         onClick={() => setIsModalOpen(true)}
         iconPosition="left"
-        icon={<Plus size={22} className="sm:size-4.5" />}
-        aria-label="Add Client"
-        textClassName="hidden sm:inline"
-        className="h-12! w-12! min-w-12 shrink-0 rounded-full! p-0! whitespace-nowrap shadow-lg shadow-(--color-primary)/30 sm:h-auto! sm:w-auto! sm:min-w-0 sm:rounded-xl! sm:px-4! sm:py-2.5! sm:shadow-none"
+        icon={<Plus size={18} />}
+        className="shrink-0 text-sm whitespace-nowrap px-3! py-2! sm:px-4! sm:py-2.5! sm:text-base w-full sm:w-auto"
       >
         Add Client
       </Button>
