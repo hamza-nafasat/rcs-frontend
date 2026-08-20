@@ -47,9 +47,12 @@ const DonutChart = ({ labels, data, colors }) => {
       </div>
 
       {/* Custom Legend */}
-      <div className="mt-5 flex flex-wrap justify-center gap-x-6 gap-y-3">
+      <div className="mt-5 flex flex-wrap justify-center gap-4 lg:gap-0 lg:grid lg:grid-flow-col lg:grid-cols-2 lg:grid-rows-[repeat(3,auto)]">
         {labels.map((label, index) => (
-          <div key={label} className="flex items-center gap-2">
+          <div
+            key={label}
+            className="flex items-center justify-center gap-2 lg:justify-start"
+          >
             <span
               className="h-2.5 w-2.5 shrink-0 rounded-full"
               style={{
