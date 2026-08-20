@@ -33,6 +33,26 @@ const activities = [
     text: "Invoice INV-2026-088 paid by Coastal Bistro — $1,800",
     time: "3 hours ago",
   },
+  {
+    id: 4,
+    text: "Invoice INV-2026-088 paid by Coastal Bistro — $1,800",
+    time: "3 hours ago",
+  },
+  {
+    id: 4,
+    text: "Invoice INV-2026-088 paid by Coastal Bistro — $1,800",
+    time: "3 hours ago",
+  },
+  {
+    id: 4,
+    text: "Invoice INV-2026-088 paid by Coastal Bistro — $1,800",
+    time: "3 hours ago",
+  },
+  {
+    id: 4,
+    text: "Invoice INV-2026-088 paid by Coastal Bistro — $1,800",
+    time: "3 hours ago",
+  },
 ];
 
 const clients = [
@@ -96,7 +116,7 @@ const AdminDashboard = () => {
       />
 
       {/* Stats */}
-      <section className="grid grid-cols-1 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {cardData.map((card, index) => (
           <StatsCard key={index} {...card} />
         ))}

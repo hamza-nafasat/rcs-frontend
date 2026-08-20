@@ -155,12 +155,18 @@ button:hover {
   font-weight: 400;
   font-size: 0.875rem;
 }
-
+.text-revenue {
+  color: var(--color-revenue);
+  font-weight: 600;
+}
 .bg-dark {
   background-color: var(--color-bg-dark);
 }
 .bg-active {
   background-color: var(--color-bg-active);
+}
+.bg-revenue {
+  background-color: var(--color-revenue-bg);
 }
 
 /* Right-side drawer transitions */
