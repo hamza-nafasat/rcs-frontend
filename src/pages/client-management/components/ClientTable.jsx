@@ -13,6 +13,7 @@ import { useState } from "react";
 import ClientDetailsModal from "./ClientDetailsModal";
 import AddEditClientModal from "./AddEditClientModal";
 import Button from "../../../components/shared/Button";
+import DeleteModal from "../../../components/modals/DeleteModal";
 
 const STATUS_STYLES = {
   Active: { pill: "bg-revenue text-[#22C55E]", dot: "bg-[#22C55E]" },
@@ -90,6 +91,150 @@ const initialData = [
     balance: "$1,800",
     nextMeeting: "2023-08-25",
   },
+  {
+    id: 4,
+    ownerName: "Priya Patel",
+    clientEmail: "priya@example.com",
+    restaurantName: "Spice Route",
+    restaurantCuisine: "Indian",
+    status: "Pending",
+    healthScore: 71,
+    franchise: "Domino's",
+    balance: "$540",
+    nextMeeting: "2023-08-22",
+  },
+  {
+    id: 5,
+    ownerName: "Ana Torres",
+    clientEmail: "ana@example.com",
+    restaurantName: "Coastal Bistro",
+    restaurantCuisine: "Mediterranean",
+    status: "Active",
+    healthScore: 84,
+    franchise: "KFC",
+    balance: "$1,800",
+    nextMeeting: "2023-08-25",
+  },
+  {
+    id: 4,
+    ownerName: "Priya Patel",
+    clientEmail: "priya@example.com",
+    restaurantName: "Spice Route",
+    restaurantCuisine: "Indian",
+    status: "Pending",
+    healthScore: 71,
+    franchise: "Domino's",
+    balance: "$540",
+    nextMeeting: "2023-08-22",
+  },
+  {
+    id: 5,
+    ownerName: "Ana Torres",
+    clientEmail: "ana@example.com",
+    restaurantName: "Coastal Bistro",
+    restaurantCuisine: "Mediterranean",
+    status: "Active",
+    healthScore: 84,
+    franchise: "KFC",
+    balance: "$1,800",
+    nextMeeting: "2023-08-25",
+  },
+  {
+    id: 4,
+    ownerName: "Priya Patel",
+    clientEmail: "priya@example.com",
+    restaurantName: "Spice Route",
+    restaurantCuisine: "Indian",
+    status: "Pending",
+    healthScore: 71,
+    franchise: "Domino's",
+    balance: "$540",
+    nextMeeting: "2023-08-22",
+  },
+  {
+    id: 5,
+    ownerName: "Ana Torres",
+    clientEmail: "ana@example.com",
+    restaurantName: "Coastal Bistro",
+    restaurantCuisine: "Mediterranean",
+    status: "Active",
+    healthScore: 84,
+    franchise: "KFC",
+    balance: "$1,800",
+    nextMeeting: "2023-08-25",
+  },
+  {
+    id: 4,
+    ownerName: "Priya Patel",
+    clientEmail: "priya@example.com",
+    restaurantName: "Spice Route",
+    restaurantCuisine: "Indian",
+    status: "Pending",
+    healthScore: 71,
+    franchise: "Domino's",
+    balance: "$540",
+    nextMeeting: "2023-08-22",
+  },
+  {
+    id: 5,
+    ownerName: "Ana Torres",
+    clientEmail: "ana@example.com",
+    restaurantName: "Coastal Bistro",
+    restaurantCuisine: "Mediterranean",
+    status: "Active",
+    healthScore: 84,
+    franchise: "KFC",
+    balance: "$1,800",
+    nextMeeting: "2023-08-25",
+  },
+  {
+    id: 4,
+    ownerName: "Priya Patel",
+    clientEmail: "priya@example.com",
+    restaurantName: "Spice Route",
+    restaurantCuisine: "Indian",
+    status: "Pending",
+    healthScore: 71,
+    franchise: "Domino's",
+    balance: "$540",
+    nextMeeting: "2023-08-22",
+  },
+  {
+    id: 5,
+    ownerName: "Ana Torres",
+    clientEmail: "ana@example.com",
+    restaurantName: "Coastal Bistro",
+    restaurantCuisine: "Mediterranean",
+    status: "Active",
+    healthScore: 84,
+    franchise: "KFC",
+    balance: "$1,800",
+    nextMeeting: "2023-08-25",
+  },
+  {
+    id: 4,
+    ownerName: "Priya Patel",
+    clientEmail: "priya@example.com",
+    restaurantName: "Spice Route",
+    restaurantCuisine: "Indian",
+    status: "Pending",
+    healthScore: 71,
+    franchise: "Domino's",
+    balance: "$540",
+    nextMeeting: "2023-08-22",
+  },
+  {
+    id: 5,
+    ownerName: "Ana Torres",
+    clientEmail: "ana@example.com",
+    restaurantName: "Coastal Bistro",
+    restaurantCuisine: "Mediterranean",
+    status: "Active",
+    healthScore: 84,
+    franchise: "KFC",
+    balance: "$1,800",
+    nextMeeting: "2023-08-25",
+  },
 ];
 
 const ClientTable = ({ className }) => {
@@ -97,6 +242,7 @@ const ClientTable = ({ className }) => {
   const [selectedClient, setSelectedClient] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [viewClient, setViewClient] = useState(null);
+  const [clientToDelete, setClientToDelete] = useState(null);
 
   const handleViewClient = (client) => {
     setViewClient({
@@ -133,6 +279,11 @@ const ClientTable = ({ className }) => {
 
     setIsModalOpen(false);
     setSelectedClient(null);
+  };
+
+  const handleDeleteClient = () => {
+    setClients((prev) => prev.filter((client) => client.id !== clientToDelete?.id));
+    setClientToDelete(null);
   };
 
   const columns = [
@@ -257,7 +408,7 @@ const ClientTable = ({ className }) => {
               type="icon"
               className="w-full py-0! px-0! border-t border-gray-300 rounded-none!"
               textClassName="flex w-full py-2 px-3 item-center h-full gap-2 text-sm text-gray-700 transition hover:bg-gray-100 border-gray-300 text-left text-sm text-red-600 transition hover:bg-red-50 "
-              onClick={() => handleEditClient(row)}
+              onClick={() => setClientToDelete(row)}
             >
               <Trash2 size={16} className="shrink-0" />
               Delete
@@ -292,6 +443,15 @@ const ClientTable = ({ className }) => {
           mode="edit"
         />
       )}
+
+      <DeleteModal
+        isOpen={Boolean(clientToDelete)}
+        onClose={() => setClientToDelete(null)}
+        onConfirm={handleDeleteClient}
+        heading="Delete Client"
+        text={`Are you sure you want to delete ${clientToDelete?.restaurantName ?? "this client"}? This action cannot be undone.`}
+        confirmText="Delete"
+      />
 
       <ClientDetailsModal
         isOpen={Boolean(viewClient)}
