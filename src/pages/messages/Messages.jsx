@@ -86,7 +86,7 @@ const Messages = () => {
   };
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="-m-4 flex h-[calc(100%+2rem)] flex-col bg-white lg:-m-6 lg:h-[calc(100%+3rem)]">
       <div className="flex min-h-0 flex-1">
         {/* message list  */}
         <section

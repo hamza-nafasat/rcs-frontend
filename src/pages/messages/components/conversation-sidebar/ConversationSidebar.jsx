@@ -26,7 +26,9 @@ const ConversationSidebar = ({
     <aside className="flex h-full min-h-0 flex-col">
       {/* Header */}
       <div className="shrink-0 px-4">
-        <h2 className="text-base mb-2 font-semibold text-gray-900">Messages</h2>
+        <h2 className="text-base mb-2 mt-2 font-semibold text-gray-900">
+          Messages
+        </h2>
 
         {/* Search */}
         <Input
