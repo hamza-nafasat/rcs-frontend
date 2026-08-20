@@ -18,7 +18,14 @@ const tableStyles = {
   table: { style: { width: "100%" } },
   tableWrapper: { style: { width: "100%", height: "100%" } },
   responsiveWrapper: {
-    style: { width: "100%", flex: "1 1 auto", minHeight: 0, overflowY: "auto" },
+    style: {
+      width: "100%",
+      flex: "1 1 auto",
+      minHeight: 0,
+      overflowY: "auto",
+      border: "1px solid #E5E7EB",
+      borderRadius: "8px",
+    },
   },
   headRow: {
     style: {
@@ -36,7 +43,6 @@ const tableStyles = {
     style: {
       marginTop: "auto",
       flex: "0 0 auto",
-      borderTop: "1px solid #E5E7EB",
     },
   },
 };
@@ -113,7 +119,7 @@ const SupportTable = ({ tickets }) => {
   ];
 
   return (
-    <section className="flex h-full w-full min-h-0 flex-col overflow-hidden rounded-lg border color-border">
+    <section className="flex h-full w-full min-h-0 flex-col">
       {" "}
       <DataTable
         columns={columns}
