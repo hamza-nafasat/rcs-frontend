@@ -116,7 +116,7 @@ const ModeratorTable = ({ moderators, setModerators }) => {
       grow: 1,
     },
     {
-      name: "Actions",
+      name: <div className="pr-5">Actions</div>,
       width: "90px",
       right: true,
       cell: (row) => (

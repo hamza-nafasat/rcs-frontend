@@ -92,7 +92,7 @@ const FddTable = ({ documents, onReview, onESign, onDownload }) => {
       },
     },
     {
-      name: "Actions",
+      name: <div className="pr-5">Actions</div>,
       width: "90px",
       right: true,
       cell: (row) => (
