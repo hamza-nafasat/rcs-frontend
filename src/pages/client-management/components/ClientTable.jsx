@@ -15,10 +15,9 @@ import AddEditClientModal from "./AddEditClientModal";
 import Button from "../../../components/shared/Button";
 
 const STATUS_STYLES = {
-  Active: { pill: "bg-green-50 text-green-700", dot: "bg-green-500" },
-  Inactive: { pill: "bg-gray-100 text-gray-600", dot: "bg-gray-400" },
-  "At Risk": { pill: "bg-red-50 text-red-600", dot: "bg-red-500" },
-  Pending: { pill: "bg-amber-50 text-amber-700", dot: "bg-amber-500" },
+  Active: { pill: "bg-revenue text-[#22C55E]", dot: "bg-[#22C55E]" },
+  "At Risk": { pill: "bg-[#FEF2F2] text-[#EF4444]", dot: "bg-[#EF4444]" },
+  "On Hold": { pill: "bg-[#FFFBEB] text-[#F59E0B]", dot: "bg-[#F59E0B]" },
 };
 
 const HEALTH_COLORS = [
@@ -49,7 +48,7 @@ const initialData = [
     clientEmail: "jane@example.com",
     restaurantName: "Sunset Grill",
     restaurantCuisine: "American",
-    status: "Inactive",
+    status: "On Hold",
     healthScore: 48,
     franchise: "Burger King",
     balance: "$800",
@@ -172,7 +171,7 @@ const ClientTable = ({ className }) => {
       sortable: true,
       cell: (row) => {
         const { pill, dot } =
-          STATUS_STYLES[row.status] ?? STATUS_STYLES.Inactive;
+          STATUS_STYLES[row.status] ?? STATUS_STYLES["On Hold"];
 
         return (
           <span
