@@ -91,7 +91,7 @@ const Support = () => {
 
   return (
     <article className="flex h-full min-h-0 flex-col">
-      <section className="border-b color-border py-4">
+      <section>
         <SupportHeading
           heading="Support Tickets"
           subheading="Monitor, track, and manage all incoming support requests for the franchise platform."
