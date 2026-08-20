@@ -2,7 +2,13 @@ import ChatHeader from "./ChatHeader";
 import MessageList from "./MessageList";
 import MessageWrite from "./MessageWrite";
 
-const ChatPanel = ({ conversation, messages, currentUserId, onSend }) => {
+const ChatPanel = ({
+  conversation,
+  messages,
+  currentUserId,
+  onSend,
+  onBack,
+}) => {
   if (!conversation) {
     return (
       <section className="flex h-full items-center justify-center">
@@ -16,7 +22,7 @@ const ChatPanel = ({ conversation, messages, currentUserId, onSend }) => {
     <section className="flex h-full min-h-0 flex-col">
       {/* Chat Header */}
       <header className="shrink-0">
-        <ChatHeader conversation={conversation} />
+        <ChatHeader conversation={conversation} onBack={onBack} />
       </header>
 
       {/* Messages */}
