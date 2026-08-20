@@ -1,18 +1,20 @@
+import { useNavigate } from "react-router-dom";
 import Dropdown from "./Dropdown";
 import Avatar from "./Avatar";
 import { ChevronDown, LogOut, UserRound } from "lucide-react";
 
 const UserMenu = ({ name }) => {
+  const navigate = useNavigate();
   const options = [
     {
       label: "Sign out",
-      icon: <LogOut />,
-      onClick: () => console.log("Sign out clicked"),
+      icon: <LogOut size={16} />,
+      onClick: () => navigate("/signin"),
     },
     {
       label: "My Profile",
-      icon: <UserRound />,
-      onClick: () => console.log("My Profile clicked"),
+      icon: <UserRound size={16} />,
+      onClick: () => navigate("/dashboard/settings"),
     },
   ];
   return (
