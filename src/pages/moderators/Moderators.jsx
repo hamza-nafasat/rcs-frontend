@@ -1,6 +1,7 @@
 import { useState } from "react";
 import ModeratorHeading from "./components/ModeratorHeading";
 import ModeratorTable from "./components/ModeratorTable";
+import ModeratorFilter from "./components/ModeratorFilter";
 
 const initialModerators = [
   {
@@ -68,9 +69,33 @@ const initialModerators = [
     joined: "Added 1 month ago",
   },
 ];
+const initialFilters = {
+  name: "",
+  role: [],
+  status: [],
+};
 
 const Moderators = () => {
   const [moderators, setModerators] = useState(initialModerators);
+  const [filters, setFilters] = useState(initialFilters);
+
+  // these lists will come from the backend later
+  const roles = [...new Set(moderators.map((mod) => mod.role))];
+  const statuses = [...new Set(moderators.map((mod) => mod.status))];
+
+  const filteredModerators = moderators.filter((mod) => {
+    const matchName = mod.name
+      .toLowerCase()
+      .includes(filters.name.trim().toLowerCase());
+
+    const matchRole =
+      filters.role.length === 0 || filters.role.includes(mod.role);
+
+    const matchStatus =
+      filters.status.length === 0 || filters.status.includes(mod.status);
+
+    return matchName && matchRole && matchStatus;
+  });
 
   const handleAddModerator = (formData) => {
     setModerators((prev) => [
@@ -95,8 +120,20 @@ const Moderators = () => {
         onAddModerator={handleAddModerator}
       />
 
+      <section className="mt-6">
+        <ModeratorFilter
+          filters={filters}
+          setFilters={setFilters}
+          roles={roles}
+          statuses={statuses}
+        />
+      </section>
+
       <section className="mt-6 min-h-0 flex-1">
-        <ModeratorTable moderators={moderators} setModerators={setModerators} />
+        <ModeratorTable
+          moderators={filteredModerators}
+          setModerators={setModerators}
+        />
       </section>
     </section>
   );

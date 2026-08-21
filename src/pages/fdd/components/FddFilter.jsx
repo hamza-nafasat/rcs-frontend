@@ -13,7 +13,27 @@ const FddFilter = ({ filters, setFilters, countries = [], brands = [] }) => {
   };
 
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-[35fr_35fr_15fr_15fr]">
+      {/* Document */}
+      <Input
+        label="Document"
+        name="document"
+        value={filters.document}
+        onChange={handleChange}
+        placeholder="Search by document"
+        icon={<Search size={16} />}
+      />
+
+      {/* State / Region */}
+      <Input
+        label="State / Region"
+        name="state"
+        value={filters.state}
+        onChange={handleChange}
+        placeholder="Search by state/region"
+        icon={<Search size={16} />}
+      />
+
       {/* Country */}
       <Select
         label="Country"
@@ -25,16 +45,6 @@ const FddFilter = ({ filters, setFilters, countries = [], brands = [] }) => {
         multiple
         searchable
         clearable
-      />
-
-      {/* State / Region */}
-      <Input
-        label="State / Region"
-        name="state"
-        value={filters.state}
-        onChange={handleChange}
-        placeholder="Search by state/region"
-        icon={<Search size={16} />}
       />
 
       {/* Restaurant Brand */}
@@ -49,17 +59,7 @@ const FddFilter = ({ filters, setFilters, countries = [], brands = [] }) => {
         searchable
         clearable
       />
-
-      {/* Document */}
-      <Input
-        label="Document"
-        name="document"
-        value={filters.document}
-        onChange={handleChange}
-        placeholder="Search by document"
-        icon={<Search size={16} />}
-      />
-    </div>
+    </section>
   );
 };
 

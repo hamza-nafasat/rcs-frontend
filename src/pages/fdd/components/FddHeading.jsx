@@ -24,9 +24,9 @@ const FddHeading = ({ heading, subheading, emoji, onAddModerator }) => {
         onClick={() => setIsModalOpen(true)}
         iconPosition="left"
         icon={<Plus size={18} />}
-        className="shrink-0 text-sm whitespace-nowrap px-3! py-2! sm:px-4! sm:py-2.5! sm:text-base w-full sm:w-auto"
+        className="shrink-0 px-3! py-2! sm:px-4! sm:py-2.5! sm:text-base w-full sm:w-auto"
       >
-        Add FDD Document
+        Add FDD
       </Button>
 
       {isModalOpen && (

@@ -85,32 +85,32 @@ const FDD = () => {
   });
 
   return (
-    <section className="flex h-full min-h-0 flex-col">
-      <div className="border-b color-border py-4">
+    <article className="flex h-full min-h-0 flex-col">
+      <section className="border-b color-border py-4">
         <FddHeading
           heading="FDD Document"
           subheading="Manage your Franchise Disclosure Documents versions."
         />
-      </div>
+      </section>
 
-      <div className="mt-6">
+      <section className="mt-6">
         <FddFilter
           filters={filters}
           setFilters={setFilters}
           countries={countries}
           brands={brands}
         />
-      </div>
+      </section>
 
-      <div className="mt-6 min-h-0 flex-1">
+      <section className="mt-6 min-h-0 flex-1">
         <FddTable
           documents={filteredDocuments}
           onReview={(row) => console.log("Review", row)}
           onESign={(row) => console.log("E-sign", row)}
           onDownload={(row) => console.log("Download", row)}
         />
-      </div>
-    </section>
+      </section>
+    </article>
   );
 };
 
