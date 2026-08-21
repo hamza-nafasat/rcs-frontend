@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   BarChart3,
@@ -29,7 +29,6 @@ const navItems = [
 const profileItems = [
   { label: "Notifications", to: "/dashboard/notifications", icon: Bell },
   { label: "Support", to: "/dashboard/support", icon: HelpCircle },
-  { label: "Settings", to: "/dashboard/settings", icon: Settings },
 ];
 
 const linkClass =
@@ -55,6 +54,7 @@ const SectionTitle = ({ children, isCollapsed }) => (
 );
 
 const Sidebar = ({ isOpen, onClose, user, isCollapsed, onToggleCollapse }) => {
+  const navigate = useNavigate();
   const hideOnCollapse = isCollapsed ? "lg:hidden" : "";
   return (
     <>
@@ -146,6 +146,7 @@ const Sidebar = ({ isOpen, onClose, user, isCollapsed, onToggleCollapse }) => {
         <div
           className="border-t px-3 py-4"
           style={{ borderColor: "var(--color-border)" }}
+          onClick={() => navigate("/dashboard/settings")}
         >
           <div
             className={`flex items-center gap-3 rounded-lg px-2 py-2 hover:bg-(--color-bg-primary) cursor-pointer ${
