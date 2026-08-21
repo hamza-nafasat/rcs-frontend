@@ -1,5 +1,5 @@
 import AuthBackground from "../../../assets/SVGs/AuthBackground.svg";
-import Logo from "../../../assets/SVGs/Logo.svg";
+import LogoCompany from "../../../assets/SVGs/LogoCompany.svg";
 import Badge from "../../../components/shared/Badge";
 import OrangeCircleIcon from "../../../assets/SVGs/svg-components/OrangeCircleIcon";
 import OrangeBarsIcon from "../../../assets/SVGs/svg-components/OrangeBarsIcon";
@@ -92,7 +92,7 @@ const AuthBrand = ({ type = "client" }) => {
       <div className="relative mx-auto flex min-h-screen w-full max-w-2xl flex-col px-12 py-16">
         {/* Top Content */}
         <div className="flex flex-col gap-6">
-          <img src={Logo} alt="Company logo" className="w-40" />
+          <img src={LogoCompany} alt="Company logo" className="w-40" />
 
           <Badge text={content.badge} className="self-start" />
 

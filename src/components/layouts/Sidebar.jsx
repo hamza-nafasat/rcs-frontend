@@ -10,7 +10,7 @@ import {
   X,
   ChevronLeft,
 } from "lucide-react";
-import Logo from "../../assets/SVGs/logo.svg";
+import LogoCompany from "../../assets/SVGs/LogoCompany.svg";
 import SidebarClosedLogo from "../../assets/SVGs/SidebarClosedLogo.svg";
 import Avatar from "../shared/Avatar";
 
@@ -94,7 +94,7 @@ const Sidebar = ({ isOpen, onClose, user, isCollapsed, onToggleCollapse }) => {
         >
           <div className="relative flex h-16 items-center">
             <img
-              src={Logo}
+              src={LogoCompany}
               alt="Logo"
               className={`h-30 transition-opacity duration-200 ${
                 isCollapsed
