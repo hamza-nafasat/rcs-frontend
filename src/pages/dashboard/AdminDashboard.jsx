@@ -238,16 +238,16 @@ const AdminDashboard = () => {
       </section>
 
       {/* Activity & Attention */}
-      <section className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <Card className="flex h-full flex-col">
+      <section className="grid grid-cols-1 items-start gap-4 lg:grid-cols-2">
+        <Card className="flex flex-col">
           <RecentActivity
             activities={activities}
-            maxItems={8}
+            maxItems={7}
             onAction={() => navigate("/dashboard/view-all-activity")}
           />
         </Card>
 
-        <Card className="flex h-full flex-col">
+        <Card className="flex flex-col">
           <ClientsNeedingAttention clients={clients} />
         </Card>
       </section>

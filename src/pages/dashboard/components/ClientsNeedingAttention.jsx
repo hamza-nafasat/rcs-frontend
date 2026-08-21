@@ -15,12 +15,10 @@ const ClientsNeedingAttention = ({
     expanded || !hasMore ? clients : clients.slice(0, initialCount);
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex flex-col">
       <h3 className="mb-5 text-base font-semibold text-gray-900">{title}</h3>
 
-      <div
-        className={`space-y-3 ${expanded ? "max-h-80 overflow-y-auto pr-1" : ""}`}
-      >
+      <div className="max-h-80 space-y-3 overflow-y-auto pr-1">
         {visibleClients.map((client, index) => (
           <div
             key={client.id ?? index}
@@ -59,7 +57,7 @@ const ClientsNeedingAttention = ({
 
       {/* View more */}
       {hasMore && (
-        <div className="mt-auto flex justify-center pt-3">
+        <div className="flex justify-center pt-3">
           <Button
             type="icon"
             className="text-sm font-medium text-orange-500"
