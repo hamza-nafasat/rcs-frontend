@@ -1,6 +1,6 @@
 import Card from "../../components/shared/Card";
 import RecentActivity from "../dashboard/components/RecentActivity";
-import { activities } from "../dashboard/activityData";
+import { activities } from "../dashboard/data/activityData";
 import ViewAllActivityHeading from "./components/ViewAllActivityHeading";
 
 const ViewAllActivity = () => {

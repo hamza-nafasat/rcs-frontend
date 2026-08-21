@@ -11,7 +11,7 @@ import BarChart from "./components/BarChart";
 import MultiLineChart from "./components/MultiLineChart";
 import RecentActivity from "./components/RecentActivity";
 import ClientsNeedingAttention from "./components/ClientsNeedingAttention";
-import { activities } from "./activityData";
+import { activities } from "./data/activityData";
 import { useNavigate } from "react-router-dom";
 
 const clients = [
