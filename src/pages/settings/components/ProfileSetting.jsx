@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Pencil } from "lucide-react";
+import { Camera, Pencil } from "lucide-react";
 import Avatar from "../../../components/shared/Avatar";
 import Input from "../../../components/shared/Input";
 import Button from "../../../components/shared/Button";
@@ -157,9 +157,9 @@ const ProfileSetting = ({ profile, onSave, onUpdatePassword }) => {
             {isEditing && (
               <label
                 title="Change Image"
-                className="absolute bottom-1 right-0 bg-dark text-primary px-1 py-1 rounded-full cursor-pointer text-xs"
+                className="absolute bottom-1 right-1 bg-white text-black rounded-full cursor-pointer text-xs p-1"
               >
-                <Pencil size={18} />
+                <Camera size={17} />
                 <Input
                   type="file"
                   onChange={fileChangeHandler}

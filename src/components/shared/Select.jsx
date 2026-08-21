@@ -78,7 +78,8 @@ const Select = ({
   }, [open]);
 
   // Emits an event-like object so callers can keep using `e.target.name/value`
-  const emit = (nextValue) => onChange?.({ target: { name, value: nextValue } });
+  const emit = (nextValue) =>
+    onChange?.({ target: { name, value: nextValue } });
 
   const handleSelect = (optionValue) => {
     if (multiple) {
@@ -104,12 +105,12 @@ const Select = ({
 
   const triggerText = !hasSelection
     ? placeholder
-    : multiple && selectedValues.length > 2
+    : multiple && selectedValues.length > 0
       ? `${selectedValues.length} selected`
       : selectedLabels.join(", ");
 
   return (
-    <section className="w-full" ref={containerRef}>
+    <section className="w-full min-w-40" ref={containerRef}>
       {label && (
         <label
           htmlFor={id ?? name}
