@@ -162,7 +162,10 @@ const Sidebar = ({ isOpen, onClose, user, isCollapsed, onToggleCollapse }) => {
         <div
           className="border-t px-3 py-4"
           style={{ borderColor: "var(--color-border)" }}
-          onClick={() => navigate("/dashboard/settings")}
+          onClick={() => {
+            navigate("/dashboard/settings");
+            onClose?.();
+          }}
         >
           <div
             className={`flex items-center gap-3 rounded-lg px-2 py-2 hover:bg-(--color-bg-primary) cursor-pointer ${
