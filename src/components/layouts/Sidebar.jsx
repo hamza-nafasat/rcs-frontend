@@ -10,7 +10,7 @@ import {
   X,
   ChevronLeft,
 } from "lucide-react";
-import Logo from "../../assets/SVGs/Logo.svg";
+import Logo from "../../assets/SVGs/logo.svg";
 import SidebarClosedLogo from "../../assets/SVGs/SidebarClosedLogo.svg";
 import Avatar from "../shared/Avatar";
 
