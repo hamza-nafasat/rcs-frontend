@@ -1,6 +1,6 @@
 import { useState } from "react";
 import SupportHeading from "./components/SupportHeading";
-import SupportSearch from "./components/SupportSearch";
+import SupportFilter from "./components/SupportFilter";
 import SupportTable from "./components/SupportTable";
 
 const initialTickets = [
@@ -76,9 +76,21 @@ const initialTickets = [
   },
 ];
 
+const initialFilters = {
+  priority: [],
+  status: [],
+  category: [],
+};
+
 const Support = () => {
   const [tickets, setTickets] = useState(initialTickets);
   const [search, setSearch] = useState("");
+  const [filters, setFilters] = useState(initialFilters);
+
+  // these lists will come from the backend later
+  const priorities = [...new Set(tickets.map((ticket) => ticket.priority))];
+  const statuses = [...new Set(tickets.map((ticket) => ticket.status))];
+  const categories = [...new Set(tickets.map((ticket) => ticket.category))];
 
   const handleStatusChange = (ticket, status) => {
     setTickets((rows) =>
@@ -93,10 +105,22 @@ const Support = () => {
   const filteredTickets = tickets.filter((ticket) => {
     const query = search.trim().toLowerCase();
 
-    return (
+    const matchSearch =
       ticket.ticketId.toLowerCase().includes(query) ||
-      ticket.subject.toLowerCase().includes(query)
-    );
+      ticket.subject.toLowerCase().includes(query);
+
+    const matchPriority =
+      filters.priority.length === 0 ||
+      filters.priority.includes(ticket.priority);
+
+    const matchStatus =
+      filters.status.length === 0 || filters.status.includes(ticket.status);
+
+    const matchCategory =
+      filters.category.length === 0 ||
+      filters.category.includes(ticket.category);
+
+    return matchSearch && matchPriority && matchStatus && matchCategory;
   });
 
   return (
@@ -109,7 +133,15 @@ const Support = () => {
       </section>
 
       <section className="mt-6">
-        <SupportSearch search={search} setSearch={setSearch} />
+        <SupportFilter
+          search={search}
+          setSearch={setSearch}
+          filters={filters}
+          setFilters={setFilters}
+          priorities={priorities}
+          statuses={statuses}
+          categories={categories}
+        />
       </section>
 
       <section className="mt-6 min-h-0 flex-1">
