@@ -1,6 +1,9 @@
 import Card from "../../components/shared/Card";
 import ClientManagementHeading from "./components/ClientManagementHeading";
 import ClientTable from "./components/ClientTable";
+import ClientFilter from "./components/ClientFilter";
+import { initialData } from "./components/clientsData";
+import { useState } from "react";
 
 const cardData = [
   {
@@ -25,13 +28,32 @@ const cardData = [
   },
 ];
 
+const initialFilters = {
+  restaurant: "",
+  owner: "",
+  status: [],
+};
+
 const ClientManagement = () => {
+  const [filters, setFilters] = useState(initialFilters);
+
+  // this list will come from the backend later
+  const statuses = [...new Set(initialData.map((client) => client.status))];
+
   return (
     <>
       <section className="">
         <ClientManagementHeading
           heading="Client Management"
           subheading="Manage your clients and their information"
+        />
+      </section>
+
+      <section className="mt-6">
+        <ClientFilter
+          filters={filters}
+          setFilters={setFilters}
+          statuses={statuses}
         />
       </section>
 
@@ -52,7 +74,7 @@ const ClientManagement = () => {
           </Card>
         ))}
       </section>
-      <ClientTable className="mt-5" />
+      <ClientTable className="mt-5" filters={filters} />
     </>
   );
 };

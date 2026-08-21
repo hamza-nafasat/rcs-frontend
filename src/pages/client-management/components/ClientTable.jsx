@@ -10,6 +10,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { useState } from "react";
+import { initialData } from "./clientsData";
 import ClientDetailsModal from "./ClientDetailsModal";
 import AddEditClientModal from "./AddEditClientModal";
 import Button from "../../../components/shared/Button";
@@ -30,219 +31,30 @@ const HEALTH_COLORS = [
 const getHealthColor = (score) =>
   HEALTH_COLORS.find(({ min }) => score >= min).color;
 
-const initialData = [
-  {
-    id: 1,
-    ownerName: "John Doe",
-    clientEmail: "john@example.com",
-    restaurantName: "The Harbor Kitchen",
-    restaurantCuisine: "Seafood",
-    status: "Active",
-    healthScore: 92,
-    franchise: "KFC",
-    balance: "$1,200",
-    nextMeeting: "2023-08-15",
-  },
-  {
-    id: 2,
-    ownerName: "Jane Smith",
-    clientEmail: "jane@example.com",
-    restaurantName: "Sunset Grill",
-    restaurantCuisine: "American",
-    status: "On Hold",
-    healthScore: 48,
-    franchise: "Burger King",
-    balance: "$800",
-    nextMeeting: "2023-08-20",
-  },
-  {
-    id: 3,
-    ownerName: "Marcus Williams",
-    clientEmail: "marcus@example.com",
-    restaurantName: "The Rustic Table",
-    restaurantCuisine: "Italian",
-    status: "At Risk",
-    healthScore: 55,
-    franchise: "Subway",
-    balance: "$2,400",
-    nextMeeting: "2023-08-18",
-  },
-  {
-    id: 4,
-    ownerName: "Priya Patel",
-    clientEmail: "priya@example.com",
-    restaurantName: "Spice Route",
-    restaurantCuisine: "Indian",
-    status: "Pending",
-    healthScore: 71,
-    franchise: "Domino's",
-    balance: "$540",
-    nextMeeting: "2023-08-22",
-  },
-  {
-    id: 5,
-    ownerName: "Ana Torres",
-    clientEmail: "ana@example.com",
-    restaurantName: "Coastal Bistro",
-    restaurantCuisine: "Mediterranean",
-    status: "Active",
-    healthScore: 84,
-    franchise: "KFC",
-    balance: "$1,800",
-    nextMeeting: "2023-08-25",
-  },
-  {
-    id: 4,
-    ownerName: "Priya Patel",
-    clientEmail: "priya@example.com",
-    restaurantName: "Spice Route",
-    restaurantCuisine: "Indian",
-    status: "Pending",
-    healthScore: 71,
-    franchise: "Domino's",
-    balance: "$540",
-    nextMeeting: "2023-08-22",
-  },
-  {
-    id: 5,
-    ownerName: "Ana Torres",
-    clientEmail: "ana@example.com",
-    restaurantName: "Coastal Bistro",
-    restaurantCuisine: "Mediterranean",
-    status: "Active",
-    healthScore: 84,
-    franchise: "KFC",
-    balance: "$1,800",
-    nextMeeting: "2023-08-25",
-  },
-  {
-    id: 4,
-    ownerName: "Priya Patel",
-    clientEmail: "priya@example.com",
-    restaurantName: "Spice Route",
-    restaurantCuisine: "Indian",
-    status: "Pending",
-    healthScore: 71,
-    franchise: "Domino's",
-    balance: "$540",
-    nextMeeting: "2023-08-22",
-  },
-  {
-    id: 5,
-    ownerName: "Ana Torres",
-    clientEmail: "ana@example.com",
-    restaurantName: "Coastal Bistro",
-    restaurantCuisine: "Mediterranean",
-    status: "Active",
-    healthScore: 84,
-    franchise: "KFC",
-    balance: "$1,800",
-    nextMeeting: "2023-08-25",
-  },
-  {
-    id: 4,
-    ownerName: "Priya Patel",
-    clientEmail: "priya@example.com",
-    restaurantName: "Spice Route",
-    restaurantCuisine: "Indian",
-    status: "Pending",
-    healthScore: 71,
-    franchise: "Domino's",
-    balance: "$540",
-    nextMeeting: "2023-08-22",
-  },
-  {
-    id: 5,
-    ownerName: "Ana Torres",
-    clientEmail: "ana@example.com",
-    restaurantName: "Coastal Bistro",
-    restaurantCuisine: "Mediterranean",
-    status: "Active",
-    healthScore: 84,
-    franchise: "KFC",
-    balance: "$1,800",
-    nextMeeting: "2023-08-25",
-  },
-  {
-    id: 4,
-    ownerName: "Priya Patel",
-    clientEmail: "priya@example.com",
-    restaurantName: "Spice Route",
-    restaurantCuisine: "Indian",
-    status: "Pending",
-    healthScore: 71,
-    franchise: "Domino's",
-    balance: "$540",
-    nextMeeting: "2023-08-22",
-  },
-  {
-    id: 5,
-    ownerName: "Ana Torres",
-    clientEmail: "ana@example.com",
-    restaurantName: "Coastal Bistro",
-    restaurantCuisine: "Mediterranean",
-    status: "Active",
-    healthScore: 84,
-    franchise: "KFC",
-    balance: "$1,800",
-    nextMeeting: "2023-08-25",
-  },
-  {
-    id: 4,
-    ownerName: "Priya Patel",
-    clientEmail: "priya@example.com",
-    restaurantName: "Spice Route",
-    restaurantCuisine: "Indian",
-    status: "Pending",
-    healthScore: 71,
-    franchise: "Domino's",
-    balance: "$540",
-    nextMeeting: "2023-08-22",
-  },
-  {
-    id: 5,
-    ownerName: "Ana Torres",
-    clientEmail: "ana@example.com",
-    restaurantName: "Coastal Bistro",
-    restaurantCuisine: "Mediterranean",
-    status: "Active",
-    healthScore: 84,
-    franchise: "KFC",
-    balance: "$1,800",
-    nextMeeting: "2023-08-25",
-  },
-  {
-    id: 4,
-    ownerName: "Priya Patel",
-    clientEmail: "priya@example.com",
-    restaurantName: "Spice Route",
-    restaurantCuisine: "Indian",
-    status: "Pending",
-    healthScore: 71,
-    franchise: "Domino's",
-    balance: "$540",
-    nextMeeting: "2023-08-22",
-  },
-  {
-    id: 5,
-    ownerName: "Ana Torres",
-    clientEmail: "ana@example.com",
-    restaurantName: "Coastal Bistro",
-    restaurantCuisine: "Mediterranean",
-    status: "Active",
-    healthScore: 84,
-    franchise: "KFC",
-    balance: "$1,800",
-    nextMeeting: "2023-08-25",
-  },
-];
 
-const ClientTable = ({ className }) => {
+const emptyFilters = { restaurant: "", owner: "", status: [] };
+
+const ClientTable = ({ className, filters = emptyFilters }) => {
   const [clients, setClients] = useState(initialData);
   const [selectedClient, setSelectedClient] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [viewClient, setViewClient] = useState(null);
   const [clientToDelete, setClientToDelete] = useState(null);
+
+  const filteredClients = clients.filter((client) => {
+    const matchRestaurant = client.restaurantName
+      .toLowerCase()
+      .includes(filters.restaurant.trim().toLowerCase());
+
+    const matchOwner = client.ownerName
+      .toLowerCase()
+      .includes(filters.owner.trim().toLowerCase());
+
+    const matchStatus =
+      filters.status.length === 0 || filters.status.includes(client.status);
+
+    return matchRestaurant && matchOwner && matchStatus;
+  });
 
   const handleViewClient = (client) => {
     setViewClient({
@@ -426,7 +238,7 @@ const ClientTable = ({ className }) => {
     <div className={className}>
       <DataTable
         columns={columns}
-        data={clients}
+        data={filteredClients}
         pagination
         highlightOnHover
         responsive
