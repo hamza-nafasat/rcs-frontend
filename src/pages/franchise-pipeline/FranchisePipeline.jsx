@@ -6,7 +6,10 @@ import TotalMembersIcon from "../../assets/SVGs/TotalMembersIcon.svg";
 import StatsCard from "./components/StatsCard";
 import PipelineStageOverview from "./components/PipelineStageOverview";
 import FranchisePipelineTable from "./components/FranchisePipelineTable";
+import { initialApplicants } from "./components/pipelineApplicants";
+import FranchisePipelineFilter from "./components/FranchisePipelineFilter";
 import { ArrowUpRight } from "lucide-react";
+import { useState } from "react";
 const cardData = [
   {
     icon: TotalUsersIcon,
@@ -39,7 +42,22 @@ const cardData = [
     label: "Avg Score",
   },
 ];
+const initialFilters = {
+  applicant: "",
+  franchise: "",
+  stage: [],
+  territory: [],
+};
+
 const FranchisePipeline = () => {
+  const [filters, setFilters] = useState(initialFilters);
+
+  // these lists will come from the backend later
+  const stages = [...new Set(initialApplicants.map((row) => row.stage))];
+  const territories = [
+    ...new Set(initialApplicants.map((row) => row.territory)),
+  ];
+
   return (
     <article className="flex flex-col gap-4">
       <FranchisePipelineHeading
@@ -53,11 +71,19 @@ const FranchisePipeline = () => {
         ))}
       </section>
 
+      {/* Filters */}
+      <FranchisePipelineFilter
+        filters={filters}
+        setFilters={setFilters}
+        stages={stages}
+        territories={territories}
+      />
+
       {/* Stage overview */}
       <PipelineStageOverview />
 
       {/* Applicants */}
-      <FranchisePipelineTable />
+      <FranchisePipelineTable filters={filters} />
     </article>
   );
 };

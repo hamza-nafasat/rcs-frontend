@@ -6,6 +6,7 @@ import DataTable from "react-data-table-component";
 import { useState } from "react";
 import ApplicantScorecardDrawer from "./scorecard/ApplicantScorecardDrawer";
 import { STAGE_COLORS } from "./scorecard/scorecardData";
+import { initialApplicants } from "./pipelineApplicants";
 
 const scoreColor = (score) => {
   if (score >= 75) return "#22c55e";
@@ -13,68 +14,6 @@ const scoreColor = (score) => {
   return "#dc2626";
 };
 
-const initialApplicants = [
-  {
-    id: "FR-001",
-    name: "Sarah Mitchell",
-    email: "sarah.mitchell@mail.com",
-    avatar: "",
-    franchise: "BrightSmile Dental",
-    territory: "Austin, TX",
-    stage: "Interview",
-    score: 82,
-    financial: "$250,000",
-    submitted: "12 Aug 2026",
-  },
-  {
-    id: "FR-002",
-    name: "David Chen",
-    email: "d.chen@mail.com",
-    avatar: "",
-    franchise: "UrbanFit Studios",
-    territory: "Denver, CO",
-    stage: "Screening",
-    score: 64,
-    financial: "$180,000",
-    submitted: "10 Aug 2026",
-  },
-  {
-    id: "FR-003",
-    name: "Priya Nair",
-    email: "priya.nair@mail.com",
-    avatar: "",
-    franchise: "GreenLeaf Cafe",
-    territory: "Seattle, WA",
-    stage: "Discovery Day",
-    score: 91,
-    financial: "$320,000",
-    submitted: "08 Aug 2026",
-  },
-  {
-    id: "FR-004",
-    name: "Marcus Reid",
-    email: "m.reid@mail.com",
-    avatar: "",
-    franchise: "QuickLube Auto",
-    territory: "Phoenix, AZ",
-    stage: "Applications",
-    score: 38,
-    financial: "$95,000",
-    submitted: "05 Aug 2026",
-  },
-  {
-    id: "FR-005",
-    name: "Elena Duarte",
-    email: "elena.duarte@mail.com",
-    avatar: "",
-    franchise: "BrightSmile Dental",
-    territory: "Miami, FL",
-    stage: "Approved",
-    score: 88,
-    financial: "$275,000",
-    submitted: "02 Aug 2026",
-  },
-];
 
 const columns = [
   {
@@ -171,9 +110,36 @@ const customStyles = {
   },
 };
 
-const FranchisePipelineTable = () => {
+const emptyFilters = {
+  applicant: "",
+  franchise: "",
+  stage: [],
+  territory: [],
+};
+
+const FranchisePipelineTable = ({ filters = emptyFilters }) => {
   const [applicants, setApplicants] = useState(initialApplicants);
   const [selected, setSelected] = useState(null);
+
+  const filteredApplicants = applicants.filter((row) => {
+    const applicantQuery = filters.applicant.trim().toLowerCase();
+    const matchApplicant =
+      row.name.toLowerCase().includes(applicantQuery) ||
+      row.id.toLowerCase().includes(applicantQuery);
+
+    const matchFranchise = row.franchise
+      .toLowerCase()
+      .includes(filters.franchise.trim().toLowerCase());
+
+    const matchStage =
+      filters.stage.length === 0 || filters.stage.includes(row.stage);
+
+    const matchTerritory =
+      filters.territory.length === 0 ||
+      filters.territory.includes(row.territory);
+
+    return matchApplicant && matchFranchise && matchStage && matchTerritory;
+  });
   const handleStageChange = (applicant, stage) => {
     setApplicants((rows) =>
       rows.map((row) => (row.id === applicant.id ? { ...row, stage } : row)),
@@ -191,7 +157,7 @@ const FranchisePipelineTable = () => {
       <section className="overflow-hidden rounded-xl border border-gray-200 bg-white">
         <DataTable
           columns={columns}
-          data={applicants}
+          data={filteredApplicants}
           customStyles={customStyles}
           pagination
           highlightOnHover
