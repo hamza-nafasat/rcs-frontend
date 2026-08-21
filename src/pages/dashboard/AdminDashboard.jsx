@@ -161,8 +161,8 @@ const AdminDashboard = () => {
       >
         <Card className="h-full lg:col-span-3 ">
           <DashboardHeading
-            heading="Revenue"
-            subheading="Compared with last month"
+            heading="Clients trend"
+            subheading="Monthly incoming clients over time"
           />
 
           <LineChart
@@ -173,8 +173,8 @@ const AdminDashboard = () => {
 
         <Card className="h-full lg:col-span-2">
           <DashboardHeading
-            heading="Client Overview"
-            subheading="Current client distribution"
+            heading="Leads per Client"
+            subheading="23 active Clients"
           />
 
           <DonutChart
@@ -209,8 +209,8 @@ const AdminDashboard = () => {
         <Card
           header={
             <DashboardHeading
-              heading="Revenue"
-              subheading="Compared with last month"
+              heading="Leads Comparison"
+              subheading="Comparison of leads"
             />
           }
         >
@@ -223,8 +223,8 @@ const AdminDashboard = () => {
         <Card
           header={
             <DashboardHeading
-              heading="Performance"
-              subheading="Clients vs leads"
+              heading="Leads approval vs Rejection"
+              subheading="6-month approval vs Rejection report"
             />
           }
         >
