@@ -77,8 +77,18 @@ const initialTickets = [
 ];
 
 const Support = () => {
-  const [tickets] = useState(initialTickets);
+  const [tickets, setTickets] = useState(initialTickets);
   const [search, setSearch] = useState("");
+
+  const handleStatusChange = (ticket, status) => {
+    setTickets((rows) =>
+      rows.map((row) => (row.id === ticket.id ? { ...row, status } : row)),
+    );
+  };
+
+  const handleDelete = (ticket) => {
+    setTickets((rows) => rows.filter((row) => row.id !== ticket.id));
+  };
 
   const filteredTickets = tickets.filter((ticket) => {
     const query = search.trim().toLowerCase();
@@ -103,7 +113,11 @@ const Support = () => {
       </section>
 
       <section className="mt-6 min-h-0 flex-1">
-        <SupportTable tickets={filteredTickets} />
+        <SupportTable
+          tickets={filteredTickets}
+          onStatusChange={handleStatusChange}
+          onDelete={handleDelete}
+        />
       </section>
     </article>
   );
