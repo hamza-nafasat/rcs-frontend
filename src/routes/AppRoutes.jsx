@@ -17,6 +17,7 @@ import Support from "../pages/support/Support";
 import Settings from "../pages/settings/Settings";
 import Notification from "../pages/notifications/Notification";
 import FranchisePipeline from "../pages/franchise-pipeline/FranchisePipeline";
+import ViewAllActivity from "../pages/view-all-activity/ViewAllActivity";
 
 const AppRoutes = () => {
   return (
@@ -42,6 +43,7 @@ const AppRoutes = () => {
           <Route path="settings" element={<Settings />} />
           <Route path="notifications" element={<Notification />} />
           <Route path="franchise-pipeline" element={<FranchisePipeline />} />
+          <Route path="view-all-activity" element={<ViewAllActivity />} />
         </Route>
         <Route path="*" element={<DashboardNotFound />} />
       </Routes>

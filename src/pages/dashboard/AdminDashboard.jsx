@@ -11,39 +11,8 @@ import BarChart from "./components/BarChart";
 import MultiLineChart from "./components/MultiLineChart";
 import RecentActivity from "./components/RecentActivity";
 import ClientsNeedingAttention from "./components/ClientsNeedingAttention";
-
-const activities = [
-  {
-    id: 1,
-    text: "Invoice INV-2026-088 paid by Coastal Bistro — $1,800",
-    time: "3 hours ago",
-  },
-  {
-    id: 2,
-    text: "Invoice INV-2026-088 paid by Coastal Bistro — $1,800",
-    time: "3 hours ago",
-  },
-  {
-    id: 3,
-    text: "Invoice INV-2026-088 paid by Coastal Bistro — $1,800",
-    time: "3 hours ago",
-  },
-  {
-    id: 4,
-    text: "Invoice INV-2026-088 paid by Coastal Bistro — $1,800",
-    time: "3 hours ago",
-  },
-  {
-    id: 4,
-    text: "Invoice INV-2026-088 paid by Coastal Bistro — $1,800",
-    time: "3 hours ago",
-  },
-  {
-    id: 4,
-    text: "Invoice INV-2026-088 paid by Coastal Bistro — $1,800",
-    time: "3 hours ago",
-  },
-];
+import { activities } from "./activityData";
+import { useNavigate } from "react-router-dom";
 
 const clients = [
   {
@@ -160,6 +129,8 @@ const cardData = [
 ];
 
 const AdminDashboard = () => {
+  const navigate = useNavigate();
+
   return (
     <article className="flex flex-col gap-4">
       {/* Page Heading */}
@@ -271,7 +242,8 @@ const AdminDashboard = () => {
         <Card className="flex h-full flex-col">
           <RecentActivity
             activities={activities}
-            onAction={() => console.log("View all")}
+            maxItems={8}
+            onAction={() => navigate("/dashboard/view-all-activity")}
           />
         </Card>
 
