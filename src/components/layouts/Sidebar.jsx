@@ -96,7 +96,7 @@ const Sidebar = ({ isOpen, onClose, user, isCollapsed, onToggleCollapse }) => {
             <img
               src={LogoCompany}
               alt="Logo"
-              className={`h-30 transition-opacity duration-200 ${
+              className={`h-12 transition-opacity duration-200 ${
                 isCollapsed
                   ? "lg:pointer-events-none lg:opacity-0"
                   : "opacity-100"
