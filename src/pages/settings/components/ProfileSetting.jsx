@@ -5,15 +5,16 @@ import Input from "../../../components/shared/Input";
 import Button from "../../../components/shared/Button";
 
 const DUMMY_PROFILE = {
-  fullName: "Marco Ricci",
+  firstName: "Marco",
+  lastName: "Ricci",
   email: "marco@goldenfork.com",
   phone: "+1 (555) 000-0000",
   role: { displayName: "Account Owner" },
   address: "123 Market Street",
-  country: "United States",
-  state: "TX",
   city: "Austin",
+  state: "TX",
   postalCode: "78701",
+  country: "United States",
   teamSize: 12,
   url: "",
   imagePreview: "",
@@ -118,11 +119,11 @@ const ProfileSetting = ({ profile, onSave, onUpdatePassword }) => {
   };
 
   return (
-    <div className=" rounded-2xl p-4  relative h-full flex flex-col">
-      <div className="shrink-0">
+    <article className=" rounded-xl bg-white relative h-full flex flex-col">
+      <section className="shrink-0 p-4">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-2xl font-bold">
-            {isEditing ? "Edit Profile" : ""}
+            {isEditing ? "Edit Profile" : "My Profile"}
           </h1>
 
           {!isEditing && (
@@ -144,17 +145,21 @@ const ProfileSetting = ({ profile, onSave, onUpdatePassword }) => {
             {formData.imagePreview ? (
               <img
                 src={formData.imagePreview}
-                className="w-24 h-24 md:w-28 md:h-28 rounded-full object-cover border-4 border-gray-50 shadow-sm"
+                className="w-24 h-24 md:w-28 md:h-28 rounded-full object-cover shadow-sm"
               />
             ) : (
-              <Avatar src={formData?.url} name={formData?.fullName} size={70} />
+              <Avatar
+                src={formData?.url}
+                name={formData?.firstName}
+                size={100}
+              />
             )}
             {isEditing && (
               <label
                 title="Change Image"
-                className="absolute bottom-0 right-0 btn-primary-gradient text-white px-2 py-1 rounded-full cursor-pointer text-xs"
+                className="absolute bottom-1 right-0 bg-dark text-primary px-1 py-1 rounded-full cursor-pointer text-xs"
               >
-                Edit
+                <Pencil size={18} />
                 <Input
                   type="file"
                   onChange={fileChangeHandler}
@@ -166,26 +171,28 @@ const ProfileSetting = ({ profile, onSave, onUpdatePassword }) => {
 
           {/* Info */}
           <div>
-            <h2 className="text-xl font-bold">{formData.fullName}</h2>
+            <h2 className="text-xl font-bold">{formData.firstName}</h2>
             <p className="text-gray-500">{formData.email}</p>
           </div>
         </div>
-      </div>
+      </section>
 
       <form
         onSubmit={onSubmit}
         className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border-gray-100 flex-1 overflow-y-auto"
       >
         {[
-          { label: "Full Name", name: "fullName", type: "text" },
+          { label: "First Name", name: "firstName", type: "text" },
+          { label: "Last Name", name: "lastName", type: "text" },
+
           { label: "Email", name: "email", type: "email" },
           { label: "Phone Number", name: "phone", type: "tel" },
-          {
-            label: "Role / Position",
-            name: "role",
-            type: "text",
-            value: formData.role?.displayName || formData.role?.name || "",
-          },
+          // {
+          //   label: "Role / Position",
+          //   name: "role",
+          //   type: "text",
+          //   value: formData.role?.displayName || formData.role?.name || "",
+          // },
         ].map((field, idx) => (
           <div key={idx} className="flex flex-col gap-1.5">
             <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">
@@ -214,10 +221,8 @@ const ProfileSetting = ({ profile, onSave, onUpdatePassword }) => {
 
         {/* Address */}
         <div className="md:col-span-2 flex flex-col gap-1.5">
-          <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-            Address <span className="text-red-500">*</span>
-          </label>
           <Input
+            label="Address"
             name="address"
             placeholder="Enter your address"
             value={formData.address}
@@ -235,73 +240,62 @@ const ProfileSetting = ({ profile, onSave, onUpdatePassword }) => {
 
         <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-              Country <span className="text-red-500">*</span>
-            </label>
             <Input
-              name="country"
-              placeholder="Country"
-              value={formData.country || ""}
-              onChange={onChange}
-              disabled={!isEditing}
-              className={`w-full px-4 py-3 rounded-xl border text-sm transition-all outline-none shadow-sm
-          ${
-            isEditing
-              ? "border-gray-200 focus:border-[#F97316] focus:ring-4 focus:ring-indigo-500/10 bg-white"
-              : "bg-gray-50/50 text-gray-500 border-gray-100 cursor-not-allowed"
-          }
-        `}
-            />
-          </div>
-
-          <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-              State <span className="text-red-500">*</span>
-            </label>
-            <Input
-              name="state"
-              placeholder="State"
-              value={formData.state || ""}
-              onChange={onChange}
-              disabled={!isEditing}
-              className={`
-          ${
-            isEditing
-              ? "border-gray-200 focus:border-[#F97316] focus:ring-4 focus:ring-indigo-500/10 bg-white"
-              : "bg-gray-50/50 text-gray-500 border-gray-100 cursor-not-allowed"
-          }
-        `}
-            />
-          </div>
-
-          <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-              City <span className="text-red-500">*</span>
-            </label>
-            <Input
+              label="City"
               name="city"
               placeholder="City"
               value={formData.city || ""}
               onChange={onChange}
               disabled={!isEditing}
               className={`w-full px-4 py-3 rounded-xl border text-sm transition-all outline-none shadow-sm
-          ${
-            isEditing
-              ? "border-gray-200 focus:border-[#F97316] focus:ring-4 focus:ring-indigo-500/10 bg-white"
-              : "bg-gray-50/50 text-gray-500 border-gray-100 cursor-not-allowed"
-          }
-        `}
+              ${
+                isEditing
+                  ? "border-gray-200 focus:border-[#F97316] focus:ring-4 focus:ring-indigo-500/10 bg-white"
+                  : "bg-gray-50/50 text-gray-500 border-gray-100 cursor-not-allowed"
+              }
+            `}
             />
           </div>
-
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-              Postal Code <span className="text-red-500">*</span>
-            </label>
             <Input
+              label="State"
+              name="state"
+              placeholder="State"
+              value={formData.state || ""}
+              onChange={onChange}
+              disabled={!isEditing}
+              className={`
+              ${
+                isEditing
+                  ? "border-gray-200 focus:border-[#F97316] focus:ring-4 focus:ring-indigo-500/10 bg-white"
+                  : "bg-gray-50/50 text-gray-500 border-gray-100 cursor-not-allowed"
+              }
+            `}
+            />
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <Input
+              label="Postal Code"
               name="postalCode"
               placeholder="Postal Code"
               value={formData.postalCode || ""}
+              onChange={onChange}
+              disabled={!isEditing}
+              className={`w-full px-4 py-3 rounded-xl border text-sm transition-all outline-none shadow-sm
+              ${
+                isEditing
+                  ? "border-gray-200 focus:border-[#F97316] focus:ring-4 focus:ring-indigo-500/10 bg-white"
+                  : "bg-gray-50/50 text-gray-500 border-gray-100 cursor-not-allowed"
+              }
+            `}
+            />
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <Input
+              label="Country"
+              name="country"
+              placeholder="Country"
+              value={formData.country || ""}
               onChange={onChange}
               disabled={!isEditing}
               className={`w-full px-4 py-3 rounded-xl border text-sm transition-all outline-none shadow-sm
@@ -344,7 +338,7 @@ const ProfileSetting = ({ profile, onSave, onUpdatePassword }) => {
         )}
       </form>
 
-      <section className="mt-6 rounded-xl border border-gray-100 bg-gray-50/30 p-4 md:p-5">
+      <section className="mt-6 p-4">
         <div className="mb-4">
           <h2 className="text-lg font-bold">Password Update</h2>
           <p className="mt-1 text-sm text-gray-500">
@@ -403,7 +397,7 @@ const ProfileSetting = ({ profile, onSave, onUpdatePassword }) => {
           </div>
         </form>
       </section>
-    </div>
+    </article>
   );
 };
 
