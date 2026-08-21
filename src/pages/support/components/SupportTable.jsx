@@ -1,17 +1,16 @@
 import DataTable from "react-data-table-component";
 
 const PRIORITY_STYLES = {
-  Urgent: { pill: "bg-red-50 text-red-700", dot: "bg-red-500" },
-  High: { pill: "bg-orange-50 text-orange-700", dot: "bg-orange-500" },
+  Urgent: { pill: "bg-amber-50 text-amber-700", dot: "bg-amber-500" },
   Medium: { pill: "bg-amber-50 text-amber-700", dot: "bg-amber-500" },
-  Low: { pill: "bg-gray-100 text-gray-600", dot: "bg-gray-400" },
+  Low: { pill: "bg-blue-50 text-blue-700", dot: "bg-blue-500" },
 };
 
 const STATUS_STYLES = {
   Open: { pill: "bg-blue-50 text-blue-700", dot: "bg-blue-500" },
   "In Progress": { pill: "bg-amber-50 text-amber-700", dot: "bg-amber-500" },
   Resolved: { pill: "bg-green-50 text-green-700", dot: "bg-green-500" },
-  Closed: { pill: "bg-gray-100 text-gray-600", dot: "bg-gray-400" },
+  Closed: { pill: "bg-red-50 text-red-700", dot: "bg-red-500" },
 };
 
 const tableStyles = {
@@ -108,13 +107,6 @@ const SupportTable = ({ tickets }) => {
       sortable: true,
       minWidth: "150px",
       cell: (row) => <p className="text-tablecell">{row.receivedOn}</p>,
-    },
-    {
-      name: "Last Updated",
-      selector: (row) => row.lastUpdated,
-      sortable: true,
-      minWidth: "150px",
-      cell: (row) => <p className="text-tablecell">{row.lastUpdated}</p>,
     },
   ];
 

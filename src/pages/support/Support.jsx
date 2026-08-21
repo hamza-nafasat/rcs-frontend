@@ -6,17 +6,17 @@ import SupportTable from "./components/SupportTable";
 const initialTickets = [
   {
     id: 1,
-    ticketId: "TKT-1001",
+    ticketId: "#TKT-1001",
     subject: "Unable to upload FDD document",
     category: "Documents",
-    priority: "High",
+    priority: "Urgent",
     status: "Open",
     receivedOn: "12 Aug 2026",
     lastUpdated: "14 Aug 2026",
   },
   {
     id: 2,
-    ticketId: "TKT-1002",
+    ticketId: "#TKT-1002",
     subject: "Franchisee login not working",
     category: "Account",
     priority: "Urgent",
@@ -26,7 +26,7 @@ const initialTickets = [
   },
   {
     id: 3,
-    ticketId: "TKT-1003",
+    ticketId: "#TKT-1003",
     subject: "Payment receipt not generated",
     category: "Billing",
     priority: "Medium",
@@ -36,7 +36,7 @@ const initialTickets = [
   },
   {
     id: 4,
-    ticketId: "TKT-1004",
+    ticketId: "#TKT-1004",
     subject: "Request to update restaurant brand name",
     category: "General",
     priority: "Low",
@@ -46,7 +46,7 @@ const initialTickets = [
   },
   {
     id: 5,
-    ticketId: "TKT-1005",
+    ticketId: "#TKT-1005",
     subject: "Request to update restaurant brand name",
     category: "General",
     priority: "Low",
@@ -56,7 +56,7 @@ const initialTickets = [
   },
   {
     id: 6,
-    ticketId: "TKT-1006",
+    ticketId: "#TKT-1006",
     subject: "Request to update restaurant brand name",
     category: "General",
     priority: "Low",
@@ -66,7 +66,7 @@ const initialTickets = [
   },
   {
     id: 7,
-    ticketId: "TKT-1003",
+    ticketId: "#TKT-1003",
     subject: "Payment receipt not generated",
     category: "Billing",
     priority: "Medium",
