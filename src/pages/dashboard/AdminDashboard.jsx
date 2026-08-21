@@ -6,7 +6,7 @@ import RevenueIcon from "../../assets/SVGs/RevenueIcon.svg";
 import TotalMembersIcon from "../../assets/SVGs/TotalMembersIcon.svg";
 import Card from "../../components/shared/Card";
 import LineChart from "./components/LineChart";
-import DonutChart from "./components/DonutChart";
+import LeadsPerClient from "./components/LeadsPerClient";
 import BarChart from "./components/BarChart";
 import MultiLineChart from "./components/MultiLineChart";
 import RecentActivity from "./components/RecentActivity";
@@ -97,6 +97,51 @@ const clients = [
   },
 ];
 
+const leadsPerClient = [
+  {
+    id: 1,
+    name: "Coastal Bistro",
+    owner: "Ahmed Sarfaz",
+    leads: 7,
+    status: "Active",
+  },
+  {
+    id: 2,
+    name: "Spice Route",
+    owner: "Priya Patel",
+    leads: 5,
+    status: "Needs Attention",
+  },
+  {
+    id: 3,
+    name: "The Rustic Table",
+    owner: "Marcus Williams",
+    leads: 4,
+    status: "Needs Attention",
+  },
+  {
+    id: 4,
+    name: "Urban Greens",
+    owner: "Sofia Chen",
+    leads: 3,
+    status: "Active",
+  },
+  {
+    id: 5,
+    name: "Golden Harvest",
+    owner: "James Liu",
+    leads: 4,
+    status: "Active",
+  },
+  {
+    id: 6,
+    name: "Harbour Grill",
+    owner: "Elena Rossi",
+    leads: 4,
+    status: "Needs Attention",
+  },
+];
+
 const cardData = [
   {
     icon: TotalUsersIcon,
@@ -159,7 +204,7 @@ const AdminDashboard = () => {
         className="fade-up grid grid-cols-1 items-stretch gap-4 lg:grid-cols-5"
         style={{ "--fade-delay": "360ms" }}
       >
-        <Card className="h-full lg:col-span-3 ">
+        <Card className="flex h-full flex-col lg:col-span-3">
           <DashboardHeading
             heading="Clients trend"
             subheading="Monthly incoming clients over time"
@@ -171,32 +216,11 @@ const AdminDashboard = () => {
           />
         </Card>
 
-        <Card className="h-full lg:col-span-2">
-          <DashboardHeading
-            heading="Leads per Client"
+        <Card className="flex h-full min-h-0 flex-col lg:col-span-2">
+          <LeadsPerClient
+            clients={leadsPerClient}
             subheading="23 active Clients"
-          />
-
-          <DonutChart
-            labels={[
-              "Clients",
-              "Leads",
-              "Pending",
-              "Active",
-              "Inactive",
-              "Completed",
-              "Cancelled",
-            ]}
-            data={[25, 20, 15, 12, 10, 10, 8]}
-            colors={[
-              "#6366F1",
-              "#22C55E",
-              "#EF4444",
-              "#F59E0B",
-              "#06B6D4",
-              "#8B5CF6",
-              "#F97316",
-            ]}
+            onViewAll={() => navigate("/dashboard/clients")}
           />
         </Card>
       </section>
@@ -207,6 +231,7 @@ const AdminDashboard = () => {
         style={{ "--fade-delay": "440ms" }}
       >
         <Card
+          className="flex flex-col"
           header={
             <DashboardHeading
               heading="Leads Comparison"
@@ -221,6 +246,7 @@ const AdminDashboard = () => {
         </Card>
 
         <Card
+          className="flex flex-col"
           header={
             <DashboardHeading
               heading="Leads approval vs Rejection"

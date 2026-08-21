@@ -35,6 +35,7 @@ const MultiLineChart = ({ labels, datasets }) => {
 
       options: {
         responsive: true,
+        maintainAspectRatio: false,
 
         plugins: {
           legend: {
@@ -55,7 +56,11 @@ const MultiLineChart = ({ labels, datasets }) => {
     };
   }, [labels, datasets]);
 
-  return <canvas ref={chartRef} />;
+  return (
+    <div className="min-h-56 w-full flex-1 sm:min-h-64 lg:min-h-72">
+      <canvas ref={chartRef} />
+    </div>
+  );
 };
 
 export default MultiLineChart;
