@@ -135,6 +135,7 @@ const AdminDashboard = () => {
     <article className="flex flex-col gap-4">
       {/* Page Heading */}
       <DashboardHeading
+        className="fade-up"
         emoji="👋"
         heading="Good morning, marrrram"
         subheading="Monday, August 3, 2026 · You had 0 leads yesterday and 8 messages awaiting response."
@@ -143,12 +144,21 @@ const AdminDashboard = () => {
       {/* Stats */}
       <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {cardData.map((card, index) => (
-          <StatsCard key={index} {...card} />
+          <div
+            key={index}
+            className="fade-up h-full"
+            style={{ "--fade-delay": `${80 + index * 70}ms` }}
+          >
+            <StatsCard {...card} />
+          </div>
         ))}
       </section>
 
       {/* Revenue & Clients */}
-      <section className="grid grid-cols-1 items-stretch gap-4 lg:grid-cols-5">
+      <section
+        className="fade-up grid grid-cols-1 items-stretch gap-4 lg:grid-cols-5"
+        style={{ "--fade-delay": "360ms" }}
+      >
         <Card className="h-full lg:col-span-3 ">
           <DashboardHeading
             heading="Revenue"
@@ -192,7 +202,10 @@ const AdminDashboard = () => {
       </section>
 
       {/* Bar & Multi Line */}
-      <section className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <section
+        className="fade-up grid grid-cols-1 gap-4 lg:grid-cols-2"
+        style={{ "--fade-delay": "440ms" }}
+      >
         <Card
           header={
             <DashboardHeading
@@ -238,7 +251,10 @@ const AdminDashboard = () => {
       </section>
 
       {/* Activity & Attention */}
-      <section className="grid grid-cols-1 items-start gap-4 lg:grid-cols-2">
+      <section
+        className="fade-up grid grid-cols-1 items-start gap-4 lg:grid-cols-2"
+        style={{ "--fade-delay": "520ms" }}
+      >
         <Card className="flex flex-col">
           <RecentActivity
             activities={activities}

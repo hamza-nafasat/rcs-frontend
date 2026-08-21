@@ -2,7 +2,7 @@ import { ArrowUpRight } from "lucide-react";
 
 const StatsCard = ({ icon, badge, value, label, comparison }) => {
   return (
-    <article className="rounded-2xl bg-white p-5 border color-border">
+    <article className="h-full rounded-2xl bg-white p-5 border color-border transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-md">
       {/* Top */}
       <section className="flex items-center justify-between">
         <div className="flex h-10 w-10 items-center justify-center">
