@@ -1,11 +1,5 @@
 import { Check, Trash2 } from "lucide-react";
-
-const TYPE_STYLES = {
-  document: "bg-blue-50 text-blue-600",
-  message: "bg-purple-50 text-purple-600",
-  support: "bg-amber-50 text-amber-600",
-  system: "bg-gray-100 text-gray-600",
-};
+import { TYPE_STYLES, getTypeIcon } from "../notificationTypes";
 
 const NotificationItem = ({ notification, onMarkRead, onDelete }) => {
   const { title, description, time, type, isRead } = notification;
@@ -22,7 +16,7 @@ const NotificationItem = ({ notification, onMarkRead, onDelete }) => {
           TYPE_STYLES[type] ?? TYPE_STYLES.system
         }`}
       >
-        {notification.icon}
+        {getTypeIcon(type)}
       </span>
 
       {/* Content */}
