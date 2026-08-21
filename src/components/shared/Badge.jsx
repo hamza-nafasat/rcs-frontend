@@ -1,7 +1,10 @@
 const Badge = ({ text, dotColor = "var(--color-primary)", className = "" }) => {
   return (
     <div
-      className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 bg-primary border-primary ${className}`}
+      className={`inline-flex items-center gap-2 rounded-full border px-3 py-1  ${className}`}
+      style={{
+        borderColor: dotColor,
+      }}
     >
       {dotColor && (
         <span
@@ -10,7 +13,9 @@ const Badge = ({ text, dotColor = "var(--color-primary)", className = "" }) => {
         />
       )}
 
-      <span className="primary text-xs">{text}</span>
+      <span style={{ color: dotColor }} className={` text-xs`}>
+        {text}
+      </span>
     </div>
   );
 };

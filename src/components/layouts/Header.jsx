@@ -30,7 +30,7 @@ const Header = ({ onMenuClick }) => {
         <NotificationBell />
 
         {/* User Menu */}
-        <UserMenu name="Faiza" />
+        <UserMenu name="Marco" />
       </div>
     </header>
   );

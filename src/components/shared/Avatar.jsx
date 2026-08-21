@@ -59,7 +59,7 @@ export default function Avatar({
           fontSize,
           backgroundColor: color,
         }}
-        className={`shrink-0 ${bgClass} text-white ${rounded} flex items-center justify-center font-semibold ${className}`}
+        className={`shrink-0 ${name == "Marco" ? "bg-orange-500" : bgClass} text-white ${rounded} flex items-center justify-center font-semibold ${className}`}
       >
         {initials || "?"}
       </div>

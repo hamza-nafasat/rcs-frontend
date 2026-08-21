@@ -120,7 +120,7 @@ const ModeratorTable = ({ moderators, setModerators }) => {
       width: "90px",
       right: true,
       cell: (row) => (
-        <div className="flex justify-end">
+        <div className="flex justify-end pr-6">
           <Dropdown
             align="right"
             portalClassName="max-w-12"

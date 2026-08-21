@@ -137,7 +137,7 @@ const AdminDashboard = () => {
       <DashboardHeading
         className="fade-up"
         emoji="👋"
-        heading="Good morning, marrrram"
+        heading="Good morning, Marco"
         subheading="Monday, August 3, 2026 · You had 0 leads yesterday and 8 messages awaiting response."
       />
 

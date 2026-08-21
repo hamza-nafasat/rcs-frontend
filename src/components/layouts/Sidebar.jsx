@@ -1,25 +1,26 @@
-import { NavLink, useNavigate } from "react-router-dom";
 import {
-  LayoutDashboard,
-  BarChart3,
-  MessageSquare,
   Award,
-  Settings,
   Bell,
-  HelpCircle,
-  X,
   ChevronLeft,
+  FileIcon,
+  HelpCircle,
+  LayoutDashboard,
+  MessageSquare,
+  Settings,
+  Users,
+  X,
 } from "lucide-react";
+import { NavLink, useNavigate } from "react-router-dom";
 import LogoCompany from "../../assets/SVGs/LogoCompany.svg";
 import SidebarClosedLogo from "../../assets/SVGs/SidebarClosedLogo.svg";
 import Avatar from "../shared/Avatar";
 
 const navItems = [
   { label: "Dashboard", to: "/dashboard", icon: LayoutDashboard },
-  { label: "Clients", to: "/dashboard/clients", icon: BarChart3 },
+  { label: "Clients", to: "/dashboard/clients", icon: Users },
   { label: "Messages", to: "/dashboard/messages", icon: MessageSquare },
   { label: "Moderators", to: "/dashboard/moderators", icon: Award },
-  { label: "FDD", to: "/dashboard/fdd", icon: Settings },
+  { label: "FDD", to: "/dashboard/fdd", icon: FileIcon },
   {
     label: "Franchise Pipeline",
     to: "/dashboard/franchise-pipeline",
@@ -40,7 +41,7 @@ const linkClass =
     } ${
       isActive
         ? "bg-primary text-primary"
-        : "text-secondary hover:bg-(--color-bg-primary)"
+        : "text-secondary hover:bg-(--color-bg-primary) hover:text-[#fefefe]!  "
     }`;
 
 const SectionTitle = ({ children, isCollapsed }) => (
@@ -160,8 +161,7 @@ const Sidebar = ({ isOpen, onClose, user, isCollapsed, onToggleCollapse }) => {
         </div>
 
         <div
-          className="border-t px-3 py-4"
-          style={{ borderColor: "var(--color-border)" }}
+          className="border-t border-gray-600 px-3 py-4"
           onClick={() => {
             navigate("/dashboard/settings");
             onClose?.();
@@ -172,13 +172,13 @@ const Sidebar = ({ isOpen, onClose, user, isCollapsed, onToggleCollapse }) => {
               isCollapsed ? "lg:justify-center lg:px-0" : ""
             }`}
           >
-            <Avatar name={user?.name || "Faiza"} size={34} />
+            <Avatar name={user?.name || "Marco"} size={34} />
             <div className={`min-w-0 flex-1 ${hideOnCollapse}`}>
               <p className="truncate text-sm font-medium text-white">
-                {user?.name || "Faiza"}
+                {user?.name || "Marco"}
               </p>
               <p className="truncate text-xs text-muted">
-                {user?.email || "faiza@example.com"}
+                {user?.email || "marco@example.com"}
               </p>
             </div>
           </div>

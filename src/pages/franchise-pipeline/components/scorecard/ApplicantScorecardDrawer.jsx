@@ -62,7 +62,7 @@ const ApplicantScorecardDrawer = ({
       />
 
       <aside
-        className={`relative flex h-full w-full max-w-105 flex-col overflow-y-auto bg-gray-50 shadow-xl ${isClosing ? "drawer-panel-closing" : "drawer-panel"}`}
+        className={`relative flex h-full w-full max-w-110 flex-col overflow-y-auto bg-gray-50 shadow-xl ${isClosing ? "drawer-panel-closing" : "drawer-panel"}`}
       >
         {/* Header */}
         <article className="sticky top-0 z-10 flex items-start justify-between gap-3 border-b border-gray-200 bg-white px-5 py-4">

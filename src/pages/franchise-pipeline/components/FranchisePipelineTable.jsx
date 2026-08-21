@@ -14,7 +14,6 @@ const scoreColor = (score) => {
   return "#dc2626";
 };
 
-
 const columns = [
   {
     name: "Applicant",
@@ -51,8 +50,13 @@ const columns = [
     name: "Stage",
     selector: (row) => row.stage,
     sortable: true,
+    width: "140px",
     cell: (row) => (
-      <Badge text={row.stage} dotColor={STAGE_COLORS[row.stage]} />
+      <Badge
+        text={row.stage}
+        dotColor={STAGE_COLORS[row.stage]}
+        className="text-white! w-full flex items-center justify-center"
+      />
     ),
   },
   {
