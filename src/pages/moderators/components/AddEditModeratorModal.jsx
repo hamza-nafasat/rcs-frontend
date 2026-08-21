@@ -2,12 +2,10 @@ import { useState } from "react";
 import { X } from "lucide-react";
 import Input from "../../../components/shared/Input";
 import Button from "../../../components/shared/Button";
+import Select from "../../../components/shared/Select";
 
 const ROLES = ["Moderator", "Account Owner"];
 const STATUSES = ["Active", "Inactive", "Pending"];
-
-const selectClass =
-  "h-10 w-full rounded-xl border border-[#E5E7EB] bg-white px-4 text-sm outline-none focus:border-primary";
 
 const AddEditModeratorModal = ({
   isOpen,
@@ -77,42 +75,26 @@ const AddEditModeratorModal = ({
             required
           />
 
-          <div className="w-full">
-            <label className="mb-2 block text-sm font-medium text-[#111111]">
-              Role *
-            </label>
-            <select
-              name="role"
-              value={formData.role}
-              onChange={handleChange}
-              className={selectClass}
-              required
-            >
-              {ROLES.map((role) => (
-                <option key={role} value={role}>
-                  {role}
-                </option>
-              ))}
-            </select>
-          </div>
+          <Select
+            label="Role *"
+            name="role"
+            value={formData.role}
+            onChange={handleChange}
+            options={ROLES}
+            placeholder="Select role"
+            labelClassName="mb-2"
+            required
+          />
 
-          <div className="w-full">
-            <label className="mb-2 block text-sm font-medium text-[#111111]">
-              Status
-            </label>
-            <select
-              name="status"
-              value={formData.status}
-              onChange={handleChange}
-              className={selectClass}
-            >
-              {STATUSES.map((status) => (
-                <option key={status} value={status}>
-                  {status}
-                </option>
-              ))}
-            </select>
-          </div>
+          <Select
+            label="Status"
+            name="status"
+            value={formData.status}
+            onChange={handleChange}
+            options={STATUSES}
+            placeholder="Select status"
+            labelClassName="mb-2"
+          />
 
           {/* Buttons */}
           <div className="flex  gap-3 pt-4">

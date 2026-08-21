@@ -1,9 +1,6 @@
 import { Search } from "lucide-react";
 import Input from "../../../components/shared/Input";
-
-const labelClass = "mb-1 block text-sm font-medium text-[#111111]";
-const selectClass =
-  "h-10 w-full rounded-xl border border-[#E5E7EB] bg-white px-4 text-sm outline-none focus:border-primary";
+import Select from "../../../components/shared/Select";
 
 const FddFilter = ({ filters, setFilters, countries = [], brands = [] }) => {
   const handleChange = (e) => {
@@ -18,25 +15,17 @@ const FddFilter = ({ filters, setFilters, countries = [], brands = [] }) => {
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {/* Country */}
-      <section className="w-full">
-        <label htmlFor="country" className={labelClass}>
-          Country
-        </label>
-        <select
-          id="country"
-          name="country"
-          value={filters.country}
-          onChange={handleChange}
-          className={selectClass}
-        >
-          <option value="all">All Countries</option>
-          {countries.map((country) => (
-            <option key={country} value={country}>
-              {country}
-            </option>
-          ))}
-        </select>
-      </section>
+      <Select
+        label="Country"
+        name="country"
+        value={filters.country}
+        onChange={handleChange}
+        options={countries}
+        placeholder="All Countries"
+        multiple
+        searchable
+        clearable
+      />
 
       {/* State / Region */}
       <Input
@@ -49,25 +38,17 @@ const FddFilter = ({ filters, setFilters, countries = [], brands = [] }) => {
       />
 
       {/* Restaurant Brand */}
-      <section className="w-full">
-        <label htmlFor="brand" className={labelClass}>
-          Restaurant Brand
-        </label>
-        <select
-          id="brand"
-          name="brand"
-          value={filters.brand}
-          onChange={handleChange}
-          className={selectClass}
-        >
-          <option value="all">All Restaurants</option>
-          {brands.map((brand) => (
-            <option key={brand} value={brand}>
-              {brand}
-            </option>
-          ))}
-        </select>
-      </section>
+      <Select
+        label="Restaurant Brand"
+        name="brand"
+        value={filters.brand}
+        onChange={handleChange}
+        options={brands}
+        placeholder="All Restaurants"
+        multiple
+        searchable
+        clearable
+      />
 
       {/* Document */}
       <Input

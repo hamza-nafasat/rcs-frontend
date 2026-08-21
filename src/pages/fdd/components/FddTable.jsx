@@ -51,7 +51,8 @@ const FddTable = ({ documents, onReview, onESign, onDownload }) => {
     },
     {
       name: "Restaurant Brand",
-      selector: (row) => row.brand,
+      selector: (row) =>
+        Array.isArray(row.brand) ? row.brand.join(", ") : row.brand,
       sortable: true,
       minWidth: "160px",
       grow: 1,

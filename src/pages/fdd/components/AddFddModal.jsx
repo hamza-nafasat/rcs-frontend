@@ -8,7 +8,7 @@ import Button from "../../../components/shared/Button";
 const INITIAL_FORM = {
   title: "",
   version: "",
-  brand: "",
+  brands: [],
   country: "",
   state: "",
 };
@@ -35,6 +35,9 @@ const AddFddModal = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (formData.brands.length === 0) return;
+
     onSubmit({ ...formData, file });
   };
 
@@ -95,11 +98,14 @@ const AddFddModal = ({
           <section>
             <Select
               label="Restaurant Brands *"
-              name="brand"
-              value={formData.brand}
+              name="brands"
+              value={formData.brands}
               onChange={handleChange}
               placeholder="Select restaurant brands"
               options={brands}
+              multiple
+              searchable
+              clearable
               required
             />
           </section>

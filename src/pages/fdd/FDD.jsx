@@ -52,9 +52,9 @@ const initialDocuments = [
 ];
 
 const initialFilters = {
-  country: "all",
+  country: [],
   state: "",
-  brand: "all",
+  brand: [],
   document: "",
 };
 
@@ -68,9 +68,10 @@ const FDD = () => {
 
   const filteredDocuments = documents.filter((doc) => {
     const matchCountry =
-      filters.country === "all" || doc.country === filters.country;
+      filters.country.length === 0 || filters.country.includes(doc.country);
 
-    const matchBrand = filters.brand === "all" || doc.brand === filters.brand;
+    const matchBrand =
+      filters.brand.length === 0 || filters.brand.includes(doc.brand);
 
     const matchState = doc.state
       .toLowerCase()
