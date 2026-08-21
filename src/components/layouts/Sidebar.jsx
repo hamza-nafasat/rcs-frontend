@@ -11,6 +11,7 @@ import {
   ChevronLeft,
 } from "lucide-react";
 import Logo from "../../assets/SVGs/Logo.svg";
+import SidebarClosedLogo from "../../assets/SVGs/SidebarClosedLogo.svg";
 import Avatar from "../shared/Avatar";
 
 const navItems = [
@@ -91,11 +92,26 @@ const Sidebar = ({ isOpen, onClose, user, isCollapsed, onToggleCollapse }) => {
             isCollapsed ? "lg:justify-center lg:px-0" : "justify-between"
           }`}
         >
-          <img
-            src={Logo}
-            alt="Logo"
-            className={`h-30 ${isCollapsed ? "lg:hidden" : ""}`}
-          />
+          <div className="relative flex h-16 items-center">
+            <img
+              src={Logo}
+              alt="Logo"
+              className={`h-30 transition-opacity duration-200 ${
+                isCollapsed
+                  ? "lg:pointer-events-none lg:opacity-0"
+                  : "opacity-100"
+              }`}
+            />
+            <img
+              src={SidebarClosedLogo}
+              alt="Logo"
+              className={`absolute left-1/2 top-1/2 h-8 -translate-x-1/2 -translate-y-1/2 transition-opacity duration-200 ${
+                isCollapsed
+                  ? "opacity-0 lg:opacity-100"
+                  : "pointer-events-none opacity-0"
+              }`}
+            />
+          </div>
           <button
             type="button"
             onClick={onClose}
