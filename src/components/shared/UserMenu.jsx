@@ -3,8 +3,10 @@ import Dropdown from "./Dropdown";
 import Avatar from "./Avatar";
 import { ChevronDown, LogOut, UserRound } from "lucide-react";
 
-const UserMenu = ({ name }) => {
+const UserMenu = ({ name, type = "admin" }) => {
   const navigate = useNavigate();
+  const profilePath =
+    type === "client" ? "/client/dashboard" : "/admin/dashboard/settings";
   const options = [
     {
       label: "Sign out",
@@ -14,7 +16,7 @@ const UserMenu = ({ name }) => {
     {
       label: "My Profile",
       icon: <UserRound size={16} />,
-      onClick: () => navigate("/dashboard/settings"),
+      onClick: () => navigate(profilePath),
     },
   ];
   return (

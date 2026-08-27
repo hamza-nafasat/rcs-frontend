@@ -220,7 +220,7 @@ const AdminDashboard = () => {
           <LeadsPerClient
             clients={leadsPerClient}
             subheading="23 active Clients"
-            onViewAll={() => navigate("/dashboard/clients")}
+            onViewAll={() => navigate("/admin/dashboard/clients")}
           />
         </Card>
       </section>
@@ -285,7 +285,7 @@ const AdminDashboard = () => {
           <RecentActivity
             activities={activities}
             maxItems={7}
-            onAction={() => navigate("/dashboard/view-all-activity")}
+            onAction={() => navigate("/admin/dashboard/view-all-activity")}
           />
         </Card>
 

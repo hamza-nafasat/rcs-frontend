@@ -10,15 +10,19 @@ import {
 
 const RECENT_LIMIT = 5;
 
-const NotificationBell = () => {
+const NotificationBell = ({ type = "admin" }) => {
   const navigate = useNavigate();
   const { notifications, unreadCount, markRead } = useNotifications();
+  const notificationsPath =
+    type === "client"
+      ? "/client/dashboard/notifications"
+      : "/admin/dashboard/notifications";
 
   const recent = notifications.slice(0, RECENT_LIMIT);
 
   const handleSelect = (notification) => {
     markRead(notification.id);
-    navigate("/dashboard/notifications");
+    navigate(notificationsPath);
   };
 
   return (
@@ -100,7 +104,7 @@ const NotificationBell = () => {
       <div className="border-t color-border p-2">
         <Button
           type="icon"
-          onClick={() => navigate("/dashboard/notifications")}
+          onClick={() => navigate(notificationsPath)}
           className="w-full rounded-lg py-2 text-center text-sm font-medium text-(--color-primary) hover:bg-gray-50"
         >
           View all notifications

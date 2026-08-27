@@ -4,7 +4,7 @@ import Breadcrumb from "../shared/Breadcrumb";
 import Button from "../shared/Button";
 import NotificationBell from "../shared/NotificationBell";
 
-const Header = ({ onMenuClick }) => {
+const Header = ({ onMenuClick, type = "admin" }) => {
   return (
     <header
       className="sticky top-0 z-20 flex h-16 items-center gap-4 border-b bg-white px-4 lg:px-6"
@@ -27,10 +27,10 @@ const Header = ({ onMenuClick }) => {
 
       <div className="ml-auto flex items-center gap-3">
         {/* Notifications */}
-        <NotificationBell />
+        <NotificationBell type={type} />
 
         {/* User Menu */}
-        <UserMenu name="Marco" />
+        <UserMenu name="Marco" type={type} />
       </div>
     </header>
   );

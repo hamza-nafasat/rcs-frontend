@@ -4,7 +4,7 @@ import Header from "./Header";
 import Sidebar from "./Sidebar";
 import { NotificationsProvider } from "../../context/NotificationsContext";
 
-const Dashboard = ({ children, title }) => {
+const Dashboard = ({ children, title, type = "admin" }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -16,10 +16,15 @@ const Dashboard = ({ children, title }) => {
           onClose={() => setIsSidebarOpen(false)}
           isCollapsed={isCollapsed}
           onToggleCollapse={() => setIsCollapsed((v) => !v)}
+          type={type}
         />
 
         <div className="flex min-w-0 min-h-0 flex-1 flex-col">
-          <Header title={title} onMenuClick={() => setIsSidebarOpen(true)} />
+          <Header
+            title={title}
+            onMenuClick={() => setIsSidebarOpen(true)}
+            type={type}
+          />
 
           <main className="min-h-0 flex-1 overflow-y-auto p-4 lg:p-6">
             {children ?? <Outlet />}

@@ -60,7 +60,7 @@ const CreateAccountForm = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    navigate("/dashboard");
+    navigate("/client/dashboard");
   };
 
   return (

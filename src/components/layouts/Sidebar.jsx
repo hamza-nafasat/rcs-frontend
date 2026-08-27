@@ -15,22 +15,36 @@ import LogoCompany from "../../assets/SVGs/LogoCompany.svg";
 import SidebarClosedLogo from "../../assets/SVGs/SidebarClosedLogo.svg";
 import Avatar from "../shared/Avatar";
 
-const navItems = [
-  { label: "Dashboard", to: "/dashboard", icon: LayoutDashboard },
-  { label: "Clients", to: "/dashboard/clients", icon: Users },
-  { label: "Messages", to: "/dashboard/messages", icon: MessageSquare },
-  { label: "Moderators", to: "/dashboard/moderators", icon: Award },
-  { label: "FDD", to: "/dashboard/fdd", icon: FileIcon },
+const adminNavItems = [
+  { label: "Dashboard", to: "/admin/dashboard", icon: LayoutDashboard },
+  { label: "Clients", to: "/admin/dashboard/clients", icon: Users },
+  { label: "Messages", to: "/admin/dashboard/messages", icon: MessageSquare },
+  { label: "Moderators", to: "/admin/dashboard/moderators", icon: Award },
+  { label: "FDD", to: "/admin/dashboard/fdd", icon: FileIcon },
   {
     label: "Franchise Pipeline",
-    to: "/dashboard/franchise-pipeline",
+    to: "/admin/dashboard/franchise-pipeline",
     icon: Settings,
   },
 ];
 
-const profileItems = [
-  { label: "Notifications", to: "/dashboard/notifications", icon: Bell },
-  { label: "Support", to: "/dashboard/support", icon: HelpCircle },
+const adminProfileItems = [
+  { label: "Notifications", to: "/admin/dashboard/notifications", icon: Bell },
+  { label: "Support", to: "/admin/dashboard/support", icon: HelpCircle },
+];
+
+const clientNavItems = [
+  { label: "Overview", to: "/client/dashboard", icon: LayoutDashboard },
+  { label: "Pipeline", to: "/client/dashboard/pipeline", icon: Award },
+  { label: "Reports", to: "/client/dashboard/reports", icon: FileIcon },
+  { label: "Messages", to: "/client/dashboard/messages", icon: MessageSquare },
+  { label: "Moderators", to: "/client/dashboard/moderators", icon: Award },
+  { label: "FDD", to: "/client/dashboard/fdd", icon: FileIcon },
+];
+
+const clientProfileItems = [
+  { label: "Notifications", to: "/client/dashboard/notifications", icon: Bell },
+  { label: "Support", to: "/client/dashboard/support", icon: HelpCircle },
 ];
 
 const linkClass =
@@ -55,9 +69,16 @@ const SectionTitle = ({ children, isCollapsed }) => (
   </p>
 );
 
-const Sidebar = ({ isOpen, onClose, user, isCollapsed, onToggleCollapse }) => {
+const Sidebar = ({ isOpen, onClose, user, isCollapsed, onToggleCollapse, type = "admin" }) => {
   const navigate = useNavigate();
   const hideOnCollapse = isCollapsed ? "lg:hidden" : "";
+  const isClient = type === "client";
+  const menuItems = isClient ? clientNavItems : adminNavItems;
+  const profileLinks = isClient ? clientProfileItems : adminProfileItems;
+  const homePath = isClient ? "/client/dashboard" : "/admin/dashboard";
+  const settingsPath = isClient
+    ? "/client/dashboard"
+    : "/admin/dashboard/settings";
   return (
     <>
       <div
@@ -126,11 +147,11 @@ const Sidebar = ({ isOpen, onClose, user, isCollapsed, onToggleCollapse }) => {
         <nav className="min-h-0 flex-1 overflow-y-auto px-3 py-4">
           <SectionTitle isCollapsed={isCollapsed}>Menu</SectionTitle>
           <div className="space-y-1">
-            {navItems.map(({ label, to, icon: Icon }) => (
+            {menuItems.map(({ label, to, icon: Icon }) => (
               <NavLink
                 key={label}
                 to={to}
-                end={to === "/dashboard"}
+                end={to === homePath}
                 onClick={onClose}
                 className={linkClass(isCollapsed)}
                 title={isCollapsed ? label : undefined}
@@ -145,7 +166,7 @@ const Sidebar = ({ isOpen, onClose, user, isCollapsed, onToggleCollapse }) => {
         <div className="px-3 pb-4">
           <SectionTitle isCollapsed={isCollapsed}>Profile</SectionTitle>
           <div className="space-y-1">
-            {profileItems.map(({ label, to, icon: Icon }) => (
+            {profileLinks.map(({ label, to, icon: Icon }) => (
               <NavLink
                 key={label}
                 to={to}
@@ -163,7 +184,7 @@ const Sidebar = ({ isOpen, onClose, user, isCollapsed, onToggleCollapse }) => {
         <div
           className="border-t border-gray-600 px-3 py-4"
           onClick={() => {
-            navigate("/dashboard/settings");
+            navigate(settingsPath);
             onClose?.();
           }}
         >
