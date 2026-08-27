@@ -11,6 +11,8 @@ const Input = ({
   isEyeButton = false,
   showConfirm = false,
   setShowConfirm,
+  hint,
+  hintClassName = "",
   ...rest
 }) => {
   return (
@@ -52,6 +54,10 @@ const Input = ({
           </button>
         )}
       </div>
+
+      {hint && (
+        <p className={`mt-1 text-xs text-muted ${hintClassName}`}>{hint}</p>
+      )}
     </section>
   );
 };

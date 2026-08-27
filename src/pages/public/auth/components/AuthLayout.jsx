@@ -7,7 +7,7 @@ const AuthLayout = ({ children, type = "admin" }) => {
         <AuthBrand type={type} />
       </section>
 
-      <main className="flex w-full items-center justify-center lg:w-1/2">
+      <main className="h-screen w-full overflow-y-auto lg:w-1/2">
         {children}
       </main>
     </div>

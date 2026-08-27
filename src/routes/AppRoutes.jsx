@@ -18,6 +18,7 @@ import Settings from "../pages/admin/settings/Settings";
 import Notification from "../pages/admin/notifications/Notification";
 import FranchisePipeline from "../pages/admin/franchise-pipeline/FranchisePipeline";
 import ViewAllActivity from "../pages/admin/view-all-activity/ViewAllActivity";
+import CreateAccount from "../pages/public/auth/CreateAccount";
 
 const AppRoutes = () => {
   return (
@@ -32,6 +33,7 @@ const AppRoutes = () => {
           path="/reset-password-success"
           element={<ResetPasswordSuccess />}
         />
+        <Route path="/create-account" element={<CreateAccount />} />
 
         <Route path="/dashboard" element={<Dashboard />}>
           <Route index element={<AdminDashboard />} />
