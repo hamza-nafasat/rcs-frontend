@@ -1,7 +1,7 @@
 import AuthHeading from "./components/AuthHeading";
 import AuthLayout from "./components/AuthLayout";
-import SuccessfulIcon from "../../assets/SVGs/SuccessfulIcon.svg";
-import Button from "../../components/shared/Button";
+import SuccessfulIcon from "../../../assets/SVGs/SuccessfulIcon.svg";
+import Button from "../../../components/shared/Button";
 import { useNavigate } from "react-router-dom";
 
 const ResetPasswordSuccess = () => {

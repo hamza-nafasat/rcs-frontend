@@ -1,9 +1,9 @@
-import Button from "../../components/shared/Button";
+import Button from "../../../components/shared/Button";
 import AuthHeading from "./components/AuthHeading";
 import AuthLayout from "./components/AuthLayout";
 import { Link } from "react-router-dom";
 import BackLink from "./components/BackLink";
-import CheckEmailIcon from "../../assets/SVGs/CheckEmailIcon.svg";
+import CheckEmailIcon from "../../../assets/SVGs/CheckEmailIcon.svg";
 
 const user = {
   email: "anna@rcs.com",
@@ -23,7 +23,7 @@ const CheckEmail = () => {
                 <>
                   We've sent a password reset link to{" "}
                   <span className="font-medium text-tertiary">
-                    {user?.email} email@
+                    {user?.email}
                   </span>
                   . Click the link in the email to reset your password.
                 </>
@@ -41,7 +41,7 @@ const CheckEmail = () => {
           <section className="mt-6 text-center text-sm text-gray-500">
             Didn't receive the email?{" "}
             <Link
-              //   to="/resend-email"
+              to="/forget-password"
               className="font-medium text-primary hover:text-primary/10"
             >
               Resend

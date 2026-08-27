@@ -1,10 +1,10 @@
-import AuthBackground from "../../../assets/SVGs/AuthBackground.svg";
-import LogoCompany from "../../../assets/SVGs/LogoCompany.svg";
-import Badge from "../../../components/shared/Badge";
-import OrangeCircleIcon from "../../../assets/SVGs/svg-components/OrangeCircleIcon";
-import OrangeBarsIcon from "../../../assets/SVGs/svg-components/OrangeBarsIcon";
-import OrangeBriefcaseIcon from "../../../assets/SVGs/svg-components/OrangeBriefcaseIcon";
-import OrangeDocumentIcon from "../../../assets/SVGs/svg-components/OrangeDocumentIcon";
+import AuthBackground from "../../../../assets/SVGs/AuthBackground.svg";
+import LogoCompany from "../../../../assets/SVGs/LogoCompany.svg";
+import Badge from "../../../../components/shared/Badge";
+import OrangeCircleIcon from "../../../../assets/SVGs/svg-components/OrangeCircleIcon";
+import OrangeBarsIcon from "../../../../assets/SVGs/svg-components/OrangeBarsIcon";
+import OrangeBriefcaseIcon from "../../../../assets/SVGs/svg-components/OrangeBriefcaseIcon";
+import OrangeDocumentIcon from "../../../../assets/SVGs/svg-components/OrangeDocumentIcon";
 
 const authContent = {
   client: {
@@ -77,7 +77,7 @@ const authContent = {
 };
 
 const AuthBrand = ({ type = "client" }) => {
-  const content = authContent[type];
+  const content = authContent[type] ?? authContent.client;
 
   return (
     <section className="relative min-h-screen w-full overflow-hidden">

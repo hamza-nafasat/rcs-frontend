@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import LessIcon from "../../../assets/SVGs/LessIcon.svg";
+import LessIcon from "../../../../assets/SVGs/LessIcon.svg";
 
 export default function BackLink({
   text = "",

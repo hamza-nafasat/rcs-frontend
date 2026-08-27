@@ -1,9 +1,9 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import SignIn from "../pages/auth/SignIn";
-import ForgetPassword from "../pages/auth/ForgetPassword";
-import CheckEmail from "../pages/auth/CheckEmail";
-import ResetPassword from "../pages/auth/ResetPassword";
+import SignIn from "../pages/public/auth/SignIn";
+import ForgetPassword from "../pages/public/auth/ForgetPassword";
+import CheckEmail from "../pages/public/auth/CheckEmail";
+import ResetPassword from "../pages/public/auth/ResetPassword";
 import Dashboard from "../components/layouts/Dashboard";
 import DashboardNotFound from "../components/layouts/DashboardNotFound";
 import AdminDashboard from "../pages/dashboard/AdminDashboard";
@@ -12,7 +12,7 @@ import ClientManagement from "../pages/client-management/ClientManagement";
 import Messages from "../pages/messages/Messages";
 import Moderators from "../pages/moderators/Moderators";
 import FDD from "../pages/fdd/FDD";
-import ResetPasswordSuccess from "../pages/auth/ResetPasswordSuccess";
+import ResetPasswordSuccess from "../pages/public/auth/ResetPasswordSuccess";
 import Support from "../pages/support/Support";
 import Settings from "../pages/settings/Settings";
 import Notification from "../pages/notifications/Notification";

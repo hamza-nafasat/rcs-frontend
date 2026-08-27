@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Button from "../../components/shared/Button";
-import Input from "../../components/shared/Input";
+import Button from "../../../components/shared/Button";
+import Input from "../../../components/shared/Input";
 import AuthHeading from "./components/AuthHeading";
 import AuthLayout from "./components/AuthLayout";
 import { useNavigate } from "react-router-dom";
@@ -16,12 +16,15 @@ const ResetPassword = () => {
   });
 
   const handleInputChange = (e) => {
-    e.preventDefault();
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
     navigate("/reset-password-success");
   };
 
@@ -35,7 +38,7 @@ const ResetPassword = () => {
             subheading="Your new password must be different from your previous password"
           />
           {/* Form */}
-          <form className="flex flex-col gap-5" onSubmit={handleInputChange}>
+          <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
             <Input
               label="New Password"
               type={showForNewPassword ? "text" : "password"}
