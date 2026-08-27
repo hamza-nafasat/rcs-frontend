@@ -6,18 +6,18 @@ import CheckEmail from "../pages/public/auth/CheckEmail";
 import ResetPassword from "../pages/public/auth/ResetPassword";
 import Dashboard from "../components/layouts/Dashboard";
 import DashboardNotFound from "../components/layouts/DashboardNotFound";
-import AdminDashboard from "../pages/dashboard/AdminDashboard";
+import AdminDashboard from "../pages/admin/dashboard/AdminDashboard";
 import { Navigate } from "react-router-dom";
-import ClientManagement from "../pages/client-management/ClientManagement";
-import Messages from "../pages/messages/Messages";
-import Moderators from "../pages/moderators/Moderators";
-import FDD from "../pages/fdd/FDD";
+import ClientManagement from "../pages/admin/client-management/ClientManagement";
+import Messages from "../pages/admin/messages/Messages";
+import Moderators from "../pages/admin/moderators/Moderators";
+import FDD from "../pages/admin/fdd/FDD";
 import ResetPasswordSuccess from "../pages/public/auth/ResetPasswordSuccess";
-import Support from "../pages/support/Support";
-import Settings from "../pages/settings/Settings";
-import Notification from "../pages/notifications/Notification";
-import FranchisePipeline from "../pages/franchise-pipeline/FranchisePipeline";
-import ViewAllActivity from "../pages/view-all-activity/ViewAllActivity";
+import Support from "../pages/admin/support/Support";
+import Settings from "../pages/admin/settings/Settings";
+import Notification from "../pages/admin/notifications/Notification";
+import FranchisePipeline from "../pages/admin/franchise-pipeline/FranchisePipeline";
+import ViewAllActivity from "../pages/admin/view-all-activity/ViewAllActivity";
 
 const AppRoutes = () => {
   return (
