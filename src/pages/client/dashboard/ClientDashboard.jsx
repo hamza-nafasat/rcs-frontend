@@ -7,6 +7,8 @@ import TotalMembersIcon from "../../../assets/SVGs/TotalMembersIcon.svg";
 import DonutChart from "./components/DonutChart";
 import BarChart from "./components/BarChart";
 import Card from "../../../components/shared/Card";
+import ApplicantsScored from "./components/ApplicantsScored";
+import RecentApplicants from "./components/RecentApplicants";
 
 const cardData = [
   {
@@ -95,6 +97,14 @@ const ClientDashboard = () => {
             ]}
           />
         </Card>
+      </section>
+
+      <section className="fade-up" style={{ "--fade-delay": "520ms" }}>
+        <ApplicantsScored />
+      </section>
+
+      <section className="fade-up" style={{ "--fade-delay": "600ms" }}>
+        <RecentApplicants />
       </section>
     </article>
   );

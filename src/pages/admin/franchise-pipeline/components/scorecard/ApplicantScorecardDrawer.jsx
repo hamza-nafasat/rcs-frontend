@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { X, DollarSign, Briefcase, Scale, MapPin } from "lucide-react";
 import Button from "../../../../../components/shared/Button";
 import Badge from "../../../../../components/shared/Badge";
@@ -38,6 +39,10 @@ const ApplicantScorecardDrawer = ({
   useEffect(() => () => clearTimeout(closeTimer.current), []);
 
   useEffect(() => {
+    if (isOpen) setIsClosing(false);
+  }, [isOpen]);
+
+  useEffect(() => {
     const onKeyDown = (event) => event.key === "Escape" && handleClose();
 
     document.addEventListener("keydown", onKeyDown);
@@ -53,7 +58,7 @@ const ApplicantScorecardDrawer = ({
 
   const handleStageChange = (next) => onStageChange?.(applicant, next);
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-50 flex justify-end">
       <div
         className={`absolute inset-0 bg-black/40 ${isClosing ? "drawer-overlay-closing" : "drawer-overlay"}`}
@@ -150,7 +155,8 @@ const ApplicantScorecardDrawer = ({
           <StageSelector value={stage} onChange={handleStageChange} />
         </article>
       </aside>
-    </div>
+    </div>,
+    document.body,
   );
 };
 
