@@ -278,7 +278,7 @@ const CreateAccountForm = () => {
           </div>
         </FormSection>
 
-        <footer className="flex flex-wrap items-center justify-between gap-3">
+        <footer className="flex flex-wrap items-center justify-between gap-3 border-t color-border pt-4">
           <Button
             type="icon"
             onClick={() => navigate("/signin")}
