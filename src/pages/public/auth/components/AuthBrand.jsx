@@ -42,17 +42,17 @@ const authContent = {
   },
 
   admin: {
-    badge: "Admin Management Platform",
+    badge: "Enterprise Consulting Platform",
 
     heading: (
       <>
-        Manage Your Platform with{" "}
-        <span className="primary">Complete Control</span>
+        Transform Restaurant Growth with{" "}
+        <span className="primary">Intelligent Consulting</span>
       </>
     ),
 
     description:
-      "Manage users, permissions, reports, and platform operations from one centralized admin dashboard.",
+      "Manage clients, consulting projects, reports, and business growth from one centralized platform built for restaurant consulting firms.",
 
     icons: [
       <OrangeCircleIcon />,
@@ -62,16 +62,16 @@ const authContent = {
     ],
 
     features: [
-      "User & Role Management",
-      "Platform Performance Analytics",
-      "Reports & Business Insights",
-      "System & Access Control",
+      "CRM & Client Success Management",
+      "Revenue Analytics & Performance Tracking",
+      "Consulting Project & Milestone Management",
+      "Automated Invoicing & Document Control",
     ],
 
     stats: [
-      { label: "Active Users", value: "500+" },
-      { label: "Projects Managed", value: "150+" },
-      { label: "System Uptime", value: "99.9%" },
+      { label: "Restaurant Clients", value: "200+" },
+      { label: "Revenue Generated", value: "$12M+" },
+      { label: "Client Satisfaction", value: "98%" },
     ],
   },
 };
