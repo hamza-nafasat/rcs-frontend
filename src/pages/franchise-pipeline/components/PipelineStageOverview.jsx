@@ -9,7 +9,9 @@ const stages = [
   { value: "54", label: "Under Review", color: "#f97316", bg: "#fff7ed" },
   { value: "31", label: "Committee Review", color: "#a855f7", bg: "#faf5ff" },
   { value: "18", label: "Approved", color: "#22c55e", bg: "#f0fdf4" },
-  { value: "9", label: "Denied", color: "#dc2626", bg: "#fef2f2" },
+  { value: "2", label: "Approved", color: "#047857", bg: "#0478571C" },
+  { value: "3", label: "Assign Location", color: "#AC24EB", bg: "#FAF1FF" },
+  { value: "4", label: "Denied", color: "#D92E2E", bg: "#FFEDED" },
 ];
 
 const PipelineStageOverview = () => {
@@ -17,7 +19,7 @@ const PipelineStageOverview = () => {
     <section className="flex flex-col gap-4 rounded-2xl bg-white p-5 shadow-sm">
       <h2 className="heading-lg text-tertiary">Pipeline Stage Overview</h2>
 
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
         {stages.map((stage) => (
           <div
             key={stage.label}
