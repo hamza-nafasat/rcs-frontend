@@ -4,6 +4,9 @@ import TotalUsersIcon from "../../../assets/SVGs/TotalUsersIcon.svg";
 import SuccessIcon from "../../../assets/SVGs/SuccessIcon.svg";
 import RevenueIcon from "../../../assets/SVGs/RevenueIcon.svg";
 import TotalMembersIcon from "../../../assets/SVGs/TotalMembersIcon.svg";
+import DonutChart from "./components/DonutChart";
+import BarChart from "./components/BarChart";
+import Card from "../../../components/shared/Card";
 
 const cardData = [
   {
@@ -52,6 +55,46 @@ const ClientDashboard = () => {
             <StatsCard {...card} />
           </div>
         ))}
+      </section>
+
+      <section
+        className="fade-up grid grid-cols-1 items-stretch gap-4 lg:grid-cols-5"
+        style={{ "--fade-delay": "440ms" }}
+      >
+        <Card
+          className="h-full lg:col-span-3"
+          header={
+            <DashboardHeading
+              heading="Clients per month"
+            />
+          }
+        >
+          <BarChart
+            labels={["Jan", "Feb", "Mar", "Apr", "May", "Jun"]}
+            data={[2, 3, 2, 5, 4, 7]}
+          />
+        </Card>
+
+        <Card className="h-full lg:col-span-2">
+          <DashboardHeading
+            heading="Applicants by Stage"
+          />
+
+          <DonutChart
+            labels={[
+              "Clients",
+              "Leads",
+              "Pending",
+
+            ]}
+            data={[25, 20, 15, 12, 10, 10, 8]}
+            colors={[
+              "#6366F1",
+              "#22C55E",
+              "#EF4444",
+            ]}
+          />
+        </Card>
       </section>
     </article>
   );
