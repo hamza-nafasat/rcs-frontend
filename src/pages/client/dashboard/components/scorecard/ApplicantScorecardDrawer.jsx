@@ -6,7 +6,7 @@ import {
   SCORE_CATEGORIES,
   buildScorecard,
   getRecommendation,
-} from "./scorecardData";
+} from "../../data/scorecardData";
 import ScoreRadar from "./ScoreRadar";
 import ScorecardSection from "./ScorecardSection";
 import Badge from "../../../../../components/shared/Badge";

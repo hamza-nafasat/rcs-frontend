@@ -1,4 +1,4 @@
-import { SCORE_CATEGORIES } from "./scorecardData";
+import { SCORE_CATEGORIES } from "../../data/scorecardData";
 
 const SIZE = 180;
 const CENTER = SIZE / 2;

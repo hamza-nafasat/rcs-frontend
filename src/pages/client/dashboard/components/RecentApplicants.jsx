@@ -7,7 +7,7 @@ import ProgressBar from "../../../../components/shared/ProgressBar";
 import {
   STAGE_COLORS,
   getRecommendation,
-} from "./scorecard/scorecardData";
+} from "../data/scorecardData";
 import { recentApplicants } from "../data/recentApplicants";
 import ApplicantScorecardDrawer from "./scorecard/ApplicantScorecardDrawer";
 
