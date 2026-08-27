@@ -8,17 +8,17 @@ import OrangeDocumentIcon from "../../../../assets/SVGs/svg-components/OrangeDoc
 
 const authContent = {
   client: {
-    badge: "Client Consulting Platform",
+    badge: "Franchise Lead & Approval Platform",
 
     heading: (
       <>
-        Transform Restaurant Growth with{" "}
-        <span className="primary">Intelligent Consulting</span>
+        Live pipelines.{" "}
+        <span className="primary">Instant decisions.</span>
       </>
     ),
 
     description:
-      "Manage clients, consulting projects, reports, and business growth from one centralized platform built for restaurant consulting firms.",
+      "Every franchise applicant scored the moment they apply. Clients see their pipeline live — no more waiting for a monthly report.",
 
     icons: [
       <OrangeCircleIcon />,
@@ -28,10 +28,10 @@ const authContent = {
     ],
 
     features: [
-      "CRM & Client Success Management",
-      "Revenue Analytics & Performance Tracking",
-      "Consulting Project & Milestone Management",
-      "Automated Invoicing & Document Control",
+      "Live client dashboard — real-time pipeline visibility",
+      "Automated scoring engine — Financial, Experience, Legal, Market",
+      "On-demand report export — no more month-end scrambles",
+      "One RCS admin panel — every client's pipeline in one place",
     ],
 
     stats: [
