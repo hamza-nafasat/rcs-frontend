@@ -19,6 +19,10 @@ import FranchisePipeline from "../pages/admin/franchise-pipeline/FranchisePipeli
 import ViewAllActivity from "../pages/admin/view-all-activity/ViewAllActivity";
 import CreateAccount from "../pages/public/auth/CreateAccount";
 import ClientDashboard from "../pages/client/dashboard/ClientDashboard";
+import Pipeline from "../pages/client/pipeline/Pipeline";
+import Report from "../pages/client/reports/Report";
+import ClientFDD from "../pages/client/fdd/ClientFDD";
+import ClientModerator from "../pages/client/moderators/ClientModerator";
 
 const LegacyAdminRedirect = () => {
   const { pathname } = useLocation();
@@ -59,8 +63,14 @@ const AppRoutes = () => {
         <Route path="/client" element={<Navigate to="/client/dashboard" replace />} />
         <Route path="/client/dashboard" element={<Dashboard type="client" />}>
           <Route index element={<ClientDashboard />} />
+          {/* Pipeline */}
+          <Route path="pipeline" element={<Pipeline />}/>
+          <Route path="reports" element={<Report />}/>
+          <Route path="fdd" element={<ClientFDD />}/>
+          <Route path="moderators" element={<ClientModerator />}/>
           <Route path="notifications" element={<Notification />} />
           <Route path="support" element={<Support />} />
+          <Route path="messages" element={<Messages />} />
         </Route>
 
         <Route path="*" element={<DashboardNotFound />} />
