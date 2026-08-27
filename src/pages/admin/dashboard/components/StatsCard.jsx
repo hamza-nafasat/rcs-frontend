@@ -9,12 +9,7 @@ const StatsCard = ({ icon, badge, value, label, comparison }) => {
           {icon && <img src={icon} alt="" />}
         </div>
 
-        {badge && (
-          <span className="rounded-full bg-revenue px-2.5 py-1 text-xs font-medium text-revenue">
             <ArrowUpRight size={12} className="mr-1 inline-block" />
-            {badge}
-          </span>
-        )}
       </section>
 
       {/* Figure */}

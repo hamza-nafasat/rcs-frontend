@@ -8,31 +8,27 @@ import TotalMembersIcon from "../../../assets/SVGs/TotalMembersIcon.svg";
 const cardData = [
   {
     icon: TotalUsersIcon,
-    badge: "+3",
     value: "12",
-    label: "Active Leads",
-    comparison: "↑ 12% vs last month",
+    label: "Total Applicants",
+    comparison: "All time",
   },
   {
     icon: SuccessIcon,
-    badge: "+5",
     value: "28",
-    label: "Messages",
-    comparison: "↑ 8% vs last month",
+    label: "Approved",
+    comparison: "0% of total",
   },
   {
     icon: RevenueIcon,
-    badge: "+2",
     value: "4",
-    label: "Applications",
-    comparison: "↑ 15% vs last month",
+    label: "Conditional",
+    comparison: "Needs review",
   },
   {
     icon: TotalMembersIcon,
-    badge: "+6",
     value: "82",
-    label: "Pipeline Score",
-    comparison: "↑ 6% vs last month",
+    label: "Avg Score",
+    comparison: "/ 100 possible",
   },
 ];
 
