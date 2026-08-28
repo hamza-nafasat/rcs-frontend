@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import DataTable from "react-data-table-component";
-import { Eye, MapPin } from "lucide-react";
+import { MapPin } from "lucide-react";
 import Avatar from "../../../../components/shared/Avatar";
 import Badge from "../../../../components/shared/Badge";
 import ProgressBar from "../../../../components/shared/ProgressBar";
@@ -9,7 +9,7 @@ import {
   getRecommendation,
 } from "../data/scorecardData";
 import { initialApplicants } from "../data/pipelineApplicants";
-import ApplicantScorecardDrawer from "./scorecard/ApplicantScorecardDrawer";
+import ClientApplicantScorecardDrawer from "./scorecard/ClientApplicantScorecardDrawer";
 
 const scoreColor = (score) => {
   if (score >= 80) return "var(--color-revenue)";
@@ -65,9 +65,10 @@ const customStyles = {
 };
 
 const PipelineTable = ({ filters = emptyFilters }) => {
+  const [applicants, setApplicants] = useState(initialApplicants);
   const [selected, setSelected] = useState(null);
 
-  const filteredApplicants = initialApplicants.filter((row) => {
+  const filteredApplicants = applicants.filter((row) => {
     const applicantQuery = filters.applicant.trim().toLowerCase();
     const matchApplicant =
       !applicantQuery ||
@@ -162,45 +163,42 @@ const PipelineTable = ({ filters = emptyFilters }) => {
         selector: (row) => row.submitted,
         cell: (row) => <span className="text-secondary">{row.submitted}</span>,
       },
-      {
-        name: "",
-        width: "72px",
-        right: true,
-        ignoreRowClick: true,
-        button: true,
-        cell: (row) => (
-          <button
-            type="button"
-            aria-label={`View scorecard for ${row.name}`}
-            className="rounded-md pr-6 text-secondary transition hover:bg-muted hover:text-tertiary"
-            onClick={(event) => {
-              event.stopPropagation();
-              setSelected(row);
-            }}
-          >
-            <Eye size={16} />
-          </button>
-        ),
-      },
     ],
     [],
   );
 
-  return (
-    <article className="overflow-hidden rounded-2xl border color-border bg-white">
-      <DataTable
-        columns={columns}
-        data={filteredApplicants}
-        customStyles={customStyles}
-        highlightOnHover
-        responsive
-      />
+  const handleStageChange = (applicant, stage) => {
+    setApplicants((rows) =>
+      rows.map((row) => (row.id === applicant.id ? { ...row, stage } : row)),
+    );
 
-      <ApplicantScorecardDrawer
+    setSelected((current) =>
+      current && current.id === applicant.id ? { ...current, stage } : current,
+    );
+  };
+
+  return (
+    <article className="flex flex-col gap-4">
+      <h2 className="heading-lg text-tertiary">Applicant Scorecard</h2>
+
+      <section className="overflow-hidden rounded-2xl border color-border bg-white">
+        <DataTable
+          columns={columns}
+          data={filteredApplicants}
+          customStyles={customStyles}
+          pagination
+          highlightOnHover
+          pointerOnHover
+          onRowClicked={(row) => setSelected(row)}
+        />
+      </section>
+
+      <ClientApplicantScorecardDrawer
         key={selected?.id}
         isOpen={Boolean(selected)}
         applicant={selected}
         onClose={() => setSelected(null)}
+        onStageChange={handleStageChange}
       />
     </article>
   );

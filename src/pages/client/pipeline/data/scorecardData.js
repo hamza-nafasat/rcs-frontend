@@ -1,3 +1,12 @@
+export const STAGES = [
+  "Approved",
+  "Committee Review",
+  "New Application",
+  "Under Review",
+  "Conditionally Approved",
+  "Document Collection",
+];
+
 export const STAGE_COLORS = {
   Approved: "var(--color-revenue)",
   "Committee Review": "var(--color-info)",
@@ -41,9 +50,11 @@ export const SCORE_CATEGORIES = [
 export const getRecommendation = (stage, score) => {
   if (stage === "Approved" || score >= 80) {
     return {
-      label: "APPROVE",
+      code: "APPROVE",
+      label: "Approve",
       pillLabel: "Approve",
       mark: "✓",
+      note: "Strong profile across all scoring categories. Top candidate.",
       color: "var(--color-revenue)",
       bg: "bg-revenue",
       border: "border-(--color-revenue)/30",
@@ -53,9 +64,11 @@ export const getRecommendation = (stage, score) => {
 
   if (stage === "Conditionally Approved" || score >= 60) {
     return {
-      label: "CONDITIONAL",
+      code: "CONDITIONAL",
+      label: "Conditional Approve",
       pillLabel: "Conditional",
       mark: "",
+      note: "Meets minimums but requires committee review before approval.",
       color: "var(--color-text-moderator)",
       bg: "bg-moderator",
       border: "border-moderator",
@@ -64,9 +77,11 @@ export const getRecommendation = (stage, score) => {
   }
 
   return {
-    label: "DENY",
+    code: "DENY",
+    label: "Deny",
     pillLabel: "Deny",
     mark: "✘",
+    note: "Score below threshold or disqualifying flag present.",
     color: "var(--color-text-remove)",
     bg: "bg-(--color-text-remove)/10",
     border: "border-(--color-text-remove)/20",
