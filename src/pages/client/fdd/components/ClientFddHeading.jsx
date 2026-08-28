@@ -20,7 +20,7 @@ const ClientFddHeading = ({ heading, subheading, emoji, onAddModerator }) => {
         <p className=" text-muted">{subheading}</p>
       </div>
 
-      <Button
+      {/* <Button
         onClick={() => setIsModalOpen(true)}
         iconPosition="left"
         icon={<Plus size={18} />}
@@ -36,7 +36,7 @@ const ClientFddHeading = ({ heading, subheading, emoji, onAddModerator }) => {
           onSubmit={handleAddModerator}
           mode="add"
         />
-      )}
+      )} */}
     </div>
   );
 };

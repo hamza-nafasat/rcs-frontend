@@ -31,7 +31,7 @@ const DateField = ({ placeholder, value, onChange, name, min, max }) => {
             /* native click still opens the picker */
           }
         }}
-        className="absolute top-1/2 right-2 z-10 h-8 w-8 -translate-y-1/2 cursor-pointer opacity-0"
+        className="absolute inset-0 z-10 cursor-pointer opacity-0"
       />
     </div>
   );

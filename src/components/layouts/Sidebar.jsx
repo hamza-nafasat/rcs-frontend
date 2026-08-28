@@ -163,7 +163,7 @@ const Sidebar = ({ isOpen, onClose, user, isCollapsed, onToggleCollapse, type = 
         </nav>
 
         <div className="px-3 pb-4">
-          <SectionTitle isCollapsed={isCollapsed}>Account</SectionTitle>
+          <SectionTitle isCollapsed={isCollapsed}>Manage</SectionTitle>
           <div className="space-y-1">
             {profileLinks.map(({ label, to, icon: Icon }) => (
               <NavLink
