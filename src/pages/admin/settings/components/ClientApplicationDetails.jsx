@@ -1,30 +1,22 @@
-import { useState } from "react";
 import ApplicationFields from "../../../public/auth/components/ApplicationFields";
-import {
-  EMPTY_APPLICATION,
-  scoreApplication,
-} from "../../../public/auth/utils/applicationScore";
+import { scoreApplication } from "../../../public/auth/utils/applicationScore";
 
-const ClientApplicationDetails = () => {
-  const [form, setForm] = useState(EMPTY_APPLICATION);
+const ClientApplicationDetails = ({
+  form,
+  onChange,
+  onSelect,
+  disabled = false,
+}) => {
   const scores = scoreApplication(form);
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSelect = (name, value) => {
-    setForm((prev) => ({ ...prev, [name]: value }));
-  };
-
   return (
-    <section className="p-4">
+    <section>
       <ApplicationFields
         form={form}
         scores={scores}
-        onChange={handleChange}
-        onSelect={handleSelect}
+        onChange={onChange}
+        onSelect={onSelect}
+        disabled={disabled}
       />
     </section>
   );

@@ -7,6 +7,7 @@ const SegmentedControl = ({
   hintClassName = "",
   className = "",
   labelClassName = "uppercase tracking-wide",
+  disabled = false,
 }) => {
   return (
     <section className={`w-full ${className}`}>
@@ -26,14 +27,17 @@ const SegmentedControl = ({
             <button
               key={option.value}
               type="button"
+              disabled={disabled}
               onClick={() => onChange(option.value)}
               className={`flex-1 px-3 py-2 text-sm font-semibold transition ${
                 index > 0 ? "border-l color-border" : ""
               } ${
                 isActive
                   ? option.activeClassName
-                  : "bg-white text-secondary hover:bg-muted"
-              }`}
+                  : disabled
+                    ? "bg-gray-50/50 text-gray-500"
+                    : "bg-white text-secondary hover:bg-muted"
+              } ${disabled ? "cursor-not-allowed" : ""}`}
             >
               {option.label}
             </button>

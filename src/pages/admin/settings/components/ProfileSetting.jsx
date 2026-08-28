@@ -4,6 +4,7 @@ import Avatar from "../../../../components/shared/Avatar";
 import Input from "../../../../components/shared/Input";
 import Button from "../../../../components/shared/Button";
 import ClientApplicationDetails from "./ClientApplicationDetails";
+import { EMPTY_APPLICATION } from "../../../public/auth/utils/applicationScore";
 
 const DUMMY_PROFILE = {
   firstName: "Marco",
@@ -21,8 +22,33 @@ const DUMMY_PROFILE = {
   imagePreview: "",
 };
 
+const DUMMY_APPLICATION = {
+  ...EMPTY_APPLICATION,
+  applicantName: "Marco Ricci",
+  companyName: "Golden Fork",
+  proposedTerritory: "Austin Metro",
+  city: "Austin",
+  state: "TX",
+  liquidCapital: "150000",
+  netWorth: "500000",
+  creditScore: "720",
+  yearsMgmt: "8",
+  foodExp: "Y",
+  multiUnit: "N",
+  bankruptcy: "N",
+  litigation: "N",
+  criminal: "N",
+  nonCompete: "N",
+  territoryAvailable: "Y",
+  density: "medium",
+};
+
 const ProfileSetting = ({ profile, onSave, onUpdatePassword, type = "admin" }) => {
   const [formData, setFormData] = useState({ ...DUMMY_PROFILE, ...profile });
+  const [applicationForm, setApplicationForm] = useState({
+    ...DUMMY_APPLICATION,
+    ...profile?.application,
+  });
   const [isEditing, setIsEditing] = useState(false);
   const [formError, setFormError] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
@@ -55,8 +81,18 @@ const ProfileSetting = ({ profile, onSave, onUpdatePassword, type = "admin" }) =
     setIsEditing(true);
   };
 
+  const onApplicationChange = (event) => {
+    const { name, value } = event.target;
+    setApplicationForm((current) => ({ ...current, [name]: value }));
+  };
+
+  const onApplicationSelect = (name, value) => {
+    setApplicationForm((current) => ({ ...current, [name]: value }));
+  };
+
   const onCancel = () => {
     setFormData({ ...DUMMY_PROFILE, ...profile });
+    setApplicationForm({ ...DUMMY_APPLICATION, ...profile?.application });
     setFormError("");
     setIsEditing(false);
   };
@@ -67,7 +103,7 @@ const ProfileSetting = ({ profile, onSave, onUpdatePassword, type = "admin" }) =
     setFormError("");
 
     try {
-      await onSave?.(formData);
+      await onSave?.({ ...formData, application: applicationForm });
       setIsEditing(false);
     } catch {
       setFormError("Unable to save your profile. Please try again.");
@@ -317,6 +353,17 @@ const ProfileSetting = ({ profile, onSave, onUpdatePassword, type = "admin" }) =
           </p>
         )}
 
+        {type === "client" && (
+          <div className="md:col-span-2">
+            <ClientApplicationDetails
+              form={applicationForm}
+              onChange={onApplicationChange}
+              onSelect={onApplicationSelect}
+              disabled={!isEditing}
+            />
+          </div>
+        )}
+
         {/* Buttons */}
         {isEditing && (
           <div className="md:col-span-2 flex justify-end gap-3 mt-4">
@@ -338,8 +385,6 @@ const ProfileSetting = ({ profile, onSave, onUpdatePassword, type = "admin" }) =
           </div>
         )}
       </form>
-
-      {type === "client" && <ClientApplicationDetails />}
 
       <section className="mt-6 p-4">
         <div className="mb-4">
