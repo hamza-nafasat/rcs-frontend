@@ -87,13 +87,12 @@ const ClientDashboard = () => {
               "Clients",
               "Leads",
               "Pending",
-
             ]}
-            data={[25, 20, 15, 12, 10, 10, 8]}
+            data={[25, 20, 15]}
             colors={[
-              "#6366F1",
-              "#22C55E",
-              "#EF4444",
+              "#D97706",
+              "#DC2626",
+              "#047857",
             ]}
           />
         </Card>

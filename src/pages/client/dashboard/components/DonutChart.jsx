@@ -20,6 +20,7 @@ const DonutChart = ({ labels, data, colors }) => {
             data,
             backgroundColor: colors,
             borderWidth: 0,
+            spacing: 8,
           },
         ],
       },
