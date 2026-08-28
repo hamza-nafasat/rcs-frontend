@@ -1,15 +1,71 @@
-import { File, FileSpreadsheet, FileText, ChevronDown, Download } from "lucide-react";
+import { Calendar, FileSpreadsheet, FileText, ChevronDown, Download } from "lucide-react";
 
 import Button from "../../../../components/shared/Button";
 import Dropdown from "../../../../components/shared/Dropdown";
+import Input from "../../../../components/shared/Input";
 
-const ReportHeading = ({ heading, subheading }) => {
+const DateField = ({ placeholder, value, onChange, name, min, max }) => {
+  return (
+    <div className="relative">
+      <Input
+        type="text"
+        placeholder={placeholder}
+        aria-label={placeholder}
+        value={value}
+        readOnly
+        icon={<Calendar size={16} />}
+      />
+      <input
+        type="date"
+        name={name}
+        value={value}
+        min={min}
+        max={max}
+        onChange={onChange}
+        tabIndex={-1}
+        aria-label={placeholder}
+        onClick={(event) => {
+          try {
+            event.currentTarget.showPicker();
+          } catch {
+            /* native click still opens the picker */
+          }
+        }}
+        className="absolute top-1/2 right-2 z-10 h-8 w-8 -translate-y-1/2 cursor-pointer opacity-0"
+      />
+    </div>
+  );
+};
+
+const ReportHeading = ({ heading, subheading, dates, onDateChange }) => {
   return (
     <section className="flex flex-wrap items-center justify-between gap-3 sm:gap-4">
       {/* Heading */}
-      <div>
+      <div className="mr-auto">
         <h1 className="heading-lg text-tertiary">{heading}</h1>
         <p className="text-muted">{subheading}</p>
+      </div>
+
+      {/* Date range */}
+      <div className="flex w-full items-center gap-2 sm:w-auto sm:gap-3">
+        <div className="min-w-0 flex-1 sm:w-40 sm:flex-none">
+          <DateField
+            placeholder="Start Date"
+            name="startDate"
+            value={dates.startDate}
+            onChange={onDateChange}
+            max={dates.endDate || undefined}
+          />
+        </div>
+        <div className="min-w-0 flex-1 sm:w-40 sm:flex-none">
+          <DateField
+            placeholder="End Date"
+            name="endDate"
+            value={dates.endDate}
+            onChange={onDateChange}
+            min={dates.startDate || undefined}
+          />
+        </div>
       </div>
 
       {/* Actions */}
@@ -53,14 +109,6 @@ const ReportHeading = ({ heading, subheading }) => {
             </div>
           </button>
         </Dropdown>
-
-        <Button
-          icon={<File size={18} />}
-          iconPosition="left"
-          className="shrink-0 whitespace-nowrap px-3! py-2! text-xs sm:px-4! sm:py-2.5! sm:text-base"
-        >
-          Download PDF Report
-        </Button>
       </div>
     </section>
   );

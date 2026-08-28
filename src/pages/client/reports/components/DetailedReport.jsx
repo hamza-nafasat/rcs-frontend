@@ -62,7 +62,7 @@ const customStyles = {
   },
 };
 
-const DetailedReport = ({ applicants = [], franchise = "Bella Cucina" }) => {
+const DetailedReport = ({ applicants = [],  }) => {
   const [selected, setSelected] = useState(null);
 
   const columns = useMemo(
@@ -96,6 +96,7 @@ const DetailedReport = ({ applicants = [], franchise = "Bella Cucina" }) => {
       {
         name: "Stage",
         selector: (row) => row.stage,
+        width: "120px",
         cell: (row) => (
           <span
             className="text-sm font-medium"
@@ -115,6 +116,7 @@ const DetailedReport = ({ applicants = [], franchise = "Bella Cucina" }) => {
       {
         name: "Experience",
         selector: (row) => row.categories?.experience ?? 0,
+        width: "120px",
         cell: (row) => (
           <span className="text-tertiary">{categoryValue(row, "experience")}</span>
         ),
@@ -167,8 +169,7 @@ const DetailedReport = ({ applicants = [], franchise = "Bella Cucina" }) => {
   return (
     <article className="overflow-hidden rounded-2xl border color-border bg-white">
       <header className="flex items-center justify-between px-5 py-4">
-        <h2 className="card-heading">All Applicants — Detailed Report</h2>
-        <p className="text-sm text-muted">{franchise}</p>
+        <h2 className="card-heading">Applicants Detailed Report</h2>
       </header>
 
       <DataTable
