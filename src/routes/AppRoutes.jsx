@@ -23,6 +23,7 @@ import Pipeline from "../pages/client/pipeline/Pipeline";
 import Report from "../pages/client/reports/Report";
 import ClientFDD from "../pages/client/fdd/ClientFDD";
 import ClientModerator from "../pages/client/moderators/ClientModerator";
+import ClientSupport from "../pages/client/support/ClientSupport";
 
 const LegacyAdminRedirect = () => {
   const { pathname } = useLocation();
@@ -70,7 +71,7 @@ const AppRoutes = () => {
           <Route path="moderators" element={<ClientModerator />}/>
           <Route path="settings" element={<Settings type="client" />} />
           <Route path="notifications" element={<Notification />} />
-          <Route path="support" element={<Support />} />
+          <Route path="support" element={<ClientSupport />} />
           <Route path="messages" element={<Messages />} />
         </Route>
 

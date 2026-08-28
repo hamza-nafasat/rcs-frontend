@@ -1,23 +1,46 @@
 import { Upload, X } from "lucide-react";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 const FileUpload = ({
   label,
-  accept = "application/pdf",
-  hint = "PDF up to 10MB",
+  accept = ".pdf,.png,.jpg,.jpeg,.zip",
+  hint = "Supports PDF, PNG, JPG, ZIP up to 10MB",
   file,
   onFileChange,
 }) => {
   const inputRef = useRef(null);
+  const [isDragging, setIsDragging] = useState(false);
+
+  const handleFile = (selectedFile) => {
+    if (!selectedFile) return;
+
+    const maxSize = 10 * 1024 * 1024;
+
+    if (selectedFile.size > maxSize) {
+      return;
+    }
+
+    onFileChange(selectedFile);
+  };
 
   const handleChange = (e) => {
-    onFileChange(e.target.files?.[0] || null);
+    handleFile(e.target.files?.[0]);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+
+    const droppedFile = e.dataTransfer.files?.[0];
+    handleFile(droppedFile);
   };
 
   const handleClear = () => {
     onFileChange(null);
 
-    if (inputRef.current) inputRef.current.value = "";
+    if (inputRef.current) {
+      inputRef.current.value = "";
+    }
   };
 
   return (
@@ -28,7 +51,19 @@ const FileUpload = ({
         </label>
       )}
 
-      <div className="rounded-xl border border-dashed border-[#E5E7EB] bg-white px-4 py-6">
+      <div
+        onDragOver={(e) => {
+          e.preventDefault();
+          setIsDragging(true);
+        }}
+        onDragLeave={() => setIsDragging(false)}
+        onDrop={handleDrop}
+        className={`rounded-xl border border-dashed px-4 py-5 transition ${
+          isDragging
+            ? "border-primary bg-orange-50"
+            : "border-[#E5E7EB] bg-white"
+        }`}
+      >
         <input
           ref={inputRef}
           type="file"
@@ -39,7 +74,9 @@ const FileUpload = ({
 
         {file ? (
           <div className="flex items-center justify-between gap-3">
-            <p className="truncate text-sm text-[#111111]">{file.name}</p>
+            <p className="truncate text-sm text-[#111111]">
+              {file.name}
+            </p>
 
             <button
               type="button"
@@ -50,18 +87,26 @@ const FileUpload = ({
             </button>
           </div>
         ) : (
-          <div className="flex flex-col items-center gap-2 text-center">
-            <Upload size={20} className="text-secondary" />
+          <div className="flex flex-col items-center justify-center gap-1 text-center">
+            <Upload
+              size={26}
+              className="mb-2 text-primary"
+            />
 
-            <button
-              type="button"
-              onClick={() => inputRef.current?.click()}
-              className="text-sm font-medium text-primary underline"
-            >
-              Choose a file
-            </button>
+            <p className="text-sm font-medium text-[#111111]">
+              Drag & drop your files here, or{" "}
+              <button
+                type="button"
+                onClick={() => inputRef.current?.click()}
+                className="font-medium text-primary underline"
+              >
+                browse
+              </button>
+            </p>
 
-            <p className="text-xs text-secondary">{hint}</p>
+            <p className="text-xs text-secondary">
+              {hint}
+            </p>
           </div>
         )}
       </div>
