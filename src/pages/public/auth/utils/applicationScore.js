@@ -29,6 +29,26 @@ export const DENSITY_OPTIONS = [
 
 export const DENSITY_SCORES = { low: 5, medium: 3, high: 1 };
 
+export const EMPTY_APPLICATION = {
+  applicantName: "",
+  companyName: "",
+  proposedTerritory: "",
+  city: "",
+  state: "",
+  liquidCapital: "",
+  netWorth: "",
+  creditScore: "",
+  yearsMgmt: "",
+  foodExp: "N",
+  multiUnit: "N",
+  bankruptcy: "N",
+  litigation: "Y",
+  criminal: "N",
+  nonCompete: "N",
+  territoryAvailable: "Y",
+  density: "medium",
+};
+
 export const scoreApplication = (form) => {
   const liquid = scoreAgainstMinimum(form.liquidCapital, 75000, 225000);
   const netWorth = scoreAgainstMinimum(form.netWorth, 250000, 750000);

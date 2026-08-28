@@ -3,6 +3,7 @@ import { Camera, Pencil } from "lucide-react";
 import Avatar from "../../../../components/shared/Avatar";
 import Input from "../../../../components/shared/Input";
 import Button from "../../../../components/shared/Button";
+import ClientApplicationDetails from "./ClientApplicationDetails";
 
 const DUMMY_PROFILE = {
   firstName: "Marco",
@@ -20,7 +21,7 @@ const DUMMY_PROFILE = {
   imagePreview: "",
 };
 
-const ProfileSetting = ({ profile, onSave, onUpdatePassword }) => {
+const ProfileSetting = ({ profile, onSave, onUpdatePassword, type = "admin" }) => {
   const [formData, setFormData] = useState({ ...DUMMY_PROFILE, ...profile });
   const [isEditing, setIsEditing] = useState(false);
   const [formError, setFormError] = useState("");
@@ -337,6 +338,8 @@ const ProfileSetting = ({ profile, onSave, onUpdatePassword }) => {
           </div>
         )}
       </form>
+
+      {type === "client" && <ClientApplicationDetails />}
 
       <section className="mt-6 p-4">
         <div className="mb-4">

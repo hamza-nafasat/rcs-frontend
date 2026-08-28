@@ -1,7 +1,6 @@
-// import SettingsHeading from "./components/SettingsHeading";
 import ProfileSetting from "./components/ProfileSetting";
 
-const Settings = () => {
+const Settings = ({ type = "admin" }) => {
   const handleSaveProfile = (profile) => {
     console.log("Save profile", profile);
   };
@@ -12,14 +11,9 @@ const Settings = () => {
 
   return (
     <article className="flex h-full min-h-0 flex-col">
-      {/* <section className="py-4">
-        <SettingsHeading
-          heading="Settings"
-          subheading="Manage your account and notification preferences"
-        />
-      </section> */}
       <section>
         <ProfileSetting
+          type={type}
           onSave={handleSaveProfile}
           onUpdatePassword={handleUpdatePassword}
         />

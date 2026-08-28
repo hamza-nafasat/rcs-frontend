@@ -10,7 +10,7 @@ import {
   Users,
   X,
 } from "lucide-react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import LogoCompany from "../../assets/SVGs/LogoCompany.svg";
 import SidebarClosedLogo from "../../assets/SVGs/SidebarClosedLogo.svg";
 import Avatar from "../shared/Avatar";
@@ -70,14 +70,13 @@ const SectionTitle = ({ children, isCollapsed }) => (
 );
 
 const Sidebar = ({ isOpen, onClose, user, isCollapsed, onToggleCollapse, type = "admin" }) => {
-  const navigate = useNavigate();
   const hideOnCollapse = isCollapsed ? "lg:hidden" : "";
   const isClient = type === "client";
   const menuItems = isClient ? clientNavItems : adminNavItems;
   const profileLinks = isClient ? clientProfileItems : adminProfileItems;
   const homePath = isClient ? "/client/dashboard" : "/admin/dashboard";
   const settingsPath = isClient
-    ? "/client/dashboard"
+    ? "/client/dashboard/settings"
     : "/admin/dashboard/settings";
   return (
     <>
@@ -181,12 +180,12 @@ const Sidebar = ({ isOpen, onClose, user, isCollapsed, onToggleCollapse, type = 
           </div>
         </div>
 
-        <div
-          className="border-t border-gray-600 px-3 py-4"
-          onClick={() => {
-            navigate(settingsPath);
-            onClose?.();
-          }}
+        <NavLink
+          to={settingsPath}
+          onClick={onClose}
+          className={`border-t border-gray-600 px-3 py-4 block ${
+            isCollapsed ? "lg:px-0" : ""
+          }`}
         >
           <div
             className={`flex items-center gap-3 rounded-lg px-2 py-2 hover:bg-(--color-bg-primary) cursor-pointer ${
@@ -203,7 +202,7 @@ const Sidebar = ({ isOpen, onClose, user, isCollapsed, onToggleCollapse, type = 
               </p>
             </div>
           </div>
-        </div>
+        </NavLink>
       </aside>
     </>
   );

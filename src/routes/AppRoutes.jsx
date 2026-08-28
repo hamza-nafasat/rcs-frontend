@@ -54,7 +54,7 @@ const AppRoutes = () => {
           <Route path="moderators" element={<Moderators />} />
           <Route path="fdd" element={<FDD />} />
           <Route path="support" element={<Support />} />
-          <Route path="settings" element={<Settings />} />
+          <Route path="settings" element={<Settings type="admin" />} />
           <Route path="notifications" element={<Notification />} />
           <Route path="franchise-pipeline" element={<FranchisePipeline />} />
           <Route path="view-all-activity" element={<ViewAllActivity />} />
@@ -68,6 +68,7 @@ const AppRoutes = () => {
           <Route path="reports" element={<Report />}/>
           <Route path="fdd" element={<ClientFDD />}/>
           <Route path="moderators" element={<ClientModerator />}/>
+          <Route path="settings" element={<Settings type="client" />} />
           <Route path="notifications" element={<Notification />} />
           <Route path="support" element={<Support />} />
           <Route path="messages" element={<Messages />} />
