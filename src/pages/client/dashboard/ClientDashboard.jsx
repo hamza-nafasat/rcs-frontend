@@ -79,18 +79,18 @@ const ClientDashboard = () => {
 
         <Card className="h-full lg:col-span-2">
           <DashboardHeading
-            heading="Applicants by Stage"
+            heading="Pipeline by Stage"
           />
 
           <DonutChart
             labels={[
-              "Clients",
-              "Leads",
+              "Approved",
+              "Denied",
               "Pending",
             ]}
             data={[25, 20, 15]}
             colors={[
-              "#D97706",
+              "#EAB308",
               "#DC2626",
               "#047857",
             ]}
