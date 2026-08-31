@@ -9,15 +9,9 @@ import {
   Tooltip,
 } from "chart.js";
 
-Chart.register(
-  BarController,
-  BarElement,
-  CategoryScale,
-  LinearScale,
-  Tooltip
-);
+Chart.register(BarController, BarElement, CategoryScale, LinearScale, Tooltip);
 
-const BarChart = ({ data = [] }) => {
+const BarChart = ({ data = [], labels = [] }) => {
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
 
@@ -49,6 +43,23 @@ const BarChart = ({ data = [] }) => {
               data.length === 12
                 ? data
                 : [20, 35, 28, 50, 45, 70, 55, 65, 40, 75, 60, 80],
+            labels:
+              labels.length === 12
+                ? labels
+                : [
+                    "Jan",
+                    "Feb",
+                    "Mar",
+                    "Apr",
+                    "May",
+                    "Jun",
+                    "Jul",
+                    "Aug",
+                    "Sep",
+                    "Oct",
+                    "Nov",
+                    "Dec",
+                  ],
 
             backgroundColor: "#F97316",
             borderRadius: 6,

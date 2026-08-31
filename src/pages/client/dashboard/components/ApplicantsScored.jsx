@@ -18,13 +18,13 @@ const SCORE_CATEGORIES = [
     label: "Legal & Background",
     weight: "20%",
     description: "Bankruptcy, litigation, criminal, non-compete",
-    color: "var(--color-success)",
+    color: "var(--color-legal)",
   },
   {
     label: "Market & Location",
     weight: "25%",
     description: "Territory availability, competitive density",
-    color: "var(--color-revenue)",
+    color: "var(--color-market)",
   },
 ];
 
@@ -32,7 +32,7 @@ const SCORE_LEGEND = [
   {
     label: "Approve",
     value: "≥ 80",
-    pillClass: "bg-revenue text-revenue",
+    pillClass: "bg-market text-market",
   },
   {
     label: "Conditional",
@@ -49,49 +49,44 @@ const SCORE_LEGEND = [
 const ApplicantsScored = () => {
   return (
     <Card>
-      <article>
-        <header className="mb-4 flex items-center gap-2">
-          <Star size={16} className="text-primary" />
-          <h2 className="card-heading">How Your Applicants Are Scored</h2>
-        </header>
+      <header className="mb-4 flex items-center gap-2">
+        <Star size={16} className="text-primary" />
+        <h2 className="card-heading">How Your Applicants Are Scored</h2>
+      </header>
 
-        <section className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
-          {SCORE_CATEGORIES.map((category) => (
-            <section
-              key={category.label}
-              className="rounded-xl bg-muted p-3"
-            >
-              <div className="flex items-start justify-between gap-2">
-                <h3 className="text-sm font-semibold text-tertiary">
-                  {category.label}
-                </h3>
-                <p
-                  className="shrink-0 text-sm font-bold"
-                  style={{ color: category.color }}
-                >
-                  {category.weight}
-                </p>
-              </div>
-              <p className="mt-1 text-xs text-secondary">
-                {category.description}
-              </p>
-            </section>
-          ))}
-        </section>
-
-        <footer className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-secondary">
-          {SCORE_LEGEND.map((item) => (
-            <p key={item.label} className="flex items-center gap-2">
-              <span>{item.label}:</span>
-              <span
-                className={`rounded-full px-2 py-0.5 text-xs font-medium ${item.pillClass}`}
+      <section className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        {SCORE_CATEGORIES.map((category) => (
+          <section key={category.label} className="rounded-xl bg-muted p-3">
+            <div className="flex items-start justify-between gap-2">
+              <h3 className="text-sm font-semibold text-tertiary">
+                {category.label}
+              </h3>
+              <p
+                className="shrink-0 text-sm font-bold"
+                style={{ color: category.color }}
               >
-                {item.value}
-              </span>
+                {category.weight}
+              </p>
+            </div>
+            <p className="mt-1 text-xs text-card-subheading">
+              {category.description}
             </p>
-          ))}
-        </footer>
-      </article>
+          </section>
+        ))}
+      </section>
+
+      <footer className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-secondary">
+        {SCORE_LEGEND.map((item) => (
+          <p key={item.label} className="flex items-center gap-2">
+            <span>{item.label}:</span>
+            <span
+              className={`rounded-full px-2 py-0.5 text-xs font-medium ${item.pillClass}`}
+            >
+              {item.value}
+            </span>
+          </p>
+        ))}
+      </footer>
     </Card>
   );
 };
