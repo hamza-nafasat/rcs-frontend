@@ -19,6 +19,7 @@
   --color-bg-active: #fafafa;
   --color-bg-muted: #f9fafb;
   --color-bg-moderator: #fff7ed;
+  --color-bg-market: #04785715;
   /* Text */
   --color-text-primary: #f97316;
   --color-text-secondary: #6b7280;
@@ -31,6 +32,9 @@
   --color-text-cancel: #344054;
   --color-text-subject: #111827;
   --color-text-tablecell: #4b5563;
+  --color-legal: #7c3aed;
+  --color-market: #059669;
+  --color-text-card-subheading: #99a1af;
 
   /* Sidebar */
   --color-sidebar-section: #4b5563;
@@ -41,6 +45,9 @@
   --color-border-muted: #dbeafe;
   --color-border-moderator: #ffedd4;
   --color-border-cancel: #d0d5dd;
+
+  /* Icons */
+  --color-icon-arrow: #d1d5dc;
 }
 html {
   /* font-size: 14px; */
@@ -159,6 +166,16 @@ button:hover {
   color: var(--color-revenue);
   font-weight: 600;
 }
+.text-market {
+  color: var(--color-market);
+  font-weight: 600;
+}
+.text-card-subheading {
+  color: var(--color-text-card-subheading);
+  font-weight: 400;
+  font-size: 0.75rem;
+}
+
 .bg-dark {
   background-color: var(--color-bg-dark);
 }
@@ -167,6 +184,13 @@ button:hover {
 }
 .bg-revenue {
   background-color: var(--color-revenue-bg);
+}
+.bg-market {
+  background-color: var(--color-bg-market);
+}
+
+.icon-arrow {
+  color: var(--color-icon-arrow);
 }
 
 /* Right-side drawer transitions */
