@@ -4,11 +4,7 @@ import { MapPin } from "lucide-react";
 import Avatar from "../../../../components/shared/Avatar";
 import Badge from "../../../../components/shared/Badge";
 import ProgressBar from "../../../../components/shared/ProgressBar";
-import {
-  STAGE_COLORS,
-  getRecommendation,
-} from "../data/scorecardData";
-import { initialApplicants } from "../data/pipelineApplicants";
+import { STAGE_COLORS, getRecommendation } from "../data/scorecardData";
 import ClientApplicantScorecardDrawer from "./scorecard/ClientApplicantScorecardDrawer";
 
 const scoreColor = (score) => {
@@ -32,7 +28,6 @@ const customStyles = {
   },
   headRow: {
     style: {
-      backgroundColor: "var(--color-bg-muted)",
       borderBottomWidth: "1px",
       borderBottomColor: "var(--color-border)",
       minHeight: "44px",
@@ -64,8 +59,11 @@ const customStyles = {
   },
 };
 
-const PipelineTable = ({ filters = emptyFilters }) => {
-  const [applicants, setApplicants] = useState(initialApplicants);
+const PipelineTable = ({
+  filters = emptyFilters,
+  applicants = [],
+  onStageChange,
+}) => {
   const [selected, setSelected] = useState(null);
 
   const filteredApplicants = applicants.filter((row) => {
@@ -97,23 +95,23 @@ const PipelineTable = ({ filters = emptyFilters }) => {
         grow: 2,
         selector: (row) => row.name,
         cell: (row) => (
-          <section className="flex items-center gap-3 py-1">
+          <div className="flex items-center gap-3 py-1">
             <Avatar name={row.name} size={36} rounded="rounded-lg" />
             <div>
               <p className="font-medium text-tertiary">{row.name}</p>
               <p className="text-xs text-muted">{row.company}</p>
             </div>
-          </section>
+          </div>
         ),
       },
       {
         name: "Territory",
         selector: (row) => row.territory,
         cell: (row) => (
-          <section className="flex items-center gap-1.5 text-secondary">
+          <div className="flex items-center gap-1.5 text-secondary">
             <MapPin size={14} className="shrink-0 text-muted" />
             <span>{row.territory}</span>
-          </section>
+          </div>
         ),
       },
       {
@@ -134,12 +132,12 @@ const PipelineTable = ({ filters = emptyFilters }) => {
           const color = scoreColor(row.score);
 
           return (
-            <section className="flex w-full flex-col gap-1 py-1">
+            <div className="flex w-full flex-col gap-1 py-1">
               <span className="text-sm font-semibold" style={{ color }}>
                 {row.score.toFixed(1)}
               </span>
               <ProgressBar value={row.score} color={color} />
-            </section>
+            </div>
           );
         },
       },
@@ -168,17 +166,11 @@ const PipelineTable = ({ filters = emptyFilters }) => {
   );
 
   const handleStageChange = (applicant, stage) => {
-    setApplicants((rows) =>
-      rows.map((row) => (row.id === applicant.id ? { ...row, stage } : row)),
-    );
-
-    setSelected((current) =>
-      current && current.id === applicant.id ? { ...current, stage } : current,
-    );
+    onStageChange(applicant, stage);
   };
 
   return (
-    <article className="flex flex-col gap-4">
+    <section className="flex flex-col gap-4">
       <h2 className="heading-lg text-tertiary">Applicant Scorecard</h2>
 
       <section className="overflow-hidden rounded-2xl border color-border bg-white">
@@ -200,7 +192,7 @@ const PipelineTable = ({ filters = emptyFilters }) => {
         onClose={() => setSelected(null)}
         onStageChange={handleStageChange}
       />
-    </article>
+    </section>
   );
 };
 

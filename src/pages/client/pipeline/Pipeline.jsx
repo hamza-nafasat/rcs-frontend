@@ -14,12 +14,25 @@ const initialFilters = {
 
 const Pipeline = () => {
   const [filters, setFilters] = useState(initialFilters);
+  const [applicants, setApplicants] = useState(initialApplicants);
 
   // these lists will come from the backend later
   const stages = [...new Set(initialApplicants.map((row) => row.stage))];
   const territories = [
     ...new Set(initialApplicants.map((row) => row.territory)),
   ];
+
+  const handleFilterChange = (name, value) => {
+    setFilters((current) => ({
+      ...current,
+      [name]: value,
+    }));
+  };
+  const handleStageChange = (applicant, stage) => {
+    setApplicants((rows) =>
+      rows.map((row) => (row.id === applicant.id ? { ...row, stage } : row)),
+    );
+  };
   return (
     <article className="flex flex-col gap-4">
       <PipelineHeading
@@ -30,7 +43,7 @@ const Pipeline = () => {
       {/* Filters */}
       <PipelineFilter
         filters={filters}
-        setFilters={setFilters}
+        onFilterChange={handleFilterChange}
         stages={stages}
         territories={territories}
       />
@@ -39,7 +52,11 @@ const Pipeline = () => {
       <ClientPipelineStageOverview />
 
       {/* Applicants */}
-      <PipelineTable filters={filters} />
+      <PipelineTable
+        filters={filters}
+        applicants={applicants}
+        onStageChange={handleStageChange}
+      />
     </article>
   );
 };

@@ -4,17 +4,13 @@ import Select from "../../../../components/shared/Select";
 
 const PipelineFilter = ({
   filters,
-  setFilters,
+  onFilterChange,
   stages = [],
   territories = [],
 }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    setFilters((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    onFilterChange(name, value);
   };
 
   return (
@@ -28,7 +24,6 @@ const PipelineFilter = ({
         placeholder="Search by applicant or ID"
         icon={<Search size={16} />}
       />
-
 
       {/* Stage */}
       <Select

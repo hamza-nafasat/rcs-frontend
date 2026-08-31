@@ -8,7 +8,7 @@ const stages = [
   },
   { value: "54", label: "Under Review", color: "#f97316", bg: "#fff7ed" },
   { value: "31", label: "Committee Review", color: "#a855f7", bg: "#faf5ff" },
-  { value: "18", label: "Approved", color: "#22c55e", bg: "#f0fdf4" },
+  { value: "18", label: "Agreement", color: "#22c55e", bg: "#f0fdf4" },
   { value: "2", label: "Approved", color: "#047857", bg: "#0478571C" },
   { value: "3", label: "Assign Location", color: "#AC24EB", bg: "#FAF1FF" },
   { value: "4", label: "Denied", color: "#D92E2E", bg: "#FFEDED" },
