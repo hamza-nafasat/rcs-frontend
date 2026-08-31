@@ -18,12 +18,12 @@ const cardData = [
   {
     label: "Total Messages",
     value: "2",
-    valueColor: "#22C55E",
+    valueColor: "#047857",
   },
   {
     label: "Total Leads",
     value: "7",
-    valueColor: "#EF4444",
+    valueColor: "#DC2626",
   },
   {
     label: "Converted Leads",
@@ -56,19 +56,14 @@ const Report = () => {
         onDateChange={handleDateChange}
       />
 
-<section className="mt-6 gap-4 grid grid-cols-2 lg:grid-cols-4">
+      <section className="sm:mt-6 gap-4 grid grid-cols-2 lg:grid-cols-4">
         {cardData.map((card, index) => (
           <Card key={index} className="h-full">
-            <div className="flex flex-col gap-1">
-              <h2
-                className="text-lg font-semibold"
-                style={{ color: card.valueColor }}
-              >
+            <div className="flex flex-col gap-1 text-center">
+              <h2 className="heading-lg" style={{ color: card.valueColor }}>
                 {card.value}
               </h2>
-              <p className="text-xs sm:text-sm font-medium text-muted">
-                {card.label}
-              </p>
+              <p className="text-card-subheading">{card.label}</p>
             </div>
           </Card>
         ))}

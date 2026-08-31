@@ -1,9 +1,7 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import DataTable from "react-data-table-component";
-import { Eye } from "lucide-react";
-import {
-  getRecommendation,
-} from "../../dashboard/data/scorecardData";
+import { getRecommendation } from "../../dashboard/data/scorecardData";
+import Card from "../../../../components/shared/Card";
 
 const scoreColor = (score) => {
   if (score >= 80) return "var(--color-revenue)";
@@ -19,8 +17,7 @@ const stageColor = (stage) => {
   return "var(--color-primary)";
 };
 
-const categoryValue = (row, key) =>
-  (row.categories?.[key] ?? 0).toFixed(1);
+const categoryValue = (row, key) => (row.categories?.[key] ?? 0).toFixed(1);
 
 const customStyles = {
   table: {
@@ -62,18 +59,14 @@ const customStyles = {
   },
 };
 
-const DetailedReport = ({ applicants = [],  }) => {
-  const [selected, setSelected] = useState(null);
-
+const DetailedReport = ({ applicants = [] }) => {
   const columns = useMemo(
     () => [
       {
         name: "ID",
         selector: (row) => row.id,
         width: "88px",
-        cell: (row) => (
-          <span className="text-xs text-muted">{row.id}</span>
-        ),
+        cell: (row) => <span className="text-xs text-muted">{row.id}</span>,
       },
       {
         name: "Applicant",
@@ -89,9 +82,7 @@ const DetailedReport = ({ applicants = [],  }) => {
       {
         name: "Territory",
         selector: (row) => row.territory,
-        cell: (row) => (
-          <span className="text-secondary">{row.territory}</span>
-        ),
+        cell: (row) => <span className="text-secondary">{row.territory}</span>,
       },
       {
         name: "Stage",
@@ -110,7 +101,9 @@ const DetailedReport = ({ applicants = [],  }) => {
         name: "Financial",
         selector: (row) => row.categories?.financial ?? 0,
         cell: (row) => (
-          <span className="text-tertiary">{categoryValue(row, "financial")}</span>
+          <span className="text-tertiary">
+            {categoryValue(row, "financial")}
+          </span>
         ),
       },
       {
@@ -118,7 +111,9 @@ const DetailedReport = ({ applicants = [],  }) => {
         selector: (row) => row.categories?.experience ?? 0,
         width: "120px",
         cell: (row) => (
-          <span className="text-tertiary">{categoryValue(row, "experience")}</span>
+          <span className="text-tertiary">
+            {categoryValue(row, "experience")}
+          </span>
         ),
       },
       {
@@ -167,19 +162,21 @@ const DetailedReport = ({ applicants = [],  }) => {
   );
 
   return (
-    <article className="overflow-hidden rounded-2xl border color-border bg-white">
-      <header className="flex items-center justify-between px-5 py-4">
+    <Card className="overflow-hidden rounded-2xl border color-border bg-white">
+      <header className="flex items-center justify-between ">
         <h2 className="card-heading">Applicants Detailed Report</h2>
       </header>
 
-      <DataTable
-        columns={columns}
-        data={applicants}
-        customStyles={customStyles}
-        highlightOnHover
-        responsive
-      />
-    </article>
+      <section className="mt-6 overflow-hidden border-t color-border">
+        <DataTable
+          columns={columns}
+          data={applicants}
+          customStyles={customStyles}
+          highlightOnHover
+          responsive
+        />
+      </section>
+    </Card>
   );
 };
 
