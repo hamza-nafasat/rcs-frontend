@@ -65,11 +65,7 @@ const ClientDashboard = () => {
       >
         <Card
           className="h-full lg:col-span-3"
-          header={
-            <DashboardHeading
-              heading="Clients per month"
-            />
-          }
+          header={<DashboardHeading heading="Clients per month" />}
         >
           <BarChart
             labels={["Jan", "Feb", "Mar", "Apr", "May", "Jun"]}
@@ -78,22 +74,12 @@ const ClientDashboard = () => {
         </Card>
 
         <Card className="h-full lg:col-span-2">
-          <DashboardHeading
-            heading="Pipeline by Stage"
-          />
+          <DashboardHeading heading="Pipeline by Stage" />
 
           <DonutChart
-            labels={[
-              "Approved",
-              "Denied",
-              "Pending",
-            ]}
+            labels={["Approved", "Denied", "Pending"]}
             data={[25, 20, 15]}
-            colors={[
-              "#EAB308",
-              "#DC2626",
-              "#047857",
-            ]}
+            colors={["#EAB308", "#DC2626", "#047857"]}
           />
         </Card>
       </section>
