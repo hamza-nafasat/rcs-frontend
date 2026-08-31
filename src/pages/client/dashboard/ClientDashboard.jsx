@@ -1,9 +1,9 @@
 import StatsCard from "../../admin/dashboard/components/StatsCard";
 import DashboardHeading from "./components/DashboardHeading";
 import TotalUsersIcon from "../../../assets/SVGs/TotalUsersIcon.svg";
-import SuccessIcon from "../../../assets/SVGs/SuccessIcon.svg";
-import RevenueIcon from "../../../assets/SVGs/RevenueIcon.svg";
-import TotalMembersIcon from "../../../assets/SVGs/TotalMembersIcon.svg";
+import ClientApprovedIcon from "../../../assets/SVGs/ClientApprovedIcon.svg";
+import ClientConditionalIcon from "../../../assets/SVGs/ClientConditionalIcon.svg";
+import ClientAvgScoreIcon from "../../../assets/SVGs/ClientAvgScoreIcon.svg";
 import DonutChart from "./components/DonutChart";
 import BarChart from "./components/BarChart";
 import Card from "../../../components/shared/Card";
@@ -18,19 +18,19 @@ const cardData = [
     comparison: "All time",
   },
   {
-    icon: SuccessIcon,
+    icon: ClientApprovedIcon,
     value: "28",
     label: "Approved",
     comparison: "0% of total",
   },
   {
-    icon: RevenueIcon,
+    icon: ClientConditionalIcon,
     value: "4",
     label: "Conditional",
     comparison: "Needs review",
   },
   {
-    icon: TotalMembersIcon,
+    icon: ClientAvgScoreIcon,
     value: "82",
     label: "Avg Score",
     comparison: "/ 100 possible",
