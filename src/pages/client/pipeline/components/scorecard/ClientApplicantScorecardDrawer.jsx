@@ -4,7 +4,6 @@ import { X, DollarSign, Briefcase, Scale, MapPin } from "lucide-react";
 import Button from "../../../../../components/shared/Button";
 import Badge from "../../../../../components/shared/Badge";
 import ScoreRadar from "./ScoreRadar";
-// import CategoryScores from "./CategoryScores";
 import ScorecardSection from "./ScorecardSection";
 import {
   STAGE_COLORS,
@@ -110,8 +109,6 @@ const ClientApplicantScorecardDrawer = ({ isOpen, applicant, onClose }) => {
           </section>
 
           <ScoreRadar categories={data.categories} />
-
-          {/* <CategoryScores categories={data.categories} /> */}
 
           <ScorecardSection
             icon={DollarSign}
