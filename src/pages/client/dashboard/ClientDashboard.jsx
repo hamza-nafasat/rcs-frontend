@@ -79,7 +79,7 @@ const ClientDashboard = () => {
           <DonutChart
             labels={["Approved", "Denied", "Pending"]}
             data={[25, 20, 15]}
-            colors={["#EAB308", "#DC2626", "#047857"]}
+            colors={["#047857", "#DC2626", "#EAB308"]}
           />
         </Card>
       </section>
