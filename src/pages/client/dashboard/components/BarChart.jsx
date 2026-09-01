@@ -88,7 +88,7 @@ const BarChart = ({ data = [], labels = [] }) => {
     return () => {
       chartInstance.current?.destroy();
     };
-  }, [data]);
+  }, [data, labels]);
 
   return (
     <div className="min-h-56 w-full flex-1 sm:min-h-64 lg:min-h-72">

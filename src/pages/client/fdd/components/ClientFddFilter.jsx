@@ -2,14 +2,16 @@ import { Search } from "lucide-react";
 import Input from "../../../../components/shared/Input";
 import Select from "../../../../components/shared/Select";
 
-const ClientFddFilter = ({ filters, setFilters, countries = [], brands = [] }) => {
+const ClientFddFilter = ({
+  filters,
+  setFilters,
+  countries = [],
+  brands = [],
+}) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    setFilters((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
   return (

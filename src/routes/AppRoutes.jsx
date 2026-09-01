@@ -19,7 +19,7 @@ import Moderators from "../pages/admin/moderators/Moderators";
 import FDD from "../pages/admin/fdd/FDD";
 import ResetPasswordSuccess from "../pages/public/auth/ResetPasswordSuccess";
 import Support from "../pages/admin/support/Support";
-import Settings from "../pages/admin/settings/Settings";
+import Settings from "../pages/public/settings/Settings";
 import Notification from "../pages/admin/notifications/Notification";
 import FranchisePipeline from "../pages/admin/pipeline/Pipeline";
 import ViewAllActivity from "../pages/admin/view-all-activity/ViewAllActivity";

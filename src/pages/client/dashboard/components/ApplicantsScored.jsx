@@ -56,35 +56,13 @@ const ApplicantsScored = () => {
 
       <section className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {SCORE_CATEGORIES.map((category) => (
-          <section key={category.label} className="rounded-xl bg-muted p-3">
-            <div className="flex items-start justify-between gap-2">
-              <h3 className="text-sm font-semibold text-tertiary">
-                {category.label}
-              </h3>
-              <p
-                className="shrink-0 text-sm font-bold"
-                style={{ color: category.color }}
-              >
-                {category.weight}
-              </p>
-            </div>
-            <p className="mt-1 text-xs text-card-subheading">
-              {category.description}
-            </p>
-          </section>
+          <ScoreCategory key={category.label} category={category} />
         ))}
       </section>
 
       <footer className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-secondary">
         {SCORE_LEGEND.map((item) => (
-          <p key={item.label} className="flex items-center gap-2">
-            <span>{item.label}:</span>
-            <span
-              className={`rounded-full px-2 py-0.5 text-xs font-medium ${item.pillClass}`}
-            >
-              {item.value}
-            </span>
-          </p>
+          <ScoreLegendItem key={item.label} item={item} />
         ))}
       </footer>
     </Card>
@@ -92,3 +70,37 @@ const ApplicantsScored = () => {
 };
 
 export default ApplicantsScored;
+
+const ScoreCategory = ({ category, key }) => {
+  return (
+    <section key={key} className="rounded-xl bg-muted p-3">
+      <div className="flex items-start justify-between gap-2">
+        <h3 className="text-sm font-semibold text-tertiary">
+          {category.label}
+        </h3>
+        <p
+          className="shrink-0 text-sm font-bold"
+          style={{ color: category.color }}
+        >
+          {category.weight}
+        </p>
+      </div>
+      <p className="mt-1 text-xs text-card-subheading">
+        {category.description}
+      </p>
+    </section>
+  );
+};
+
+const ScoreLegendItem = ({ item, key }) => {
+  return (
+    <p key={key} className="flex items-center gap-2">
+      <span>{item.label}:</span>
+      <span
+        className={`rounded-full px-2 py-0.5 text-xs font-medium ${item.pillClass}`}
+      >
+        {item.value}
+      </span>
+    </p>
+  );
+};
