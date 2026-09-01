@@ -1,14 +1,30 @@
+import { CATEGORY_ICON_COLORS } from "../../data/scorecardData";
+
 const valueClass = (ok) => {
   if (ok === true) return "text-revenue";
   if (ok === false) return "text-remove";
   return "text-tertiary";
 };
 
-const ScorecardSection = ({ icon: Icon, iconClassName = "text-muted", title, items }) => {
+const ScorecardSection = ({
+  icon: Icon,
+  iconClassName,
+  categoryKey,
+  title,
+  items,
+}) => {
+  const getIconClass = () => {
+    if (categoryKey && CATEGORY_ICON_COLORS[categoryKey]) {
+      const color = CATEGORY_ICON_COLORS[categoryKey];
+      return color;
+    }
+    return iconClassName || "text-secondary";
+  };
+
   return (
     <section className="rounded-xl border color-border bg-white p-4">
       <h3 className="flex items-center gap-2 text-sm font-semibold text-tertiary">
-        {Icon && <Icon size={16} className={iconClassName} />}
+        {Icon && <Icon size={16} style={{ color: getIconClass() }} />}
         {title}
       </h3>
 
@@ -16,7 +32,7 @@ const ScorecardSection = ({ icon: Icon, iconClassName = "text-muted", title, ite
         {items.map((item) => (
           <div
             key={item.label}
-            className="rounded-lg border color-border bg-muted p-3 text-center"
+            className="rounded-lg bg-active p-3 text-center"
           >
             <p className={`text-sm font-semibold ${valueClass(item.ok)}`}>
               {item.value}

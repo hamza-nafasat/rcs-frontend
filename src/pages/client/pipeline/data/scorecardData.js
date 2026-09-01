@@ -16,6 +16,13 @@ export const STAGE_COLORS = {
   "Document Collection": "var(--color-text-muted)",
 };
 
+export const CATEGORY_ICON_COLORS = {
+  financial: "var(--color-primary)",
+  experience: "var(--color-text-info)",
+  legal: "var(--color-legal)",
+  market: "var(--color-market)",
+};
+
 export const SCORE_CATEGORIES = [
   {
     key: "financial",
@@ -57,7 +64,7 @@ export const getRecommendation = (stage, score) => {
       note: "Strong profile across all scoring categories. Top candidate.",
       color: "var(--color-revenue)",
       bg: "bg-revenue",
-      border: "border-(--color-revenue)/30",
+      // border: "border-(--color-revenue)/30",
       text: "text-revenue",
     };
   }
@@ -71,7 +78,7 @@ export const getRecommendation = (stage, score) => {
       note: "Meets minimums but requires committee review before approval.",
       color: "var(--color-text-moderator)",
       bg: "bg-moderator",
-      border: "border-moderator",
+      // border: "border-moderator",
       text: "text-moderator",
     };
   }
@@ -84,7 +91,7 @@ export const getRecommendation = (stage, score) => {
     note: "Score below threshold or disqualifying flag present.",
     color: "var(--color-text-remove)",
     bg: "bg-(--color-text-remove)/10",
-    border: "border-(--color-text-remove)/20",
+    // border: "border-(--color-text-remove)/20",
     text: "text-remove",
   };
 };

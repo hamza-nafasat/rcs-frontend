@@ -4,7 +4,7 @@ import { X, DollarSign, Briefcase, Scale, MapPin } from "lucide-react";
 import Button from "../../../../../components/shared/Button";
 import Badge from "../../../../../components/shared/Badge";
 import ScoreRadar from "./ScoreRadar";
-import CategoryScores from "./CategoryScores";
+// import CategoryScores from "./CategoryScores";
 import ScorecardSection from "./ScorecardSection";
 import {
   STAGE_COLORS,
@@ -54,12 +54,12 @@ const ClientApplicantScorecardDrawer = ({ isOpen, applicant, onClose }) => {
       />
 
       <aside
-        className={`relative flex h-full w-full max-w-110 flex-col overflow-y-auto bg-gray-50 shadow-xl ${isClosing ? "drawer-panel-closing" : "drawer-panel"}`}
+        className={`relative flex h-full w-full max-w-110 flex-col overflow-y-auto bg-white shadow-xl ${isClosing ? "drawer-panel-closing" : "drawer-panel"}`}
       >
         <header className="sticky top-0 z-10 flex items-start justify-between gap-3 border-b border-gray-200 bg-white px-5 py-4">
           <section>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-medium text-gray-400">
+              <span className="text-xs font-bold text-secondary">
                 {data.id}
               </span>
 
@@ -85,7 +85,7 @@ const ClientApplicantScorecardDrawer = ({ isOpen, applicant, onClose }) => {
 
         <article className="flex flex-col gap-4 p-5">
           <section
-            className={`flex items-start justify-between gap-3 rounded-xl border p-4 ${recommendation.bg} ${recommendation.border}`}
+            className={`flex items-start justify-between gap-3 rounded-xl p-4 ${recommendation.bg}`}
           >
             <div>
               <p className={`text-sm font-semibold ${recommendation.text}`}>
@@ -111,30 +111,34 @@ const ClientApplicantScorecardDrawer = ({ isOpen, applicant, onClose }) => {
 
           <ScoreRadar categories={data.categories} />
 
-          <CategoryScores categories={data.categories} />
+          {/* <CategoryScores categories={data.categories} /> */}
 
           <ScorecardSection
             icon={DollarSign}
             title="Financial Profile"
             items={data.financialProfile}
+            categoryKey="financial"
           />
 
           <ScorecardSection
             icon={Briefcase}
             title="Business Experience"
             items={data.experience}
+            categoryKey="experience"
           />
 
           <ScorecardSection
             icon={Scale}
             title="Legal & Background"
             items={data.legal}
+            categoryKey="legal"
           />
 
           <ScorecardSection
             icon={MapPin}
             title="Market & Location Fit"
             items={data.market}
+            categoryKey="market"
           />
         </article>
       </aside>

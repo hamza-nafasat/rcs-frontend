@@ -19,8 +19,8 @@ const ScoreRadar = ({ categories }) => {
   const values = SCORE_CATEGORIES.map((c) => categories[c.key] ?? 0);
 
   return (
-    <section className="rounded-xl border color-border bg-white p-4">
-      <h3 className="text-xs font-semibold tracking-wide text-muted uppercase">
+    <section className="rounded-xl bg-active p-4">
+      <h3 className="text-xs font-semibold tracking-wide text-secondary uppercase">
         Score Breakdown
       </h3>
 
