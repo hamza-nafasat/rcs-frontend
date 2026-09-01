@@ -4,12 +4,9 @@ import { MapPin } from "lucide-react";
 import Avatar from "../../../../components/shared/Avatar";
 import Badge from "../../../../components/shared/Badge";
 import ProgressBar from "../../../../components/shared/ProgressBar";
-import {
-  STAGE_COLORS,
-  getRecommendation,
-} from "../data/scorecardData";
+import { STAGE_COLORS, getRecommendation } from "../data/scorecardData";
 import { recentApplicants } from "../data/recentApplicants";
-import ApplicantScorecardDrawer from "./scorecard/ApplicantScorecardDrawer";
+import ClientApplicantScorecardDrawer from "../../pipeline/components/scorecard/ClientApplicantScorecardDrawer";
 
 const scoreColor = (score) => {
   if (score >= 80) return "var(--color-revenue)";
@@ -132,8 +129,12 @@ const customStyles = {
   },
 };
 
-const RecentApplicants = () => {
+const RecentApplicants = ({ onStageChange }) => {
   const [selected, setSelected] = useState(null);
+
+  const handleStageChange = (applicant, stage) => {
+    onStageChange(applicant, stage);
+  };
 
   return (
     <article className="overflow-hidden rounded-2xl border color-border bg-white">
@@ -152,11 +153,12 @@ const RecentApplicants = () => {
         onRowClicked={(row) => setSelected(row)}
       />
 
-      <ApplicantScorecardDrawer
+      <ClientApplicantScorecardDrawer
         key={selected?.id}
         isOpen={Boolean(selected)}
         applicant={selected}
         onClose={() => setSelected(null)}
+        onStageChange={handleStageChange}
       />
     </article>
   );
