@@ -32,10 +32,6 @@ const ApplicantScorecardDrawer = ({ isOpen, applicant, onClose }) => {
   useEffect(() => () => clearTimeout(closeTimer.current), []);
 
   useEffect(() => {
-    if (isOpen) setIsClosing(false);
-  }, [isOpen]);
-
-  useEffect(() => {
     const onKeyDown = (event) => event.key === "Escape" && handleClose();
 
     document.addEventListener("keydown", onKeyDown);
@@ -63,10 +59,7 @@ const ApplicantScorecardDrawer = ({ isOpen, applicant, onClose }) => {
           <section>
             <div className="flex items-center gap-2">
               <span className="text-xs font-medium text-muted">{data.id}</span>
-              <Badge
-                text={data.stage}
-                dotColor={STAGE_COLORS[data.stage]}
-              />
+              <Badge text={data.stage} dotColor={STAGE_COLORS[data.stage]} />
             </div>
             <h2 className="mt-1 text-xl font-semibold text-tertiary">
               {data.name}
@@ -104,16 +97,15 @@ const ApplicantScorecardDrawer = ({ isOpen, applicant, onClose }) => {
                     / 100
                   </span>
                 </p>
-                <p className={`text-[10px] ${recommendation.text}`}>Weighted Total</p>
+                <p className={`text-[10px] ${recommendation.text}`}>
+                  Weighted Total
+                </p>
               </div>
             </div>
 
             <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
               {SCORE_CATEGORIES.map((category) => (
-                <div
-                  key={category.key}
-                  className="rounded-lg bg-white p-2.5"
-                >
+                <div key={category.key} className="rounded-lg bg-white p-2.5">
                   <p className="text-[10px] text-secondary">
                     {category.shortLabel} ({category.weight}%)
                   </p>

@@ -14,12 +14,7 @@ import {
 
 const CLOSE_DURATION = 250;
 
-const ClientApplicantScorecardDrawer = ({
-  isOpen,
-  applicant,
-  onClose,
-  onStageChange,
-}) => {
+const ClientApplicantScorecardDrawer = ({ isOpen, applicant, onClose }) => {
   const [isClosing, setIsClosing] = useState(false);
   const closeTimer = useRef(null);
 
@@ -37,10 +32,6 @@ const ClientApplicantScorecardDrawer = ({
   useEffect(() => () => clearTimeout(closeTimer.current), []);
 
   useEffect(() => {
-    if (isOpen) setIsClosing(false);
-  }, [isOpen]);
-
-  useEffect(() => {
     const onKeyDown = (event) => event.key === "Escape" && handleClose();
 
     document.addEventListener("keydown", onKeyDown);
@@ -54,8 +45,6 @@ const ClientApplicantScorecardDrawer = ({
   const data = buildScorecard(applicant);
   const recommendation = getRecommendation(stage, data.score);
 
-  const handleStageChange = (next) => onStageChange?.(applicant, next);
-
   return createPortal(
     <div className="fixed inset-0 z-50 flex justify-end">
       <div
@@ -67,7 +56,7 @@ const ClientApplicantScorecardDrawer = ({
       <aside
         className={`relative flex h-full w-full max-w-110 flex-col overflow-y-auto bg-gray-50 shadow-xl ${isClosing ? "drawer-panel-closing" : "drawer-panel"}`}
       >
-        <article className="sticky top-0 z-10 flex items-start justify-between gap-3 border-b border-gray-200 bg-white px-5 py-4">
+        <header className="sticky top-0 z-10 flex items-start justify-between gap-3 border-b border-gray-200 bg-white px-5 py-4">
           <section>
             <div className="flex items-center gap-2">
               <span className="text-xs font-medium text-gray-400">
@@ -92,7 +81,7 @@ const ClientApplicantScorecardDrawer = ({
           >
             <X size={20} />
           </Button>
-        </article>
+        </header>
 
         <article className="flex flex-col gap-4 p-5">
           <section
