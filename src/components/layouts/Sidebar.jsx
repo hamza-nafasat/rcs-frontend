@@ -2,6 +2,7 @@ import {
   Award,
   Bell,
   ChevronLeft,
+  FileChartColumn,
   FileIcon,
   HelpCircle,
   LayoutDashboard,
@@ -36,7 +37,7 @@ const adminProfileItems = [
 const clientNavItems = [
   { label: "Overview", to: "/client/dashboard", icon: LayoutDashboard },
   { label: "Pipeline", to: "/client/dashboard/pipeline", icon: Award },
-  { label: "Reports", to: "/client/dashboard/reports", icon: FileIcon },
+  { label: "Reports", to: "/client/dashboard/reports", icon: FileChartColumn },
   { label: "Messages", to: "/client/dashboard/messages", icon: MessageSquare },
   { label: "Moderators", to: "/client/dashboard/moderators", icon: Award },
   { label: "FDD", to: "/client/dashboard/fdd", icon: FileIcon },
@@ -69,7 +70,14 @@ const SectionTitle = ({ children, isCollapsed }) => (
   </p>
 );
 
-const Sidebar = ({ isOpen, onClose, user, isCollapsed, onToggleCollapse, type = "admin" }) => {
+const Sidebar = ({
+  isOpen,
+  onClose,
+  user,
+  isCollapsed,
+  onToggleCollapse,
+  type = "admin",
+}) => {
   const hideOnCollapse = isCollapsed ? "lg:hidden" : "";
   const isClient = type === "client";
   const menuItems = isClient ? clientNavItems : adminNavItems;
