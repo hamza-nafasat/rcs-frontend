@@ -1,4 +1,10 @@
-import { BrowserRouter, Route, Routes, Navigate, useLocation } from "react-router-dom";
+import {
+  BrowserRouter,
+  Route,
+  Routes,
+  Navigate,
+  useLocation,
+} from "react-router-dom";
 
 import SignIn from "../pages/public/auth/SignIn";
 import ForgetPassword from "../pages/public/auth/ForgetPassword";
@@ -15,7 +21,7 @@ import ResetPasswordSuccess from "../pages/public/auth/ResetPasswordSuccess";
 import Support from "../pages/admin/support/Support";
 import Settings from "../pages/admin/settings/Settings";
 import Notification from "../pages/admin/notifications/Notification";
-import FranchisePipeline from "../pages/admin/franchise-pipeline/FranchisePipeline";
+import FranchisePipeline from "../pages/admin/pipeline/Pipeline";
 import ViewAllActivity from "../pages/admin/view-all-activity/ViewAllActivity";
 import CreateAccount from "../pages/public/auth/CreateAccount";
 import ClientDashboard from "../pages/client/dashboard/ClientDashboard";
@@ -57,18 +63,21 @@ const AppRoutes = () => {
           <Route path="support" element={<Support />} />
           <Route path="settings" element={<Settings type="admin" />} />
           <Route path="notifications" element={<Notification />} />
-          <Route path="franchise-pipeline" element={<FranchisePipeline />} />
+          <Route path="pipeline" element={<FranchisePipeline />} />
           <Route path="view-all-activity" element={<ViewAllActivity />} />
         </Route>
 
-        <Route path="/client" element={<Navigate to="/client/dashboard" replace />} />
+        <Route
+          path="/client"
+          element={<Navigate to="/client/dashboard" replace />}
+        />
         <Route path="/client/dashboard" element={<Dashboard type="client" />}>
           <Route index element={<ClientDashboard />} />
           {/* Pipeline */}
-          <Route path="pipeline" element={<Pipeline />}/>
-          <Route path="reports" element={<Report />}/>
-          <Route path="fdd" element={<ClientFDD />}/>
-          <Route path="moderators" element={<ClientModerator />}/>
+          <Route path="pipeline" element={<Pipeline />} />
+          <Route path="reports" element={<Report />} />
+          <Route path="fdd" element={<ClientFDD />} />
+          <Route path="moderators" element={<ClientModerator />} />
           <Route path="settings" element={<Settings type="client" />} />
           <Route path="notifications" element={<Notification />} />
           <Route path="support" element={<ClientSupport />} />

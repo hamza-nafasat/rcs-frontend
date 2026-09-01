@@ -23,8 +23,8 @@ const adminNavItems = [
   { label: "Moderators", to: "/admin/dashboard/moderators", icon: Award },
   { label: "FDD", to: "/admin/dashboard/fdd", icon: FileIcon },
   {
-    label: "Franchise Pipeline",
-    to: "/admin/dashboard/franchise-pipeline",
+    label: "Pipeline",
+    to: "/admin/dashboard/pipeline",
     icon: Settings,
   },
 ];

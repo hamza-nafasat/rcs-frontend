@@ -12,7 +12,7 @@ const initialFilters = {
   territory: [],
 };
 
-const FranchisePipeline = () => {
+const Pipeline = () => {
   const [filters, setFilters] = useState(initialFilters);
 
   // these lists will come from the backend later
@@ -45,4 +45,4 @@ const FranchisePipeline = () => {
   );
 };
 
-export default FranchisePipeline;
+export default Pipeline;
