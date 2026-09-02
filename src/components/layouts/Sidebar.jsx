@@ -48,22 +48,29 @@ const clientProfileItems = [
   { label: "Support", to: "/client/dashboard/support", icon: HelpCircle },
 ];
 
+const userNavItems = [
+  { label: "My Application", to: "/user/dashboard", icon: LayoutDashboard },
+
+];
+
+const userProfileItems = [
+  { label: "Notifications", to: "/user/dashboard/notifications", icon: Bell },
+  { label: "Support", to: "/user/dashboard/support", icon: HelpCircle },
+];
+
 const linkClass =
   (isCollapsed) =>
-  ({ isActive }) =>
-    `flex items-center gap-3 rounded-lg py-2.5 text-sm font-medium transition-colors ${
-      isCollapsed ? "lg:justify-center lg:px-0 px-3" : "px-3"
-    } ${
-      isActive
+    ({ isActive }) =>
+      `flex items-center gap-3 rounded-lg py-2.5 text-sm font-medium transition-colors ${isCollapsed ? "lg:justify-center lg:px-0 px-3" : "px-3"
+      } ${isActive
         ? "bg-primary text-primary"
         : "text-secondary hover:bg-(--color-bg-primary) hover:text-[#fefefe]!  "
-    }`;
+      }`;
 
 const SectionTitle = ({ children, isCollapsed }) => (
   <p
-    className={`px-3 pb-2 text-xs font-semibold uppercase tracking-wider ${
-      isCollapsed ? "lg:hidden" : ""
-    }`}
+    className={`px-3 pb-2 text-xs font-semibold uppercase tracking-wider ${isCollapsed ? "lg:hidden" : ""
+      }`}
     style={{ color: "var(--color-sidebar-section)" }}
   >
     {children}
@@ -80,25 +87,28 @@ const Sidebar = ({
 }) => {
   const hideOnCollapse = isCollapsed ? "lg:hidden" : "";
   const isClient = type === "client";
-  const menuItems = isClient ? clientNavItems : adminNavItems;
-  const profileLinks = isClient ? clientProfileItems : adminProfileItems;
-  const homePath = isClient ? "/client/dashboard" : "/admin/dashboard";
-  const settingsPath = isClient
-    ? "/client/dashboard/settings"
-    : "/admin/dashboard/settings";
+  const isUser = type === "user";
+
+  // Define menu items based on user type
+  const menuItems = isUser ? userNavItems : isClient ? clientNavItems : adminNavItems;
+  const profileLinks = isUser ? userProfileItems : isClient ? clientProfileItems : adminProfileItems;
+  const homePath = isUser ? "/user/dashboard" : isClient ? "/client/dashboard" : "/admin/dashboard";
+  const settingsPath = isUser
+    ? "/user/dashboard/settings"
+    : isClient
+      ? "/client/dashboard/settings"
+      : "/admin/dashboard/settings";
   return (
     <>
       <div
         onClick={onClose}
-        className={`fixed inset-0 z-30 bg-black/40 lg:hidden ${
-          isOpen ? "block" : "hidden"
-        }`}
+        className={`fixed inset-0 z-30 bg-black/40 lg:hidden ${isOpen ? "block" : "hidden"
+          }`}
       />
 
       <aside
-        className={`fixed inset-y-0 left-0 z-40 flex w-64 shrink-0 flex-col border-r bg-dark transition-all duration-200 lg:static lg:translate-x-0 ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        } ${isCollapsed ? "lg:w-20" : ""}`}
+        className={`fixed inset-y-0 left-0 z-40 flex w-64 shrink-0 flex-col border-r bg-dark transition-all duration-200 lg:static lg:translate-x-0 ${isOpen ? "translate-x-0" : "-translate-x-full"
+          } ${isCollapsed ? "lg:w-20" : ""}`}
         style={{ borderColor: "var(--color-border)" }}
       >
         <button
@@ -110,35 +120,31 @@ const Sidebar = ({
         >
           <ChevronLeft
             size={14}
-            className={`transition-transform duration-200 ${
-              isCollapsed ? "rotate-180" : ""
-            }`}
+            className={`transition-transform duration-200 ${isCollapsed ? "rotate-180" : ""
+              }`}
           />
         </button>
 
         <div
-          className={`flex h-16 items-center px-5 ${
-            isCollapsed ? "lg:justify-center lg:px-0" : "justify-between"
-          }`}
+          className={`flex h-16 items-center px-5 ${isCollapsed ? "lg:justify-center lg:px-0" : "justify-between"
+            }`}
         >
           <div className="relative flex h-16 items-center">
             <img
               src={LogoCompany}
               alt="Logo"
-              className={`h-12 transition-opacity duration-200 ${
-                isCollapsed
-                  ? "lg:pointer-events-none lg:opacity-0"
-                  : "opacity-100"
-              }`}
+              className={`h-12 transition-opacity duration-200 ${isCollapsed
+                ? "lg:pointer-events-none lg:opacity-0"
+                : "opacity-100"
+                }`}
             />
             <img
               src={SidebarClosedLogo}
               alt="Logo"
-              className={`absolute left-1/2 top-1/2 h-8 -translate-x-1/2 -translate-y-1/2 transition-opacity duration-200 ${
-                isCollapsed
-                  ? "opacity-0 lg:opacity-100"
-                  : "pointer-events-none opacity-0"
-              }`}
+              className={`absolute left-1/2 top-1/2 h-8 -translate-x-1/2 -translate-y-1/2 transition-opacity duration-200 ${isCollapsed
+                ? "opacity-0 lg:opacity-100"
+                : "pointer-events-none opacity-0"
+                }`}
             />
           </div>
           <button
@@ -191,14 +197,12 @@ const Sidebar = ({
         <NavLink
           to={settingsPath}
           onClick={onClose}
-          className={`border-t border-gray-600 px-3 py-4 block ${
-            isCollapsed ? "lg:px-0" : ""
-          }`}
+          className={`border-t border-gray-600 px-3 py-4 block ${isCollapsed ? "lg:px-0" : ""
+            }`}
         >
           <div
-            className={`flex items-center gap-3 rounded-lg px-2 py-2 hover:bg-(--color-bg-primary) cursor-pointer ${
-              isCollapsed ? "lg:justify-center lg:px-0" : ""
-            }`}
+            className={`flex items-center gap-3 rounded-lg px-2 py-2 hover:bg-(--color-bg-primary) cursor-pointer ${isCollapsed ? "lg:justify-center lg:px-0" : ""
+              }`}
           >
             <Avatar name={user?.name || "Marco"} size={34} />
             <div className={`min-w-0 flex-1 ${hideOnCollapse}`}>

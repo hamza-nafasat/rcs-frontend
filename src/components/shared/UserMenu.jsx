@@ -6,7 +6,9 @@ import { ChevronDown, LogOut, UserRound } from "lucide-react";
 const UserMenu = ({ name, type = "admin" }) => {
   const navigate = useNavigate();
   const profilePath =
-    type === "client"
+    type === "user"
+      ? "/user/dashboard/settings"
+      : type === "client"
       ? "/client/dashboard/settings"
       : "/admin/dashboard/settings";
   const options = [

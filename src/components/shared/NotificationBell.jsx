@@ -14,7 +14,9 @@ const NotificationBell = ({ type = "admin" }) => {
   const navigate = useNavigate();
   const { notifications, unreadCount, markRead } = useNotifications();
   const notificationsPath =
-    type === "client"
+    type === "user"
+      ? "/user/dashboard/notifications"
+      : type === "client"
       ? "/client/dashboard/notifications"
       : "/admin/dashboard/notifications";
 
