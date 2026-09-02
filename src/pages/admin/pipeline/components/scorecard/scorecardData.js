@@ -1,10 +1,12 @@
 export const STAGES = [
-  "Approved",
-  "Committee Review",
   "New Application",
-  "Under Review",
-  "Conditionally Approved",
   "Document Collection",
+  "Under Review",
+  "Committee Review",
+  "Agreement",
+  "Approved",
+  "Assign Location",
+  "Denied",
 ];
 
 export const STAGE_COLORS = {
@@ -23,8 +25,6 @@ export const SCORE_CATEGORIES = [
   { key: "market", label: "Market & Location Fit", weight: 25, color: "#3b82f6" },
 ];
 
-// Recommendation is driven by the decision an admin has made (the stage).
-// Until a decision exists it falls back to the engine's score thresholds.
 export const getRecommendation = (stage, score) => {
   if (stage === "Approved")
     return {
@@ -81,8 +81,6 @@ export const getRecommendation = (stage, score) => {
   };
 };
 
-// Builds the full scorecard for a table row, filling in defaults for any
-// detail the row does not carry yet.
 export const buildScorecard = (row) => {
   const score = row.score ?? 0;
 
