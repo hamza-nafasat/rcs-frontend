@@ -71,9 +71,9 @@ const ApplicantsScored = () => {
 
 export default ApplicantsScored;
 
-const ScoreCategory = ({ category, key }) => {
+const ScoreCategory = ({ category }) => {
   return (
-    <section key={key} className="rounded-xl bg-muted p-3">
+    <section className="rounded-xl bg-muted p-3">
       <div className="flex items-start justify-between gap-2">
         <h3 className="text-sm font-semibold text-tertiary">
           {category.label}
@@ -92,9 +92,9 @@ const ScoreCategory = ({ category, key }) => {
   );
 };
 
-const ScoreLegendItem = ({ item, key }) => {
+const ScoreLegendItem = ({ item }) => {
   return (
-    <p key={key} className="flex items-center gap-2">
+    <p className="flex items-center gap-2">
       <span>{item.label}:</span>
       <span
         className={`rounded-full px-2 py-0.5 text-xs font-medium ${item.pillClass}`}

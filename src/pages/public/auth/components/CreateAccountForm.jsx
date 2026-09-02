@@ -5,6 +5,7 @@ import Button from "../../../../components/shared/Button";
 import AuthHeading from "./AuthHeading";
 import ApplicationNotice from "./ApplicationNotice";
 import ApplicationFields from "./ApplicationFields";
+import LocationAssign from "./LocationAssign";
 import {
   EMPTY_APPLICATION,
   scoreApplication,
@@ -49,6 +50,14 @@ const CreateAccountForm = () => {
           scores={scores}
           onChange={handleChange}
           onSelect={handleSelect}
+        />
+
+        {/* Territory drawing on real USA map */}
+        <LocationAssign
+          onTerritoryChange={(geoPoints) => {
+            // geoPoints is an array of { lat, lng } or null when cleared
+            // Available for form submission in production
+          }}
         />
 
         <footer className="flex flex-wrap items-center justify-between gap-3 border-t color-border pt-4">
