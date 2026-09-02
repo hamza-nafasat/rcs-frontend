@@ -87,14 +87,25 @@ const ApplicantScorecardDrawer = ({
             <p className="text-sm text-gray-500">{data.company}</p>
           </section>
 
-          <Button
-            type="icon"
-            onClick={handleClose}
-            aria-label="Close scorecard"
-            className="p-1! text-gray-500 hover:bg-gray-100 rounded-full!"
-          >
-            <X size={20} />
-          </Button>
+          <div className="flex flex-col items-end gap-2 shrink-0">
+            <Button
+              type="icon"
+              onClick={handleClose}
+              aria-label="Close scorecard"
+              className="p-1! text-gray-500 hover:bg-gray-100 rounded-full!"
+            >
+              <X size={20} />
+            </Button>
+
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => { }}
+              className="text-xs py-2! px-3!"
+            >
+              Assign Location
+            </Button>
+          </div>
         </article>
 
         <article className="flex flex-col gap-4 p-5">
