@@ -714,7 +714,7 @@ const FullscreenDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
         style={{
           flex: 1,
           position: "relative",
-          cursor: isDrawingActive ? "crosshair" : "grab",
+          cursor: isDrawingActive ? "pointer" : "grab",
           touchAction: "none",
         }}
         onContextMenu={(e) => e.preventDefault()}

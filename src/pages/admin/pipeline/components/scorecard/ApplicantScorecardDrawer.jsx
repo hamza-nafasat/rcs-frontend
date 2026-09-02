@@ -7,6 +7,8 @@ import ScoreRadar from "./ScoreRadar";
 import CategoryScores from "./CategoryScores";
 import ScorecardSection from "./ScorecardSection";
 import StageSelector from "./StageSelector";
+import AdminLocationAssignModal from "./AdminLocationAssignModal";
+import AdminInlineLocationMap from "./AdminInlineLocationMap";
 import {
   STAGE_COLORS,
   buildScorecard,
@@ -22,6 +24,7 @@ const ApplicantScorecardDrawer = ({
   onStageChange,
 }) => {
   const [isClosing, setIsClosing] = useState(false);
+  const [showMapModal, setShowMapModal] = useState(false);
   const closeTimer = useRef(null);
 
   // Play the slide-out animation before unmounting.
@@ -96,17 +99,20 @@ const ApplicantScorecardDrawer = ({
             >
               <X size={20} />
             </Button>
-
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={() => { }}
-              className="text-xs py-2! px-3!"
-            >
-              Assign Location
-            </Button>
           </div>
         </article>
+
+        {/* Admin Location Assign Map Modal */}
+        <AdminLocationAssignModal
+          isOpen={showMapModal}
+          applicant={applicant}
+          onClose={() => setShowMapModal(false)}
+          onSaveLocation={(updatedAreas) => {
+            if (applicant) {
+              applicant.territories = updatedAreas;
+            }
+          }}
+        />
 
         <article className="flex flex-col gap-4 p-5">
           {/* Recommendation */}
@@ -162,6 +168,14 @@ const ApplicantScorecardDrawer = ({
             title="Market & Location Fit"
             items={data.market}
           />
+
+          {/* Inline Assigned Branch Location Map Preview */}
+          <div className="mt-1">
+            <AdminInlineLocationMap
+              applicant={applicant}
+              onOpenFullMap={() => setShowMapModal(true)}
+            />
+          </div>
 
           <StageSelector value={stage} onChange={handleStageChange} />
         </article>
