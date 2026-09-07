@@ -47,11 +47,9 @@ const customStyles = {
 };
 
 const UserFranchisePipelineTable = () => {
-  // Store all applicant data, but limit display to only 1 item for this franchisee request
   const [applicants] = useState(initialApplicants);
   const [selected, setSelected] = useState(null);
 
-  // Single franchise application requested by the user
   const userApplication = applicants.slice(0, 1);
   const currentApplicant = userApplication[0];
 
@@ -124,10 +122,9 @@ const UserFranchisePipelineTable = () => {
 
   return (
     <article className="flex flex-col gap-6">
-      {/* Pipeline Stage Cards Tracker */}
       <UserPipelineStageOverview currentStage={currentApplicant?.stage} />
 
-      {/* Single Franchise Request Table */}
+      {/* Single Franchise Table */}
       <div className="flex flex-col gap-3">
         <h2 className="heading-lg text-tertiary">Pipeline Request</h2>
 
@@ -143,7 +140,6 @@ const UserFranchisePipelineTable = () => {
         </section>
       </div>
 
-      {/* Read-Only Applicant Scorecard / Details Drawer */}
       <ApplicantScorecardDrawer
         key={selected?.id}
         isOpen={Boolean(selected)}
