@@ -31,6 +31,7 @@ import ClientFDD from "../pages/client/fdd/ClientFDD";
 import ClientModerator from "../pages/client/moderators/ClientModerator";
 import ClientSupport from "../pages/client/support/ClientSupport";
 import UserDashboard from "../pages/user/dashboard/UserDashboard";
+import ClientFranchisee from "../pages/client/franchisee/ClientFranchisee";
 
 const LegacyAdminRedirect = () => {
   const { pathname } = useLocation();
@@ -83,6 +84,7 @@ const AppRoutes = () => {
           <Route path="notifications" element={<Notification />} />
           <Route path="support" element={<ClientSupport />} />
           <Route path="messages" element={<Messages />} />
+          <Route path="franchisee" element={<ClientFranchisee />} />
         </Route>
 
         <Route path="/user/dashboard" element={<Dashboard type="user" />}>

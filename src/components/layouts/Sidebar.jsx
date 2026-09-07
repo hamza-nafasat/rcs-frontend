@@ -9,6 +9,7 @@ import {
   MessageSquare,
   Settings,
   Users,
+  UserSquare,
   X,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
@@ -41,6 +42,7 @@ const clientNavItems = [
   { label: "Messages", to: "/client/dashboard/messages", icon: MessageSquare },
   { label: "Moderators", to: "/client/dashboard/moderators", icon: Award },
   { label: "FDD", to: "/client/dashboard/fdd", icon: FileIcon },
+  { label: "Franchisee", to: "/client/dashboard/franchisee", icon: UserSquare },
 ];
 
 const clientProfileItems = [
@@ -50,12 +52,14 @@ const clientProfileItems = [
 
 const userNavItems = [
   { label: "My Application", to: "/user/dashboard", icon: LayoutDashboard },
+  { label: "Messages", to: "/user/dashboard/messages", icon: MessageSquare },
 
 ];
 
 const userProfileItems = [
   { label: "Notifications", to: "/user/dashboard/notifications", icon: Bell },
   { label: "Support", to: "/user/dashboard/support", icon: HelpCircle },
+
 ];
 
 const linkClass =
