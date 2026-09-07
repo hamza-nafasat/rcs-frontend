@@ -1,12 +1,10 @@
 import { MapPin, Eye } from "lucide-react";
 import Avatar from "../../../../components/shared/Avatar";
-import Badge from "../../../../components/shared/Badge";
 import ProgressBar from "../../../../components/shared/ProgressBar";
 import Button from "../../../../components/shared/Button";
 import DataTable from "react-data-table-component";
 import { useState } from "react";
 import ApplicantScorecardDrawer from "./scorecard/ApplicantScorecardDrawer";
-import { STAGE_COLORS } from "./scorecard/scorecardData";
 import { initialApplicants } from "../../../admin/pipeline/components/pipelineApplicants";
 import UserPipelineStageOverview from "./UserPipelineStageOverview";
 
@@ -50,22 +48,12 @@ const customStyles = {
 
 const UserFranchisePipelineTable = () => {
   // Store all applicant data, but limit display to only 1 item for this franchisee request
-  const [applicants, setApplicants] = useState(initialApplicants);
+  const [applicants] = useState(initialApplicants);
   const [selected, setSelected] = useState(null);
 
   // Single franchise application requested by the user
   const userApplication = applicants.slice(0, 1);
   const currentApplicant = userApplication[0];
-
-  const handleStageChange = (applicant, stage) => {
-    setApplicants((rows) =>
-      rows.map((row) => (row.id === applicant.id ? { ...row, stage } : row)),
-    );
-
-    setSelected((current) =>
-      current && current.id === applicant.id ? { ...current, stage } : current,
-    );
-  };
 
   const columns = [
     {
@@ -99,19 +87,6 @@ const UserFranchisePipelineTable = () => {
       ),
     },
     {
-      name: "Stage",
-      selector: (row) => row.stage,
-      sortable: true,
-      width: "160px",
-      cell: (row) => (
-        <Badge
-          text={row.stage}
-          dotColor={STAGE_COLORS[row.stage] || "#2563eb"}
-          className="text-white! w-full flex items-center justify-center"
-        />
-      ),
-    },
-    {
       name: "Score",
       selector: (row) => row.score,
       sortable: true,
@@ -134,15 +109,15 @@ const UserFranchisePipelineTable = () => {
     },
     {
       name: "Action",
-      width: "160px",
+      width: "120px",
       cell: (row) => (
         <Button
           type="button"
-          className="px-3 py-1.5 text-xs flex items-center gap-1.5 bg-blue-50 text-blue-600 hover:bg-blue-100 border-none rounded-lg font-medium transition"
+          className="px-2.5 py-1.5 text-xs flex items-center gap-1.5 bg-transparent hover:bg-gray-100 text-gray-700 border-none shadow-none rounded-lg font-medium transition"
           onClick={() => setSelected(row)}
         >
-          <Eye size={14} />
-          View Details
+          <Eye size={16} />
+          View
         </Button>
       ),
     },
@@ -169,13 +144,13 @@ const UserFranchisePipelineTable = () => {
         </section>
       </div>
 
-      {/* Applicant Scorecard / Details Drawer */}
+      {/* Read-Only Applicant Scorecard / Details Drawer */}
       <ApplicantScorecardDrawer
         key={selected?.id}
         isOpen={Boolean(selected)}
         applicant={selected}
         onClose={() => setSelected(null)}
-        onStageChange={handleStageChange}
+        readOnly={true}
       />
     </article>
   );

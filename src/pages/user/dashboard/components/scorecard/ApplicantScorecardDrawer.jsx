@@ -22,6 +22,7 @@ const ApplicantScorecardDrawer = ({
   applicant,
   onClose,
   onStageChange,
+  readOnly = false,
 }) => {
   const [isClosing, setIsClosing] = useState(false);
   const [showMapModal, setShowMapModal] = useState(false);
@@ -177,7 +178,9 @@ const ApplicantScorecardDrawer = ({
             />
           </div>
 
-          <StageSelector value={stage} onChange={handleStageChange} />
+          {!readOnly && (
+            <StageSelector value={stage} onChange={handleStageChange} />
+          )}
         </article>
       </aside>
     </div>,
