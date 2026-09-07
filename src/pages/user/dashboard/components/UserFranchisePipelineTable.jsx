@@ -7,6 +7,7 @@ import { useState } from "react";
 import ApplicantScorecardDrawer from "./scorecard/ApplicantScorecardDrawer";
 import { initialApplicants } from "../../../admin/pipeline/components/pipelineApplicants";
 import UserPipelineStageOverview from "./UserPipelineStageOverview";
+import UploadedDocumentsSection from "./UploadedDocumentsSection";
 
 const scoreColor = (score) => {
   if (score >= 75) return "#22c55e";
@@ -139,6 +140,9 @@ const UserFranchisePipelineTable = () => {
           />
         </section>
       </div>
+
+      {/* Uploaded Application Documents */}
+      <UploadedDocumentsSection />
 
       <ApplicantScorecardDrawer
         key={selected?.id}
