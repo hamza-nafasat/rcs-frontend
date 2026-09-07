@@ -113,11 +113,10 @@ const UserFranchisePipelineTable = () => {
       cell: (row) => (
         <Button
           type="button"
-          className="px-2.5 py-1.5 text-xs flex items-center gap-1.5 bg-transparent hover:bg-gray-100 text-gray-700 border-none shadow-none rounded-lg font-medium transition"
+          className="px-2.5! py-1.5! text-xs flex items-center gap-1.5 bg-transparent text-gray-700!"
           onClick={() => setSelected(row)}
         >
           <Eye size={16} />
-          View
         </Button>
       ),
     },
