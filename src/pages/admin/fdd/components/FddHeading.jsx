@@ -3,11 +3,11 @@ import Button from "../../../../components/shared/Button";
 import { useState } from "react";
 import AddFddModal from "./AddFddModal";
 
-const FddHeading = ({ heading, subheading, emoji, onAddModerator }) => {
+const FddHeading = ({ heading, subheading, emoji, onAddFdd }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleAddModerator = (formData) => {
-    onAddModerator?.(formData);
+  const handleAddFdd = (formData) => {
+    onAddFdd?.(formData);
     setIsModalOpen(false);
   };
 
@@ -33,7 +33,7 @@ const FddHeading = ({ heading, subheading, emoji, onAddModerator }) => {
         <AddFddModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          onSubmit={handleAddModerator}
+          onSubmit={handleAddFdd}
           mode="add"
         />
       )}

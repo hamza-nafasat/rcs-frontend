@@ -4,33 +4,60 @@ import Input from "../../../../components/shared/Input";
 import Select from "../../../../components/shared/Select";
 import FileUpload from "../../../../components/shared/FileUpload";
 import Button from "../../../../components/shared/Button";
+import { US_STATES } from "../../../../utils/fddStateHelper";
+
+const DEFAULT_BRANDS = ["Burger Hub", "Pizza Corner", "Sushi Place", "Taco Town"];
+const DEFAULT_COUNTRIES = ["United States"];
+const DEFAULT_STATES = [
+  "General (Non-Registration States)",
+  ...US_STATES.map((s) => s.name),
+];
+
+const FDD_TYPE_OPTIONS = [
+  "State-Specific Registration FDD",
+  "General Federal FDD",
+];
 
 const INITIAL_FORM = {
   title: "",
   version: "",
   brands: [],
-  country: "",
-  state: "",
+  country: "United States",
+  state: "California",
+  fddType: "State-Specific Registration FDD",
+  status: "Approved",
 };
 
 const AddFddModal = ({
   isOpen,
   onClose,
   onSubmit,
-  brands = [],
-  countries = [],
-  states = [],
+  brands = DEFAULT_BRANDS,
+  countries = DEFAULT_COUNTRIES,
+  states = DEFAULT_STATES,
 }) => {
   const [formData, setFormData] = useState(INITIAL_FORM);
   const [file, setFile] = useState(null);
 
+  const availableBrands = brands.length > 0 ? brands : DEFAULT_BRANDS;
+  const availableCountries = countries.length > 0 ? countries : DEFAULT_COUNTRIES;
+  const availableStates = states.length > 0 ? states : DEFAULT_STATES;
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => {
+      const updated = { ...prev, [name]: value };
+      // Auto adjust FDD type if state changes
+      if (name === "state") {
+        if (value.includes("General")) {
+          updated.fddType = "General Federal FDD";
+        } else {
+          updated.fddType = "State-Specific Registration FDD";
+        }
+      }
+      return updated;
+    });
   };
 
   const handleSubmit = (e) => {
@@ -38,7 +65,17 @@ const AddFddModal = ({
 
     if (formData.brands.length === 0) return;
 
-    onSubmit({ ...formData, file });
+    const documentName = file
+      ? file.name
+      : formData.title
+        ? `${formData.title}.pdf`
+        : `${formData.state} FDD ${formData.version}.pdf`;
+
+    onSubmit({
+      ...formData,
+      document: documentName,
+      file,
+    });
   };
 
   if (!isOpen) return null;
@@ -54,7 +91,7 @@ const AddFddModal = ({
             </h2>
 
             <p className="mt-1 text-sm text-secondary">
-              Add a new version of the franchise disclosure document.
+              Add a new version of the franchise disclosure document for a specific state or general coverage.
             </p>
           </div>
 
@@ -77,7 +114,7 @@ const AddFddModal = ({
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
-                placeholder="Enter document title"
+                placeholder="e.g. California State FDD 2025"
                 required
               />
             </div>
@@ -88,13 +125,13 @@ const AddFddModal = ({
                 name="version"
                 value={formData.version}
                 onChange={handleChange}
-                placeholder="e.g. v1.0"
+                placeholder="e.g. v3.2"
                 required
               />
             </div>
           </section>
 
-          {/* Brand */}
+          {/* Restaurant Brand Select */}
           <section>
             <Select
               label="Restaurant Brands *"
@@ -102,7 +139,7 @@ const AddFddModal = ({
               value={formData.brands}
               onChange={handleChange}
               placeholder="Select restaurant brands"
-              options={brands}
+              options={availableBrands}
               multiple
               searchable
               clearable
@@ -110,30 +147,30 @@ const AddFddModal = ({
             />
           </section>
 
-          {/* Target location */}
+          {/* Target location Selects */}
           <section className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Select
-              label="Target Country *"
-              name="country"
-              value={formData.country}
-              onChange={handleChange}
-              placeholder="Select target country"
-              options={countries}
-              required
-            />
-
-            <Select
-              label="Target State / Region *"
+              label="State *"
               name="state"
               value={formData.state}
               onChange={handleChange}
-              placeholder="Select target state/region"
-              options={states}
+              placeholder="Select state"
+              options={availableStates}
+              searchable
+              clearable
               required
+            />
+            <Select
+              label="FDD Document Type *"
+              name="fddType"
+              value={formData.fddType}
+              onChange={handleChange}
+              options={FDD_TYPE_OPTIONS}
+              placeholder="Select FDD Document Type"
             />
           </section>
 
-          {/* Document file */}
+          {/* PDF File Upload */}
           <section>
             <FileUpload
               label="PDF Document *"
@@ -157,7 +194,7 @@ const AddFddModal = ({
               type="submit"
               className="w-1/2 px-3! py-2! sm:px-4! sm:py-2.5!"
             >
-              Upload
+              Upload FDD
             </Button>
           </section>
         </form>
