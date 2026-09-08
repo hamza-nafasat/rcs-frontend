@@ -23,8 +23,8 @@ const AdminDocumentRequestCard = ({
         <div className="flex items-center gap-3">
           <div
             className={`p-2.5 rounded-xl border shrink-0 ${hasRequest
-                ? "bg-amber-50 text-amber-600 border-amber-200"
-                : "bg-emerald-50 text-emerald-600 border-emerald-200"
+              ? "bg-amber-50 text-amber-600 border-amber-200"
+              : "bg-emerald-50 text-emerald-600 border-emerald-200"
               }`}
           >
             {hasRequest ? (
@@ -43,8 +43,8 @@ const AdminDocumentRequestCard = ({
               </h3>
               <span
                 className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${hasRequest
-                    ? "bg-amber-100 text-amber-800 border-amber-300"
-                    : "bg-emerald-100 text-emerald-800 border-emerald-300"
+                  ? "bg-amber-100 text-amber-800 border-amber-300"
+                  : "bg-emerald-100 text-emerald-800 border-emerald-300"
                   }`}
               >
                 {hasRequest ? "Action Required" : "No Request"}

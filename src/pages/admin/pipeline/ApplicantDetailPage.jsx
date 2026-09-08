@@ -9,7 +9,8 @@ import ScorecardSection from "./components/scorecard/ScorecardSection";
 import StageSelector from "./components/scorecard/StageSelector";
 import AdminLocationAssignModal from "./components/scorecard/AdminLocationAssignModal";
 import AdminInlineLocationMap from "./components/scorecard/AdminInlineLocationMap";
-import UserPipelineStageOverview from "../../user/dashboard/components/UserPipelineStageOverview";
+import AdminPipelineStageOverview from "./components/AdminPipelineStageOverview";
+import UploadedDocumentsSection from "../../user/dashboard/components/UploadedDocumentsSection";
 import { initialApplicants } from "./components/pipelineApplicants";
 import {
   STAGE_COLORS,
@@ -46,29 +47,31 @@ const ApplicantDetailPage = () => {
 
   return (
     <article className="flex flex-col gap-6 animate-fade-in">
-      {/* Visual Pipeline Stage Overview Cards (Admin View with Make a Request Button) */}
-      <UserPipelineStageOverview currentStage={stage} showMakeRequest={true} />
+      {/* Visual Pipeline Stage Overview Cards (Admin Dedicated View) */}
+      <AdminPipelineStageOverview currentStage={stage} />
       {/* Header with Card Background */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl bg-white p-4 sm:p-5 shadow-xs border border-gray-200">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold text-gray-400">
-              {data.id}
-            </span>
-            <Badge text={stage} dotColor={STAGE_COLORS[stage] || "#2563eb"} />
-          </div>
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mt-0.5">
-            {data.name} — Applicant Scorecard
-          </h1>
-          <p className="text-xs text-gray-500">{data.company}</p>
-        </div>
-      </div>
+
 
 
 
       {/* Main Scorecard Page Container */}
       <div className="flex flex-col gap-5 rounded-2xl bg-white p-5 sm:p-6 shadow-xs border border-gray-200">
         {/* Recommendation Banner */}
+
+
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl bg-white ">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-semibold text-gray-400">
+                {data.id}
+              </span>
+            </div>
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mt-0.5">
+              {data.name}
+            </h1>
+            <p className="text-xs text-gray-500">{data.company}</p>
+          </div>
+        </div>
         <div
           className={`flex items-start justify-between gap-3 rounded-xl border p-4 ${recommendation.bg} ${recommendation.border}`}
         >
@@ -144,6 +147,9 @@ const ApplicantDetailPage = () => {
           <StageSelector value={stage} onChange={handleStageChange} />
         </div>
       </div>
+
+      {/* User Uploaded Documents Section */}
+      <UploadedDocumentsSection showUploadButton={false} />
 
       {/* Full Map Modal */}
       {showMapModal && (

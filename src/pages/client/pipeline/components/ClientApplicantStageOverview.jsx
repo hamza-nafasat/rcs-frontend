@@ -10,9 +10,7 @@ export const PIPELINE_STAGES = [
   { label: "Assign Location", color: "#ac24eb", bg: "#faf1ff" },
 ];
 
-const UserPipelineStageOverview = ({
-  currentStage = "New Application",
-}) => {
+const ClientApplicantStageOverview = ({ currentStage = "New Application" }) => {
   const activeIndex = PIPELINE_STAGES.findIndex(
     (s) => s.label.toLowerCase() === currentStage?.toLowerCase(),
   );
@@ -24,11 +22,9 @@ const UserPipelineStageOverview = ({
         <div>
           <h2 className="heading-lg text-tertiary">Application Progress</h2>
           <p className="text-xs text-gray-500 mt-0.5">
-            Track your franchise request journey across pipeline stages
+            Overview of applicant stage progression in pipeline
           </p>
         </div>
-
-
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-7 gap-3">
@@ -102,4 +98,4 @@ const UserPipelineStageOverview = ({
   );
 };
 
-export default UserPipelineStageOverview;
+export default ClientApplicantStageOverview;

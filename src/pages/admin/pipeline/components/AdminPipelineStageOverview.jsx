@@ -1,4 +1,7 @@
-import { CheckCircle2, Circle } from "lucide-react";
+import { useState } from "react";
+import { CheckCircle2, Circle, MessageSquarePlus } from "lucide-react";
+import Button from "../../../../components/shared/Button";
+import MakeRequestModal from "../../../../components/modals/MakeRequestModal";
 
 export const PIPELINE_STAGES = [
   { label: "New Application", color: "#2563eb", bg: "#eff6ff" },
@@ -10,13 +13,22 @@ export const PIPELINE_STAGES = [
   { label: "Assign Location", color: "#ac24eb", bg: "#faf1ff" },
 ];
 
-const UserPipelineStageOverview = ({
+const AdminPipelineStageOverview = ({
   currentStage = "New Application",
+  onMakeRequestSubmit,
 }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const activeIndex = PIPELINE_STAGES.findIndex(
     (s) => s.label.toLowerCase() === currentStage?.toLowerCase(),
   );
   const currentIndex = activeIndex === -1 ? 0 : activeIndex;
+
+  const handleRequestSubmit = (requestData) => {
+    onMakeRequestSubmit?.(requestData);
+    console.log("Admin Make a Request submitted:", requestData);
+    alert(`Request "${requestData.title}" sent to user successfully.`);
+  };
 
   return (
     <section className="flex flex-col gap-4 rounded-2xl bg-white p-4 sm:p-5 shadow-sm border border-gray-100">
@@ -24,11 +36,19 @@ const UserPipelineStageOverview = ({
         <div>
           <h2 className="heading-lg text-tertiary">Application Progress</h2>
           <p className="text-xs text-gray-500 mt-0.5">
-            Track your franchise request journey across pipeline stages
+            Track and manage franchisee applicant's pipeline stage progress
           </p>
         </div>
 
-
+        {/* 'Make a Request' button for Admin */}
+        <Button
+          type="button"
+          icon={<MessageSquarePlus size={16} />}
+          onClick={() => setIsModalOpen(true)}
+          className="self-start sm:self-auto px-4! py-2! text-xs font-semibold text-white rounded-xl shadow-2xs transition"
+        >
+          Make a Request
+        </Button>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-7 gap-3">
@@ -98,8 +118,15 @@ const UserPipelineStageOverview = ({
           );
         })}
       </div>
+
+      {/* Make a Request Modal for Admin */}
+      <MakeRequestModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleRequestSubmit}
+      />
     </section>
   );
 };
 
-export default UserPipelineStageOverview;
+export default AdminPipelineStageOverview;

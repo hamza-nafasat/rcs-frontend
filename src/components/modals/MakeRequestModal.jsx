@@ -2,10 +2,12 @@ import { useState } from "react";
 import { X, Send } from "lucide-react";
 import Input from "../shared/Input";
 import Button from "../shared/Button";
+import FileUpload from "../shared/FileUpload";
 
 const MakeRequestModal = ({ isOpen, onClose, onSubmit }) => {
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
+  const [file, setFile] = useState(null);
 
   if (!isOpen) return null;
 
@@ -13,15 +15,16 @@ const MakeRequestModal = ({ isOpen, onClose, onSubmit }) => {
     e.preventDefault();
     if (!title.trim() || !message.trim()) return;
 
-    onSubmit?.({ title, message });
+    onSubmit?.({ title, message, file });
     setTitle("");
     setMessage("");
+    setFile(null);
     onClose?.();
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 animate-fade-in">
-      <div className="w-full max-w-125 rounded-2xl bg-white p-6 shadow-xl border border-gray-100 flex flex-col gap-5">
+      <div className="w-full max-w-125 rounded-2xl bg-white p-6 shadow-xl border border-gray-100 flex flex-col gap-5 max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-start justify-between gap-4 border-b border-gray-100 pb-3">
           <div>
@@ -40,7 +43,7 @@ const MakeRequestModal = ({ isOpen, onClose, onSubmit }) => {
           </button>
         </div>
 
-        {/* Form with exactly 2 fields: Title and Message */}
+        {/* Form with Title, Message, and Attachment fields */}
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           {/* Field 1: Title */}
           <Input
@@ -59,7 +62,7 @@ const MakeRequestModal = ({ isOpen, onClose, onSubmit }) => {
             </label>
             <textarea
               name="message"
-              rows={4}
+              rows={3}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Enter your message details..."
@@ -67,6 +70,14 @@ const MakeRequestModal = ({ isOpen, onClose, onSubmit }) => {
               required
             />
           </section>
+
+          {/* Field 3: File Upload */}
+          <FileUpload
+            label="Attachment (Optional)"
+            file={file}
+            onFileChange={setFile}
+            hint="Supports PDF, PNG, JPG, ZIP up to 10MB"
+          />
 
           {/* Action Buttons */}
           <div className="mt-2 flex gap-3 pt-2">

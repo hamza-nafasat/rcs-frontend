@@ -31,7 +31,7 @@ const UserApplicantScorecardSection = ({ applicant }) => {
             </span>
           </div>
           <h2 className="mt-1 text-xl font-bold text-gray-900">
-            {data.name} — Applicant Scorecard
+            {data.name}
           </h2>
           <p className="text-xs text-gray-500">{data.company}</p>
         </div>
