@@ -4,6 +4,7 @@ import { DollarSign, Briefcase, Scale, MapPin } from "lucide-react";
 import Badge from "../../../components/shared/Badge";
 import ScoreRadar from "./components/scorecard/ScoreRadar";
 import ScorecardSection from "./components/scorecard/ScorecardSection";
+import UserPipelineStageOverview from "../../user/dashboard/components/UserPipelineStageOverview";
 import { initialApplicants } from "./data/pipelineApplicants";
 import {
   STAGE_COLORS,
@@ -47,6 +48,9 @@ const ClientApplicantDetailPage = () => {
           <p className="text-xs text-gray-500">{data.company}</p>
         </div>
       </div>
+
+      {/* Visual Pipeline Stage Overview Cards */}
+      <UserPipelineStageOverview currentStage={stage} />
 
       {/* Main Scorecard Page Container */}
       <div className="flex flex-col gap-5 rounded-2xl bg-white p-5 sm:p-6 shadow-xs border border-gray-200">

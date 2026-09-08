@@ -1,4 +1,7 @@
-import { CheckCircle2, Circle } from "lucide-react";
+import { useState } from "react";
+import { CheckCircle2, Circle, MessageSquarePlus } from "lucide-react";
+import Button from "../../../../components/shared/Button";
+import MakeRequestModal from "../../../../components/modals/MakeRequestModal";
 
 export const PIPELINE_STAGES = [
   { label: "New Application", color: "#2563eb", bg: "#eff6ff" },
@@ -10,11 +13,23 @@ export const PIPELINE_STAGES = [
   { label: "Assign Location", color: "#ac24eb", bg: "#faf1ff" },
 ];
 
-const UserPipelineStageOverview = ({ currentStage = "New Application" }) => {
+const UserPipelineStageOverview = ({
+  currentStage = "New Application",
+  showMakeRequest = false,
+  onMakeRequestSubmit,
+}) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const activeIndex = PIPELINE_STAGES.findIndex(
     (s) => s.label.toLowerCase() === currentStage?.toLowerCase(),
   );
   const currentIndex = activeIndex === -1 ? 0 : activeIndex;
+
+  const handleRequestSubmit = (requestData) => {
+    onMakeRequestSubmit?.(requestData);
+    console.log("Make a Request submitted:", requestData);
+    alert(`Request "${requestData.title}" has been sent successfully.`);
+  };
 
   return (
     <section className="flex flex-col gap-4 rounded-2xl bg-white p-4 sm:p-5 shadow-sm border border-gray-100">
@@ -25,9 +40,22 @@ const UserPipelineStageOverview = ({ currentStage = "New Application" }) => {
             Track your franchise request journey across pipeline stages
           </p>
         </div>
-        <span className="self-start sm:self-auto inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700 border border-blue-100 shrink-0">
-          Current: {PIPELINE_STAGES[currentIndex]?.label}
-        </span>
+
+        {/* 'Make a Request' button is ONLY shown for Admin */}
+        {showMakeRequest ? (
+          <Button
+            type="button"
+            icon={<MessageSquarePlus size={16} />}
+            onClick={() => setIsModalOpen(true)}
+            className="self-start sm:self-auto px-4! py-2! text-xs font-semibold text-white rounded-xl shadow-2xs transition"
+          >
+            Make a Request
+          </Button>
+        ) : (
+          <span className="self-start sm:self-auto inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700 border border-blue-100 shrink-0">
+            Current: {PIPELINE_STAGES[currentIndex]?.label}
+          </span>
+        )}
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-7 gap-3">
@@ -42,7 +70,6 @@ const UserPipelineStageOverview = ({ currentStage = "New Application" }) => {
                 style={{ backgroundColor: stage.bg, borderColor: stage.color }}
                 className="relative flex flex-col justify-between items-center rounded-xl p-3 min-h-[92px] h-full text-center border-2 shadow-sm transition-all w-full"
               >
-                {/* Fixed height top slot to align all top badges/icons on exact same line */}
                 <div className="h-6 flex items-center justify-center w-full">
                   <span
                     className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-white shadow-2xs"
@@ -69,7 +96,6 @@ const UserPipelineStageOverview = ({ currentStage = "New Application" }) => {
                 key={stage.label}
                 className="relative flex flex-col justify-between items-center rounded-xl p-3 min-h-[92px] h-full text-center border border-emerald-200 bg-emerald-50/70 text-emerald-800 transition-all w-full"
               >
-                {/* Fixed height top slot to align checkmark icon perfectly */}
                 <div className="h-6 flex items-center justify-center w-full">
                   <CheckCircle2 size={18} className="text-emerald-600" />
                 </div>
@@ -87,7 +113,6 @@ const UserPipelineStageOverview = ({ currentStage = "New Application" }) => {
               key={stage.label}
               className="relative flex flex-col justify-between items-center rounded-xl p-3 min-h-[92px] h-full text-center border border-gray-200 bg-gray-50 text-gray-400 transition-all opacity-70 w-full"
             >
-              {/* Fixed height top slot */}
               <div className="h-6 flex items-center justify-center w-full">
                 <Circle size={15} className="text-gray-300" />
               </div>
@@ -100,6 +125,15 @@ const UserPipelineStageOverview = ({ currentStage = "New Application" }) => {
           );
         })}
       </div>
+
+      {/* Make a Request Modal for Admin */}
+      {showMakeRequest && (
+        <MakeRequestModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSubmit={handleRequestSubmit}
+        />
+      )}
     </section>
   );
 };

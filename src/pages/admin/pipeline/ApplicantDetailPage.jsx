@@ -9,6 +9,7 @@ import ScorecardSection from "./components/scorecard/ScorecardSection";
 import StageSelector from "./components/scorecard/StageSelector";
 import AdminLocationAssignModal from "./components/scorecard/AdminLocationAssignModal";
 import AdminInlineLocationMap from "./components/scorecard/AdminInlineLocationMap";
+import UserPipelineStageOverview from "../../user/dashboard/components/UserPipelineStageOverview";
 import { initialApplicants } from "./components/pipelineApplicants";
 import {
   STAGE_COLORS,
@@ -45,6 +46,8 @@ const ApplicantDetailPage = () => {
 
   return (
     <article className="flex flex-col gap-6 animate-fade-in">
+      {/* Visual Pipeline Stage Overview Cards (Admin View with Make a Request Button) */}
+      <UserPipelineStageOverview currentStage={stage} showMakeRequest={true} />
       {/* Header with Card Background */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl bg-white p-4 sm:p-5 shadow-xs border border-gray-200">
         <div>
@@ -60,6 +63,8 @@ const ApplicantDetailPage = () => {
           <p className="text-xs text-gray-500">{data.company}</p>
         </div>
       </div>
+
+
 
       {/* Main Scorecard Page Container */}
       <div className="flex flex-col gap-5 rounded-2xl bg-white p-5 sm:p-6 shadow-xs border border-gray-200">
