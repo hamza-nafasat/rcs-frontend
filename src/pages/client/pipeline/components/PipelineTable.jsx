@@ -1,11 +1,11 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import DataTable from "react-data-table-component";
 import { MapPin } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import Avatar from "../../../../components/shared/Avatar";
 import Badge from "../../../../components/shared/Badge";
 import ProgressBar from "../../../../components/shared/ProgressBar";
 import { STAGE_COLORS, getRecommendation } from "../data/scorecardData";
-import ClientApplicantScorecardDrawer from "./scorecard/ClientApplicantScorecardDrawer";
 
 const scoreColor = (score) => {
   if (score >= 80) return "var(--color-revenue)";
@@ -62,9 +62,8 @@ const customStyles = {
 const PipelineTable = ({
   filters = emptyFilters,
   applicants = [],
-  onStageChange,
 }) => {
-  const [selected, setSelected] = useState(null);
+  const navigate = useNavigate();
 
   const filteredApplicants = applicants.filter((row) => {
     const applicantQuery = filters.applicant.trim().toLowerCase();
@@ -165,10 +164,6 @@ const PipelineTable = ({
     [],
   );
 
-  const handleStageChange = (applicant, stage) => {
-    onStageChange(applicant, stage);
-  };
-
   return (
     <section className="flex flex-col gap-4">
       <h2 className="heading-lg text-tertiary">Applicant Scorecard</h2>
@@ -181,17 +176,9 @@ const PipelineTable = ({
           pagination
           highlightOnHover
           pointerOnHover
-          onRowClicked={(row) => setSelected(row)}
+          onRowClicked={(row) => navigate(`/client/dashboard/pipeline/${row.id}`)}
         />
       </section>
-
-      <ClientApplicantScorecardDrawer
-        key={selected?.id}
-        isOpen={Boolean(selected)}
-        applicant={selected}
-        onClose={() => setSelected(null)}
-        onStageChange={handleStageChange}
-      />
     </section>
   );
 };

@@ -4,7 +4,7 @@ import Badge from "../../../../components/shared/Badge";
 import ProgressBar from "../../../../components/shared/ProgressBar";
 import DataTable from "react-data-table-component";
 import { useState } from "react";
-import ApplicantScorecardDrawer from "./scorecard/ApplicantScorecardDrawer";
+import { useNavigate } from "react-router-dom";
 import { STAGE_COLORS } from "./scorecard/scorecardData";
 import { initialApplicants } from "./pipelineApplicants";
 
@@ -22,7 +22,6 @@ const columns = [
     cell: (row) => (
       <section className="flex items-center gap-3 py-2">
         <Avatar src={row.avatar} name={row.name} rounded="rounded-lg" />
-
         <div>
           <p className="font-medium text-gray-900">{row.name}</p>
           <p className="text-xs text-gray-500">{row.email}</p>
@@ -122,8 +121,8 @@ const emptyFilters = {
 };
 
 const FranchisePipelineTable = ({ filters = emptyFilters }) => {
-  const [applicants, setApplicants] = useState(initialApplicants);
-  const [selected, setSelected] = useState(null);
+  const navigate = useNavigate();
+  const [applicants] = useState(initialApplicants);
 
   const filteredApplicants = applicants.filter((row) => {
     const applicantQuery = filters.applicant.trim().toLowerCase();
@@ -144,15 +143,6 @@ const FranchisePipelineTable = ({ filters = emptyFilters }) => {
 
     return matchApplicant && matchFranchise && matchStage && matchTerritory;
   });
-  const handleStageChange = (applicant, stage) => {
-    setApplicants((rows) =>
-      rows.map((row) => (row.id === applicant.id ? { ...row, stage } : row)),
-    );
-
-    setSelected((current) =>
-      current && current.id === applicant.id ? { ...current, stage } : current,
-    );
-  };
 
   return (
     <article className="flex flex-col gap-4">
@@ -166,17 +156,9 @@ const FranchisePipelineTable = ({ filters = emptyFilters }) => {
           pagination
           highlightOnHover
           pointerOnHover
-          onRowClicked={(row) => setSelected(row)}
+          onRowClicked={(row) => navigate(`/admin/dashboard/pipeline/${row.id}`)}
         />
       </section>
-
-      <ApplicantScorecardDrawer
-        key={selected?.id}
-        isOpen={Boolean(selected)}
-        applicant={selected}
-        onClose={() => setSelected(null)}
-        onStageChange={handleStageChange}
-      />
     </article>
   );
 };

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { DollarSign, Briefcase, Scale, MapPin } from "lucide-react";
-import Badge from "../../../../components/shared/Badge";
 import ScoreRadar from "./scorecard/ScoreRadar";
 import CategoryScores from "./scorecard/CategoryScores";
 import ScorecardSection from "./scorecard/ScorecardSection";
@@ -30,7 +29,6 @@ const UserApplicantScorecardSection = ({ applicant }) => {
             <span className="text-xs font-semibold text-gray-400">
               {data.id}
             </span>
-            <Badge text={stage} dotColor={STAGE_COLORS[stage] || "#2563eb"} />
           </div>
           <h2 className="mt-1 text-xl font-bold text-gray-900">
             {data.name} — Applicant Scorecard

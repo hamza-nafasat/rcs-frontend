@@ -22,10 +22,12 @@ import Support from "../pages/admin/support/Support";
 import Settings from "../pages/public/settings/Settings";
 import Notification from "../pages/admin/notifications/Notification";
 import FranchisePipeline from "../pages/admin/pipeline/Pipeline";
+import ApplicantDetailPage from "../pages/admin/pipeline/ApplicantDetailPage";
 import ViewAllActivity from "../pages/admin/view-all-activity/ViewAllActivity";
 import CreateAccount from "../pages/public/auth/CreateAccount";
 import ClientDashboard from "../pages/client/dashboard/ClientDashboard";
 import Pipeline from "../pages/client/pipeline/Pipeline";
+import ClientApplicantDetailPage from "../pages/client/pipeline/ClientApplicantDetailPage";
 import Report from "../pages/client/reports/Report";
 import ClientFDD from "../pages/client/fdd/ClientFDD";
 import ClientModerator from "../pages/client/moderators/ClientModerator";
@@ -66,6 +68,7 @@ const AppRoutes = () => {
           <Route path="settings" element={<Settings type="admin" />} />
           <Route path="notifications" element={<Notification />} />
           <Route path="pipeline" element={<FranchisePipeline />} />
+          <Route path="pipeline/:id" element={<ApplicantDetailPage />} />
           <Route path="view-all-activity" element={<ViewAllActivity />} />
         </Route>
 
@@ -77,6 +80,7 @@ const AppRoutes = () => {
           <Route index element={<ClientDashboard />} />
           {/* Pipeline */}
           <Route path="pipeline" element={<Pipeline />} />
+          <Route path="pipeline/:id" element={<ClientApplicantDetailPage />} />
           <Route path="reports" element={<Report />} />
           <Route path="fdd" element={<ClientFDD />} />
           <Route path="moderators" element={<ClientModerator />} />
