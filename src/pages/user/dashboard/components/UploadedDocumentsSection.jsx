@@ -120,9 +120,7 @@ const UploadedDocumentsSection = ({
           icon={<Upload size={14} />}
           className="self-start sm:self-auto px-3.5 py-2 text-xs flex items-center gap-2 text-white rounded-lg transition"
           onClick={() =>
-            alert(
-              "Document upload modal ready for backend API integration.",
-            )
+            console.log("Upload Document")
           }
         >
           Upload Document
@@ -178,7 +176,7 @@ const UploadedDocumentsSection = ({
                   className="p-1.5 bg-transparent text-secondary rounded-md transition"
                   title="Download Document"
                   onClick={() =>
-                    alert(`Downloading ${doc.fileName}... (Backend Ready)`)
+                    console.log("Download Document")
                   }
                 >
                   <Download size={16} />
@@ -235,7 +233,7 @@ const UploadedDocumentsSection = ({
                 type="button"
                 icon={<Download size={14} />}
                 className="px-4 py-2 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition flex items-center gap-1.5"
-                onClick={() => alert(`Downloading ${viewingDoc.fileName}...`)}
+                onClick={() => console.log("Download File")}
               >
                 Download File
               </Button>
