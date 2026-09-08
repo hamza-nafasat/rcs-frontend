@@ -66,6 +66,7 @@ const INITIAL_DOCUMENTS = [
 
 const UploadedDocumentsSection = ({
   documents = INITIAL_DOCUMENTS,
+  showUploadButton = true,
   className = "",
 }) => {
   const [docList] = useState(documents);
@@ -114,17 +115,17 @@ const UploadedDocumentsSection = ({
           </div>
         </div>
 
-        {/* Upload Button placeholder for future backend integration */}
-        <Button
-          type="button"
-          icon={<Upload size={14} />}
-          className="self-start sm:self-auto px-3.5 py-2 text-xs flex items-center gap-2 text-white rounded-lg transition"
-          onClick={() =>
-            console.log("Upload Document")
-          }
-        >
-          Upload Document
-        </Button>
+        {/* Render Upload Button ONLY if admin has requested a document to upload */}
+        {showUploadButton && (
+          <Button
+            type="button"
+            icon={<Upload size={14} />}
+            className="self-start sm:self-auto px-3.5 py-2 text-xs flex items-center gap-2 text-white rounded-lg transition"
+            onClick={() => console.log("Upload Document")}
+          >
+            Upload Document
+          </Button>
+        )}
       </div>
 
       {/* Document Items Grid / List */}
