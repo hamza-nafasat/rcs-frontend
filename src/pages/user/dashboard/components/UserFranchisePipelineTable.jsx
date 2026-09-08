@@ -1,12 +1,11 @@
-import { MapPin, Eye } from "lucide-react";
+import { MapPin } from "lucide-react";
 import Avatar from "../../../../components/shared/Avatar";
 import ProgressBar from "../../../../components/shared/ProgressBar";
-import Button from "../../../../components/shared/Button";
 import DataTable from "react-data-table-component";
 import { useState } from "react";
-import ApplicantScorecardDrawer from "./scorecard/ApplicantScorecardDrawer";
 import { initialApplicants } from "../../../admin/pipeline/components/pipelineApplicants";
 import UserPipelineStageOverview from "./UserPipelineStageOverview";
+import UserApplicantScorecardSection from "./UserApplicantScorecardSection";
 import UploadedDocumentsSection from "./UploadedDocumentsSection";
 
 const scoreColor = (score) => {
@@ -49,7 +48,6 @@ const customStyles = {
 
 const UserFranchisePipelineTable = () => {
   const [applicants] = useState(initialApplicants);
-  const [selected, setSelected] = useState(null);
 
   const userApplication = applicants.slice(0, 1);
   const currentApplicant = userApplication[0];
@@ -106,28 +104,19 @@ const UserFranchisePipelineTable = () => {
       selector: (row) => row.submitted,
       sortable: true,
     },
-    {
-      name: "Action",
-      width: "120px",
-      cell: (row) => (
-        <Button
-          type="button"
-          className="px-2.5! py-1.5! text-xs flex items-center gap-1.5 bg-transparent text-gray-700!"
-          onClick={() => setSelected(row)}
-        >
-          <Eye size={16} />
-        </Button>
-      ),
-    },
   ];
 
   return (
     <article className="flex flex-col gap-6">
+      {/* Application Progress Stage Overview */}
       <UserPipelineStageOverview currentStage={currentApplicant?.stage} />
+
+      {/* Applicant Scorecard Details directly on page below Application Progress */}
+      <UserApplicantScorecardSection applicant={currentApplicant} />
 
       {/* Single Franchise Table */}
       <div className="flex flex-col gap-3">
-        <h2 className="heading-lg text-tertiary">Pipeline Request</h2>
+        <h2 className="heading-lg text-tertiary">Pipeline Request Summary</h2>
 
         <section className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-xs">
           <DataTable
@@ -135,22 +124,12 @@ const UserFranchisePipelineTable = () => {
             data={userApplication}
             customStyles={customStyles}
             highlightOnHover
-            pointerOnHover
-            onRowClicked={(row) => setSelected(row)}
           />
         </section>
       </div>
 
       {/* Uploaded Application Documents */}
       <UploadedDocumentsSection />
-
-      <ApplicantScorecardDrawer
-        key={selected?.id}
-        isOpen={Boolean(selected)}
-        applicant={selected}
-        onClose={() => setSelected(null)}
-        readOnly={true}
-      />
     </article>
   );
 };
