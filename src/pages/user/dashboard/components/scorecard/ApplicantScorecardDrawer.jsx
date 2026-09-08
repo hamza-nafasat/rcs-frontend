@@ -9,7 +9,6 @@ import ScorecardSection from "./ScorecardSection";
 import StageSelector from "./StageSelector";
 import AdminLocationAssignModal from "./AdminLocationAssignModal";
 import AdminInlineLocationMap from "./AdminInlineLocationMap";
-import UploadedDocumentsSection from "../UploadedDocumentsSection";
 import {
   STAGE_COLORS,
   buildScorecard,
@@ -178,9 +177,6 @@ const ApplicantScorecardDrawer = ({
               onOpenFullMap={() => setShowMapModal(true)}
             />
           </div>
-
-          {/* Uploaded Application Documents */}
-          <UploadedDocumentsSection className="mt-1 shadow-none border-gray-200" />
 
           {!readOnly && (
             <StageSelector value={stage} onChange={handleStageChange} />
