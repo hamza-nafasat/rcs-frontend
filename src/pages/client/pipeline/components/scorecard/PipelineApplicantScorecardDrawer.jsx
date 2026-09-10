@@ -73,7 +73,7 @@ const PipelineApplicantScorecardDrawer = ({ isOpen, applicant, onClose }) => {
           </section>
 
           <Button
-            type="icon"
+            variant="bare"
             onClick={handleClose}
             aria-label="Close scorecard"
             className="p-1! text-gray-500 hover:bg-gray-100 rounded-full!"

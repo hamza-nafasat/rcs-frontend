@@ -331,7 +331,7 @@ const SettingsProfileSetting = ({ profile, onSave, onUpdatePassword, type = "adm
         {isEditing && (
           <div className="md:col-span-2 flex justify-end gap-3 mt-4">
             <Button
-              type="icon"
+              variant="bare"
               onClick={onCancel}
               className="px-3! py-2! sm:px-4! sm:py-2.5! text-sm rounded cursor-pointer border border-gray-200 transition font-medium"
             >

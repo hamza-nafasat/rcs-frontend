@@ -11,7 +11,7 @@ import {
 
 Chart.register(BarController, BarElement, CategoryScale, LinearScale, Tooltip);
 
-const BarChart = ({ data = [], labels = [] }) => {
+const DashboardBarChart = ({ data = [], labels = [] }) => {
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
 
@@ -97,4 +97,4 @@ const BarChart = ({ data = [], labels = [] }) => {
   );
 };
 
-export default BarChart;
+export default DashboardBarChart;

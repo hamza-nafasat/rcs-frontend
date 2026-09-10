@@ -22,7 +22,7 @@ const SettingsConsultantCard = ({ consultant, onContact }) => {
         </div>
 
         <Button
-          type="icon"
+          variant="bare"
           onClick={() => onContact?.(consultant)}
           className="bg-primary primary px-4! py-2! text-sm"
         >

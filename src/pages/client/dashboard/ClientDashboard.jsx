@@ -1,8 +1,8 @@
 import DashboardStatsCard from "../../admin/dashboard/components/DashboardStatsCard";
-import DashboardHeading from "./components/DashboardHeading";
+import DashboardHeading from "../../../components/global/DashboardHeading";
 
 import DashboardDonutChart from "./components/DashboardDonutChart";
-import BarChart from "./components/BarChart";
+import DashboardBarChart from "./components/DashboardBarChart";
 import Card from "../../../components/shared/Card";
 import DashboardApplicantsScored from "./components/DashboardApplicantsScored";
 import DashboardRecentApplicants from "./components/DashboardRecentApplicants";
@@ -38,7 +38,7 @@ const ClientDashboard = () => {
           className="h-full lg:col-span-3"
           header={<DashboardHeading heading="Clients per month" />}
         >
-          <BarChart
+          <DashboardBarChart
             labels={["Jan", "Feb", "Mar", "Apr", "May", "Jun"]}
             data={[2, 3, 2, 5, 4, 7]}
           />

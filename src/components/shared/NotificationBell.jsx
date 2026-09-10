@@ -2,7 +2,12 @@ import { Bell } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Dropdown from "./Dropdown";
 import Button from "./Button";
-import { useNotifications } from "../../context/useNotifications";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  markRead,
+  selectNotifications,
+  selectUnreadCount,
+} from "../../store/slices/notificationsSlice";
 import {
   TYPE_STYLES,
   getTypeIcon,
@@ -12,7 +17,9 @@ const RECENT_LIMIT = 5;
 
 const NotificationBell = ({ type = "admin" }) => {
   const navigate = useNavigate();
-  const { notifications, unreadCount, markRead } = useNotifications();
+  const notifications = useSelector(selectNotifications);
+  const unreadCount = useSelector(selectUnreadCount);
+  const dispatch = useDispatch();
   const notificationsPath =
     type === "user"
       ? "/user/dashboard/notifications"
@@ -23,7 +30,7 @@ const NotificationBell = ({ type = "admin" }) => {
   const recent = notifications.slice(0, RECENT_LIMIT);
 
   const handleSelect = (notification) => {
-    markRead(notification.id);
+    dispatch(markRead(notification.id));
     navigate(notificationsPath);
   };
 
@@ -105,7 +112,7 @@ const NotificationBell = ({ type = "admin" }) => {
 
       <div className="border-t color-border p-2">
         <Button
-          type="icon"
+          variant="bare"
           onClick={() => navigate(notificationsPath)}
           className="w-full rounded-lg py-2 text-center text-sm font-medium text-(--color-primary) hover:bg-gray-50"
         >

@@ -10,7 +10,7 @@ import {
 
 Chart.register(BarController, BarElement, CategoryScale, LinearScale, Tooltip);
 
-const BarChart = ({ labels, data }) => {
+const DashboardBarChart = ({ labels, data }) => {
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
 
@@ -54,4 +54,4 @@ const BarChart = ({ labels, data }) => {
   );
 };
 
-export default BarChart;
+export default DashboardBarChart;

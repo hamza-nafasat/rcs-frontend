@@ -10,6 +10,7 @@ import {
   buildScorecard,
   getRecommendation,
 } from "../utils/scorecardData";
+import { SCORE_CATEGORIES } from "../utils/scorecardData";
 
 const DashboardApplicantScorecardSection = ({ applicant }) => {
   const [showMapModal, setShowMapModal] = useState(false);
@@ -66,7 +67,10 @@ const DashboardApplicantScorecardSection = ({ applicant }) => {
       {/* Radar Chart & Category Scores Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-center">
         <ScoreRadar categories={data.categories} />
-        <CategoryScores categories={data.categories} />
+        <CategoryScores
+            categories={data.categories}
+            definitions={SCORE_CATEGORIES}
+          />
       </div>
 
       {/* Detailed Scorecard Breakdown Grid */}

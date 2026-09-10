@@ -110,18 +110,14 @@ const buildColumns = ({ onStatusChange, setTicketToDelete }) => [
           portalClassName="max-w-12"
           trigger={
             <Button
-              type="icon"
-              className="w-full py-2! px-3!"
-              textClassName="flex w-full item-center h-full gap-2 text-sm text-gray-700 transition hover:bg-gray-100"
+              variant="menuTrigger"
             >
               <MoreHorizontal size={18} />
             </Button>
           }
         >
           <Button
-            type="icon"
-            className="w-full py-0! px-0!"
-            textClassName="flex w-full px-3 py-2 item-center h-full gap-2 text-sm text-gray-700 transition hover:bg-gray-100"
+            variant="menuItem"
             disabled={row.status === "Resolved"}
             onClick={() => onStatusChange?.(row, "Resolved")}
           >
@@ -129,9 +125,7 @@ const buildColumns = ({ onStatusChange, setTicketToDelete }) => [
             Resolved
           </Button>
           <Button
-            type="icon"
-            className="w-full py-0! px-0!"
-            textClassName="flex w-full px-3 py-2 item-center h-full gap-2 text-sm text-gray-700 transition hover:bg-gray-100"
+            variant="menuItem"
             disabled={row.status === "Closed"}
             onClick={() => onStatusChange?.(row, "Closed")}
           >
@@ -139,9 +133,7 @@ const buildColumns = ({ onStatusChange, setTicketToDelete }) => [
             Closed
           </Button>
           <Button
-            type="icon"
-            className="w-full py-0! px-0! border-t border-gray-300 rounded-none!"
-            textClassName="flex w-full px-3 py-2 item-center h-full gap-2 text-left text-sm text-red-600 transition hover:bg-red-50"
+            variant="menuItemDanger"
             onClick={() => setTicketToDelete(row)}
           >
             <Trash2 size={16} className="shrink-0" />

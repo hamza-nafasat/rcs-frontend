@@ -1,15 +1,15 @@
 import ProgressBar from "../../shared/ProgressBar";
-import { SCORE_CATEGORIES } from "../../../pages/admin/pipeline/utils/scorecardData";
 
 const MAX = 5;
 
-const CategoryScores = ({ categories }) => {
+// `definitions` comes from the calling module's own scorecard data (§1.2: data is never shared)
+const CategoryScores = ({ categories, definitions = [] }) => {
   return (
     <section className="rounded-xl border border-gray-200 bg-white p-4">
       <h3 className="text-sm font-semibold text-gray-900">Category Scores</h3>
 
       <div className="mt-3 flex flex-col gap-3">
-        {SCORE_CATEGORIES.map((category) => {
+        {definitions.map((category) => {
           const value = categories[category.key] ?? 0;
 
           return (

@@ -11,7 +11,7 @@ const Header = ({ onMenuClick, type = "admin" }) => {
       style={{ borderColor: "var(--color-border)" }}
     >
       <Button
-        type="icon"
+        variant="bare"
         onClick={onMenuClick}
         className="text-secondary lg:hidden"
         aria-label="Open sidebar"

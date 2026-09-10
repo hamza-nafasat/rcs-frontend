@@ -1,4 +1,7 @@
-@import "tailwindcss";
+@import "tailwindcss" source(none);
+
+/* Scan application source only — otherwise prose in .md files leaks classes into the bundle */
+@source "./";
 
 :root {
   --color-primary: #f97316;

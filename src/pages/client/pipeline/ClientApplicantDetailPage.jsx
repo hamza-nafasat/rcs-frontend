@@ -4,7 +4,7 @@ import { DollarSign, Briefcase, Scale, MapPin } from "lucide-react";
 import PipelineApplicantProgress from "./components/PipelineApplicantProgress";
 import DashboardDocumentRequestCard from "../../user/dashboard/components/DashboardDocumentRequestCard";
 import PipelineScoreRadar from "./components/scorecard/PipelineScoreRadar";
-import PipelineCategoryScores from "./components/scorecard/PipelineCategoryScores";
+import CategoryScores from "../../../components/global/scorecard/CategoryScores";
 import PipelineScorecardSection from "./components/scorecard/PipelineScorecardSection";
 import LocationAssignModal from "../../../components/modals/LocationAssignModal";
 import InlineLocationMap from "../../../components/global/scorecard/InlineLocationMap";
@@ -13,6 +13,7 @@ import {
   buildScorecard,
   getRecommendation,
 } from "./utils/scorecardData";
+import { SCORE_CATEGORIES } from "./utils/scorecardData";
 
 const ClientApplicantDetailPage = () => {
   const { id } = useParams();
@@ -78,7 +79,10 @@ const ClientApplicantDetailPage = () => {
         {/* Radar Chart & Category Scores Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-center">
           <PipelineScoreRadar categories={data.categories} />
-          <PipelineCategoryScores categories={data.categories} />
+          <CategoryScores
+            categories={data.categories}
+            definitions={SCORE_CATEGORIES}
+          />
         </div>
 
         {/* Category Breakdown */}

@@ -18,7 +18,7 @@ const DashboardRecentActivity = ({
 
         {actionLabel && (
           <Button
-            type="icon"
+            variant="bare"
             className="text-sm font-medium text-orange-500"
             onClick={onAction}
           >

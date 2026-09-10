@@ -59,7 +59,7 @@ const DashboardClientsNeedingAttention = ({
       {hasMore && (
         <div className="flex justify-center pt-3">
           <Button
-            type="icon"
+            variant="bare"
             className="text-sm font-medium text-orange-500"
             onClick={() => setExpanded((prev) => !prev)}
           >

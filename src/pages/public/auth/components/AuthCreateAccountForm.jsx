@@ -62,7 +62,7 @@ const AuthCreateAccountForm = () => {
 
         <footer className="flex flex-wrap items-center justify-between gap-3 border-t color-border pt-4">
           <Button
-            type="icon"
+            variant="bare"
             onClick={() => navigate("/signin")}
             className="h-10 rounded-xl border color-border bg-white px-4 text-sm font-medium text-cancel"
           >

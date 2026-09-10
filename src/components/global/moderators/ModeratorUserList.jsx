@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Shield } from "lucide-react";
-import ModeratorUserListItem from "../../../../components/global/moderators/ModeratorUserListItem";
-import ModeratorManageAccountsModal from "../../../../components/modals/ModeratorManageAccountsModal";
-import Button from "../../../../components/shared/Button";
-import DeleteModal from "../../../../components/modals/DeleteModal";
+import ModeratorUserListItem from "./ModeratorUserListItem";
+import ModeratorManageAccountsModal from "../../modals/ModeratorManageAccountsModal";
+import Button from "../../shared/Button";
+import DeleteModal from "../../modals/DeleteModal";
 
 const MODERATORS = [
   {

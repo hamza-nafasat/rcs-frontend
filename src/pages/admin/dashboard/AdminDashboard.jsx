@@ -1,10 +1,10 @@
-import DashboardHeading from "./components/DashboardHeading";
+import DashboardHeading from "../../../components/global/DashboardHeading";
 import DashboardStatsCard from "./components/DashboardStatsCard";
 
 import Card from "../../../components/shared/Card";
 import DashboardLineChart from "./components/DashboardLineChart";
 import DashboardLeadsPerClient from "./components/DashboardLeadsPerClient";
-import BarChart from "./components/BarChart";
+import DashboardBarChart from "./components/DashboardBarChart";
 import DashboardMultiLineChart from "./components/DashboardMultiLineChart";
 import DashboardRecentActivity from "./components/DashboardRecentActivity";
 import DashboardClientsNeedingAttention from "./components/DashboardClientsNeedingAttention";
@@ -78,7 +78,7 @@ const AdminDashboard = () => {
             />
           }
         >
-          <BarChart
+          <DashboardBarChart
             labels={["Jan", "Feb", "Mar", "Apr", "May", "Jun"]}
             data={[20, 35, 28, 50, 45, 70]}
           />

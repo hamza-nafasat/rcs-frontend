@@ -116,36 +116,28 @@ const buildColumns = ({ handleEditClient, handleViewClient, setClientToDelete })
           portalClassName="max-w-12"
           trigger={
             <Button
-              type="icon"
-              className="w-full py-2! px-3!"
-              textClassName="flex w-full item-center h-full gap-2 text-sm text-gray-700 transition hover:bg-gray-100  "
+              variant="menuTrigger"
             >
               <MoreHorizontal size={18} />
             </Button>
           }
         >
           <Button
-            type="icon"
-            className="w-full py-0! px-0!"
-            textClassName="flex py-2 px-3 w-full item-center h-full gap-2 text-sm text-gray-700 transition hover:bg-gray-100  "
+            variant="menuItem"
             onClick={() => handleEditClient(row)}
           >
             <Pencil size={16} className="mt-0.5" />
             Edit
           </Button>
           <Button
-            type="icon"
-            className="w-full py-0! px-0!"
-            textClassName="flex w-full px-3 py-2 item-center h-full gap-2 text-sm text-gray-700 transition hover:bg-gray-100  "
+            variant="menuItem"
             onClick={() => handleViewClient(row)}
           >
             <Eye size={16} className="mt-0.5" />
             View
           </Button>
           <Button
-            type="icon"
-            className="w-full py-0! px-0!"
-            textClassName="flex w-full px-3 py-2 item-center h-full gap-2 text-sm text-gray-700 transition hover:bg-gray-100  "
+            variant="menuItem"
             onClick={() => handleEditClient(row)}
           >
             <MessageSquare size={14} className="mt-0.5" />
@@ -153,9 +145,7 @@ const buildColumns = ({ handleEditClient, handleViewClient, setClientToDelete })
           </Button>
 
           <Button
-            type="icon"
-            className="w-full py-0! px-0! border-t border-gray-300 rounded-none!"
-            textClassName="flex w-full py-2 px-3 item-center h-full gap-2 text-sm text-gray-700 transition hover:bg-gray-100 border-gray-300 text-left text-sm text-red-600 transition hover:bg-red-50 "
+            variant="menuItemDanger"
             onClick={() => setClientToDelete(row)}
           >
             <Trash2 size={16} className="shrink-0" />

@@ -43,7 +43,7 @@ const ReportHeading = ({ heading, subheading, dates, onDateChange }) => {
         <Dropdown
           trigger={
             <Button
-              type="icon"
+              variant="bare"
               className="px-3! py-2! sm:px-4! sm:py-2.5! text-base border color-border text-secondary bg-white!"
               textClassName="flex items-center gap-2"
             >

@@ -1,4 +1,4 @@
-import DashboardHeading from "./DashboardHeading";
+import DashboardHeading from "../../../../components/global/DashboardHeading";
 import Button from "../../../../components/shared/Button";
 
 const statusStyles = {

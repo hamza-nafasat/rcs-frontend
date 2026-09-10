@@ -2,16 +2,19 @@ import { useState } from "react";
 import NotificationHeading from "./components/NotificationHeading";
 import NotificationTabs from "./components/NotificationTabs";
 import NotificationList from "./components/NotificationList";
-import { useNotifications } from "../../../context/useNotifications";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  markAllRead,
+  markRead,
+  removeNotification,
+  selectNotifications,
+  selectUnreadCount,
+} from "../../../store/slices/notificationsSlice";
 
 const Notifications = () => {
-  const {
-    notifications,
-    unreadCount,
-    markRead,
-    markAllRead,
-    removeNotification,
-  } = useNotifications();
+  const notifications = useSelector(selectNotifications);
+  const unreadCount = useSelector(selectUnreadCount);
+  const dispatch = useDispatch();
   const [activeTab, setActiveTab] = useState("all");
 
   const filteredNotifications = notifications.filter((item) => {
@@ -28,7 +31,7 @@ const Notifications = () => {
           heading="Notifications"
           subheading="Stay updated with the latest activity across the franchise platform."
           unreadCount={unreadCount}
-          onMarkAllRead={markAllRead}
+          onMarkAllRead={() => dispatch(markAllRead())}
         />
       </div>
 
@@ -43,8 +46,8 @@ const Notifications = () => {
       <div className="mt-6 min-h-0 flex-1 overflow-y-auto">
         <NotificationList
           notifications={filteredNotifications}
-          onMarkRead={markRead}
-          onDelete={removeNotification}
+          onMarkRead={(id) => dispatch(markRead(id))}
+          onDelete={(id) => dispatch(removeNotification(id))}
         />
       </div>
     </section>

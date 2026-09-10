@@ -14,6 +14,7 @@ import {
   buildScorecard,
   getRecommendation,
 } from "../../utils/scorecardData";
+import { SCORE_CATEGORIES } from "../../utils/scorecardData";
 
 const CLOSE_DURATION = 250;
 
@@ -93,7 +94,7 @@ const DashboardApplicantScorecardDrawer = ({
 
           <div className="flex flex-col items-end gap-2 shrink-0">
             <Button
-              type="icon"
+              variant="bare"
               onClick={handleClose}
               aria-label="Close scorecard"
               className="p-1! text-gray-500 hover:bg-gray-100 rounded-full!"
@@ -144,7 +145,10 @@ const DashboardApplicantScorecardDrawer = ({
 
           <ScoreRadar categories={data.categories} />
 
-          <CategoryScores categories={data.categories} />
+          <CategoryScores
+            categories={data.categories}
+            definitions={SCORE_CATEGORIES}
+          />
 
           <ScorecardSection
             icon={DollarSign}

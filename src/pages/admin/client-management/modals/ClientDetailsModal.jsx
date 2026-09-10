@@ -61,7 +61,7 @@ const ClientDetailsModal = ({ isOpen, onClose, client }) => {
           </section>
 
           <Button
-            type="icon"
+            variant="bare"
             onClick={onClose}
             className="p-1! m-1! text-gray-500 hover:bg-gray-100 transition rounded-full! "
           >
@@ -143,7 +143,7 @@ const ClientDetailsModal = ({ isOpen, onClose, client }) => {
 
             <div className="grid grid-cols-2 gap-3">
               <Button
-                type="icon"
+                variant="bare"
                 className="flex h-16 flex-col w-full items-center justify-center gap-1 rounded-xl border border-gray-200 text-sm text-gray-500 transition hover:bg-gray-50"
               >
                 <span className="flex flex-col items-center gap-1 ">
@@ -153,7 +153,7 @@ const ClientDetailsModal = ({ isOpen, onClose, client }) => {
               </Button>
 
               <Button
-                type="icon"
+                variant="bare"
                 className="flex h-16 flex-col w-full items-center justify-center gap-1 rounded-xl border border-gray-200 text-sm text-gray-500 transition hover:bg-gray-50"
               >
                 <span className="flex flex-col items-center gap-1 ">
