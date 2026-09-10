@@ -7,7 +7,6 @@ import Button from "../../../../components/shared/Button";
 import { US_STATES } from "../../../../utils/fddStateHelper";
 
 const DEFAULT_BRANDS = ["Burger Hub", "Pizza Corner", "Sushi Place", "Taco Town"];
-const DEFAULT_COUNTRIES = ["United States"];
 const DEFAULT_STATES = [
   "General (Non-Registration States)",
   ...US_STATES.map((s) => s.name),
@@ -33,14 +32,12 @@ const FddAddModal = ({
   onClose,
   onSubmit,
   brands = DEFAULT_BRANDS,
-  countries = DEFAULT_COUNTRIES,
   states = DEFAULT_STATES,
 }) => {
   const [formData, setFormData] = useState(INITIAL_FORM);
   const [file, setFile] = useState(null);
 
   const availableBrands = brands.length > 0 ? brands : DEFAULT_BRANDS;
-  const availableCountries = countries.length > 0 ? countries : DEFAULT_COUNTRIES;
   const availableStates = states.length > 0 ? states : DEFAULT_STATES;
 
   const handleChange = (e) => {

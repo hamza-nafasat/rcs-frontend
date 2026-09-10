@@ -187,12 +187,6 @@ const SettingsProfileSetting = ({ profile, onSave, onUpdatePassword, type = "adm
 
           { label: "Email", name: "email", type: "email" },
           { label: "Phone Number", name: "phone", type: "tel" },
-          // {
-          //   label: "Role / Position",
-          //   name: "role",
-          //   type: "text",
-          //   value: formData.role?.displayName || formData.role?.name || "",
-          // },
         ].map((field, idx) => (
           <div key={idx} className="flex flex-col gap-1.5">
             <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">

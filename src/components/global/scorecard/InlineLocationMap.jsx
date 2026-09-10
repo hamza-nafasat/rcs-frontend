@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { MapPin, Building2, Maximize2 } from "lucide-react";
-import { INITIAL_BRANCHES } from "../../modals/LocationAssignModal";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Building2, Maximize2 } from "lucide-react";
+import { INITIAL_BRANCHES } from "../../modals/locationBranches";
 
 const TILE_SIZE = 256;
 
@@ -18,17 +18,36 @@ const InlineLocationMap = ({ applicant, onOpenFullMap }) => {
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
 
-  const [center, setCenter] = useState({ lat: 30.2672, lng: -97.7431 }); // default Austin, TX
-  const [zoom] = useState(11);
+  // Size is measured into state so render never reads a ref
+  const [size, setSize] = useState({ width: 360, height: 180 });
+
+  const zoom = 11;
 
   // Filter branches matching applicant's city or franchise
   const branches = applicant?.branches || INITIAL_BRANCHES;
 
+  // Derived, not stored: the map centres on the first branch (§6.2)
+  const center = useMemo(
+    () => (branches.length > 0 ? { lat: branches[0].lat, lng: branches[0].lng } : { lat: 30.2672, lng: -97.7431 }), // default Austin, TX
+    [branches],
+  );
+
   useEffect(() => {
-    if (branches.length > 0) {
-      setCenter({ lat: branches[0].lat, lng: branches[0].lng });
-    }
-  }, [branches]);
+    const el = containerRef.current;
+    if (!el) return;
+
+    const measure = () =>
+      setSize({
+        width: el.clientWidth || 360,
+        height: el.clientHeight || 180,
+      });
+
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(el);
+
+    return () => observer.disconnect();
+  }, []);
 
   const latLngToCanvas = useCallback(
     (lat, lng) => {
@@ -72,8 +91,7 @@ const InlineLocationMap = ({ applicant, onOpenFullMap }) => {
       // Exclusion radius circle
       if (branch.radiusKm > 0) {
         const radiusPx =
-          (branch.radiusKm * 1000) /
-          ((156543.03392 * Math.cos((branch.lat * Math.PI) / 180)) / Math.pow(2, zoom));
+          (branch.radiusKm * 1000) / ((156543.03392 * Math.cos((branch.lat * Math.PI) / 180)) / Math.pow(2, zoom));
 
         ctx.beginPath();
         ctx.arc(px.x, px.y, radiusPx, 0, Math.PI * 2);
@@ -144,8 +162,8 @@ const InlineLocationMap = ({ applicant, onOpenFullMap }) => {
   const centerPxX = lngToPixel(center.lng, zoom);
   const centerPxY = latToPixel(center.lat, zoom);
 
-  const containerW = containerRef.current?.clientWidth || 360;
-  const containerH = containerRef.current?.clientHeight || 180;
+  const containerW = size.width;
+  const containerH = size.height;
 
   const minTileX = Math.floor((centerPxX - containerW / 2) / TILE_SIZE);
   const maxTileX = Math.floor((centerPxX + containerW / 2) / TILE_SIZE);
@@ -170,14 +188,12 @@ const InlineLocationMap = ({ applicant, onOpenFullMap }) => {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Building2 size={16} className="text-orange-500" />
-          <span className="text-xs font-bold text-gray-900">
-            Assigned Branch Location Map
-          </span>
+          <span className="text-xs font-bold text-gray-900">Assigned Branch Location Map</span>
         </div>
         <button
           type="button"
           onClick={onOpenFullMap}
-          className="inline-flex items-center gap-1 text-xs font-semibold text-[var(--color-primary)] hover:underline cursor-pointer"
+          className="inline-flex items-center gap-1 text-xs font-semibold text-(--color-primary)] hover:underline cursor-pointer"
         >
           <Maximize2 size={12} />
           Expand Map

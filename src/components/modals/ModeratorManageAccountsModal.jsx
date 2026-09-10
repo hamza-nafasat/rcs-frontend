@@ -10,7 +10,6 @@ const ModeratorManageAccountsModal = ({
   subheading = "Remove other profiles you want ",
 }) => {
   if (!isOpen) return null;
-  const visibleMembers = members.filter((member) => member.role !== "Account Owner");
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
@@ -23,19 +22,19 @@ const ModeratorManageAccountsModal = ({
           </div>
 
           <span className="shrink-0 rounded-full border border-moderator bg-moderator px-3 py-1 text-sm  text-moderator">
-            {visibleMembers.length}{" "}
-            {visibleMembers.length === 1 ? "Member" : "Members"}
+            {members.length}{" "}
+            {members.length === 1 ? "Member" : "Members"}
           </span>
         </div>
 
         {/* Members */}
         <div className="flex max-h-100 flex-col gap-3 overflow-y-auto">
-          {visibleMembers.length === 0 ? (
+          {members.length === 0 ? (
             <p className="card-subheading py-6 text-center">
               No moderators to show.
             </p>
           ) : (
-            visibleMembers.map((member) => (
+            members.map((member) => (
               <ModeratorUserListItem
                 key={member.id}
                 name={member.name}

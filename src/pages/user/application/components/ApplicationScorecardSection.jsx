@@ -6,13 +6,12 @@ import ScorecardSection from "../../../../components/global/scorecard/ScorecardS
 import LocationAssignModal from "../../../../components/modals/LocationAssignModal";
 import InlineLocationMap from "../../../../components/global/scorecard/InlineLocationMap";
 import {
-  STAGE_COLORS,
   buildScorecard,
   getRecommendation,
 } from "../utils/scorecardData";
 import { SCORE_CATEGORIES } from "../utils/scorecardData";
 
-const DashboardApplicantScorecardSection = ({ applicant }) => {
+const ApplicationScorecardSection = ({ applicant, onSaveLocation }) => {
   const [showMapModal, setShowMapModal] = useState(false);
 
   if (!applicant) return null;
@@ -117,15 +116,11 @@ const DashboardApplicantScorecardSection = ({ applicant }) => {
           isOpen={showMapModal}
           applicant={applicant}
           onClose={() => setShowMapModal(false)}
-          onSaveLocation={(updatedAreas) => {
-            if (applicant) {
-              applicant.territories = updatedAreas;
-            }
-          }}
+          onSaveLocation={onSaveLocation}
         />
       )}
     </section>
   );
 };
 
-export default DashboardApplicantScorecardSection;
+export default ApplicationScorecardSection;

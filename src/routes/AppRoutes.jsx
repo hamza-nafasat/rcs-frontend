@@ -14,13 +14,13 @@ import Dashboard from "../components/layouts/Dashboard";
 import DashboardNotFound from "../components/layouts/DashboardNotFound";
 import AdminDashboard from "../pages/admin/dashboard/AdminDashboard";
 import ClientManagement from "../pages/admin/client-management/ClientManagement";
-import MessagesView from "../components/global/messages/MessagesView";
+import AdminMessages from "../pages/admin/messages/AdminMessages";
 import AdminModerators from "../pages/admin/moderators/AdminModerators";
 import AdminFdd from "../pages/admin/fdd/AdminFdd";
 import ResetPasswordSuccess from "../pages/public/auth/ResetPasswordSuccess";
 import AdminSupport from "../pages/admin/support/AdminSupport";
 import Settings from "../pages/public/settings/Settings";
-import Notifications from "../pages/admin/notifications/Notifications";
+import Notifications from "../pages/public/notifications/Notifications";
 import AdminPipeline from "../pages/admin/pipeline/AdminPipeline";
 import AdminApplicantDetailPage from "../pages/admin/pipeline/AdminApplicantDetailPage";
 import ViewAllActivity from "../pages/admin/view-all-activity/ViewAllActivity";
@@ -32,7 +32,9 @@ import Reports from "../pages/client/reports/Reports";
 import ClientFdd from "../pages/client/fdd/ClientFdd";
 import ClientModerators from "../pages/client/moderators/ClientModerators";
 import ClientSupport from "../pages/client/support/ClientSupport";
-import UserDashboard from "../pages/user/dashboard/UserDashboard";
+import Application from "../pages/user/application/Application";
+import ClientMessages from "../pages/client/messages/ClientMessages";
+import UserMessages from "../pages/user/messages/UserMessages";
 import Franchisee from "../pages/client/franchisee/Franchisee";
 
 const LegacyAdminRedirect = () => {
@@ -61,7 +63,7 @@ const AppRoutes = () => {
         <Route path="/admin/dashboard" element={<Dashboard type="admin" />}>
           <Route index element={<AdminDashboard />} />
           <Route path="clients" element={<ClientManagement />} />
-          <Route path="messages" element={<MessagesView />} />
+          <Route path="messages" element={<AdminMessages />} />
           <Route path="moderators" element={<AdminModerators />} />
           <Route path="fdd" element={<AdminFdd />} />
           <Route path="support" element={<AdminSupport />} />
@@ -87,13 +89,15 @@ const AppRoutes = () => {
           <Route path="settings" element={<Settings type="client" />} />
           <Route path="notifications" element={<Notifications />} />
           <Route path="support" element={<ClientSupport />} />
-          <Route path="messages" element={<MessagesView />} />
+          <Route path="messages" element={<ClientMessages />} />
           <Route path="franchisee" element={<Franchisee />} />
         </Route>
 
         <Route path="/user/dashboard" element={<Dashboard type="user" />}>
-          <Route index element={<UserDashboard />} />
-
+          <Route index element={<Application />} />
+          <Route path="messages" element={<UserMessages />} />
+          <Route path="notifications" element={<Notifications />} />
+          <Route path="settings" element={<Settings type="user" />} />
         </Route>
 
         <Route path="*" element={<DashboardNotFound />} />

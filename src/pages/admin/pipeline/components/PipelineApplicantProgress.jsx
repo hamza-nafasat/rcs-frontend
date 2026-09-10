@@ -3,7 +3,7 @@ import { CheckCircle2, Circle, MessageSquarePlus } from "lucide-react";
 import Button from "../../../../components/shared/Button";
 import MakeRequestModal from "../../../../components/modals/MakeRequestModal";
 
-export const PIPELINE_STAGES = [
+const PIPELINE_STAGES = [
   { label: "New Application", color: "#2563eb", bg: "#eff6ff" },
   { label: "Document Collection", color: "#06b6d4", bg: "#ecfeff" },
   { label: "Under Review", color: "#f97316", bg: "#fff7ed" },

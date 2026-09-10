@@ -1,8 +1,49 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { calcBoundingBox, calcCentroid, calcPolygonAreaKm2, clearCanvas, drawAreaLabel, drawDot, fillPolygon, getCanvasPoint, isNearPoint, redrawPolygon, strokePolygon } from "../../../../utils/canvasDrawing";
-import { AREA_COLORS, DEFAULT_CENTER, DRAG_THRESHOLD, FULLSCREEN_ZOOM, LAYER_SATELLITE, LAYER_STREET, MAX_ZOOM, MIN_ZOOM, TILE_SIZE, drawTiles, latToPixel, lngToPixel, pixelToLat, pixelToLng, searchLocation, sizeCanvas } from "../utils/mapHelpers";
-import { Check, ChevronDown, ChevronUp, Layers, MapPin, PenTool, Pencil, RotateCcw, Search, Trash2, X } from "lucide-react";
+import {
+  calcBoundingBox,
+  calcCentroid,
+  calcPolygonAreaKm2,
+  clearCanvas,
+  drawAreaLabel,
+  drawDot,
+  fillPolygon,
+  getCanvasPoint,
+  isNearPoint,
+  redrawPolygon,
+  strokePolygon,
+} from "../../../../utils/canvasDrawing";
+import {
+  AREA_COLORS,
+  DEFAULT_CENTER,
+  DRAG_THRESHOLD,
+  FULLSCREEN_ZOOM,
+  LAYER_SATELLITE,
+  LAYER_STREET,
+  MAX_ZOOM,
+  MIN_ZOOM,
+  TILE_SIZE,
+  drawTiles,
+  latToPixel,
+  lngToPixel,
+  pixelToLat,
+  pixelToLng,
+  searchLocation,
+  sizeCanvas,
+} from "../utils/mapHelpers";
+import {
+  Check,
+  ChevronDown,
+  ChevronUp,
+  Layers,
+  MapPin,
+  PenTool,
+  Pencil,
+  RotateCcw,
+  Search,
+  Trash2,
+  X,
+} from "lucide-react";
 
 // ═════════════════════════════════════════════════════════════════════════════
 // FULLSCREEN MULTI-AREA OVERLAY
@@ -34,7 +75,6 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
   // Summary side panel & modal states
   const [showSummaryModal, setShowSummaryModal] = useState(false);
   const [expandedAreaId, setExpandedAreaId] = useState(null);
-  const [copiedAreaId, setCopiedAreaId] = useState(null);
 
   // Search state
   const [searchQuery, setSearchQuery] = useState("");
@@ -83,8 +123,7 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
   // ── Mount & Layout ────────────────────────────────────────────────────────
 
   useEffect(() => {
-    const doResize = () =>
-      sizeCanvas(containerRef.current, mapCanvasRef.current, drawCanvasRef.current);
+    const doResize = () => sizeCanvas(containerRef.current, mapCanvasRef.current, drawCanvasRef.current);
     doResize();
     window.addEventListener("resize", doResize);
     return () => window.removeEventListener("resize", doResize);
@@ -129,15 +168,12 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
 
       fillPolygon(ctx, pxPoints, { color: color.fill });
       strokePolygon(ctx, pxPoints, { color: color.stroke, width: 2.5 });
-      pxPoints.forEach((p, idx) =>
-        drawDot(ctx, p, { fill: color.stroke, stroke: "#ffffff", radius: 4 }),
-      );
+      pxPoints.forEach((p) => drawDot(ctx, p, { fill: color.stroke, stroke: "#ffffff", radius: 4 }));
 
       // Area label at centroid
       const centroidGeo = calcCentroid(area.geoPoints);
       const centroidPx = latLngToCanvas(centroidGeo.lat, centroidGeo.lng);
-      const displayLabel =
-        area.distanceKm > 0 ? `${area.name} (${area.distanceKm} km)` : area.name;
+      const displayLabel = area.distanceKm > 0 ? `${area.name} (${area.distanceKm} km)` : area.name;
       drawAreaLabel(ctx, centroidPx, displayLabel, color.stroke);
     });
 
@@ -179,8 +215,7 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
       }
 
       // 2. MOUSE SCROLL WHEEL ZOOM (vertical wheel scroll)
-      const isMouseWheel =
-        e.deltaMode === 1 || (Math.abs(e.deltaY) >= 50 && e.deltaX === 0);
+      const isMouseWheel = e.deltaMode === 1 || (Math.abs(e.deltaY) >= 50 && e.deltaX === 0);
       if (isMouseWheel) {
         mouseWheelAccumulator += e.deltaY;
         if (Math.abs(mouseWheelAccumulator) >= 60 && now - lastZoomTime > 200) {
@@ -350,11 +385,6 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
     setCursor(null);
   };
 
-  const handleCloseModal = () => {
-    handleClearActive();
-    onClose();
-  };
-
   const handleSaveAndExit = () => {
     onComplete(completedAreas);
     onClose();
@@ -396,15 +426,6 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
     setShowSaveModal(false);
   };
 
-  const handleEditAreaDetails = (area) => {
-    setEditingAreaId(area.id);
-    setPendingGeoPoints(area.geoPoints);
-    setFormAreaName(area.name);
-    setFormAreaDistance(area.distanceKm ? String(area.distanceKm) : "5");
-    setShowSaveModal(true);
-    setShowSummaryModal(false);
-  };
-
   const handleEditAreaShape = (area) => {
     setEditingAreaId(area.id);
     setCompletedAreas((prev) => prev.filter((a) => a.id !== area.id));
@@ -413,26 +434,6 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
     setFormAreaDistance(area.distanceKm ? String(area.distanceKm) : "5");
     setIsDrawingActive(true);
     setShowSummaryModal(false);
-  };
-
-  const handleCopyAreaCoords = (area) => {
-    const text = JSON.stringify(area.geoPoints, null, 2);
-    navigator.clipboard.writeText(text).then(() => {
-      setCopiedAreaId(area.id);
-      setTimeout(() => setCopiedAreaId(null), 2000);
-    });
-  };
-
-  const handleCopyAllCoords = () => {
-    const text = JSON.stringify(
-      completedAreas.map((a) => ({ name: a.name, coordinates: a.geoPoints })),
-      null,
-      2,
-    );
-    navigator.clipboard.writeText(text).then(() => {
-      setCopiedAreaId("all");
-      setTimeout(() => setCopiedAreaId(null), 2000);
-    });
   };
 
   return createPortal(
@@ -462,9 +463,7 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
         <div className="flex items-center gap-2.5 shrink-0">
           <MapPin size={18} className="text-revenue" />
           <div>
-            <h2 className="text-sm font-bold text-tertiary leading-tight">
-              Select Territory Areas
-            </h2>
+            <h2 className="text-sm font-bold text-tertiary leading-tight">Select Territory Areas</h2>
             <p className="text-[11px] text-secondary">
               {completedAreas.length} Area{completedAreas.length !== 1 ? "s" : ""} selected
             </p>
@@ -474,17 +473,14 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
         {/* Location Search Bar */}
         <div className="relative flex-1 max-w-md">
           <div className="relative">
-            <Search
-              size={14}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary"
-            />
+            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
             <input
               type="text"
               value={searchQuery}
               onChange={handleSearchInput}
               onFocus={() => searchResults.length > 0 && setShowResults(true)}
               placeholder="Search city, state, address (e.g. Austin, TX)..."
-              className="w-full h-8.5 rounded-lg border color-border bg-white pl-9 pr-3 text-xs outline-none focus:border-[var(--color-primary)] transition"
+              className="w-full h-8.5 rounded-lg border color-border bg-white pl-9 pr-3 text-xs outline-none focus:border-(--color-primary) transition"
             />
           </div>
 
@@ -501,9 +497,7 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
                   className="w-full flex items-start gap-2.5 px-3 py-2 text-left text-xs hover:bg-gray-50 cursor-pointer transition border-b last:border-b-0 color-border"
                 >
                   <MapPin size={13} className="text-primary shrink-0 mt-0.5" />
-                  <span className="text-tertiary leading-snug line-clamp-2">
-                    {result.name}
-                  </span>
+                  <span className="text-tertiary leading-snug line-clamp-2">{result.name}</span>
                 </button>
               ))}
             </div>
@@ -538,10 +532,11 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
           <button
             type="button"
             onClick={handleToggleDrawMode}
-            className={`inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-semibold cursor-pointer transition ${isDrawingActive
-              ? "bg-red-500 text-white shadow-xs"
-              : "border color-border bg-white text-tertiary hover:bg-gray-50"
-              }`}
+            className={`inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-semibold cursor-pointer transition ${
+              isDrawingActive
+                ? "bg-red-500 text-white shadow-xs"
+                : "border color-border bg-white text-tertiary hover:bg-gray-50"
+            }`}
             title={
               isDrawingActive
                 ? "Click to stop drawing and clear in-progress dots"
@@ -556,7 +551,7 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
           <button
             type="button"
             onClick={handleSaveAndExit}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--color-primary)] text-white px-4 py-1.5 text-xs font-semibold cursor-pointer hover:opacity-90 transition"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-(--color-primary) text-white px-4 py-1.5 text-xs font-semibold cursor-pointer hover:opacity-90 transition"
           >
             <Check size={14} />
             Save
@@ -575,10 +570,7 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
         }}
         onContextMenu={(e) => e.preventDefault()}
       >
-        <canvas
-          ref={mapCanvasRef}
-          style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
-        />
+        <canvas ref={mapCanvasRef} style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} />
         <canvas
           ref={drawCanvasRef}
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
@@ -610,20 +602,22 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
           <button
             type="button"
             onClick={() => setMapLayer(LAYER_STREET)}
-            className={`px-3 py-1 text-xs font-semibold rounded-lg cursor-pointer transition ${mapLayer === LAYER_STREET
-              ? "bg-[var(--color-primary)] text-white shadow-xs"
-              : "text-secondary hover:text-tertiary"
-              }`}
+            className={`px-3 py-1 text-xs font-semibold rounded-lg cursor-pointer transition ${
+              mapLayer === LAYER_STREET
+                ? "bg-(--color-primary) text-white shadow-xs"
+                : "text-secondary hover:text-tertiary"
+            }`}
           >
             Street Map
           </button>
           <button
             type="button"
             onClick={() => setMapLayer(LAYER_SATELLITE)}
-            className={`px-3 py-1 text-xs font-semibold rounded-lg cursor-pointer transition ${mapLayer === LAYER_SATELLITE
-              ? "bg-[var(--color-primary)] text-white shadow-xs"
-              : "text-secondary hover:text-tertiary"
-              }`}
+            className={`px-3 py-1 text-xs font-semibold rounded-lg cursor-pointer transition ${
+              mapLayer === LAYER_SATELLITE
+                ? "bg-(--color-primary) text-white shadow-xs"
+                : "text-secondary hover:text-tertiary"
+            }`}
           >
             Satellite
           </button>
@@ -665,9 +659,7 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-tertiary">Save Area Details</h3>
-                  <p className="text-xs text-secondary">
-                    Territory shape completed — enter area information
-                  </p>
+                  <p className="text-xs text-secondary">Territory shape completed — enter area information</p>
                 </div>
               </div>
               <button
@@ -695,7 +687,7 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
                   value={formAreaName}
                   onChange={(e) => setFormAreaName(e.target.value)}
                   placeholder="e.g. Downtown Territory"
-                  className="w-full h-10 rounded-xl border color-border bg-white px-3.5 text-sm outline-none focus:border-[var(--color-primary)] transition"
+                  className="w-full h-10 rounded-xl border color-border bg-white px-3.5 text-sm outline-none focus:border-(--color-primary) transition"
                 />
               </div>
 
@@ -713,7 +705,7 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
                     value={formAreaDistance}
                     onChange={(e) => setFormAreaDistance(e.target.value)}
                     placeholder="e.g. 5"
-                    className="w-full h-10 rounded-xl border color-border bg-white pl-3.5 pr-14 text-sm font-semibold text-tertiary outline-none focus:border-[var(--color-primary)] transition"
+                    className="w-full h-10 rounded-xl border color-border bg-white pl-3.5 pr-14 text-sm font-semibold text-tertiary outline-none focus:border-(--color-primary) transition"
                   />
                   <span className="absolute right-3 text-xs font-bold text-secondary bg-gray-100 px-2.5 py-1 rounded-md">
                     km
@@ -761,7 +753,7 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
                 <button
                   type="button"
                   onClick={handleConfirmSaveArea}
-                  className="flex-1 h-10 rounded-xl bg-[var(--color-primary)] text-white text-xs font-bold hover:opacity-90 transition cursor-pointer"
+                  className="flex-1 h-10 rounded-xl bg-(--color-primary) text-white text-xs font-bold hover:opacity-90 transition cursor-pointer"
                 >
                   Save Area Details
                 </button>
@@ -792,9 +784,7 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
               <div className="flex items-center gap-2.5">
                 <Layers size={18} className="text-primary" />
                 <div>
-                  <h3 className="text-base font-bold text-tertiary">
-                    Territory Coordinates Summary
-                  </h3>
+                  <h3 className="text-base font-bold text-tertiary">Territory Coordinates Summary</h3>
                   <p className="text-xs text-secondary">
                     {completedAreas.length} Area{completedAreas.length !== 1 ? "s" : ""} selected
                   </p>
@@ -825,16 +815,11 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
                   const isExpanded = expandedAreaId === area.id;
 
                   return (
-                    <div
-                      key={area.id}
-                      className="rounded-xl border color-border overflow-hidden bg-white shadow-2xs"
-                    >
+                    <div key={area.id} className="rounded-xl border color-border overflow-hidden bg-white shadow-2xs">
                       {/* Area Card Header */}
                       <div
                         className="flex items-center justify-between p-3.5 cursor-pointer hover:bg-gray-50/80 transition"
-                        onClick={() =>
-                          setExpandedAreaId(isExpanded ? null : area.id)
-                        }
+                        onClick={() => setExpandedAreaId(isExpanded ? null : area.id)}
                       >
                         <div className="flex items-center gap-3">
                           <span
@@ -842,9 +827,7 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
                             style={{ backgroundColor: color.stroke }}
                           />
                           <div>
-                            <span className="text-sm font-bold text-tertiary">
-                              {area.name}
-                            </span>
+                            <span className="text-sm font-bold text-tertiary">{area.name}</span>
                             <span className="ml-2 text-xs text-secondary">
                               ({area.geoPoints.length} vertices ·{" "}
                               {area.areaKm2 < 1
@@ -860,8 +843,7 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
                           <button
                             type="button"
                             onClick={() => handleEditAreaShape(area)}
-
-                            className="p-1.5 rounded-lg  border border-orange-200 bg-orange-50 text-[var(--color-primary)] hover:bg-orange-100 cursor-pointer transition"
+                            className="p-1.5 rounded-lg  border border-orange-200 bg-orange-50 text-(--color-primary) hover:bg-orange-100 cursor-pointer transition"
                             title="Edit area shape dots and details"
                           >
                             <Pencil size={13} />
@@ -934,7 +916,7 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
               <button
                 type="button"
                 onClick={() => setShowSummaryModal(false)}
-                className="px-5 py-2 rounded-xl bg-[var(--color-primary)] text-white text-xs font-semibold cursor-pointer hover:opacity-90 transition"
+                className="px-5 py-2 rounded-xl bg-(--color-primary) text-white text-xs font-semibold cursor-pointer hover:opacity-90 transition"
               >
                 Close Summary
               </button>
@@ -946,8 +928,5 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
     document.body,
   );
 };
-
-// ═════════════════════════════════════════════════════════════════════════════
-// PREVIEW COMPONENT (Embedded in Form)
 
 export default AuthTerritoryDrawing;

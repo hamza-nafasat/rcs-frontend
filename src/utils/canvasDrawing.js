@@ -104,7 +104,6 @@ export const drawAreaLabel = (ctx, point, label, color = "#f97316") => {
   ctx.font = "bold 11px sans-serif";
   const metrics = ctx.measureText(label);
   const padX = 8;
-  const padY = 4;
   const w = metrics.width + padX * 2;
   const h = 18;
   const x = point.x - w / 2;

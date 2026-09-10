@@ -1,7 +1,7 @@
 import DataTable from "react-data-table-component";
 import { ChevronDown, Eye, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
-import ModeratorManageAccountsModal from "../../../../components/modals/ModeratorManageAccountsModal";
+import ModeratorDetailsModal from "../../../../components/modals/ModeratorDetailsModal";
 import ModeratorAddEditModal from "../../../../components/modals/ModeratorAddEditModal";
 import DeleteModal from "../../../../components/modals/DeleteModal";
 import Avatar from "../../../../components/shared/Avatar";
@@ -116,7 +116,6 @@ const buildColumns = ({ setMemberToEdit, setViewMember, setMemberToRemove }) => 
           </Button>
           <Button
             variant="menuItemDanger"
-            disabled={row.role === "Account Owner"}
             onClick={() => setMemberToRemove(row)}
           >
             <Trash2 size={16} className="shrink-0" />
@@ -187,10 +186,14 @@ const ModeratorTable = ({ moderators, setModerators }) => {
         />
       )}
 
-      <ModeratorManageAccountsModal
+      <ModeratorDetailsModal
         isOpen={Boolean(viewMember)}
         onClose={() => setViewMember(null)}
-        members={viewMember ? [viewMember] : []}
+        member={viewMember}
+        onEdit={(member) => {
+          setViewMember(null);
+          setMemberToEdit(member);
+        }}
         onRemove={(member) => {
           setViewMember(null);
           setMemberToRemove(member);
@@ -201,9 +204,9 @@ const ModeratorTable = ({ moderators, setModerators }) => {
         isOpen={Boolean(memberToRemove)}
         onClose={() => setMemberToRemove(null)}
         onConfirm={handleConfirmRemove}
-        heading="Remove Member"
+        heading="Remove Moderator"
         text={`Are you sure you want to remove ${
-          memberToRemove?.name ?? "this member"
+          memberToRemove?.name ?? "this moderator"
         }? This action cannot be undone.`}
       />
     </section>

@@ -1,6 +1,6 @@
 import { CheckCircle2, Circle } from "lucide-react";
 
-export const PIPELINE_STAGES = [
+const PIPELINE_STAGES = [
   { label: "New Application", color: "#2563eb", bg: "#eff6ff" },
   { label: "Document Collection", color: "#06b6d4", bg: "#ecfeff" },
   { label: "Under Review", color: "#f97316", bg: "#fff7ed" },
@@ -10,7 +10,7 @@ export const PIPELINE_STAGES = [
   { label: "Assign Location", color: "#ac24eb", bg: "#faf1ff" },
 ];
 
-const DashboardApplicantProgress = ({
+const ApplicationProgress = ({
   currentStage = "New Application",
 }) => {
   const activeIndex = PIPELINE_STAGES.findIndex(
@@ -102,4 +102,4 @@ const DashboardApplicantProgress = ({
   );
 };
 
-export default DashboardApplicantProgress;
+export default ApplicationProgress;

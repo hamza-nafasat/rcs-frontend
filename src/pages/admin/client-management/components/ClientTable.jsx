@@ -2,13 +2,7 @@ import DataTable from "react-data-table-component";
 import Avatar from "../../../../components/shared/Avatar";
 import Dropdown from "../../../../components/shared/Dropdown";
 import ProgressBar from "../../../../components/shared/ProgressBar";
-import {
-  Eye,
-  MessageSquare,
-  MoreHorizontal,
-  Pencil,
-  Trash2,
-} from "lucide-react";
+import { Eye, MessageSquare, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { initialData } from "../utils/data";
 import ClientDetailsModal from "../modals/ClientDetailsModal";
@@ -28,9 +22,7 @@ const HEALTH_COLORS = [
   { min: 0, color: "#EF4444" },
 ];
 
-const getHealthColor = (score) =>
-  HEALTH_COLORS.find(({ min }) => score >= min).color;
-
+const getHealthColor = (score) => HEALTH_COLORS.find(({ min }) => score >= min).color;
 
 const emptyFilters = { restaurant: "", owner: "", status: [] };
 
@@ -42,19 +34,10 @@ const buildColumns = ({ handleEditClient, handleViewClient, setClientToDelete })
     minWidth: "220px",
     cell: (row) => (
       <div className="flex items-center gap-2">
-        <Avatar
-          name={row.restaurantName}
-          size={32}
-          rounded="rounded-md"
-          color="#F97316"
-        />
+        <Avatar name={row.restaurantName} size={32} rounded="rounded-md" color="#F97316" />
         <div className="min-w-0">
-          <p className="truncate text-sm text-gray-900">
-            {row.restaurantName}
-          </p>
-          <p className="truncate text-xs text-gray-500">
-            {row.restaurantCuisine}
-          </p>
+          <p className="truncate text-sm text-gray-900">{row.restaurantName}</p>
+          <p className="truncate text-xs text-gray-500">{row.restaurantCuisine}</p>
         </div>
       </div>
     ),
@@ -69,8 +52,7 @@ const buildColumns = ({ handleEditClient, handleViewClient, setClientToDelete })
     selector: (row) => row.status,
     sortable: true,
     cell: (row) => {
-      const { pill, dot } =
-        STATUS_STYLES[row.status] ?? STATUS_STYLES["On Hold"];
+      const { pill, dot } = STATUS_STYLES[row.status] ?? STATUS_STYLES["On Hold"];
 
       return (
         <span
@@ -89,10 +71,7 @@ const buildColumns = ({ handleEditClient, handleViewClient, setClientToDelete })
     minWidth: "160px",
     cell: (row) => (
       <div className="flex w-full items-center gap-2">
-        <ProgressBar
-          value={row.healthScore}
-          color={getHealthColor(row.healthScore)}
-        />
+        <ProgressBar value={row.healthScore} color={getHealthColor(row.healthScore)} />
         <span
           className="shrink-0 whitespace-nowrap text-xs font-medium"
           style={{ color: getHealthColor(row.healthScore) }}
@@ -115,39 +94,25 @@ const buildColumns = ({ handleEditClient, handleViewClient, setClientToDelete })
           align="right"
           portalClassName="max-w-12"
           trigger={
-            <Button
-              variant="menuTrigger"
-            >
+            <Button variant="menuTrigger">
               <MoreHorizontal size={18} />
             </Button>
           }
         >
-          <Button
-            variant="menuItem"
-            onClick={() => handleEditClient(row)}
-          >
+          <Button variant="menuItem" onClick={() => handleEditClient(row)}>
             <Pencil size={16} className="mt-0.5" />
             Edit
           </Button>
-          <Button
-            variant="menuItem"
-            onClick={() => handleViewClient(row)}
-          >
+          <Button variant="menuItem" onClick={() => handleViewClient(row)}>
             <Eye size={16} className="mt-0.5" />
             View
           </Button>
-          <Button
-            variant="menuItem"
-            onClick={() => handleEditClient(row)}
-          >
+          <Button variant="menuItem" onClick={() => {}}>
             <MessageSquare size={14} className="mt-0.5" />
             Send Message
           </Button>
 
-          <Button
-            variant="menuItemDanger"
-            onClick={() => setClientToDelete(row)}
-          >
+          <Button variant="menuItemDanger" onClick={() => setClientToDelete(row)}>
             <Trash2 size={16} className="shrink-0" />
             Delete
           </Button>
@@ -168,16 +133,11 @@ const ClientTable = ({ className, filters = emptyFilters }) => {
   const [clientToDelete, setClientToDelete] = useState(null);
 
   const filteredClients = clients.filter((client) => {
-    const matchRestaurant = client.restaurantName
-      .toLowerCase()
-      .includes(filters.restaurant.trim().toLowerCase());
+    const matchRestaurant = client.restaurantName.toLowerCase().includes(filters.restaurant.trim().toLowerCase());
 
-    const matchOwner = client.ownerName
-      .toLowerCase()
-      .includes(filters.owner.trim().toLowerCase());
+    const matchOwner = client.ownerName.toLowerCase().includes(filters.owner.trim().toLowerCase());
 
-    const matchStatus =
-      filters.status.length === 0 || filters.status.includes(client.status);
+    const matchStatus = filters.status.length === 0 || filters.status.includes(client.status);
 
     return matchRestaurant && matchOwner && matchStatus;
   });
@@ -227,13 +187,7 @@ const ClientTable = ({ className, filters = emptyFilters }) => {
   const columns = buildColumns({ handleEditClient, handleViewClient, setClientToDelete });
   return (
     <section className={className}>
-      <DataTable
-        columns={columns}
-        data={filteredClients}
-        pagination
-        highlightOnHover
-        responsive
-      />
+      <DataTable columns={columns} data={filteredClients} pagination highlightOnHover responsive />
       {isModalOpen && selectedClient && (
         <ClientAddEditModal
           isOpen={isModalOpen}
@@ -256,11 +210,7 @@ const ClientTable = ({ className, filters = emptyFilters }) => {
         confirmText="Delete"
       />
 
-      <ClientDetailsModal
-        isOpen={Boolean(viewClient)}
-        onClose={() => setViewClient(null)}
-        client={viewClient}
-      />
+      <ClientDetailsModal isOpen={Boolean(viewClient)} onClose={() => setViewClient(null)} client={viewClient} />
     </section>
   );
 };

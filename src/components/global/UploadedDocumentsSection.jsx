@@ -8,7 +8,7 @@ import {
   Upload,
   FolderCheck,
 } from "lucide-react";
-import Button from "../../../../components/shared/Button";
+import Button from "../shared/Button";
 
 // Initial mock uploaded documents submitted with the franchise request
 const INITIAL_DOCUMENTS = [
@@ -64,7 +64,7 @@ const INITIAL_DOCUMENTS = [
   },
 ];
 
-const DashboardUploadedDocumentsSection = ({
+const UploadedDocumentsSection = ({
   documents = INITIAL_DOCUMENTS,
   showUploadButton = true,
   className = "",
@@ -249,4 +249,4 @@ const DashboardUploadedDocumentsSection = ({
   );
 };
 
-export default DashboardUploadedDocumentsSection;
+export default UploadedDocumentsSection;

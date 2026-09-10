@@ -1,19 +1,19 @@
 import { useState } from "react";
 import ConversationSidebar from "./conversation-sidebar/ConversationSidebar";
 import ChatPanel from "./chat-panel/ChatPanel";
-import { conversations, initialMessagesByConversation } from "./messagesData";
 
-const MessagesView = () => {
+const MessagesView = ({
+  conversations = [],
+  initialMessages = {},
+  currentUserId,
+}) => {
   const [selectedConversationId, setSelectedConversationId] = useState(null);
-  const [messagesByConversation, setMessagesByConversation] = useState(
-    initialMessagesByConversation,
-  );
+  const [messagesByConversation, setMessagesByConversation] =
+    useState(initialMessages);
 
   const selectedConversation = conversations.find(
     (conversation) => conversation.id === selectedConversationId,
   );
-
-  const currentUserId = "admin-1";
 
   const messages = selectedConversationId
     ? (messagesByConversation[selectedConversationId] ?? [])

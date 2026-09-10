@@ -4,8 +4,15 @@ import Input from "../shared/Input";
 import Button from "../shared/Button";
 import Select from "../shared/Select";
 
-const ROLES = ["Moderator", "Account Owner"];
 const STATUSES = ["Active", "Inactive"];
+
+// Returns an error message, or "" when the password is acceptable.
+const validatePassword = (password) => {
+  if (!password) return "Password is required";
+
+  // TODO(human)
+  return "";
+};
 
 const ModeratorAddEditModal = ({
   isOpen,
@@ -14,12 +21,17 @@ const ModeratorAddEditModal = ({
   initialData = null,
   mode = "add",
 }) => {
+  const isAdd = mode === "add";
+
   const [formData, setFormData] = useState(() => ({
     name: initialData?.name || "",
     email: initialData?.email || "",
-    role: initialData?.role || "Moderator",
+    password: "",
+    role: "Moderator", // the only role there is — see frontend-rules §0
     status: initialData?.status || "Active",
   }));
+  const [showPassword, setShowPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -28,11 +40,32 @@ const ModeratorAddEditModal = ({
       ...prev,
       [name]: value,
     }));
+
+    if (name === "password") setPasswordError("");
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
+
+    if (isAdd) {
+      const error = validatePassword(formData.password);
+      if (error) {
+        setPasswordError(error);
+        return;
+      }
+    }
+
+    // an existing moderator keeps their password — it is never re-sent on edit
+    onSubmit(
+      isAdd
+        ? formData
+        : {
+            name: formData.name,
+            email: formData.email,
+            role: formData.role,
+            status: formData.status,
+          },
+    );
   };
 
   if (!isOpen) return null;
@@ -76,16 +109,23 @@ const ModeratorAddEditModal = ({
             required
           />
 
-          <Select
-            label="Role *"
-            name="role"
-            value={formData.role}
-            onChange={handleChange}
-            options={ROLES}
-            placeholder="Select role"
-            labelClassName="mb-2"
-            required
-          />
+          {isAdd && (
+            <Input
+              label="Password *"
+              name="password"
+              type={showPassword ? "text" : "password"}
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Set a password for this moderator"
+              isEyeButton
+              showConfirm={showPassword}
+              setShowConfirm={setShowPassword}
+              hint={passwordError}
+              hintClassName={passwordError ? "text-remove" : ""}
+              required
+            />
+          )}
+
 
           <Select
             label="Status"

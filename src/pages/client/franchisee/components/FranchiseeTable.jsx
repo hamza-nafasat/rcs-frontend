@@ -2,13 +2,7 @@ import DataTable from "react-data-table-component";
 import Avatar from "../../../../components/shared/Avatar";
 import Dropdown from "../../../../components/shared/Dropdown";
 import ProgressBar from "../../../../components/shared/ProgressBar";
-import {
-  Eye,
-  MessageSquare,
-  MoreHorizontal,
-  Pencil,
-  Trash2,
-} from "lucide-react";
+import { Eye, MessageSquare, MoreHorizontal } from "lucide-react";
 import { useState } from "react";
 import { initialData } from "../utils/data";
 import Button from "../../../../components/shared/Button";
@@ -25,13 +19,11 @@ const HEALTH_COLORS = [
   { min: 0, color: "#EF4444" },
 ];
 
-const getHealthColor = (score) =>
-  HEALTH_COLORS.find(({ min }) => score >= min).color;
-
+const getHealthColor = (score) => HEALTH_COLORS.find(({ min }) => score >= min).color;
 
 const emptyFilters = { restaurant: "", owner: "", status: [] };
 
-const buildColumns = ({ handleEditClient, handleViewClient }) => [
+const buildColumns = ({ handleViewClient, handleSendMessage }) => [
   {
     name: "Restaurant",
     selector: (row) => row.restaurantName,
@@ -39,19 +31,10 @@ const buildColumns = ({ handleEditClient, handleViewClient }) => [
     minWidth: "220px",
     cell: (row) => (
       <div className="flex items-center gap-2">
-        <Avatar
-          name={row.restaurantName}
-          size={32}
-          rounded="rounded-md"
-          color="#F97316"
-        />
+        <Avatar name={row.restaurantName} size={32} rounded="rounded-md" color="#F97316" />
         <div className="min-w-0">
-          <p className="truncate text-sm text-gray-900">
-            {row.restaurantName}
-          </p>
-          <p className="truncate text-xs text-gray-500">
-            {row.restaurantCuisine}
-          </p>
+          <p className="truncate text-sm text-gray-900">{row.restaurantName}</p>
+          <p className="truncate text-xs text-gray-500">{row.restaurantCuisine}</p>
         </div>
       </div>
     ),
@@ -66,8 +49,7 @@ const buildColumns = ({ handleEditClient, handleViewClient }) => [
     selector: (row) => row.status,
     sortable: true,
     cell: (row) => {
-      const { pill, dot } =
-        STATUS_STYLES[row.status] ?? STATUS_STYLES["On Hold"];
+      const { pill, dot } = STATUS_STYLES[row.status] ?? STATUS_STYLES["On Hold"];
 
       return (
         <span
@@ -86,10 +68,7 @@ const buildColumns = ({ handleEditClient, handleViewClient }) => [
     minWidth: "160px",
     cell: (row) => (
       <div className="flex w-full items-center gap-2">
-        <ProgressBar
-          value={row.healthScore}
-          color={getHealthColor(row.healthScore)}
-        />
+        <ProgressBar value={row.healthScore} color={getHealthColor(row.healthScore)} />
         <span
           className="shrink-0 whitespace-nowrap text-xs font-medium"
           style={{ color: getHealthColor(row.healthScore) }}
@@ -112,24 +91,16 @@ const buildColumns = ({ handleEditClient, handleViewClient }) => [
           align="right"
           portalClassName="max-w-12"
           trigger={
-            <Button
-              variant="menuTrigger"
-            >
+            <Button variant="menuTrigger">
               <MoreHorizontal size={18} />
             </Button>
           }
         >
-          <Button
-            variant="menuItem"
-            onClick={() => handleViewClient(row)}
-          >
+          <Button variant="menuItem" onClick={() => handleViewClient(row)}>
             <Eye size={16} className="mt-0.5" />
             View
           </Button>
-          <Button
-            variant="menuItem"
-            onClick={() => handleEditClient(row)}
-          >
+          <Button variant="menuItem" onClick={() => handleSendMessage(row)}>
             <MessageSquare size={14} className="mt-0.5" />
             Send Message
           </Button>
@@ -143,93 +114,26 @@ const buildColumns = ({ handleEditClient, handleViewClient }) => [
 ];
 
 const FranchiseeTable = ({ className, filters = emptyFilters }) => {
-  const [clients, setClients] = useState(initialData);
-  const [selectedClient, setSelectedClient] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [viewClient, setViewClient] = useState(null);
-  const [clientToDelete, setClientToDelete] = useState(null);
+  const [clients] = useState(initialData);
 
   const filteredClients = clients.filter((client) => {
-    const matchRestaurant = client.restaurantName
-      .toLowerCase()
-      .includes(filters.restaurant.trim().toLowerCase());
+    const matchRestaurant = client.restaurantName.toLowerCase().includes(filters.restaurant.trim().toLowerCase());
 
-    const matchOwner = client.ownerName
-      .toLowerCase()
-      .includes(filters.owner.trim().toLowerCase());
+    const matchOwner = client.ownerName.toLowerCase().includes(filters.owner.trim().toLowerCase());
 
-    const matchStatus =
-      filters.status.length === 0 || filters.status.includes(client.status);
+    const matchStatus = filters.status.length === 0 || filters.status.includes(client.status);
 
     return matchRestaurant && matchOwner && matchStatus;
   });
 
-  const handleViewClient = (client) => {
-    setViewClient({
-      name: client.restaurantName,
-      type: client.franchise,
-      status: client.status,
-      location: client.location ?? "—",
-      owner: client.ownerName,
-      email: client.clientEmail,
-      phone: client.phone ?? "—",
-      healthScore: client.healthScore,
-      outstandingBalance: String(client.balance ?? "").replace("$", ""),
-    });
-  };
+  // TODO: wire View + Send Message once the franchisee detail/message APIs land
+  const handleViewClient = () => {};
+  const handleSendMessage = () => {};
 
-  const handleEditClient = (client) => {
-    setSelectedClient(client);
-    setIsModalOpen(true);
-  };
-
-  const handleUpdateClient = (formData) => {
-    setClients((prev) =>
-      prev.map((client) =>
-        client.id === selectedClient?.id
-          ? {
-            ...client,
-            ownerName: formData.ownerName,
-            clientEmail: formData.clientEmail,
-            restaurantName: formData.restaurantName,
-          }
-          : client,
-      ),
-    );
-
-    setIsModalOpen(false);
-    setSelectedClient(null);
-  };
-
-  const handleDeleteClient = () => {
-    setClients((prev) => prev.filter((client) => client.id !== clientToDelete?.id));
-    setClientToDelete(null);
-  };
-
-  const columns = buildColumns({ handleEditClient, handleViewClient });
+  const columns = buildColumns({ handleViewClient, handleSendMessage });
   return (
     <section className={className}>
-      <DataTable
-        columns={columns}
-        data={filteredClients}
-        pagination
-        highlightOnHover
-        responsive
-      />
-      {/* <DeleteModal
-        isOpen={Boolean(clientToDelete)}
-        onClose={() => setClientToDelete(null)}
-        onConfirm={handleDeleteClient}
-        heading="Delete Client"
-        text={`Are you sure you want to delete ${clientToDelete?.restaurantName ?? "this client"}? This action cannot be undone.`}
-        confirmText="Delete"
-      />
-
-      <ClientDetailsModal
-        isOpen={Boolean(viewClient)}
-        onClose={() => setViewClient(null)}
-        client={viewClient}
-      /> */}
+      <DataTable columns={columns} data={filteredClients} pagination highlightOnHover responsive />
     </section>
   );
 };

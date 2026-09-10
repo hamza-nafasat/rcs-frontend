@@ -5,7 +5,6 @@ export const DUMMY_PROFILE = {
   lastName: "Ricci",
   email: "marco@goldenfork.com",
   phone: "+1 (555) 000-0000",
-  role: { displayName: "Account Owner" },
   address: "123 Market Street",
   city: "Austin",
   state: "TX",

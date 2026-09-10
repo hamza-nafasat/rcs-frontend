@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { DollarSign, Briefcase, Scale, MapPin } from "lucide-react";
-import Button from "../../../components/shared/Button";
-import Badge from "../../../components/shared/Badge";
 import ScoreRadar from "../../../components/global/scorecard/ScoreRadar";
 import CategoryScores from "../../../components/global/scorecard/CategoryScores";
 import ScorecardSection from "../../../components/global/scorecard/ScorecardSection";
@@ -10,10 +8,9 @@ import StageSelector from "../../../components/global/scorecard/StageSelector";
 import LocationAssignModal from "../../../components/modals/LocationAssignModal";
 import InlineLocationMap from "../../../components/global/scorecard/InlineLocationMap";
 import PipelineApplicantProgress from "./components/PipelineApplicantProgress";
-import DashboardUploadedDocumentsSection from "../../user/dashboard/components/DashboardUploadedDocumentsSection";
+import UploadedDocumentsSection from "../../../components/global/UploadedDocumentsSection";
 import { initialApplicants } from "./utils/data";
 import {
-  STAGE_COLORS,
   buildScorecard,
   getRecommendation,
 } from "./utils/scorecardData";
@@ -41,9 +38,16 @@ const AdminApplicantDetailPage = () => {
 
   const handleStageChange = (nextStage) => {
     setApplicants((prev) =>
-      prev.map((a) => (a.id === applicant.id ? { ...a, stage: nextStage } : a))
+      prev.map((a) => (a.id === applicant.id ? { ...a, stage: nextStage } : a)),
     );
-    applicant.stage = nextStage;
+  };
+
+  const handleSaveLocation = (updatedAreas) => {
+    setApplicants((prev) =>
+      prev.map((a) =>
+        a.id === applicant.id ? { ...a, territories: updatedAreas } : a,
+      ),
+    );
   };
 
   return (
@@ -153,7 +157,7 @@ const AdminApplicantDetailPage = () => {
       </div>
 
       {/* User Uploaded Documents Section */}
-      <DashboardUploadedDocumentsSection showUploadButton={false} />
+      <UploadedDocumentsSection showUploadButton={false} />
 
       {/* Full Map Modal */}
       {showMapModal && (
@@ -161,11 +165,7 @@ const AdminApplicantDetailPage = () => {
           isOpen={showMapModal}
           applicant={applicant}
           onClose={() => setShowMapModal(false)}
-          onSaveLocation={(updatedAreas) => {
-            if (applicant) {
-              applicant.territories = updatedAreas;
-            }
-          }}
+          onSaveLocation={handleSaveLocation}
         />
       )}
     </article>

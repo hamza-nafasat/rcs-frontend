@@ -54,7 +54,7 @@ const AuthCreateAccountForm = () => {
 
         {/* Territory drawing on real USA map */}
         <AuthLocationAssign
-          onTerritoryChange={(geoPoints) => {
+          onTerritoryChange={() => {
             // geoPoints is an array of { lat, lng } or null when cleared
             // Available for form submission in production
           }}

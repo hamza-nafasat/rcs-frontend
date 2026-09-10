@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   FileQuestion,
   FileCheck2,
@@ -7,7 +6,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
-const DashboardDocumentRequestCard = ({
+const ApplicationDocumentRequestCard = ({
   hasRequest = true,
   onRequestToggle,
   requestDetails = {
@@ -99,4 +98,4 @@ const DashboardDocumentRequestCard = ({
   );
 };
 
-export default DashboardDocumentRequestCard;
+export default ApplicationDocumentRequestCard;

@@ -2,12 +2,10 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { DollarSign, Briefcase, Scale, MapPin } from "lucide-react";
 import PipelineApplicantProgress from "./components/PipelineApplicantProgress";
-import DashboardDocumentRequestCard from "../../user/dashboard/components/DashboardDocumentRequestCard";
 import PipelineScoreRadar from "./components/scorecard/PipelineScoreRadar";
 import CategoryScores from "../../../components/global/scorecard/CategoryScores";
 import PipelineScorecardSection from "./components/scorecard/PipelineScorecardSection";
 import LocationAssignModal from "../../../components/modals/LocationAssignModal";
-import InlineLocationMap from "../../../components/global/scorecard/InlineLocationMap";
 import { initialApplicants } from "./utils/data";
 import {
   buildScorecard,
@@ -19,7 +17,6 @@ const ClientApplicantDetailPage = () => {
   const { id } = useParams();
 
   const [applicants] = useState(initialApplicants);
-  const [hasAdminRequest, setHasAdminRequest] = useState(true);
   const [showMapModal, setShowMapModal] = useState(false);
 
   const applicant = applicants.find((a) => String(a.id) === String(id)) || applicants[0];

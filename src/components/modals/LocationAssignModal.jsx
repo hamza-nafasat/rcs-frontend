@@ -1,95 +1,46 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import {
-  Search,
-  Building2,
-  MapPin,
-  X,
-  AlertTriangle,
-  Pencil,
-  Trash2,
-  List,
-  HousePlus,
-} from "lucide-react";
+import { Search, Building2, MapPin, X, AlertTriangle, Pencil, Trash2, List, HousePlus } from "lucide-react";
 import Input from "../shared/Input";
-import { LAYER_SATELLITE, LAYER_STREET, MAX_ZOOM, MIN_ZOOM, TILE_SIZE, getDistanceKm, latToPixel, lngToPixel, pixelToLat, pixelToLng, searchLocation } from "../../utils/mapTiles";
+import {
+  LAYER_SATELLITE,
+  LAYER_STREET,
+  MAX_ZOOM,
+  MIN_ZOOM,
+  TILE_SIZE,
+  getDistanceKm,
+  latToPixel,
+  lngToPixel,
+  pixelToLat,
+  pixelToLng,
+  searchLocation,
+} from "../../utils/mapTiles";
+import { INITIAL_BRANCHES } from "./locationBranches";
 
-export const INITIAL_BRANCHES = [
-  {
-    id: "branch-01",
-    name: "Austin Central Branch",
-    franchise: "BrightSmile Dental",
-    city: "Austin, TX",
-    lat: 30.2672,
-    lng: -97.7431,
-    radiusKm: 5,
-  },
-  {
-    id: "branch-02",
-    name: "Austin North Branch",
-    franchise: "BrightSmile Dental",
-    city: "Austin, TX",
-    lat: 30.3801,
-    lng: -97.7289,
-    radiusKm: 5,
-  },
-  {
-    id: "branch-03",
-    name: "Denver Downtown Studio",
-    franchise: "UrbanFit Studios",
-    city: "Denver, CO",
-    lat: 39.7392,
-    lng: -104.9903,
-    radiusKm: 8,
-  },
-  {
-    id: "branch-04",
-    name: "Seattle Harbor Cafe",
-    franchise: "GreenLeaf Cafe",
-    city: "Seattle, WA",
-    lat: 47.6062,
-    lng: -122.3321,
-    radiusKm: 4,
-  },
-  {
-    id: "branch-05",
-    name: "Phoenix Airport Hub",
-    franchise: "QuickLube Auto",
-    city: "Phoenix, AZ",
-    lat: 33.4484,
-    lng: -112.074,
-    radiusKm: 6,
-  },
-  {
-    id: "branch-06",
-    name: "Miami South Beach Clinic",
-    franchise: "BrightSmile Dental",
-    city: "Miami, FL",
-    lat: 25.7617,
-    lng: -80.1918,
-    radiusKm: 6,
-  },
-];
+const findConflictAt = (point, branches) => {
+  for (const branch of branches) {
+    const dist = getDistanceKm(point.lat, point.lng, branch.lat, branch.lng);
+    if (dist <= branch.radiusKm) return { branch, distanceKm: dist };
+  }
 
-const LocationAssignModal = ({
-  isOpen,
-  applicant,
-  onClose,
-  onSaveLocation,
-}) => {
+  return null;
+};
+
+const LocationAssignModal = ({ isOpen, applicant, onClose, onSaveLocation }) => {
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
 
   // Map state
   const [center, setCenter] = useState({ lat: 30.2672, lng: -97.7431 }); // default Austin, TX
   const [zoom, setZoom] = useState(11);
+  // Size is measured into state so render never reads a ref
+  const [size, setSize] = useState({ width: 1000, height: 700 });
   const [mapLayer, setMapLayer] = useState(LAYER_STREET);
 
   // Branch state
   const [branches, setBranches] = useState(INITIAL_BRANCHES);
   const [isPlacingBranch, setIsPlacingBranch] = useState(false);
   const [cursor, setCursor] = useState(null);
-  const [activeConflict, setActiveConflict] = useState(null);
   const [conflictToast, setConflictToast] = useState(null);
   const [showBranchListModal, setShowBranchListModal] = useState(false);
 
@@ -113,6 +64,23 @@ const LocationAssignModal = ({
   const pointerDownInfo = useRef({ x: 0, y: 0, centerLat: 0, centerLng: 0 });
 
   // Center map on applicant's city when opened
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const measure = () =>
+      setSize({
+        width: el.clientWidth || 1000,
+        height: el.clientHeight || 700,
+      });
+
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(el);
+
+    return () => observer.disconnect();
+  }, [isOpen]);
+
   useEffect(() => {
     if (applicant?.territory) {
       searchLocation(applicant.territory).then((results) => {
@@ -148,10 +116,7 @@ const LocationAssignModal = ({
 
   const canvasToLatLng = useCallback(
     (x, y) => {
-      const el = containerRef.current;
-      if (!el) return { lat: 0, lng: 0 };
-      const width = el.clientWidth;
-      const height = el.clientHeight;
+      const { width, height } = size;
 
       const centerPxX = lngToPixel(center.lng, zoom);
       const centerPxY = latToPixel(center.lat, zoom);
@@ -164,54 +129,32 @@ const LocationAssignModal = ({
         lng: pixelToLng(ptPxX, zoom),
       };
     },
-    [center, zoom],
+    [center, zoom, size],
   );
 
-  // Calculate all overlapping branch pairs where radius surpasses/intersects another branch radius
-  const overlappingBranchIds = new Set();
-  const overlappingDetails = new Map();
+  // Branch pairs whose radii surpass or intersect each other
+  const overlappingBranchIds = useMemo(() => {
+    const ids = new Set();
 
-  for (let i = 0; i < branches.length; i++) {
-    for (let j = i + 1; j < branches.length; j++) {
-      const b1 = branches[i];
-      const b2 = branches[j];
-      const dist = getDistanceKm(b1.lat, b1.lng, b2.lat, b2.lng);
-      const isSurpassing = dist < b1.radiusKm || dist < b2.radiusKm || dist < b1.radiusKm + b2.radiusKm;
+    for (let i = 0; i < branches.length; i++) {
+      for (let j = i + 1; j < branches.length; j++) {
+        const b1 = branches[i];
+        const b2 = branches[j];
+        const dist = getDistanceKm(b1.lat, b1.lng, b2.lat, b2.lng);
 
-      if (isSurpassing) {
-        overlappingBranchIds.add(b1.id);
-        overlappingBranchIds.add(b2.id);
-        overlappingDetails.set(b1.id, { other: b2, dist });
-        overlappingDetails.set(b2.id, { other: b1, dist });
-      }
-    }
-  }
-
-  // Check radius conflict at cursor position when adding new branch
-  useEffect(() => {
-    if (!cursor || !isPlacingBranch) {
-      setActiveConflict(null);
-      return;
-    }
-
-    const cursorGeo = canvasToLatLng(cursor.x, cursor.y);
-    let foundConflict = null;
-
-    for (const branch of branches) {
-      const dist = getDistanceKm(
-        cursorGeo.lat,
-        cursorGeo.lng,
-        branch.lat,
-        branch.lng,
-      );
-      if (dist <= branch.radiusKm) {
-        foundConflict = { branch, distanceKm: dist };
-        break;
+        if (dist < b1.radiusKm || dist < b2.radiusKm || dist < b1.radiusKm + b2.radiusKm) {
+          ids.add(b1.id);
+          ids.add(b2.id);
+        }
       }
     }
 
-    setActiveConflict(foundConflict);
-  }, [cursor, isPlacingBranch, branches, canvasToLatLng]);
+    return ids;
+  }, [branches]);
+
+  // Derived, not stored: the conflict under the cursor while placing a branch
+  const activeConflict =
+    cursor && isPlacingBranch ? findConflictAt(canvasToLatLng(cursor.x, cursor.y), branches) : null;
 
   // Check live edit input radius surpass conflict preview
   const liveFormRadius = parseFloat(formBranchDistance) || 0;
@@ -259,25 +202,16 @@ const LocationAssignModal = ({
     // 1. Draw Existing & Newly Saved Branches
     branches.forEach((branch) => {
       const px = latLngToCanvas(branch.lat, branch.lng);
-      if (
-        px.x < -100 ||
-        px.x > width + 100 ||
-        px.y < -100 ||
-        px.y > height + 100
-      )
-        return;
+      if (px.x < -100 || px.x > width + 100 || px.y < -100 || px.y > height + 100) return;
 
-      const isCursorConflict =
-        activeConflict && activeConflict.branch.id === branch.id;
+      const isCursorConflict = activeConflict && activeConflict.branch.id === branch.id;
       const isOverlapConflict = overlappingBranchIds.has(branch.id);
       const isConflict = isCursorConflict || isOverlapConflict;
 
       // Draw Radius Circle (HIGHLIGHTS RED ON CONFLICT OR OVERLAP)
       if (branch.radiusKm > 0) {
         const radiusPx =
-          (branch.radiusKm * 1000) /
-          ((156543.03392 * Math.cos((branch.lat * Math.PI) / 180)) /
-            Math.pow(2, zoom));
+          (branch.radiusKm * 1000) / ((156543.03392 * Math.cos((branch.lat * Math.PI) / 180)) / Math.pow(2, zoom));
 
         ctx.beginPath();
         ctx.arc(px.x, px.y, radiusPx, 0, Math.PI * 2);
@@ -334,7 +268,6 @@ const LocationAssignModal = ({
       // Draw Branch Name Text Label Badge
       ctx.save();
       ctx.font = "bold 11px Inter, system-ui, sans-serif";
-      const overlapDetail = overlappingDetails.get(branch.id);
 
       const branchLabel = isOverlapConflict
         ? `⚠️ OVERLAP: ${branch.name} (${branch.radiusKm} km)`
@@ -373,9 +306,7 @@ const LocationAssignModal = ({
       const isConflict = !!activeConflict;
 
       ctx.save();
-      ctx.shadowColor = isConflict
-        ? "rgba(239, 68, 68, 0.6)"
-        : "rgba(234, 88, 12, 0.4)";
+      ctx.shadowColor = isConflict ? "rgba(239, 68, 68, 0.6)" : "rgba(234, 88, 12, 0.4)";
       ctx.shadowBlur = 10;
       ctx.shadowOffsetY = 4;
 
@@ -406,9 +337,7 @@ const LocationAssignModal = ({
       // Floating Helper text badge attached next to cursor
       ctx.save();
       ctx.font = "bold 11px Inter, system-ui, sans-serif";
-      const helperText = isConflict
-        ? `⚠️ CANNOT ADD HERE!`
-        : `Click on map`;
+      const helperText = isConflict ? `⚠️ CANNOT ADD HERE!` : `Click on map`;
 
       const textW = ctx.measureText(helperText).width;
       const badgeW = textW + 16;
@@ -498,7 +427,6 @@ const LocationAssignModal = ({
     }
 
     if (isDragging.current) {
-      const totalPx = TILE_SIZE * Math.pow(2, zoom);
       const startPxX = lngToPixel(dragStartCenter.current.lng, zoom);
       const startPxY = latToPixel(dragStartCenter.current.lat, zoom);
 
@@ -513,10 +441,7 @@ const LocationAssignModal = ({
   };
 
   const handlePointerUp = (e) => {
-    const moveDist = Math.hypot(
-      e.clientX - pointerDownInfo.current.x,
-      e.clientY - pointerDownInfo.current.y,
-    );
+    const moveDist = Math.hypot(e.clientX - pointerDownInfo.current.x, e.clientY - pointerDownInfo.current.y);
 
     if (moveDist < 6 && isPlacingBranch) {
       if (activeConflict) {
@@ -590,10 +515,10 @@ const LocationAssignModal = ({
       const updated = branches.map((b) =>
         b.id === editingBranchId
           ? {
-            ...b,
-            name: formBranchName.trim() || b.name,
-            radiusKm: parseFloat(formBranchDistance) || b.radiusKm,
-          }
+              ...b,
+              name: formBranchName.trim() || b.name,
+              radiusKm: parseFloat(formBranchDistance) || b.radiusKm,
+            }
           : b,
       );
       setBranches(updated);
@@ -650,8 +575,8 @@ const LocationAssignModal = ({
   const centerPxX = lngToPixel(center.lng, zoom);
   const centerPxY = latToPixel(center.lat, zoom);
 
-  const containerW = containerRef.current?.clientWidth || 1000;
-  const containerH = containerRef.current?.clientHeight || 700;
+  const containerW = size.width;
+  const containerH = size.height;
 
   const minTileX = Math.floor((centerPxX - containerW / 2) / TILE_SIZE);
   const maxTileX = Math.floor((centerPxX + containerW / 2) / TILE_SIZE);
@@ -685,9 +610,7 @@ const LocationAssignModal = ({
             <h2 className="text-base font-bold text-gray-900 leading-tight">
               Assign Location | {applicant?.name || "Applicant"}
             </h2>
-            <p className="text-xs text-gray-500">
-              {applicant?.franchise || "Franchise"}
-            </p>
+            <p className="text-xs text-gray-500">{applicant?.franchise || "Franchise"}</p>
           </div>
         </div>
 
@@ -700,7 +623,7 @@ const LocationAssignModal = ({
             onChange={handleSearchInput}
             onFocus={() => searchResults.length > 0 && setShowResults(true)}
             placeholder="Search..."
-            className="w-full h-9 rounded-lg border border-gray-200 bg-white pl-9 pr-3 text-xs outline-none focus:border-[var(--color-primary)] transition"
+            className="w-full h-9 rounded-lg border border-gray-200 bg-white pl-9 pr-3 text-xs outline-none focus:border-(--color-primary) transition"
           />
 
           {showResults && (
@@ -713,9 +636,7 @@ const LocationAssignModal = ({
                   className="w-full flex items-start gap-2.5 px-3 py-2 text-left text-xs hover:bg-gray-50 cursor-pointer transition border-b last:border-b-0 border-gray-100"
                 >
                   <MapPin size={13} className="text-primary shrink-0 mt-0.5" />
-                  <span className="text-gray-800 line-clamp-2">
-                    {result.name}
-                  </span>
+                  <span className="text-gray-800 line-clamp-2">{result.name}</span>
                 </button>
               ))}
             </div>
@@ -736,15 +657,14 @@ const LocationAssignModal = ({
           <button
             type="button"
             onClick={() => setIsPlacingBranch((prev) => !prev)}
-            className={`inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-semibold cursor-pointer transition ${isPlacingBranch
-              ? "bg-orange-600 text-white shadow-xs"
-              : "border border-gray-200 bg-white text-gray-800 hover:bg-gray-50"
-              }`}
+            className={`inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-semibold cursor-pointer transition ${
+              isPlacingBranch
+                ? "bg-orange-600 text-white shadow-xs"
+                : "border border-gray-200 bg-white text-gray-800 hover:bg-gray-50"
+            }`}
           >
             <HousePlus size={14} />
-            {isPlacingBranch
-              ? "Adding Branch (Click map to place)"
-              : "Add"}
+            {isPlacingBranch ? "Adding Branch (Click map to place)" : "Add"}
           </button>
 
           <button
@@ -765,8 +685,9 @@ const LocationAssignModal = ({
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
         onDoubleClick={handleDoubleClick}
-        className={`relative flex-1 bg-gray-100 overflow-hidden select-none ${isPlacingBranch ? "cursor-pointer" : "cursor-grab active:cursor-grabbing"
-          }`}
+        className={`relative flex-1 bg-gray-100 overflow-hidden select-none ${
+          isPlacingBranch ? "cursor-pointer" : "cursor-grab active:cursor-grabbing"
+        }`}
       >
         {/* Tile Grid */}
         <div className="absolute inset-0 pointer-events-none">
@@ -788,10 +709,7 @@ const LocationAssignModal = ({
         </div>
 
         {/* Canvas overlay for drawing & branch markers */}
-        <canvas
-          ref={canvasRef}
-          className="absolute inset-0 pointer-events-none z-10"
-        />
+        <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-10" />
 
         {/* Conflict Toast Alert Banner */}
         {conflictToast && (
@@ -804,9 +722,7 @@ const LocationAssignModal = ({
         {/* Informational Banner */}
         <div className="absolute top-4 left-4 z-20 flex items-center gap-2 bg-white/95 backdrop-blur-xs px-3.5 py-2 rounded-xl border border-gray-200 shadow-md text-xs">
           <Building2 size={15} className="text-slate-800" />
-          <span className="font-semibold text-gray-800">
-            Saved Branches
-          </span>
+          <span className="font-semibold text-gray-800">Saved Branches</span>
           {overlappingBranchIds.size > 0 && (
             <span className="ml-2 text-red-600 font-bold animate-pulse">
               — ⚠️ {overlappingBranchIds.size} Branches have surpassing/overlapping radii!
@@ -819,20 +735,22 @@ const LocationAssignModal = ({
           <button
             type="button"
             onClick={() => setMapLayer(LAYER_STREET)}
-            className={`px-3 py-1 text-xs font-semibold rounded-lg cursor-pointer transition ${mapLayer === LAYER_STREET
-              ? "bg-[var(--color-primary)] text-white shadow-xs"
-              : "text-gray-600 hover:text-gray-900"
-              }`}
+            className={`px-3 py-1 text-xs font-semibold rounded-lg cursor-pointer transition ${
+              mapLayer === LAYER_STREET
+                ? "bg-(--color-primary) text-white shadow-xs"
+                : "text-gray-600 hover:text-gray-900"
+            }`}
           >
             Street Map
           </button>
           <button
             type="button"
             onClick={() => setMapLayer(LAYER_SATELLITE)}
-            className={`px-3 py-1 text-xs font-semibold rounded-lg cursor-pointer transition ${mapLayer === LAYER_SATELLITE
-              ? "bg-[var(--color-primary)] text-white shadow-xs"
-              : "text-gray-600 hover:text-gray-900"
-              }`}
+            className={`px-3 py-1 text-xs font-semibold rounded-lg cursor-pointer transition ${
+              mapLayer === LAYER_SATELLITE
+                ? "bg-(--color-primary) text-white shadow-xs"
+                : "text-gray-600 hover:text-gray-900"
+            }`}
           >
             Satellite
           </button>
@@ -870,9 +788,7 @@ const LocationAssignModal = ({
           >
             <div className="flex items-center justify-between border-b border-gray-100 pb-3">
               <div>
-                <h3 className="text-base font-bold text-gray-900">
-                  Manage Saved Branches ({branches.length})
-                </h3>
+                <h3 className="text-base font-bold text-gray-900">Manage Saved Branches ({branches.length})</h3>
                 <p className="text-xs text-gray-500">
                   Edit branch names, radius distances, or remove branch locations.
                 </p>
@@ -893,21 +809,15 @@ const LocationAssignModal = ({
                 return (
                   <div
                     key={b.id}
-                    className={`flex items-center justify-between p-3 rounded-xl border ${hasOverlap
-                      ? "border-red-300 bg-red-50/60"
-                      : "border-gray-200 bg-white"
-                      }`}
+                    className={`flex items-center justify-between p-3 rounded-xl border ${
+                      hasOverlap ? "border-red-300 bg-red-50/60" : "border-gray-200 bg-white"
+                    }`}
                   >
                     <div className="flex items-center gap-2.5">
-                      <Building2
-                        size={16}
-                        className={hasOverlap ? "text-red-600" : "text-slate-700"}
-                      />
+                      <Building2 size={16} className={hasOverlap ? "text-red-600" : "text-slate-700"} />
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="text-xs font-bold text-gray-900">
-                            {b.name}
-                          </span>
+                          <span className="text-xs font-bold text-gray-900">{b.name}</span>
                           {hasOverlap && (
                             <span className="text-[10px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full border border-red-200">
                               Radius Overlap Conflict
@@ -969,26 +879,23 @@ const LocationAssignModal = ({
               <div className="p-3 rounded-xl bg-red-50 border border-red-200 flex items-start gap-2 text-xs text-red-700">
                 <AlertTriangle size={15} className="shrink-0 text-red-600 mt-0.5" />
                 <span>
-                  <strong>⚠️ Radius Surpass Warning:</strong> This radius ({liveFormRadius} km) surpasses/overlaps with <strong>&quot;{liveFormConflict.other.name}&quot;</strong> (distance is {liveFormConflict.dist.toFixed(1)} km).
+                  <strong>⚠️ Radius Surpass Warning:</strong> This radius ({liveFormRadius} km) surpasses/overlaps with{" "}
+                  <strong>&quot;{liveFormConflict.other.name}&quot;</strong> (distance is{" "}
+                  {liveFormConflict.dist.toFixed(1)} km).
                 </span>
               </div>
             )}
 
-            <form
-              onSubmit={handleSaveBranchConfirm}
-              className="flex flex-col gap-3.5"
-            >
+            <form onSubmit={handleSaveBranchConfirm} className="flex flex-col gap-3.5">
               <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1">
-                  Branch Name *
-                </label>
+                <label className="block text-xs font-semibold text-gray-700 mb-1">Branch Name *</label>
                 <input
                   type="text"
                   required
                   value={formBranchName}
                   onChange={(e) => setFormBranchName(e.target.value)}
                   placeholder="e.g. Austin East Branch"
-                  className="w-full h-9 rounded-lg border border-gray-200 px-3 text-xs outline-none focus:border-[var(--color-primary)] transition"
+                  className="w-full h-9 rounded-lg border border-gray-200 px-3 text-xs outline-none focus:border-(--color-primary) transition"
                 />
               </div>
 
@@ -1004,14 +911,13 @@ const LocationAssignModal = ({
                     required
                     value={formBranchDistance}
                     onChange={(e) => setFormBranchDistance(e.target.value)}
-                    className={`w-full h-9 rounded-lg border pl-3 pr-10 text-xs outline-none transition ${liveFormConflict
-                      ? "border-red-400 bg-red-50/30 text-red-900"
-                      : "border-gray-200 focus:border-[var(--color-primary)]"
-                      }`}
+                    className={`w-full h-9 rounded-lg border pl-3 pr-10 text-xs outline-none transition ${
+                      liveFormConflict
+                        ? "border-red-400 bg-red-50/30 text-red-900"
+                        : "border-gray-200 focus:border-(--color-primary)"
+                    }`}
                   />
-                  <span className="absolute right-3 text-xs font-semibold text-gray-400">
-                    km
-                  </span>
+                  <span className="absolute right-3 text-xs font-semibold text-gray-400">km</span>
                 </div>
               </div>
 
@@ -1028,7 +934,7 @@ const LocationAssignModal = ({
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 h-9 rounded-lg bg-[var(--color-primary)] text-white text-xs font-bold hover:opacity-90 cursor-pointer transition"
+                  className="flex-1 h-9 rounded-lg bg-(--color-primary) text-white text-xs font-bold hover:opacity-90 cursor-pointer transition"
                 >
                   {editingBranchId ? "Update Branch" : "Save Branch"}
                 </button>

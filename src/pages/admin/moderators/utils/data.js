@@ -4,7 +4,7 @@ export const initialModerators = [
     name: "Sarah Chen",
     email: "sarah.chen@example.com",
     status: "Active",
-    role: "Account Owner",
+    role: "Moderator",
     joined: "Added 2 days ago",
   },
   {
@@ -36,7 +36,7 @@ export const initialModerators = [
     name: "Sarah Chen",
     email: "sarah.chen@example.com",
     status: "Active",
-    role: "Account Owner",
+    role: "Moderator",
     joined: "Added 2 days ago",
   },
   {
