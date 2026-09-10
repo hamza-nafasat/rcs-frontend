@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Avatar from "../../../../components/shared/Avatar";
 import Badge from "../../../../components/shared/Badge";
 import ProgressBar from "../../../../components/shared/ProgressBar";
-import { STAGE_COLORS, getRecommendation } from "../data/scorecardData";
+import { STAGE_COLORS, getRecommendation } from "../utils/scorecardData";
 
 const scoreColor = (score) => {
   if (score >= 80) return "var(--color-revenue)";

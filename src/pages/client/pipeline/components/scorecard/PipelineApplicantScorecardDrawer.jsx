@@ -1,0 +1,147 @@
+import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { X, DollarSign, Briefcase, Scale, MapPin } from "lucide-react";
+import Button from "../../../../../components/shared/Button";
+import Badge from "../../../../../components/shared/Badge";
+import PipelineScoreRadar from "./PipelineScoreRadar";
+import PipelineScorecardSection from "./PipelineScorecardSection";
+import {
+  STAGE_COLORS,
+  buildScorecard,
+  getRecommendation,
+} from "../../utils/scorecardData";
+
+const CLOSE_DURATION = 250;
+
+const PipelineApplicantScorecardDrawer = ({ isOpen, applicant, onClose }) => {
+  const [isClosing, setIsClosing] = useState(false);
+  const closeTimer = useRef(null);
+
+  const handleClose = useCallback(() => {
+    if (closeTimer.current) return;
+
+    setIsClosing(true);
+
+    closeTimer.current = setTimeout(() => {
+      closeTimer.current = null;
+      onClose?.();
+    }, CLOSE_DURATION);
+  }, [onClose]);
+
+  useEffect(() => () => clearTimeout(closeTimer.current), []);
+
+  useEffect(() => {
+    const onKeyDown = (event) => event.key === "Escape" && handleClose();
+
+    document.addEventListener("keydown", onKeyDown);
+
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [handleClose]);
+
+  if (!isOpen || !applicant) return null;
+
+  const stage = applicant.stage;
+  const data = buildScorecard(applicant);
+  const recommendation = getRecommendation(stage, data.score);
+
+  return createPortal(
+    <div className="fixed inset-0 z-50 flex justify-end">
+      <div
+        className={`absolute inset-0 bg-black/40 ${isClosing ? "drawer-overlay-closing" : "drawer-overlay"}`}
+        onClick={handleClose}
+        aria-hidden="true"
+      />
+
+      <aside
+        className={`relative flex h-full w-full max-w-110 flex-col overflow-y-auto bg-white shadow-xl ${isClosing ? "drawer-panel-closing" : "drawer-panel"}`}
+      >
+        <header className="sticky top-0 z-10 flex items-start justify-between gap-3 border-b border-gray-200 bg-white px-5 py-4">
+          <section>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-bold text-secondary">
+                {data.id}
+              </span>
+
+              <Badge text={stage} dotColor={STAGE_COLORS[stage]} />
+            </div>
+
+            <h2 className="mt-1 text-xl font-semibold text-gray-900">
+              {data.name}
+            </h2>
+
+            <p className="text-sm text-gray-500">{data.company}</p>
+          </section>
+
+          <Button
+            type="icon"
+            onClick={handleClose}
+            aria-label="Close scorecard"
+            className="p-1! text-gray-500 hover:bg-gray-100 rounded-full!"
+          >
+            <X size={20} />
+          </Button>
+        </header>
+
+        <article className="flex flex-col gap-4 p-5">
+          <section
+            className={`flex items-start justify-between gap-3 rounded-xl p-4 ${recommendation.bg}`}
+          >
+            <div>
+              <p className={`text-sm font-semibold ${recommendation.text}`}>
+                {recommendation.code} — {recommendation.label}
+              </p>
+
+              <p className="mt-1 text-xs text-gray-600">
+                {recommendation.note}
+              </p>
+            </div>
+
+            <div className="text-right">
+              <p
+                className="text-2xl font-bold"
+                style={{ color: recommendation.color }}
+              >
+                {data.score.toFixed(1)}
+              </p>
+
+              <p className="text-[10px] text-gray-500">/ 100</p>
+            </div>
+          </section>
+
+          <PipelineScoreRadar categories={data.categories} />
+
+          <PipelineScorecardSection
+            icon={DollarSign}
+            title="Financial Profile"
+            items={data.financialProfile}
+            categoryKey="financial"
+          />
+
+          <PipelineScorecardSection
+            icon={Briefcase}
+            title="Business Experience"
+            items={data.experience}
+            categoryKey="experience"
+          />
+
+          <PipelineScorecardSection
+            icon={Scale}
+            title="Legal & Background"
+            items={data.legal}
+            categoryKey="legal"
+          />
+
+          <PipelineScorecardSection
+            icon={MapPin}
+            title="Market & Location Fit"
+            items={data.market}
+            categoryKey="market"
+          />
+        </article>
+      </aside>
+    </div>,
+    document.body,
+  );
+};
+
+export default PipelineApplicantScorecardDrawer;

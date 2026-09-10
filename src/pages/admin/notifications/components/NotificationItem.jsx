@@ -1,5 +1,5 @@
 import { Check, Trash2 } from "lucide-react";
-import { TYPE_STYLES, getTypeIcon } from "../notificationTypes";
+import { TYPE_STYLES, getTypeIcon } from "../utils/notificationTypes";
 
 const NotificationItem = ({ notification, onMarkRead, onDelete }) => {
   const { title, description, time, type, isRead } = notification;

@@ -2,31 +2,9 @@ import Card from "../../../components/shared/Card";
 import ClientManagementHeading from "./components/ClientManagementHeading";
 import ClientTable from "./components/ClientTable";
 import ClientFilter from "./components/ClientFilter";
-import { initialData } from "./components/clientsData";
+import { initialData } from "./utils/data";
 import { useState } from "react";
-
-const cardData = [
-  {
-    label: "Total Clients",
-    value: "8",
-    valueColor: "#2563EB",
-  },
-  {
-    label: "Total Messages",
-    value: "2",
-    valueColor: "#22C55E",
-  },
-  {
-    label: "Total Leads",
-    value: "7",
-    valueColor: "#EF4444",
-  },
-  {
-    label: "Converted Leads",
-    value: "6",
-    valueColor: "#F59E0B",
-  },
-];
+import { cardData } from "./utils/data";
 
 const initialFilters = {
   restaurant: "",

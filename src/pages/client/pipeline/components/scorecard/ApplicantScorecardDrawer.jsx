@@ -6,9 +6,9 @@ import {
   SCORE_CATEGORIES,
   buildScorecard,
   getRecommendation,
-} from "../../data/scorecardData";
-import ScoreRadar from "./ScoreRadar";
-import ScorecardSection from "./ScorecardSection";
+} from "../../utils/scorecardData";
+import PipelineScoreRadar from "./PipelineScoreRadar";
+import PipelineScorecardSection from "./PipelineScorecardSection";
 import Badge from "../../../../../components/shared/Badge";
 import Button from "../../../../../components/shared/Button";
 
@@ -120,30 +120,30 @@ const ApplicantScorecardDrawer = ({ isOpen, applicant, onClose }) => {
             </div>
           </section>
 
-          <ScoreRadar categories={data.categories} />
+          <PipelineScoreRadar categories={data.categories} />
 
-          <ScorecardSection
+          <PipelineScorecardSection
             icon={DollarSign}
             iconClassName="text-primary"
             title="Financial Profile"
             items={data.financialProfile}
           />
 
-          <ScorecardSection
+          <PipelineScorecardSection
             icon={Briefcase}
             iconClassName="text-info"
             title="Business Experience"
             items={data.experience}
           />
 
-          <ScorecardSection
+          <PipelineScorecardSection
             icon={Shield}
             iconClassName="text-[var(--color-success)]"
             title="Legal & Background"
             items={data.legal}
           />
 
-          <ScorecardSection
+          <PipelineScorecardSection
             icon={MapPin}
             iconClassName="text-revenue"
             title="Market & Location Fit"

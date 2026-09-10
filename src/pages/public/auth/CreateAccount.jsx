@@ -1,11 +1,11 @@
 import AuthLayout from "./components/AuthLayout";
-import CreateAccountForm from "./components/CreateAccountForm";
+import AuthCreateAccountForm from "./components/AuthCreateAccountForm";
 
 const CreateAccount = () => {
   return (
     <AuthLayout type="client">
       <section className="px-4 py-6 sm:px-6">
-        <CreateAccountForm />
+        <AuthCreateAccountForm />
       </section>
     </AuthLayout>
   );

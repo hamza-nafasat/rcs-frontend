@@ -3,17 +3,17 @@ import { createPortal } from "react-dom";
 import { X, DollarSign, Briefcase, Scale, MapPin } from "lucide-react";
 import Button from "../../../../../components/shared/Button";
 import Badge from "../../../../../components/shared/Badge";
-import ScoreRadar from "./ScoreRadar";
-import CategoryScores from "./CategoryScores";
-import ScorecardSection from "./ScorecardSection";
-import StageSelector from "./StageSelector";
-import AdminLocationAssignModal from "./AdminLocationAssignModal";
-import AdminInlineLocationMap from "./AdminInlineLocationMap";
+import ScoreRadar from "../../../../../components/global/scorecard/ScoreRadar";
+import CategoryScores from "../../../../../components/global/scorecard/CategoryScores";
+import ScorecardSection from "../../../../../components/global/scorecard/ScorecardSection";
+import StageSelector from "../../../../../components/global/scorecard/StageSelector";
+import AdminLocationAssignModal from "../../../../../components/modals/LocationAssignModal";
+import AdminInlineLocationMap from "../../../../../components/global/scorecard/InlineLocationMap";
 import {
   STAGE_COLORS,
   buildScorecard,
   getRecommendation,
-} from "./scorecardData";
+} from "../../utils/scorecardData";
 
 const CLOSE_DURATION = 250;
 

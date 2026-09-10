@@ -1,8 +1,8 @@
 import DataTable from "react-data-table-component";
 import { ChevronDown, Eye, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
-import ManageAccountsModal from "./ManageAccountsModal";
-import AddEditModeratorModal from "./AddEditModeratorModal";
+import ModeratorManageAccountsModal from "../../../../components/modals/ModeratorManageAccountsModal";
+import ModeratorAddEditModal from "../../../../components/modals/ModeratorAddEditModal";
 import DeleteModal from "../../../../components/modals/DeleteModal";
 import Avatar from "../../../../components/shared/Avatar";
 import Dropdown from "../../../../components/shared/Dropdown";
@@ -187,7 +187,7 @@ const ModeratorTable = ({ moderators, setModerators }) => {
       />
 
       {memberToEdit && (
-        <AddEditModeratorModal
+        <ModeratorAddEditModal
           isOpen={Boolean(memberToEdit)}
           onClose={() => setMemberToEdit(null)}
           onSubmit={handleUpdateMember}
@@ -196,7 +196,7 @@ const ModeratorTable = ({ moderators, setModerators }) => {
         />
       )}
 
-      <ManageAccountsModal
+      <ModeratorManageAccountsModal
         isOpen={Boolean(viewMember)}
         onClose={() => setViewMember(null)}
         members={viewMember ? [viewMember] : []}

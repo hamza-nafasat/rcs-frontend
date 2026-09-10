@@ -1,7 +1,7 @@
 import { Plus } from "lucide-react";
 import Button from "../../../../components/shared/Button";
 import { useState } from "react";
-import AddEditModeratorModal from "./AddEditModeratorModal";
+import ModeratorAddEditModal from "../../../../components/modals/ModeratorAddEditModal";
 
 const ModeratorHeading = ({ heading, subheading, emoji, onAddModerator }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -30,7 +30,7 @@ const ModeratorHeading = ({ heading, subheading, emoji, onAddModerator }) => {
       </Button>
 
       {isModalOpen && (
-        <AddEditModeratorModal
+        <ModeratorAddEditModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           onSubmit={handleAddModerator}

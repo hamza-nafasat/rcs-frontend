@@ -3,7 +3,7 @@ import Button from "../../../components/shared/Button";
 import Input from "../../../components/shared/Input";
 import AuthHeading from "./components/AuthHeading";
 import AuthLayout from "./components/AuthLayout";
-import BackLink from "./components/BackLink";
+import AuthBackLink from "./components/AuthBackLink";
 
 const ForgetPassword = () => {
   const navigate = useNavigate();
@@ -32,7 +32,7 @@ const ForgetPassword = () => {
             >
               Send reset link
             </Button>
-            <BackLink to="/signin" text="Back to sign in" className="mt-6" />
+            <AuthBackLink to="/signin" text="Back to sign in" className="mt-6" />
           </form>
         </div>
       </div>

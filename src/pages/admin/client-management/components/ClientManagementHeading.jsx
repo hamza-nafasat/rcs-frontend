@@ -1,6 +1,6 @@
 import { Plus } from "lucide-react";
 import Button from "../../../../components/shared/Button";
-import AddEditClientModal from "./AddEditClientModal";
+import ClientAddEditModal from "../modals/ClientAddEditModal";
 import { useState } from "react";
 
 const ClientManagementHeading = ({ heading, subheading, emoji }) => {
@@ -28,7 +28,7 @@ const ClientManagementHeading = ({ heading, subheading, emoji }) => {
       </Button>
 
       {isModalOpen && (
-        <AddEditClientModal
+        <ClientAddEditModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           onSubmit={handleAddClient}

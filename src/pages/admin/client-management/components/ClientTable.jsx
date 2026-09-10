@@ -10,9 +10,9 @@ import {
   Trash2,
 } from "lucide-react";
 import { useState } from "react";
-import { initialData } from "./clientsData";
-import ClientDetailsModal from "./ClientDetailsModal";
-import AddEditClientModal from "./AddEditClientModal";
+import { initialData } from "../utils/data";
+import ClientDetailsModal from "../modals/ClientDetailsModal";
+import ClientAddEditModal from "../modals/ClientAddEditModal";
 import Button from "../../../../components/shared/Button";
 import DeleteModal from "../../../../components/modals/DeleteModal";
 
@@ -244,7 +244,7 @@ const ClientTable = ({ className, filters = emptyFilters }) => {
         responsive
       />
       {isModalOpen && selectedClient && (
-        <AddEditClientModal
+        <ClientAddEditModal
           isOpen={isModalOpen}
           onClose={() => {
             setIsModalOpen(false);

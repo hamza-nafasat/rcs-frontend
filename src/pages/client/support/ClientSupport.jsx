@@ -1,5 +1,5 @@
 import { useState } from "react";
-import CreateTicketForm from "./components/CreateTicketForm"
+import SupportCreateTicketForm from "./components/SupportCreateTicketForm"
 
 const ClientSupport = () => {
     const [form, setForm] = useState({
@@ -26,7 +26,7 @@ const ClientSupport = () => {
   return (
     <>
         <section>
-            <CreateTicketForm
+            <SupportCreateTicketForm
                 form={form}
                 onChange={handleChange}
                 onSubmit={handleSubmit}

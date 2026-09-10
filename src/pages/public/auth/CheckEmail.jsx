@@ -2,7 +2,7 @@ import Button from "../../../components/shared/Button";
 import AuthHeading from "./components/AuthHeading";
 import AuthLayout from "./components/AuthLayout";
 import { Link } from "react-router-dom";
-import BackLink from "./components/BackLink";
+import AuthBackLink from "./components/AuthBackLink";
 import CheckEmailIcon from "../../../assets/SVGs/CheckEmailIcon.svg";
 
 const user = {
@@ -47,7 +47,7 @@ const CheckEmail = () => {
               Resend
             </Link>
           </section>
-          <BackLink text="Back to sign in" to="/signin" className="mt-6" />
+          <AuthBackLink text="Back to sign in" to="/signin" className="mt-6" />
         </div>
       </article>
     </AuthLayout>

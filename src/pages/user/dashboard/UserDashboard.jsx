@@ -1,9 +1,9 @@
-import UserFranchisePipelineTable from "./components/UserFranchisePipelineTable";
+import DashboardPipelineTable from "./components/DashboardPipelineTable";
 
 const UserDashboard = () => {
   return (
     <article className="flex flex-col gap-4">
-      <UserFranchisePipelineTable />
+      <DashboardPipelineTable />
     </article>
   );
 };

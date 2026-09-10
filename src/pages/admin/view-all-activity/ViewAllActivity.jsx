@@ -1,6 +1,6 @@
 import Card from "../../../components/shared/Card";
-import RecentActivity from "../dashboard/components/RecentActivity";
-import { activities } from "../dashboard/data/activityData";
+import DashboardRecentActivity from "../dashboard/components/DashboardRecentActivity";
+import { activities } from "../dashboard/utils/data";
 import ViewAllActivityHeading from "./components/ViewAllActivityHeading";
 
 const ViewAllActivity = () => {
@@ -15,7 +15,7 @@ const ViewAllActivity = () => {
 
       <section className="min-h-0 flex-1">
         <Card className="h-full">
-          <RecentActivity
+          <DashboardRecentActivity
             activities={activities}
             title="Activity History"
             actionLabel=""

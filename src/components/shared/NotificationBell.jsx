@@ -6,7 +6,7 @@ import { useNotifications } from "../../context/useNotifications";
 import {
   TYPE_STYLES,
   getTypeIcon,
-} from "../../pages/admin/notifications/notificationTypes";
+} from "../../pages/admin/notifications/utils/notificationTypes";
 
 const RECENT_LIMIT = 5;
 
