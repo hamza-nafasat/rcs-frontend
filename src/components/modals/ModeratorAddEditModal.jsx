@@ -5,7 +5,7 @@ import Button from "../shared/Button";
 import Select from "../shared/Select";
 
 const ROLES = ["Moderator", "Account Owner"];
-const STATUSES = ["Active", "Inactive", "Pending"];
+const STATUSES = ["Active", "Inactive"];
 
 const ModeratorAddEditModal = ({
   isOpen,
@@ -18,7 +18,7 @@ const ModeratorAddEditModal = ({
     name: initialData?.name || "",
     email: initialData?.email || "",
     role: initialData?.role || "Moderator",
-    status: initialData?.status || "Pending",
+    status: initialData?.status || "Active",
   }));
 
   const handleChange = (e) => {
@@ -47,6 +47,7 @@ const ModeratorAddEditModal = ({
           </h2>
 
           <button
+            aria-label="Close dialog"
             type="button"
             onClick={onClose}
             className="rounded-full p-1 text-gray-500 hover:bg-gray-100"

@@ -748,6 +748,7 @@ const LocationAssignModal = ({
           </button>
 
           <button
+            aria-label="Close"
             type="button"
             onClick={onClose}
             className="p-1.5 rounded-full hover:bg-gray-100 cursor-pointer transition text-gray-500"
@@ -877,6 +878,7 @@ const LocationAssignModal = ({
                 </p>
               </div>
               <button
+                aria-label="Close panel"
                 type="button"
                 onClick={() => setShowBranchListModal(false)}
                 className="p-1.5 rounded-full hover:bg-gray-100 text-gray-500 cursor-pointer"

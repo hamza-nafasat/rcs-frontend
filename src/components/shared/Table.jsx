@@ -53,6 +53,7 @@ const Table = ({ data, columns }) => {
       {/* Pagination */}
       <div className="flex items-center justify-between border-t border-gray-200 px-5 py-4">
         <button
+          type="button"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
           className="rounded-lg border px-4 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-40"
@@ -66,6 +67,7 @@ const Table = ({ data, columns }) => {
         </span>
 
         <button
+          type="button"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
           className="rounded-lg border px-4 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-40"

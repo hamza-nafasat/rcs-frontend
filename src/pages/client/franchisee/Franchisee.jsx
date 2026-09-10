@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState } from "react"
 import FranchiseeTable from "./components/FranchiseeTable"
 import FranchiseeFilter from "./components/FranchiseeFilter";
 import FranchiseeHeading from "./components/FranchiseeHeading";

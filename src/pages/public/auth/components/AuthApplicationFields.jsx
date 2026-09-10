@@ -1,7 +1,7 @@
 import { Briefcase, DollarSign, MapPin, Shield, User } from "lucide-react";
 import Input from "../../../../components/shared/Input";
 import SegmentedControl from "../../../../components/shared/SegmentedControl";
-import AuthFormSection from "./AuthFormSection";
+import FormSection from "../../../../components/shared/FormSection";
 import { DENSITY_OPTIONS, YES_NO_OPTIONS } from "../utils/applicationScore";
 
 const fieldLabel =
@@ -21,7 +21,7 @@ const AuthApplicationFields = ({
   return (
     <div className="grid grid-cols-1 items-stretch gap-4">
       {/* Applicant Information */}
-      <AuthFormSection
+      <FormSection
         icon={User}
         iconClassName="text-secondary"
         title="Applicant Information"
@@ -86,10 +86,10 @@ const AuthApplicationFields = ({
             className={inputClassName}
           />
         </div>
-      </AuthFormSection>
+      </FormSection>
 
       {/* Financial Strength */}
-      <AuthFormSection
+      <FormSection
         icon={DollarSign}
         iconClassName="text-primary"
         title="Financial Strength (35%)"
@@ -137,10 +137,10 @@ const AuthApplicationFields = ({
             hint={`Min. 680 - Score: ${scores.formatted.credit}/5`}
           />
         </div>
-      </AuthFormSection>
+      </FormSection>
 
       {/* Business Experience */}
-      <AuthFormSection
+      <FormSection
         icon={Briefcase}
         iconClassName="text-info"
         title="Business Experience (20%)"
@@ -178,10 +178,10 @@ const AuthApplicationFields = ({
             disabled={disabled}
           />
         </div>
-      </AuthFormSection>
+      </FormSection>
 
       {/* Legal & Background */}
-      <AuthFormSection
+      <FormSection
         icon={Shield}
         iconClassName="text-secondary"
         title="Legal & Background (20%)"
@@ -227,10 +227,10 @@ const AuthApplicationFields = ({
             disabled={disabled}
           />
         </div>
-      </AuthFormSection>
+      </FormSection>
 
       {/* Market & Location Fit */}
-      <AuthFormSection
+      <FormSection
         icon={MapPin}
         iconClassName="text-revenue"
         title="Market & Location Fit (25%)"
@@ -253,7 +253,7 @@ const AuthApplicationFields = ({
             disabled={disabled}
           />
         </div>
-      </AuthFormSection>
+      </FormSection>
     </div>
   );
 };

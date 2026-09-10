@@ -19,7 +19,7 @@ const Input = ({
     <section className="w-full">
       {label && (
         <label
-          className={`mb-1 block text-sm font-medium text-[#111111] ${labelClassName}`}
+          className={`mb-1 block text-sm font-medium text-tertiary ${labelClassName}`}
         >
           {label}
         </label>

@@ -10,7 +10,7 @@ const MODERATORS = [
     id: 1,
     name: "Sarah Chen",
     email: "sarah.chen@example.com",
-    status: "Owner",
+    status: "Active",
     meta: "Added 2 days ago",
   },
   {
@@ -24,8 +24,8 @@ const MODERATORS = [
     id: 3,
     name: "Priya Sharma",
     email: "priya.sharma@example.com",
-    status: "Pending",
-    meta: "Invited 3 days ago",
+    status: "Inactive",
+    meta: "Added 3 days ago",
   },
   {
     id: 4,

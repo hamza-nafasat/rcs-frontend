@@ -671,6 +671,7 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
                 </div>
               </div>
               <button
+                aria-label="Close"
                 type="button"
                 onClick={() => {
                   setShowSaveModal(false);
@@ -802,6 +803,7 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
 
               <div className="flex items-center gap-2">
                 <button
+                  aria-label="Close panel"
                   type="button"
                   onClick={() => setShowSummaryModal(false)}
                   className="p-1.5 rounded-full hover:bg-gray-100 cursor-pointer transition text-secondary"

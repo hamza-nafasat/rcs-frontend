@@ -46,7 +46,7 @@ const FileUpload = ({
   return (
     <section className="w-full">
       {label && (
-        <label className="mb-1 block text-sm font-medium text-[#111111]">
+        <label className="mb-1 block text-sm font-medium text-tertiary">
           {label}
         </label>
       )}
@@ -74,11 +74,12 @@ const FileUpload = ({
 
         {file ? (
           <div className="flex items-center justify-between gap-3">
-            <p className="truncate text-sm text-[#111111]">
+            <p className="truncate text-sm text-tertiary">
               {file.name}
             </p>
 
             <button
+              aria-label="Remove file"
               type="button"
               onClick={handleClear}
               className="rounded-full p-1 text-gray-500 hover:bg-gray-100"
@@ -93,7 +94,7 @@ const FileUpload = ({
               className="mb-2 text-primary"
             />
 
-            <p className="text-sm font-medium text-[#111111]">
+            <p className="text-sm font-medium text-tertiary">
               Drag & drop your files here, or{" "}
               <button
                 type="button"

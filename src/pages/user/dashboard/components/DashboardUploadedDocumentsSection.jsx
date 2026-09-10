@@ -201,6 +201,7 @@ const DashboardUploadedDocumentsSection = ({
                 </h3>
               </div>
               <button
+                type="button"
                 onClick={() => setViewingDoc(null)}
                 className="text-gray-400 hover:text-gray-600 text-lg font-bold p-1"
               >

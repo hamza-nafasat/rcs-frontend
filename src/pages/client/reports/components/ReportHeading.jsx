@@ -1,7 +1,7 @@
 import { FileSpreadsheet, FileText, ChevronDown, Download } from "lucide-react";
 import Button from "../../../../components/shared/Button";
 import Dropdown from "../../../../components/shared/Dropdown";
-import DateField from "./DateField";
+import DateField from "../../../../components/shared/DateField";
 
 const ReportHeading = ({ heading, subheading, dates, onDateChange }) => {
   // TODO: wire exports once the reporting API lands
@@ -61,7 +61,7 @@ const ReportHeading = ({ heading, subheading, dates, onDateChange }) => {
             <FileSpreadsheet size={22} className="shrink-0 text-green-600" />
 
             <div>
-              <p className="text-sm font-medium text-[#111111]">Export CSV</p>
+              <p className="text-sm font-medium text-tertiary">Export CSV</p>
               <p className="text-sm text-[#6B7280]">Spreadsheet format</p>
             </div>
           </button>
@@ -74,7 +74,7 @@ const ReportHeading = ({ heading, subheading, dates, onDateChange }) => {
             <FileText size={22} className="shrink-0 text-red-500" />
 
             <div>
-              <p className="text-sm font-medium text-[#111111]">Export PDF</p>
+              <p className="text-sm font-medium text-tertiary">Export PDF</p>
               <p className="text-sm text-[#6B7280]">Printable report</p>
             </div>
           </button>

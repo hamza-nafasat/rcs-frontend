@@ -35,6 +35,7 @@ const MakeRequestModal = ({ isOpen, onClose, onSubmit }) => {
           </div>
 
           <button
+            aria-label="Close dialog"
             type="button"
             onClick={onClose}
             className="rounded-full p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition"
@@ -57,7 +58,7 @@ const MakeRequestModal = ({ isOpen, onClose, onSubmit }) => {
 
           {/* Field 2: Message */}
           <section className="w-full">
-            <label className="mb-1 block text-sm font-medium text-[#111111]">
+            <label className="mb-1 block text-sm font-medium text-tertiary">
               Message *
             </label>
             <textarea

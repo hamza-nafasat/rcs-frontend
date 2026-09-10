@@ -13,7 +13,7 @@ const DashboardPipelineTable = () => {
   const currentApplicant = userApplication[0];
 
   return (
-    <article className="flex flex-col gap-6">
+    <section className="flex flex-col gap-6">
       {/* Application Progress Stage Overview */}
       <DashboardApplicantProgress currentStage={currentApplicant?.stage} />
 
@@ -28,7 +28,7 @@ const DashboardPipelineTable = () => {
 
       {/* Uploaded Application Documents */}
       <DashboardUploadedDocumentsSection showUploadButton={hasAdminRequest} />
-    </article>
+    </section>
   );
 };
 

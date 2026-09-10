@@ -145,7 +145,7 @@ const PipelineTable = ({ filters = emptyFilters }) => {
   });
 
   return (
-    <article className="flex flex-col gap-4">
+    <section className="flex flex-col gap-4">
       <h2 className="heading-lg text-tertiary">Applicant Scorecard</h2>
 
       <section className="overflow-hidden rounded-xl border border-gray-200 bg-white">
@@ -159,7 +159,7 @@ const PipelineTable = ({ filters = emptyFilters }) => {
           onRowClicked={(row) => navigate(`/admin/dashboard/pipeline/${row.id}`)}
         />
       </section>
-    </article>
+    </section>
   );
 };
 

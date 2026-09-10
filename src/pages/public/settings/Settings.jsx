@@ -9,11 +9,7 @@ const Settings = ({ type = "admin" }) => {
   return (
     <article className="flex h-full min-h-0 flex-col">
       <section>
-        <SettingsProfileSetting
-          type={type}
-          onSave={handleSaveProfile}
-          onUpdatePassword={handleUpdatePassword}
-        />
+        <SettingsProfileSetting type={type} onSave={handleSaveProfile} onUpdatePassword={handleUpdatePassword} />
       </section>
     </article>
   );

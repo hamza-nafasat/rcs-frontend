@@ -21,6 +21,7 @@ const DeleteModal = ({
         {showClose && (
           <div className="flex justify-end">
             <button
+              aria-label="Close dialog"
               type="button"
               onClick={onClose}
               className="rounded-full p-1 text-gray-500 hover:bg-gray-100 cursor-pointer"

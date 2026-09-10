@@ -62,6 +62,7 @@ const DashboardNotFound = () => {
         {/* Primary Action Buttons */}
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <button
+            type="button"
             onClick={() => navigate(-1)}
             className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl border border-gray-300 bg-white px-5 py-3 text-sm font-semibold text-gray-700 shadow-xs hover:bg-gray-50 hover:text-gray-900 active:scale-[0.98] transition-all"
           >

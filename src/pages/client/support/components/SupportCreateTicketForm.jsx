@@ -60,7 +60,7 @@ const SupportCreateTicketForm = ({
 
       {/* Description */}
       <div className="mt-5">
-        <label className="mb-1 block text-sm font-medium text-[#111111]">
+        <label className="mb-1 block text-sm font-medium text-tertiary">
           Description
         </label>
 

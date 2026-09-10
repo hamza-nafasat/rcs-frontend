@@ -10,7 +10,7 @@ const ModeratorManageAccountsModal = ({
   subheading = "Remove other profiles you want ",
 }) => {
   if (!isOpen) return null;
-  const visibleMembers = members.filter((member) => member.status !== "Owner");
+  const visibleMembers = members.filter((member) => member.role !== "Account Owner");
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">

@@ -9,10 +9,8 @@ import Dropdown from "../../../../components/shared/Dropdown";
 import Button from "../../../../components/shared/Button";
 
 const STATUS_STYLES = {
-  Owner: { pill: "bg-blue-50 text-blue-700", dot: "bg-blue-500" },
   Active: { pill: "bg-green-50 text-green-700", dot: "bg-green-500" },
   Inactive: { pill: "bg-gray-100 text-gray-600", dot: "bg-gray-400" },
-  Pending: { pill: "bg-amber-50 text-amber-700", dot: "bg-amber-500" },
 };
 
 const tableStyles = {
@@ -118,7 +116,7 @@ const buildColumns = ({ setMemberToEdit, setViewMember, setMemberToRemove }) => 
           </Button>
           <Button
             variant="menuItemDanger"
-            disabled={row.status === "Owner"}
+            disabled={row.role === "Account Owner"}
             onClick={() => setMemberToRemove(row)}
           >
             <Trash2 size={16} className="shrink-0" />

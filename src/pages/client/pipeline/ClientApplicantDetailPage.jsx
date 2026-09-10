@@ -26,9 +26,9 @@ const ClientApplicantDetailPage = () => {
 
   if (!applicant) {
     return (
-      <div className="p-6 text-center">
+      <article className="p-6 text-center">
         <p className="text-gray-500">Applicant not found.</p>
-      </div>
+      </article>
     );
   }
 
