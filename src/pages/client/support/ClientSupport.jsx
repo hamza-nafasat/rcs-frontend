@@ -19,9 +19,9 @@ const ClientSupport = () => {
         }));
       };
 
+      // TODO: submit the ticket once the support API lands
       const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(form);
       };
   return (
     <>

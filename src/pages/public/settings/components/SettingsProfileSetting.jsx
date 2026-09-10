@@ -4,44 +4,7 @@ import Avatar from "../../../../components/shared/Avatar";
 import Input from "../../../../components/shared/Input";
 import Button from "../../../../components/shared/Button";
 import SettingsClientApplicationDetails from "./SettingsClientApplicationDetails";
-import { EMPTY_APPLICATION } from "../../auth/utils/applicationScore";
-
-const DUMMY_PROFILE = {
-  firstName: "Marco",
-  lastName: "Ricci",
-  email: "marco@goldenfork.com",
-  phone: "+1 (555) 000-0000",
-  role: { displayName: "Account Owner" },
-  address: "123 Market Street",
-  city: "Austin",
-  state: "TX",
-  postalCode: "78701",
-  country: "United States",
-  teamSize: 12,
-  url: "",
-  imagePreview: "",
-};
-
-const DUMMY_APPLICATION = {
-  ...EMPTY_APPLICATION,
-  applicantName: "Marco Ricci",
-  companyName: "Golden Fork",
-  proposedTerritory: "Austin Metro",
-  city: "Austin",
-  state: "TX",
-  liquidCapital: "150000",
-  netWorth: "500000",
-  creditScore: "720",
-  yearsMgmt: "8",
-  foodExp: "Y",
-  multiUnit: "N",
-  bankruptcy: "N",
-  litigation: "N",
-  criminal: "N",
-  nonCompete: "N",
-  territoryAvailable: "Y",
-  density: "medium",
-};
+import { DUMMY_PROFILE, DUMMY_APPLICATION } from "../utils/data";
 
 const SettingsProfileSetting = ({ profile, onSave, onUpdatePassword, type = "admin" }) => {
   const [formData, setFormData] = useState({ ...DUMMY_PROFILE, ...profile });

@@ -1,13 +1,10 @@
 import SettingsProfileSetting from "./components/SettingsProfileSetting";
 
 const Settings = ({ type = "admin" }) => {
-  const handleSaveProfile = (profile) => {
-    console.log("Save profile", profile);
-  };
+  // TODO: persist profile + password changes once the settings API lands
+  const handleSaveProfile = () => {};
 
-  const handleUpdatePassword = (passwords) => {
-    console.log("Update password", passwords);
-  };
+  const handleUpdatePassword = () => {};
 
   return (
     <article className="flex h-full min-h-0 flex-col">

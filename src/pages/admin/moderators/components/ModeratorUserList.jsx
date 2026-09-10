@@ -5,7 +5,7 @@ import ModeratorManageAccountsModal from "../../../../components/modals/Moderato
 import Button from "../../../../components/shared/Button";
 import DeleteModal from "../../../../components/modals/DeleteModal";
 
-const ModeratorUserList = [
+const MODERATORS = [
   {
     id: 1,
     name: "Sarah Chen",
@@ -36,8 +36,8 @@ const ModeratorUserList = [
   },
 ];
 
-const UserList = () => {
-  const [moderators, setModerators] = useState(ModeratorUserList);
+const ModeratorUserList = () => {
+  const [moderators, setModerators] = useState(MODERATORS);
   const [isManageOpen, setIsManageOpen] = useState(false);
   const [memberToRemove, setMemberToRemove] = useState(null);
 
@@ -49,7 +49,7 @@ const UserList = () => {
   };
 
   return (
-    <div className="flex flex-col gap-3">
+    <section className="flex flex-col gap-3">
       {moderators.map((user) => (
         <ModeratorUserListItem
           key={user.id}
@@ -93,8 +93,8 @@ const UserList = () => {
           memberToRemove?.name ?? "this member"
         }? This action cannot be undone.`}
       />
-    </div>
+    </section>
   );
 };
 
-export default UserList;
+export default ModeratorUserList;

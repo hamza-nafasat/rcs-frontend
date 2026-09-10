@@ -12,7 +12,7 @@ const FddHeading = ({ heading, subheading, emoji, onAddModerator }) => {
   };
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4">
+    <header className="flex flex-wrap items-center justify-between gap-3 sm:gap-4">
       <div className="">
         <h1 className="heading-lg text-tertiary">
           {heading} <span className="ml-1">{emoji}</span>
@@ -37,7 +37,7 @@ const FddHeading = ({ heading, subheading, emoji, onAddModerator }) => {
           mode="add"
         />
       )} */}
-    </div>
+    </header>
   );
 };
 

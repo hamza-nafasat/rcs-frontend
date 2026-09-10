@@ -7,7 +7,7 @@ const statusStyles = {
   Inactive: "bg-gray-100 text-gray-600",
 };
 
-const DashboardLeadsPerClient = ({ status }) => (
+const StatusPill = ({ status }) => (
   <span
     className={`inline-flex whitespace-nowrap rounded-full px-3 py-1 text-xs font-semibold ${
       statusStyles[status] ?? statusStyles.Inactive
@@ -17,7 +17,7 @@ const DashboardLeadsPerClient = ({ status }) => (
   </span>
 );
 
-const LeadsPerClient = ({
+const DashboardLeadsPerClient = ({
   clients = [],
   heading = "Leads per Client",
   subheading = `${clients.length} active Clients`,
@@ -74,7 +74,7 @@ const LeadsPerClient = ({
                   {client.leads}
                 </td>
                 <td className="py-3">
-                  <DashboardLeadsPerClient status={client.status} />
+                  <StatusPill status={client.status} />
                 </td>
               </tr>
             ))}
@@ -97,7 +97,7 @@ const LeadsPerClient = ({
                 <p className="truncate text-xs text-gray-500">{client.owner}</p>
               </div>
 
-              <DashboardLeadsPerClient status={client.status} />
+              <StatusPill status={client.status} />
             </div>
 
             <p className="mt-2 text-xs text-gray-500">
@@ -113,4 +113,4 @@ const LeadsPerClient = ({
   );
 };
 
-export default LeadsPerClient;
+export default DashboardLeadsPerClient;

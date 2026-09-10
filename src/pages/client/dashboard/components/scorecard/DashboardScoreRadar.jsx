@@ -1,7 +1,7 @@
 import { SCORE_CATEGORIES } from "../../utils/scorecardData";
 
-const DashboardScoreRadar = 180;
-const CENTER = DashboardScoreRadar / 2;
+const SIZE = 180;
+const CENTER = SIZE / 2;
 const RADIUS = 62;
 const MAX = 5;
 
@@ -15,7 +15,7 @@ const point = (index, value) => {
 const toPath = (values) =>
   values.map((v, i) => point(i, v).join(",")).join(" ");
 
-const ScoreRadar = ({ categories }) => {
+const DashboardScoreRadar = ({ categories }) => {
   const values = SCORE_CATEGORIES.map((c) => categories[c.key] ?? 0);
 
   return (
@@ -99,4 +99,4 @@ const ScoreRadar = ({ categories }) => {
   );
 };
 
-export default ScoreRadar;
+export default DashboardScoreRadar;

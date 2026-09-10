@@ -5,7 +5,7 @@ import Input from "../../../components/shared/Input";
 import AuthHeading from "./components/AuthHeading";
 import AuthLayout from "./components/AuthLayout";
 
-const Login = () => {
+const SignIn = () => {
   const [showConfirm, setShowConfirm] = useState(false);
 
   return (
@@ -54,4 +54,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default SignIn;

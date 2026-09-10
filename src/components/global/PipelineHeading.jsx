@@ -1,9 +1,9 @@
 const PipelineHeading = ({ heading, subheading }) => {
   return (
-    <div>
+    <header>
       <h1 className="heading-lg text-tertiary">{heading}</h1>
       <p className=" text-muted">{subheading}</p>
-    </div>
+    </header>
   );
 };
 

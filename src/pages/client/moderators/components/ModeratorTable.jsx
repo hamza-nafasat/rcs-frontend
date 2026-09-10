@@ -30,6 +30,117 @@ const tableStyles = {
   },
 };
 
+const buildColumns = ({ setMemberToEdit, setViewMember, setMemberToRemove }) => [
+  {
+    name: "Member",
+    selector: (row) => row.name,
+    sortable: true,
+    minWidth: "240px",
+    grow: 2,
+    cell: (row) => (
+      <div className="flex items-center gap-2">
+        <Avatar
+          name={row.name}
+          src={row.src}
+          size={32}
+          rounded="rounded-lg"
+          color="#F97316"
+        />
+        <div className="min-w-0">
+          <p className="truncate text-sm text-gray-900">{row.name}</p>
+          <p className="truncate text-xs text-gray-500">{row.email}</p>
+        </div>
+      </div>
+    ),
+  },
+  {
+    name: "Role",
+    selector: (row) => row.role,
+    sortable: true,
+    grow: 1,
+  },
+  {
+    name: "Status",
+    selector: (row) => row.status,
+    sortable: true,
+    grow: 1,
+    cell: (row) => {
+      const { pill, dot } =
+        STATUS_STYLES[row.status] ?? STATUS_STYLES.Inactive;
+
+      return (
+        <span
+          className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1 text-xs font-medium ${pill}`}
+        >
+          <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />
+          {row.status}
+        </span>
+      );
+    },
+  },
+  {
+    name: "Joined",
+    selector: (row) => row.joined,
+    sortable: true,
+    minWidth: "160px",
+    grow: 1,
+  },
+  {
+    name: <div className="pr-5">Actions</div>,
+    width: "90px",
+    right: true,
+    cell: (row) => (
+      <div className="flex justify-end pr-6">
+        <Dropdown
+          align="right"
+          portalClassName="max-w-12"
+          trigger={
+            <Button
+              type="icon"
+              className="w-full py-2! px-3!"
+              textClassName="flex w-full item-center h-full gap-2 text-sm text-gray-700 transition hover:bg-gray-100  "
+            >
+              <MoreHorizontal size={18} />
+            </Button>
+          }
+        >
+          <Button
+            type="icon"
+            className="w-full py-0! px-0!"
+            textClassName="flex py-2 px-3 w-full item-center h-full gap-2 text-sm text-gray-700 transition hover:bg-gray-100  "
+            onClick={() => setMemberToEdit(row)}
+          >
+            <Pencil size={16} className="mt-0.5" />
+            Edit
+          </Button>
+          <Button
+            type="icon"
+            className="w-full py-0! px-0!"
+            textClassName="flex w-full px-3 py-2 item-center h-full gap-2 text-sm text-gray-700 transition hover:bg-gray-100  "
+            onClick={() => setViewMember(row)}
+          >
+            <Eye size={16} className="mt-0.5" />
+            View
+          </Button>
+          <Button
+            type="icon"
+            className="w-full py-0! px-0! border-t border-gray-300 rounded-none!"
+            textClassName="flex w-full py-2 px-3 item-center h-full gap-2 text-sm text-gray-700 transition hover:bg-gray-100 border-gray-300 text-left text-sm text-red-600 transition hover:bg-red-50 "
+            disabled={row.status === "Owner"}
+            onClick={() => setMemberToRemove(row)}
+          >
+            <Trash2 size={16} className="shrink-0" />
+            Delete
+          </Button>
+        </Dropdown>
+      </div>
+    ),
+    ignoreRowClick: true,
+    allowOverflow: true,
+    button: true,
+  },
+];
+
 const ModeratorTable = ({ moderators, setModerators }) => {
   const [viewMember, setViewMember] = useState(null);
   const [memberToRemove, setMemberToRemove] = useState(null);
@@ -60,119 +171,9 @@ const ModeratorTable = ({ moderators, setModerators }) => {
     setMemberToRemove(null);
   };
 
-  const columns = [
-    {
-      name: "Member",
-      selector: (row) => row.name,
-      sortable: true,
-      minWidth: "240px",
-      grow: 2,
-      cell: (row) => (
-        <div className="flex items-center gap-2">
-          <Avatar
-            name={row.name}
-            src={row.src}
-            size={32}
-            rounded="rounded-lg"
-            color="#F97316"
-          />
-          <div className="min-w-0">
-            <p className="truncate text-sm text-gray-900">{row.name}</p>
-            <p className="truncate text-xs text-gray-500">{row.email}</p>
-          </div>
-        </div>
-      ),
-    },
-    {
-      name: "Role",
-      selector: (row) => row.role,
-      sortable: true,
-      grow: 1,
-    },
-    {
-      name: "Status",
-      selector: (row) => row.status,
-      sortable: true,
-      grow: 1,
-      cell: (row) => {
-        const { pill, dot } =
-          STATUS_STYLES[row.status] ?? STATUS_STYLES.Inactive;
-
-        return (
-          <span
-            className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1 text-xs font-medium ${pill}`}
-          >
-            <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />
-            {row.status}
-          </span>
-        );
-      },
-    },
-    {
-      name: "Joined",
-      selector: (row) => row.joined,
-      sortable: true,
-      minWidth: "160px",
-      grow: 1,
-    },
-    {
-      name: <div className="pr-5">Actions</div>,
-      width: "90px",
-      right: true,
-      cell: (row) => (
-        <div className="flex justify-end pr-6">
-          <Dropdown
-            align="right"
-            portalClassName="max-w-12"
-            trigger={
-              <Button
-                type="icon"
-                className="w-full py-2! px-3!"
-                textClassName="flex w-full item-center h-full gap-2 text-sm text-gray-700 transition hover:bg-gray-100  "
-              >
-                <MoreHorizontal size={18} />
-              </Button>
-            }
-          >
-            <Button
-              type="icon"
-              className="w-full py-0! px-0!"
-              textClassName="flex py-2 px-3 w-full item-center h-full gap-2 text-sm text-gray-700 transition hover:bg-gray-100  "
-              onClick={() => setMemberToEdit(row)}
-            >
-              <Pencil size={16} className="mt-0.5" />
-              Edit
-            </Button>
-            <Button
-              type="icon"
-              className="w-full py-0! px-0!"
-              textClassName="flex w-full px-3 py-2 item-center h-full gap-2 text-sm text-gray-700 transition hover:bg-gray-100  "
-              onClick={() => setViewMember(row)}
-            >
-              <Eye size={16} className="mt-0.5" />
-              View
-            </Button>
-            <Button
-              type="icon"
-              className="w-full py-0! px-0! border-t border-gray-300 rounded-none!"
-              textClassName="flex w-full py-2 px-3 item-center h-full gap-2 text-sm text-gray-700 transition hover:bg-gray-100 border-gray-300 text-left text-sm text-red-600 transition hover:bg-red-50 "
-              disabled={row.status === "Owner"}
-              onClick={() => setMemberToRemove(row)}
-            >
-              <Trash2 size={16} className="shrink-0" />
-              Delete
-            </Button>
-          </Dropdown>
-        </div>
-      ),
-      ignoreRowClick: true,
-      allowOverflow: true,
-      button: true,
-    },
-  ];
-
+  const columns = buildColumns({ setMemberToEdit, setViewMember, setMemberToRemove });
   return (
-    <div className="flex h-full w-full min-h-0 flex-col">
+    <section className="flex h-full w-full min-h-0 flex-col">
       <DataTable
         columns={columns}
         data={moderators}
@@ -215,7 +216,7 @@ const ModeratorTable = ({ moderators, setModerators }) => {
           memberToRemove?.name ?? "this member"
         }? This action cannot be undone.`}
       />
-    </div>
+    </section>
   );
 };
 

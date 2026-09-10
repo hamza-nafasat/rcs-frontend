@@ -26,7 +26,7 @@ const PipelineApplicantProgress = ({
 
   const handleRequestSubmit = (requestData) => {
     onMakeRequestSubmit?.(requestData);
-    console.log("Admin Make a Request submitted:", requestData);
+    // NOTE: this alert is visible UI — replace with a real notification, do not just delete
     alert(`Request "${requestData.title}" sent to user successfully.`);
   };
 

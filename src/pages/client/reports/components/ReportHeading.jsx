@@ -4,6 +4,10 @@ import Dropdown from "../../../../components/shared/Dropdown";
 import DateField from "./DateField";
 
 const ReportHeading = ({ heading, subheading, dates, onDateChange }) => {
+  // TODO: wire exports once the reporting API lands
+  const handleExportCsv = () => {};
+  const handleExportPdf = () => {};
+
   return (
     <section className="flex flex-wrap items-center justify-between gap-3 sm:gap-4">
       {/* Heading */}
@@ -51,7 +55,7 @@ const ReportHeading = ({ heading, subheading, dates, onDateChange }) => {
         >
           <button
             type="button"
-            onClick={() => console.log("Export CSV")}
+            onClick={handleExportCsv}
             className="flex w-full items-center gap-3 border-b border-[#E5E7EB] px-5 py-4 text-left hover:bg-gray-50"
           >
             <FileSpreadsheet size={22} className="shrink-0 text-green-600" />
@@ -64,7 +68,7 @@ const ReportHeading = ({ heading, subheading, dates, onDateChange }) => {
 
           <button
             type="button"
-            onClick={() => console.log("Export PDF")}
+            onClick={handleExportPdf}
             className="flex w-full items-center gap-3 px-5 py-4 text-left hover:bg-gray-50"
           >
             <FileText size={22} className="shrink-0 text-red-500" />

@@ -3,9 +3,9 @@ import NotificationItem from "./NotificationItem";
 const NotificationList = ({ notifications, onMarkRead, onDelete }) => {
   if (notifications.length === 0) {
     return (
-      <div className="rounded-2xl border color-border bg-white p-10 text-center">
+      <section className="rounded-2xl border color-border bg-white p-10 text-center">
         <p className="text-sm text-gray-500">No notifications found</p>
-      </div>
+      </section>
     );
   }
 

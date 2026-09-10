@@ -69,12 +69,8 @@ const AdminFdd = () => {
       </section>
 
       <section className="mt-6 min-h-0 flex-1">
-        <FddTable
-          documents={filteredDocuments}
-          onReview={(row) => console.log("Review", row)}
-          onESign={(row) => console.log("E-sign", row)}
-          onDownload={(row) => console.log("Download", row)}
-        />
+        {/* TODO: wire onReview / onESign / onDownload once the FDD API lands */}
+        <FddTable documents={filteredDocuments} />
       </section>
     </article>
   );

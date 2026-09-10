@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { initialApplicants } from "../../../admin/pipeline/utils/data";
+import { initialApplicants } from "../utils/data";
 import DashboardApplicantProgress from "./DashboardApplicantProgress";
 import DashboardDocumentRequestCard from "./DashboardDocumentRequestCard";
 import DashboardApplicantScorecardSection from "./DashboardApplicantScorecardSection";

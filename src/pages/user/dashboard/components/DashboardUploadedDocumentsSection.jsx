@@ -69,6 +69,10 @@ const DashboardUploadedDocumentsSection = ({
   showUploadButton = true,
   className = "",
 }) => {
+  // TODO: wire upload + download once the documents API lands
+  const handleUploadDocument = () => {};
+  const handleDownloadDocument = () => {};
+  const handleDownloadFile = () => {};
   const [docList] = useState(documents);
   const [viewingDoc, setViewingDoc] = useState(null);
 
@@ -121,7 +125,7 @@ const DashboardUploadedDocumentsSection = ({
             type="button"
             icon={<Upload size={14} />}
             className="self-start sm:self-auto px-3.5 py-2 text-xs flex items-center gap-2 text-white rounded-lg transition"
-            onClick={() => console.log("Upload Document")}
+            onClick={handleUploadDocument}
           >
             Upload Document
           </Button>
@@ -176,9 +180,7 @@ const DashboardUploadedDocumentsSection = ({
                   type="button"
                   className="p-1.5 bg-transparent text-secondary rounded-md transition"
                   title="Download Document"
-                  onClick={() =>
-                    console.log("Download Document")
-                  }
+                  onClick={handleDownloadDocument}
                 >
                   <Download size={16} />
                 </Button>
@@ -234,7 +236,7 @@ const DashboardUploadedDocumentsSection = ({
                 type="button"
                 icon={<Download size={14} />}
                 className="px-4 py-2 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition flex items-center gap-1.5"
-                onClick={() => console.log("Download File")}
+                onClick={handleDownloadFile}
               >
                 Download File
               </Button>

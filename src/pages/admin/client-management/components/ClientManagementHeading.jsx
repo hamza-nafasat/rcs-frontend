@@ -5,8 +5,8 @@ import { useState } from "react";
 
 const ClientManagementHeading = ({ heading, subheading, emoji }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const handleAddClient = (clientData) => {
-    console.log("New client data:", clientData);
+  // TODO: persist the new client once the API lands
+  const handleAddClient = () => {
     setIsModalOpen(false);
   };
   return (

@@ -1,9 +1,9 @@
 import ProgressBar from "../../../../../components/shared/ProgressBar";
 import { SCORE_CATEGORIES } from "../../utils/scorecardData";
 
-const PipelineCategoryScores = 5;
+const MAX = 5;
 
-const CategoryScores = ({ categories }) => {
+const PipelineCategoryScores = ({ categories }) => {
   return (
     <section className="rounded-xl border border-gray-200 bg-white p-4">
       <h3 className="text-sm font-semibold text-gray-900">Category Scores</h3>
@@ -25,7 +25,7 @@ const CategoryScores = ({ categories }) => {
               </div>
 
               <ProgressBar
-                value={(value / PipelineCategoryScores) * 100}
+                value={(value / MAX) * 100}
                 color={category.color}
               />
             </div>
@@ -36,4 +36,4 @@ const CategoryScores = ({ categories }) => {
   );
 };
 
-export default CategoryScores;
+export default PipelineCategoryScores;

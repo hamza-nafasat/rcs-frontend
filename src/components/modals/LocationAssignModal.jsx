@@ -12,14 +12,8 @@ import {
   HousePlus,
 } from "lucide-react";
 import Input from "../shared/Input";
+import { LAYER_SATELLITE, LAYER_STREET, MAX_ZOOM, MIN_ZOOM, TILE_SIZE, getDistanceKm, latToPixel, lngToPixel, pixelToLat, pixelToLng, searchLocation } from "../../utils/mapTiles";
 
-const TILE_SIZE = 256;
-const MIN_ZOOM = 3;
-const MAX_ZOOM = 19;
-const LAYER_STREET = "street";
-const LAYER_SATELLITE = "satellite";
-
-// Dummy saved branches data for franchises
 export const INITIAL_BRANCHES = [
   {
     id: "branch-01",
@@ -76,58 +70,6 @@ export const INITIAL_BRANCHES = [
     radiusKm: 6,
   },
 ];
-
-// Haversine formula to compute exact geographical distance in km between two lat/lng points
-export function getDistanceKm(lat1, lon1, lat2, lon2) {
-  const R = 6371; // Earth's radius in km
-  const dLat = ((lat2 - lat1) * Math.PI) / 180;
-  const dLon = ((lon2 - lon1) * Math.PI) / 180;
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos((lat1 * Math.PI) / 180) *
-    Math.cos((lat2 * Math.PI) / 180) *
-    Math.sin(dLon / 2) *
-    Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
-}
-
-// Web Mercator Projection helpers
-function lngToPixel(lng, zoom) {
-  return ((lng + 180) / 360) * TILE_SIZE * Math.pow(2, zoom);
-}
-
-function latToPixel(lat, zoom) {
-  const sin = Math.sin((lat * Math.PI) / 180);
-  const y = 0.5 - Math.log((1 + sin) / (1 - sin)) / (4 * Math.PI);
-  return y * TILE_SIZE * Math.pow(2, zoom);
-}
-
-function pixelToLng(px, zoom) {
-  return (px / (TILE_SIZE * Math.pow(2, zoom))) * 360 - 180;
-}
-
-function pixelToLat(py, zoom) {
-  const n = Math.PI - (2 * Math.PI * py) / (TILE_SIZE * Math.pow(2, zoom));
-  return (180 / Math.PI) * Math.atan(0.5 * (Math.exp(n) - Math.exp(-n)));
-}
-
-async function searchLocation(query) {
-  try {
-    const res = await fetch(
-      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`,
-    );
-    const data = await res.json();
-    return data.map((item) => ({
-      name: item.display_name,
-      lat: parseFloat(item.lat),
-      lng: parseFloat(item.lon),
-    }));
-  } catch (err) {
-    console.error("Geocoding failed:", err);
-    return [];
-  }
-}
 
 const LocationAssignModal = ({
   isOpen,

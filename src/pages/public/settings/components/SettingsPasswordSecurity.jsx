@@ -8,7 +8,7 @@ import {
   MIN_PASSWORD_LENGTH,
 } from "../constants";
 
-const SettingsPasswordSecurity = [
+const FIELDS = [
   {
     name: "currentPassword",
     label: "Current Password",
@@ -26,7 +26,7 @@ const SettingsPasswordSecurity = [
   },
 ];
 
-const PasswordSecurity = ({ onUpdatePassword }) => {
+const SettingsPasswordSecurity = ({ onUpdatePassword }) => {
   const [passwords, setPasswords] = useState(EMPTY_PASSWORDS);
   const [visible, setVisible] = useState({});
   const [error, setError] = useState("");
@@ -68,7 +68,7 @@ const PasswordSecurity = ({ onUpdatePassword }) => {
       />
 
       <form onSubmit={handleSubmit} className="mt-5 space-y-4">
-        {SettingsPasswordSecurity.map(({ name, label, placeholder }) => (
+        {FIELDS.map(({ name, label, placeholder }) => (
           <Input
             key={name}
             name={name}
@@ -105,4 +105,4 @@ const PasswordSecurity = ({ onUpdatePassword }) => {
   );
 };
 
-export default PasswordSecurity;
+export default SettingsPasswordSecurity;

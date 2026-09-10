@@ -4,7 +4,7 @@ import Button from "../../../../components/shared/Button";
 import SettingsCardHeading from "./SettingsCardHeading";
 import { EMPTY_PROFILE, FIELD_LABEL_CLASS } from "../constants";
 
-const SettingsBusinessProfile = [
+const FIELDS = [
   {
     name: "applicantName",
     label: "Applicant Name *",
@@ -27,7 +27,7 @@ const SettingsBusinessProfile = [
   { name: "state", label: "State", placeholder: "e.g. IL" },
 ];
 
-const BusinessProfile = ({ profile, onSave }) => {
+const SettingsBusinessProfile = ({ profile, onSave }) => {
   const [form, setForm] = useState({ ...EMPTY_PROFILE, ...profile });
 
   const handleChange = (e) => {
@@ -50,7 +50,7 @@ const BusinessProfile = ({ profile, onSave }) => {
 
       <form onSubmit={handleSubmit} className="mt-5">
         <section className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {SettingsBusinessProfile.map(({ name, ...field }) => (
+          {FIELDS.map(({ name, ...field }) => (
             <Input
               key={name}
               name={name}
@@ -74,4 +74,4 @@ const BusinessProfile = ({ profile, onSave }) => {
   );
 };
 
-export default BusinessProfile;
+export default SettingsBusinessProfile;

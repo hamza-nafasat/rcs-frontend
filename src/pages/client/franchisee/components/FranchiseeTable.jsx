@@ -10,7 +10,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { useState } from "react";
-import { initialData } from "../../../admin/client-management/utils/data";
+import { initialData } from "../utils/data";
 import Button from "../../../../components/shared/Button";
 
 const STATUS_STYLES = {
@@ -30,6 +30,123 @@ const getHealthColor = (score) =>
 
 
 const emptyFilters = { restaurant: "", owner: "", status: [] };
+
+const buildColumns = ({ handleEditClient, handleViewClient }) => [
+  {
+    name: "Restaurant",
+    selector: (row) => row.restaurantName,
+    sortable: true,
+    minWidth: "220px",
+    cell: (row) => (
+      <div className="flex items-center gap-2">
+        <Avatar
+          name={row.restaurantName}
+          size={32}
+          rounded="rounded-md"
+          color="#F97316"
+        />
+        <div className="min-w-0">
+          <p className="truncate text-sm text-gray-900">
+            {row.restaurantName}
+          </p>
+          <p className="truncate text-xs text-gray-500">
+            {row.restaurantCuisine}
+          </p>
+        </div>
+      </div>
+    ),
+  },
+  {
+    name: "Owner",
+    selector: (row) => row.ownerName,
+    sortable: true,
+  },
+  {
+    name: "Status",
+    selector: (row) => row.status,
+    sortable: true,
+    cell: (row) => {
+      const { pill, dot } =
+        STATUS_STYLES[row.status] ?? STATUS_STYLES["On Hold"];
+
+      return (
+        <span
+          className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1 text-xs font-medium ${pill}`}
+        >
+          <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />
+          {row.status}
+        </span>
+      );
+    },
+  },
+  {
+    name: "Health Score",
+    selector: (row) => row.healthScore,
+    sortable: true,
+    minWidth: "160px",
+    cell: (row) => (
+      <div className="flex w-full items-center gap-2">
+        <ProgressBar
+          value={row.healthScore}
+          color={getHealthColor(row.healthScore)}
+        />
+        <span
+          className="shrink-0 whitespace-nowrap text-xs font-medium"
+          style={{ color: getHealthColor(row.healthScore) }}
+        >
+          {row.healthScore}%
+        </span>
+      </div>
+    ),
+  },
+  {
+    name: "Franchise",
+    selector: (row) => row.franchise,
+    sortable: true,
+  },
+  {
+    name: "Actions",
+    cell: (row) => (
+      <div className="flex justify-end">
+        <Dropdown
+          align="right"
+          portalClassName="max-w-12"
+          trigger={
+            <Button
+              type="icon"
+              className="w-full py-2! px-3!"
+              textClassName="flex w-full item-center h-full gap-2 text-sm text-gray-700 transition hover:bg-gray-100  "
+            >
+              <MoreHorizontal size={18} />
+            </Button>
+          }
+        >
+          <Button
+            type="icon"
+            className="w-full py-0! px-0!"
+            textClassName="flex w-full px-3 py-2 item-center h-full gap-2 text-sm text-gray-700 transition hover:bg-gray-100  "
+            onClick={() => handleViewClient(row)}
+          >
+            <Eye size={16} className="mt-0.5" />
+            View
+          </Button>
+          <Button
+            type="icon"
+            className="w-full py-0! px-0!"
+            textClassName="flex w-full px-3 py-2 item-center h-full gap-2 text-sm text-gray-700 transition hover:bg-gray-100  "
+            onClick={() => handleEditClient(row)}
+          >
+            <MessageSquare size={14} className="mt-0.5" />
+            Send Message
+          </Button>
+        </Dropdown>
+      </div>
+    ),
+    ignoreRowClick: true,
+    allowOverflow: true,
+    button: true,
+  },
+];
 
 const FranchiseeTable = ({ className, filters = emptyFilters }) => {
   const [clients, setClients] = useState(initialData);
@@ -95,125 +212,9 @@ const FranchiseeTable = ({ className, filters = emptyFilters }) => {
     setClientToDelete(null);
   };
 
-  const columns = [
-    {
-      name: "Restaurant",
-      selector: (row) => row.restaurantName,
-      sortable: true,
-      minWidth: "220px",
-      cell: (row) => (
-        <div className="flex items-center gap-2">
-          <Avatar
-            name={row.restaurantName}
-            size={32}
-            rounded="rounded-md"
-            color="#F97316"
-          />
-          <div className="min-w-0">
-            <p className="truncate text-sm text-gray-900">
-              {row.restaurantName}
-            </p>
-            <p className="truncate text-xs text-gray-500">
-              {row.restaurantCuisine}
-            </p>
-          </div>
-        </div>
-      ),
-    },
-    {
-      name: "Owner",
-      selector: (row) => row.ownerName,
-      sortable: true,
-    },
-    {
-      name: "Status",
-      selector: (row) => row.status,
-      sortable: true,
-      cell: (row) => {
-        const { pill, dot } =
-          STATUS_STYLES[row.status] ?? STATUS_STYLES["On Hold"];
-
-        return (
-          <span
-            className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1 text-xs font-medium ${pill}`}
-          >
-            <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />
-            {row.status}
-          </span>
-        );
-      },
-    },
-    {
-      name: "Health Score",
-      selector: (row) => row.healthScore,
-      sortable: true,
-      minWidth: "160px",
-      cell: (row) => (
-        <div className="flex w-full items-center gap-2">
-          <ProgressBar
-            value={row.healthScore}
-            color={getHealthColor(row.healthScore)}
-          />
-          <span
-            className="shrink-0 whitespace-nowrap text-xs font-medium"
-            style={{ color: getHealthColor(row.healthScore) }}
-          >
-            {row.healthScore}%
-          </span>
-        </div>
-      ),
-    },
-    {
-      name: "Franchise",
-      selector: (row) => row.franchise,
-      sortable: true,
-    },
-    {
-      name: "Actions",
-      cell: (row) => (
-        <div className="flex justify-end">
-          <Dropdown
-            align="right"
-            portalClassName="max-w-12"
-            trigger={
-              <Button
-                type="icon"
-                className="w-full py-2! px-3!"
-                textClassName="flex w-full item-center h-full gap-2 text-sm text-gray-700 transition hover:bg-gray-100  "
-              >
-                <MoreHorizontal size={18} />
-              </Button>
-            }
-          >
-            <Button
-              type="icon"
-              className="w-full py-0! px-0!"
-              textClassName="flex w-full px-3 py-2 item-center h-full gap-2 text-sm text-gray-700 transition hover:bg-gray-100  "
-              onClick={() => handleViewClient(row)}
-            >
-              <Eye size={16} className="mt-0.5" />
-              View
-            </Button>
-            <Button
-              type="icon"
-              className="w-full py-0! px-0!"
-              textClassName="flex w-full px-3 py-2 item-center h-full gap-2 text-sm text-gray-700 transition hover:bg-gray-100  "
-              onClick={() => handleEditClient(row)}
-            >
-              <MessageSquare size={14} className="mt-0.5" />
-              Send Message
-            </Button>
-          </Dropdown>
-        </div>
-      ),
-      ignoreRowClick: true,
-      allowOverflow: true,
-      button: true,
-    },
-  ];
-
+  const columns = buildColumns({ handleEditClient, handleViewClient });
   return (
-    <div className={className}>
+    <section className={className}>
       <DataTable
         columns={columns}
         data={filteredClients}
@@ -235,7 +236,7 @@ const FranchiseeTable = ({ className, filters = emptyFilters }) => {
         onClose={() => setViewClient(null)}
         client={viewClient}
       /> */}
-    </div>
+    </section>
   );
 };
 

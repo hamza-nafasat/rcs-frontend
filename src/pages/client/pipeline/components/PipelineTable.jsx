@@ -131,12 +131,12 @@ const PipelineTable = ({
           const color = scoreColor(row.score);
 
           return (
-            <div className="flex w-full flex-col gap-1 py-1">
+            <section className="flex w-full flex-col gap-1 py-1">
               <span className="text-sm font-semibold" style={{ color }}>
                 {row.score.toFixed(1)}
               </span>
               <ProgressBar value={row.score} color={color} />
-            </div>
+            </section>
           );
         },
       },
