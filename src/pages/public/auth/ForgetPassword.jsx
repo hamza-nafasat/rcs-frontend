@@ -5,7 +5,7 @@ import Input from "../../../components/shared/Input";
 import AuthHeading from "./components/AuthHeading";
 import AuthLayout from "./components/AuthLayout";
 import BackLink from "../../../components/shared/BackLink";
-import { useForgetPasswordMutation } from "../../../store/apis/auth.apis";
+import { useForgetPasswordMutation } from "../../../store/apis/public/auth.apis";
 
 const ForgetPassword = () => {
   const navigate = useNavigate();

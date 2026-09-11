@@ -4,7 +4,7 @@ import Button from "../../../components/shared/Button";
 import Input from "../../../components/shared/Input";
 import AuthHeading from "./components/AuthHeading";
 import AuthLayout from "./components/AuthLayout";
-import { useLoginMutation } from "../../../store/apis/auth.apis";
+import { useLoginMutation } from "../../../store/apis/public/auth.apis";
 import { ROLE_HOME } from "../../../configs/constants";
 
 const SignIn = () => {

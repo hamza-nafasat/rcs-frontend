@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import Dropdown from "./Dropdown";
 import Avatar from "./Avatar";
 import { ChevronDown, LogOut, UserRound } from "lucide-react";
-import { useLogoutMutation } from "../../store/apis/auth.apis";
+import { useLogoutMutation } from "../../store/apis/public/auth.apis";
 
 const UserMenu = ({ name, type = "admin" }) => {
   const navigate = useNavigate();
