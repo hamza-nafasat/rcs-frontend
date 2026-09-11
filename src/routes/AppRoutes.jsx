@@ -1,10 +1,4 @@
-import {
-  BrowserRouter,
-  Route,
-  Routes,
-  Navigate,
-  useLocation,
-} from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate, useLocation } from "react-router-dom";
 
 import SignIn from "../pages/public/auth/SignIn";
 import ForgetPassword from "../pages/public/auth/ForgetPassword";
@@ -37,6 +31,10 @@ import ClientMessages from "../pages/client/messages/ClientMessages";
 import UserMessages from "../pages/user/messages/UserMessages";
 import Franchisee from "../pages/client/franchisee/Franchisee";
 
+import ProtectedRoute from "./ProtectedRoute";
+import GuestRoute from "./GuestRoute";
+import { USER_ROLES } from "../configs/constants";
+
 const LegacyAdminRedirect = () => {
   const { pathname } = useLocation();
   const next = pathname.replace(/^\/dashboard/, "/admin/dashboard");
@@ -48,56 +46,61 @@ const AppRoutes = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Navigate to="/admin/dashboard" replace />} />
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/forget-password" element={<ForgetPassword />} />
-        <Route path="/check-email" element={<CheckEmail />} />
-        <Route path="/reset-password/:resetToken" element={<ResetPassword />} />
-        <Route
-          path="/reset-password-success"
-          element={<ResetPasswordSuccess />}
-        />
-        <Route path="/create-account" element={<CreateAccount />} />
+        {/* non authentic users */}
+        <Route element={<GuestRoute />}>
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/forget-password" element={<ForgetPassword />} />
+          <Route path="/check-email" element={<CheckEmail />} />
+          <Route path="/reset-password/:resetToken" element={<ResetPassword />} />
+          <Route path="/reset-password-success" element={<ResetPasswordSuccess />} />
+          <Route path="/create-account" element={<CreateAccount />} />
+        </Route>
 
         <Route path="/dashboard/*" element={<LegacyAdminRedirect />} />
-
-        <Route path="/admin/dashboard" element={<Dashboard type="admin" />}>
-          <Route index element={<AdminDashboard />} />
-          <Route path="clients" element={<ClientManagement />} />
-          <Route path="messages" element={<AdminMessages />} />
-          <Route path="moderators" element={<AdminModerators />} />
-          <Route path="fdd" element={<AdminFdd />} />
-          <Route path="support" element={<AdminSupport />} />
-          <Route path="settings" element={<Settings type="admin" />} />
-          <Route path="notifications" element={<Notifications />} />
-          <Route path="pipeline" element={<AdminPipeline />} />
-          <Route path="pipeline/:id" element={<AdminApplicantDetailPage />} />
-          <Route path="view-all-activity" element={<ViewAllActivity />} />
+        {/* admin only */}
+        <Route element={<ProtectedRoute role={USER_ROLES.ADMIN} />}>
+          <Route path="/admin/dashboard" element={<Dashboard type="admin" />}>
+            <Route index element={<AdminDashboard />} />
+            <Route path="clients" element={<ClientManagement />} />
+            <Route path="messages" element={<AdminMessages />} />
+            <Route path="moderators" element={<AdminModerators />} />
+            <Route path="fdd" element={<AdminFdd />} />
+            <Route path="support" element={<AdminSupport />} />
+            <Route path="settings" element={<Settings type="admin" />} />
+            <Route path="notifications" element={<Notifications />} />
+            <Route path="pipeline" element={<AdminPipeline />} />
+            <Route path="pipeline/:id" element={<AdminApplicantDetailPage />} />
+            <Route path="view-all-activity" element={<ViewAllActivity />} />
+          </Route>
         </Route>
 
-        <Route
-          path="/client"
-          element={<Navigate to="/client/dashboard" replace />}
-        />
-        <Route path="/client/dashboard" element={<Dashboard type="client" />}>
-          <Route index element={<ClientDashboard />} />
-          {/* ClientPipeline */}
-          <Route path="pipeline" element={<ClientPipeline />} />
-          <Route path="pipeline/:id" element={<ClientApplicantDetailPage />} />
-          <Route path="reports" element={<Reports />} />
-          <Route path="fdd" element={<ClientFdd />} />
-          <Route path="moderators" element={<ClientModerators />} />
-          <Route path="settings" element={<Settings type="client" />} />
-          <Route path="notifications" element={<Notifications />} />
-          <Route path="support" element={<ClientSupport />} />
-          <Route path="messages" element={<ClientMessages />} />
-          <Route path="franchisee" element={<Franchisee />} />
+        {/* client only */}
+        <Route path="/client" element={<Navigate to="/client/dashboard" replace />} />
+        <Route element={<ProtectedRoute role={USER_ROLES.CLIENT} />}>
+          <Route path="/client/dashboard" element={<Dashboard type="client" />}>
+            <Route index element={<ClientDashboard />} />
+            {/* ClientPipeline */}
+            <Route path="pipeline" element={<ClientPipeline />} />
+            <Route path="pipeline/:id" element={<ClientApplicantDetailPage />} />
+            <Route path="reports" element={<Reports />} />
+            <Route path="fdd" element={<ClientFdd />} />
+            <Route path="moderators" element={<ClientModerators />} />
+            <Route path="settings" element={<Settings type="client" />} />
+            <Route path="notifications" element={<Notifications />} />
+            <Route path="support" element={<ClientSupport />} />
+            <Route path="messages" element={<ClientMessages />} />
+            <Route path="franchisee" element={<Franchisee />} />
+          </Route>
         </Route>
 
-        <Route path="/user/dashboard" element={<Dashboard type="user" />}>
-          <Route index element={<Application />} />
-          <Route path="messages" element={<UserMessages />} />
-          <Route path="notifications" element={<Notifications />} />
-          <Route path="settings" element={<Settings type="user" />} />
+        {/* user only  */}
+        <Route element={<ProtectedRoute role={USER_ROLES.USER} />}>
+          <Route path="/user/dashboard" element={<Dashboard type="user" />}>
+            <Route index element={<Application />} />
+            <Route path="messages" element={<UserMessages />} />
+            <Route path="notifications" element={<Notifications />} />
+            <Route path="settings" element={<Settings type="user" />} />
+          </Route>
         </Route>
 
         <Route path="*" element={<DashboardNotFound />} />
