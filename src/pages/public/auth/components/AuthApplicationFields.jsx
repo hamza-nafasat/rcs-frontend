@@ -60,13 +60,14 @@ const AuthApplicationFields = ({
 
           <Input
             name="companyName"
-            label="Company Name"
+            label="Company Name *"
             labelClassName={fieldLabel}
             placeholder="e.g. Smith Ventures LLC"
             value={form.companyName}
             onChange={onChange}
             disabled={disabled}
             className={inputClassName}
+            required
           />
         </div>
 
@@ -85,24 +86,26 @@ const AuthApplicationFields = ({
 
           <Input
             name="city"
-            label="City"
+            label="City *"
             labelClassName={fieldLabel}
             placeholder="Chicago"
             value={form.city}
             onChange={onChange}
             disabled={disabled}
             className={inputClassName}
+            required
           />
 
           <Input
             name="state"
-            label="State"
+            label="State *"
             labelClassName={fieldLabel}
             placeholder="IL"
             value={form.state}
             onChange={onChange}
             disabled={disabled}
             className={inputClassName}
+            required
           />
         </div>
 
@@ -124,11 +127,12 @@ const AuthApplicationFields = ({
               <Input
                 name="phone"
                 type="tel"
-                label="Phone"
+                label="Phone *"
                 labelClassName={fieldLabel}
                 placeholder="e.g. (312) 555-0134"
                 value={account.phone}
                 onChange={onAccountChange}
+                required
               />
             </div>
 
@@ -180,7 +184,7 @@ const AuthApplicationFields = ({
             name="liquidCapital"
             type="number"
             min="0"
-            label="Liquid Capital ($)"
+            label="Liquid Capital ($) *"
             labelClassName={fieldLabel}
             placeholder="e.g. 150000"
             value={form.liquidCapital}
@@ -188,13 +192,14 @@ const AuthApplicationFields = ({
             disabled={disabled}
             className={inputClassName}
             hint={`Min. $75,000 - Score: ${scores.formatted.liquid}/5`}
+            required
           />
 
           <Input
             name="netWorth"
             type="number"
             min="0"
-            label="Net Worth ($)"
+            label="Net Worth ($) *"
             labelClassName={fieldLabel}
             placeholder="e.g. 500000"
             value={form.netWorth}
@@ -202,13 +207,14 @@ const AuthApplicationFields = ({
             disabled={disabled}
             className={inputClassName}
             hint={`Min. $250,000 - Score: ${scores.formatted.netWorth}/5`}
+            required
           />
 
           <Input
             name="creditScore"
             type="number"
             min="0"
-            label="Credit Score"
+            label="Credit Score *"
             labelClassName={fieldLabel}
             placeholder="e.g. 720"
             value={form.creditScore}
@@ -216,6 +222,7 @@ const AuthApplicationFields = ({
             disabled={disabled}
             className={inputClassName}
             hint={`Min. 680 - Score: ${scores.formatted.credit}/5`}
+            required
           />
         </div>
       </FormSection>
@@ -231,7 +238,7 @@ const AuthApplicationFields = ({
             name="yearsMgmt"
             type="number"
             min="0"
-            label="Years Mgmt Experience"
+            label="Years Mgmt Experience *"
             labelClassName={fieldLabel}
             placeholder="e.g. 8"
             value={form.yearsMgmt}
@@ -239,6 +246,7 @@ const AuthApplicationFields = ({
             disabled={disabled}
             className={inputClassName}
             hint={`Score: ${scores.formatted.years}/5`}
+            required
           />
 
           <SegmentedControl
