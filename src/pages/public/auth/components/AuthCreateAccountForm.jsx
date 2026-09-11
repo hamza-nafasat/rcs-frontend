@@ -14,8 +14,6 @@ const AuthCreateAccountForm = () => {
   const [account, setAccount] = useState(EMPTY_ACCOUNT);
   const [form, setForm] = useState(EMPTY_APPLICATION);
   const [accountErrors, setAccountErrors] = useState({});
-  const [territoryAreas, setTerritoryAreas] = useState([]);
-  const [territoryError, setTerritoryError] = useState("");
   const [showNotice, setShowNotice] = useState(true);
   const scores = scoreApplication(form);
 
@@ -36,10 +34,8 @@ const AuthCreateAccountForm = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     const errors = validateAccount(account);
-    const missingTerritory = territoryAreas.length === 0 ? "Please draw at least one territory area on the map" : "";
     setAccountErrors(errors);
-    setTerritoryError(missingTerritory);
-    if (Object.keys(errors).length > 0 || missingTerritory) return;
+    if (Object.keys(errors).length > 0) return;
     navigate("/client/dashboard");
   };
 
@@ -67,11 +63,8 @@ const AuthCreateAccountForm = () => {
           onAccountChange={handleAccountChange}
         />
 
-        {/* Territory drawing on real USA map */}
-        <section>
-          <AuthLocationAssign onTerritoryChange={setTerritoryAreas} />
-          {territoryError && <p className="mt-1 text-xs text-remove">{territoryError}</p>}
-        </section>
+        {/* Territory drawing on real USA map — display only until the backend stores polygons */}
+        <AuthLocationAssign />
 
         <footer className="flex flex-wrap items-center justify-between gap-3 border-t color-border pt-4">
           <Button
