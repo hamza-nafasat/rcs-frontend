@@ -6,16 +6,21 @@ import AuthHeading from "./AuthHeading";
 import AuthApplicationNotice from "./AuthApplicationNotice";
 import AuthApplicationFields from "./AuthApplicationFields";
 import AuthLocationAssign from "./AuthLocationAssign";
-import {
-  EMPTY_APPLICATION,
-  scoreApplication,
-} from "../utils/applicationScore";
+import { EMPTY_ACCOUNT, validateAccount } from "../utils/accountRules";
+import { EMPTY_APPLICATION, scoreApplication } from "../utils/applicationScore";
 
 const AuthCreateAccountForm = () => {
   const navigate = useNavigate();
+  const [account, setAccount] = useState(EMPTY_ACCOUNT);
   const [form, setForm] = useState(EMPTY_APPLICATION);
+  const [accountErrors, setAccountErrors] = useState({});
   const [showNotice, setShowNotice] = useState(true);
   const scores = scoreApplication(form);
+
+  const handleAccountChange = (event) => {
+    const { name, value } = event.target;
+    setAccount((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -28,6 +33,9 @@ const AuthCreateAccountForm = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    const errors = validateAccount(account);
+    setAccountErrors(errors);
+    if (Object.keys(errors).length > 0) return;
     navigate("/client/dashboard");
   };
 
@@ -50,6 +58,9 @@ const AuthCreateAccountForm = () => {
           scores={scores}
           onChange={handleChange}
           onSelect={handleSelect}
+          account={account}
+          accountErrors={accountErrors}
+          onAccountChange={handleAccountChange}
         />
 
         {/* Territory drawing on real USA map */}

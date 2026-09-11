@@ -17,7 +17,8 @@ export const DUMMY_PROFILE = {
 
 export const DUMMY_APPLICATION = {
   ...EMPTY_APPLICATION,
-  applicantName: "Marco Ricci",
+  firstName: "Marco",
+  lastName: "Ricci",
   companyName: "Golden Fork",
   proposedTerritory: "Austin Metro",
   city: "Austin",

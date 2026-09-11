@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { Briefcase, DollarSign, MapPin, Shield, User } from "lucide-react";
 import Input from "../../../../components/shared/Input";
 import SegmentedControl from "../../../../components/shared/SegmentedControl";
 import FormSection from "../../../../components/shared/FormSection";
 import { DENSITY_OPTIONS, YES_NO_OPTIONS } from "../utils/applicationScore";
+import { PASSWORD_MIN_LENGTH } from "../utils/accountRules";
 
 const fieldLabel =
   "uppercase text-xs font-semibold tracking-wide text-tertiary";
@@ -13,7 +15,12 @@ const AuthApplicationFields = ({
   onChange,
   onSelect,
   disabled = false,
+  account = null,
+  accountErrors = {},
+  onAccountChange,
 }) => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const inputClassName = disabled
     ? "bg-gray-50/50 text-gray-500 cursor-not-allowed"
     : "";
@@ -26,13 +33,25 @@ const AuthApplicationFields = ({
         iconClassName="text-secondary"
         title="Applicant Information"
       >
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <Input
-            name="applicantName"
-            label="Applicant Name *"
+            name="firstName"
+            label="First Name *"
             labelClassName={fieldLabel}
-            placeholder="e.g. John Smith"
-            value={form.applicantName}
+            placeholder="e.g. John"
+            value={form.firstName}
+            onChange={onChange}
+            disabled={disabled}
+            className={inputClassName}
+            required
+          />
+
+          <Input
+            name="lastName"
+            label="Last Name *"
+            labelClassName={fieldLabel}
+            placeholder="e.g. Smith"
+            value={form.lastName}
             onChange={onChange}
             disabled={disabled}
             className={inputClassName}
@@ -86,6 +105,68 @@ const AuthApplicationFields = ({
             className={inputClassName}
           />
         </div>
+
+        {/* only the signup form passes an account — Settings shows the application on its own */}
+        {account && (
+          <>
+            <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <Input
+                name="email"
+                label="Email"
+                labelClassName={fieldLabel}
+                placeholder="you@example.com"
+                value={account.email}
+                disabled
+                className="bg-gray-50/50 text-gray-500 cursor-not-allowed"
+                hint="Taken from your invitation"
+              />
+
+              <Input
+                name="phone"
+                type="tel"
+                label="Phone"
+                labelClassName={fieldLabel}
+                placeholder="e.g. (312) 555-0134"
+                value={account.phone}
+                onChange={onAccountChange}
+              />
+            </div>
+
+            <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <Input
+                name="password"
+                label="Password *"
+                labelClassName={fieldLabel}
+                type={showPassword ? "text" : "password"}
+                placeholder="••••••••"
+                value={account.password}
+                onChange={onAccountChange}
+                isEyeButton
+                showConfirm={showPassword}
+                setShowConfirm={setShowPassword}
+                hint={accountErrors.password ?? `At least ${PASSWORD_MIN_LENGTH} characters`}
+                hintClassName={accountErrors.password ? "text-remove" : ""}
+                required
+              />
+
+              <Input
+                name="confirmPassword"
+                label="Confirm Password *"
+                labelClassName={fieldLabel}
+                type={showConfirmPassword ? "text" : "password"}
+                placeholder="••••••••"
+                value={account.confirmPassword}
+                onChange={onAccountChange}
+                isEyeButton
+                showConfirm={showConfirmPassword}
+                setShowConfirm={setShowConfirmPassword}
+                hint={accountErrors.confirmPassword}
+                hintClassName="text-remove"
+                required
+              />
+            </div>
+          </>
+        )}
       </FormSection>
 
       {/* Financial Strength */}
