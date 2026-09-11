@@ -1,177 +1,16 @@
-import DashboardHeading from "./components/DashboardHeading";
-import StatsCard from "./components/StatsCard";
-import TotalUsersIcon from "../../../assets/SVGs/TotalUsersIcon.svg";
-import SuccessIcon from "../../../assets/SVGs/SuccessIcon.svg";
-import RevenueIcon from "../../../assets/SVGs/RevenueIcon.svg";
-import TotalMembersIcon from "../../../assets/SVGs/TotalMembersIcon.svg";
+import DashboardHeading from "../../../components/global/DashboardHeading";
+import DashboardStatsCard from "./components/DashboardStatsCard";
+
 import Card from "../../../components/shared/Card";
-import LineChart from "./components/LineChart";
-import LeadsPerClient from "./components/LeadsPerClient";
-import BarChart from "./components/BarChart";
-import MultiLineChart from "./components/MultiLineChart";
-import RecentActivity from "./components/RecentActivity";
-import ClientsNeedingAttention from "./components/ClientsNeedingAttention";
-import { activities } from "./data/activityData";
+import DashboardLineChart from "./components/DashboardLineChart";
+import DashboardLeadsPerClient from "./components/DashboardLeadsPerClient";
+import DashboardBarChart from "./components/DashboardBarChart";
+import DashboardMultiLineChart from "./components/DashboardMultiLineChart";
+import DashboardRecentActivity from "./components/DashboardRecentActivity";
+import DashboardClientsNeedingAttention from "./components/DashboardClientsNeedingAttention";
+import { activities } from "./utils/data";
 import { useNavigate } from "react-router-dom";
-
-const clients = [
-  {
-    id: 1,
-    initials: "SR",
-    name: "Spice Route",
-    personName: "Priya Patel",
-    progress: 61,
-    progressColor: "#EF4444",
-  },
-  {
-    id: 2,
-    initials: "RT",
-    name: "The Rustic Table",
-    personName: "Marcus Williams",
-    progress: 70,
-    progressColor: "#FBBF24",
-  },
-  {
-    id: 1,
-    initials: "SR",
-    name: "Spice Route",
-    personName: "Priya Patel",
-    progress: 61,
-    progressColor: "#EF4444",
-  },
-  {
-    id: 2,
-    initials: "RT",
-    name: "The Rustic Table",
-    personName: "Marcus Williams",
-    progress: 70,
-    progressColor: "#FBBF24",
-  },
-  {
-    id: 1,
-    initials: "SR",
-    name: "Spice Route",
-    personName: "Priya Patel",
-    progress: 61,
-    progressColor: "#EF4444",
-  },
-  {
-    id: 2,
-    initials: "RT",
-    name: "The Rustic Table",
-    personName: "Marcus Williams",
-    progress: 70,
-    progressColor: "#FBBF24",
-  },
-  {
-    id: 1,
-    initials: "SR",
-    name: "Spice Route",
-    personName: "Priya Patel",
-    progress: 61,
-    progressColor: "#EF4444",
-  },
-  {
-    id: 2,
-    initials: "RT",
-    name: "The Rustic Table",
-    personName: "Marcus Williams",
-    progress: 70,
-    progressColor: "#FBBF24",
-  },
-  {
-    id: 1,
-    initials: "SR",
-    name: "Spice Route",
-    personName: "Priya Patel",
-    progress: 61,
-    progressColor: "#EF4444",
-  },
-  {
-    id: 2,
-    initials: "RT",
-    name: "The Rustic Table",
-    personName: "Marcus Williams",
-    progress: 70,
-    progressColor: "#FBBF24",
-  },
-];
-
-const leadsPerClient = [
-  {
-    id: 1,
-    name: "Coastal Bistro",
-    owner: "Ahmed Sarfaz",
-    leads: 7,
-    status: "Active",
-  },
-  {
-    id: 2,
-    name: "Spice Route",
-    owner: "Priya Patel",
-    leads: 5,
-    status: "Needs Attention",
-  },
-  {
-    id: 3,
-    name: "The Rustic Table",
-    owner: "Marcus Williams",
-    leads: 4,
-    status: "Needs Attention",
-  },
-  {
-    id: 4,
-    name: "Urban Greens",
-    owner: "Sofia Chen",
-    leads: 3,
-    status: "Active",
-  },
-  {
-    id: 5,
-    name: "Golden Harvest",
-    owner: "James Liu",
-    leads: 4,
-    status: "Active",
-  },
-  {
-    id: 6,
-    name: "Harbour Grill",
-    owner: "Elena Rossi",
-    leads: 4,
-    status: "Needs Attention",
-  },
-];
-
-const cardData = [
-  {
-    icon: TotalUsersIcon,
-    badge: "+3",
-    value: "1,245",
-    label: "Total Clients",
-    comparison: "↑ 12% vs last month",
-  },
-  {
-    icon: SuccessIcon,
-    badge: "+5",
-    value: "2,345",
-    label: "Total Messages",
-    comparison: "↑ 8% vs last month",
-  },
-  {
-    icon: RevenueIcon,
-    badge: "+2",
-    value: "567",
-    label: "Total Leads",
-    comparison: "↑ 15% vs last month",
-  },
-  {
-    icon: TotalMembersIcon,
-    badge: "+72",
-    value: "567",
-    label: "Total Leads",
-    comparison: "↑ 15% vs last month",
-  },
-];
+import { clients, leadsPerClient, cardData } from "./utils/data";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -194,7 +33,7 @@ const AdminDashboard = () => {
             className="fade-up h-full"
             style={{ "--fade-delay": `${80 + index * 70}ms` }}
           >
-            <StatsCard {...card} />
+            <DashboardStatsCard {...card} />
           </div>
         ))}
       </section>
@@ -210,14 +49,14 @@ const AdminDashboard = () => {
             subheading="Monthly incoming clients over time"
           />
 
-          <LineChart
+          <DashboardLineChart
             labels={["Jan", "Feb", "Mar", "Apr", "May", "Jun"]}
             data={[20, 35, 28, 50, 45, 70]}
           />
         </Card>
 
         <Card className="flex h-full min-h-0 flex-col lg:col-span-2">
-          <LeadsPerClient
+          <DashboardLeadsPerClient
             clients={leadsPerClient}
             subheading="23 active Clients"
             onViewAll={() => navigate("/admin/dashboard/clients")}
@@ -239,7 +78,7 @@ const AdminDashboard = () => {
             />
           }
         >
-          <BarChart
+          <DashboardBarChart
             labels={["Jan", "Feb", "Mar", "Apr", "May", "Jun"]}
             data={[20, 35, 28, 50, 45, 70]}
           />
@@ -254,7 +93,7 @@ const AdminDashboard = () => {
             />
           }
         >
-          <MultiLineChart
+          <DashboardMultiLineChart
             labels={["Jan", "Feb", "Mar", "Apr", "May", "Jun"]}
             datasets={[
               {
@@ -282,7 +121,7 @@ const AdminDashboard = () => {
         style={{ "--fade-delay": "520ms" }}
       >
         <Card className="flex flex-col">
-          <RecentActivity
+          <DashboardRecentActivity
             activities={activities}
             maxItems={7}
             onAction={() => navigate("/admin/dashboard/view-all-activity")}
@@ -290,7 +129,7 @@ const AdminDashboard = () => {
         </Card>
 
         <Card className="flex flex-col">
-          <ClientsNeedingAttention clients={clients} />
+          <DashboardClientsNeedingAttention clients={clients} />
         </Card>
       </section>
     </article>

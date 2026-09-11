@@ -3,7 +3,7 @@ import Button from "../../../components/shared/Button";
 import Input from "../../../components/shared/Input";
 import AuthHeading from "./components/AuthHeading";
 import AuthLayout from "./components/AuthLayout";
-import BackLink from "./components/BackLink";
+import BackLink from "../../../components/shared/BackLink";
 
 const ForgetPassword = () => {
   const navigate = useNavigate();

@@ -1,9 +1,13 @@
 import { FileSpreadsheet, FileText, ChevronDown, Download } from "lucide-react";
 import Button from "../../../../components/shared/Button";
 import Dropdown from "../../../../components/shared/Dropdown";
-import DateField from "./DateField";
+import DateField from "../../../../components/shared/DateField";
 
 const ReportHeading = ({ heading, subheading, dates, onDateChange }) => {
+  // TODO: wire exports once the reporting API lands
+  const handleExportCsv = () => {};
+  const handleExportPdf = () => {};
+
   return (
     <section className="flex flex-wrap items-center justify-between gap-3 sm:gap-4">
       {/* Heading */}
@@ -39,7 +43,7 @@ const ReportHeading = ({ heading, subheading, dates, onDateChange }) => {
         <Dropdown
           trigger={
             <Button
-              type="icon"
+              variant="bare"
               className="px-3! py-2! sm:px-4! sm:py-2.5! text-base border color-border text-secondary bg-white!"
               textClassName="flex items-center gap-2"
             >
@@ -51,26 +55,26 @@ const ReportHeading = ({ heading, subheading, dates, onDateChange }) => {
         >
           <button
             type="button"
-            onClick={() => console.log("Export CSV")}
+            onClick={handleExportCsv}
             className="flex w-full items-center gap-3 border-b border-[#E5E7EB] px-5 py-4 text-left hover:bg-gray-50"
           >
             <FileSpreadsheet size={22} className="shrink-0 text-green-600" />
 
             <div>
-              <p className="text-sm font-medium text-[#111111]">Export CSV</p>
+              <p className="text-sm font-medium text-tertiary">Export CSV</p>
               <p className="text-sm text-[#6B7280]">Spreadsheet format</p>
             </div>
           </button>
 
           <button
             type="button"
-            onClick={() => console.log("Export PDF")}
+            onClick={handleExportPdf}
             className="flex w-full items-center gap-3 px-5 py-4 text-left hover:bg-gray-50"
           >
             <FileText size={22} className="shrink-0 text-red-500" />
 
             <div>
-              <p className="text-sm font-medium text-[#111111]">Export PDF</p>
+              <p className="text-sm font-medium text-tertiary">Export PDF</p>
               <p className="text-sm text-[#6B7280]">Printable report</p>
             </div>
           </button>

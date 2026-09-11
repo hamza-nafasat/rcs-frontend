@@ -51,15 +51,12 @@ const clientProfileItems = [
 ];
 
 const userNavItems = [
-  { label: "My Application", to: "/user/dashboard", icon: LayoutDashboard },
+  { label: "Application", to: "/user/dashboard", icon: LayoutDashboard },
   { label: "Messages", to: "/user/dashboard/messages", icon: MessageSquare },
-
 ];
 
 const userProfileItems = [
   { label: "Notifications", to: "/user/dashboard/notifications", icon: Bell },
-  { label: "Support", to: "/user/dashboard/support", icon: HelpCircle },
-
 ];
 
 const linkClass =

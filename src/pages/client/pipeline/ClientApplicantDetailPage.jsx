@@ -1,33 +1,31 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { DollarSign, Briefcase, Scale, MapPin } from "lucide-react";
-import ClientApplicantStageOverview from "./components/ClientApplicantStageOverview";
-import AdminDocumentRequestCard from "../../user/dashboard/components/AdminDocumentRequestCard";
-import ScoreRadar from "./components/scorecard/ScoreRadar";
-import CategoryScores from "./components/scorecard/CategoryScores";
-import ScorecardSection from "./components/scorecard/ScorecardSection";
-import AdminLocationAssignModal from "../../admin/pipeline/components/scorecard/AdminLocationAssignModal";
-import AdminInlineLocationMap from "../../admin/pipeline/components/scorecard/AdminInlineLocationMap";
-import { initialApplicants } from "./data/pipelineApplicants";
+import PipelineApplicantProgress from "./components/PipelineApplicantProgress";
+import PipelineScoreRadar from "./components/scorecard/PipelineScoreRadar";
+import CategoryScores from "../../../components/global/scorecard/CategoryScores";
+import PipelineScorecardSection from "./components/scorecard/PipelineScorecardSection";
+import LocationAssignModal from "../../../components/modals/LocationAssignModal";
+import { initialApplicants } from "./utils/data";
 import {
   buildScorecard,
   getRecommendation,
-} from "./data/scorecardData";
+} from "./utils/scorecardData";
+import { SCORE_CATEGORIES } from "./utils/scorecardData";
 
 const ClientApplicantDetailPage = () => {
   const { id } = useParams();
 
   const [applicants] = useState(initialApplicants);
-  const [hasAdminRequest, setHasAdminRequest] = useState(true);
   const [showMapModal, setShowMapModal] = useState(false);
 
   const applicant = applicants.find((a) => String(a.id) === String(id)) || applicants[0];
 
   if (!applicant) {
     return (
-      <div className="p-6 text-center">
+      <article className="p-6 text-center">
         <p className="text-gray-500">Applicant not found.</p>
-      </div>
+      </article>
     );
   }
 
@@ -38,7 +36,7 @@ const ClientApplicantDetailPage = () => {
   return (
     <article className="flex flex-col gap-6 animate-fade-in">
       {/* Application Progress Stage Overview */}
-      <ClientApplicantStageOverview currentStage={stage} />
+      <PipelineApplicantProgress currentStage={stage} />
 
 
 
@@ -77,34 +75,37 @@ const ClientApplicantDetailPage = () => {
 
         {/* Radar Chart & Category Scores Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-center">
-          <ScoreRadar categories={data.categories} />
-          <CategoryScores categories={data.categories} />
+          <PipelineScoreRadar categories={data.categories} />
+          <CategoryScores
+            categories={data.categories}
+            definitions={SCORE_CATEGORIES}
+          />
         </div>
 
         {/* Category Breakdown */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <ScorecardSection
+          <PipelineScorecardSection
             icon={DollarSign}
             title="Financial Profile"
             items={data.financialProfile}
             categoryKey="financial"
           />
 
-          <ScorecardSection
+          <PipelineScorecardSection
             icon={Briefcase}
             title="Business Experience"
             items={data.experience}
             categoryKey="experience"
           />
 
-          <ScorecardSection
+          <PipelineScorecardSection
             icon={Scale}
             title="Legal & Background"
             items={data.legal}
             categoryKey="legal"
           />
 
-          <ScorecardSection
+          <PipelineScorecardSection
             icon={MapPin}
             title="Market & Location Fit"
             items={data.market}
@@ -116,7 +117,7 @@ const ClientApplicantDetailPage = () => {
 
       {/* Full Map Modal */}
       {showMapModal && (
-        <AdminLocationAssignModal
+        <LocationAssignModal
           isOpen={showMapModal}
           applicant={applicant}
           onClose={() => setShowMapModal(false)}

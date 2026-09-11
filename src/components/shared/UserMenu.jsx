@@ -39,6 +39,7 @@ const UserMenu = ({ name, type = "admin" }) => {
     >
       {options.map((option, index) => (
         <button
+          type="button"
           key={index}
           className="w-full rounded-lg px-2 py-2 text-tertiary text-left text-sm hover:bg-gray-50 flex items-center gap-2 cursor-pointer"
           onClick={option.onClick}

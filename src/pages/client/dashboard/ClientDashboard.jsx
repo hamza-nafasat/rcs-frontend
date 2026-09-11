@@ -1,41 +1,12 @@
-import StatsCard from "../../admin/dashboard/components/StatsCard";
-import DashboardHeading from "./components/DashboardHeading";
-import TotalUsersIcon from "../../../assets/SVGs/TotalUsersIcon.svg";
-import ClientApprovedIcon from "../../../assets/SVGs/ClientApprovedIcon.svg";
-import ClientConditionalIcon from "../../../assets/SVGs/ClientConditionalIcon.svg";
-import ClientAvgScoreIcon from "../../../assets/SVGs/ClientAvgScoreIcon.svg";
-import DonutChart from "./components/DonutChart";
-import BarChart from "./components/BarChart";
-import Card from "../../../components/shared/Card";
-import ApplicantsScored from "./components/ApplicantsScored";
-import RecentApplicants from "./components/RecentApplicants";
+import DashboardStatsCard from "../../admin/dashboard/components/DashboardStatsCard";
+import DashboardHeading from "../../../components/global/DashboardHeading";
 
-const cardData = [
-  {
-    icon: TotalUsersIcon,
-    value: "12",
-    label: "Total Applicants",
-    comparison: "All time",
-  },
-  {
-    icon: ClientApprovedIcon,
-    value: "28",
-    label: "Approved",
-    comparison: "0% of total",
-  },
-  {
-    icon: ClientConditionalIcon,
-    value: "4",
-    label: "Conditional",
-    comparison: "Needs review",
-  },
-  {
-    icon: ClientAvgScoreIcon,
-    value: "82",
-    label: "Avg Score",
-    comparison: "/ 100 possible",
-  },
-];
+import DashboardDonutChart from "./components/DashboardDonutChart";
+import DashboardBarChart from "./components/DashboardBarChart";
+import Card from "../../../components/shared/Card";
+import DashboardApplicantsScored from "./components/DashboardApplicantsScored";
+import DashboardRecentApplicants from "./components/DashboardRecentApplicants";
+import { cardData } from "./utils/data";
 
 const ClientDashboard = () => {
   return (
@@ -54,7 +25,7 @@ const ClientDashboard = () => {
             className="fade-up h-full"
             style={{ "--fade-delay": `${80 + index * 70}ms` }}
           >
-            <StatsCard {...card} />
+            <DashboardStatsCard {...card} />
           </div>
         ))}
       </section>
@@ -67,7 +38,7 @@ const ClientDashboard = () => {
           className="h-full lg:col-span-3"
           header={<DashboardHeading heading="Clients per month" />}
         >
-          <BarChart
+          <DashboardBarChart
             labels={["Jan", "Feb", "Mar", "Apr", "May", "Jun"]}
             data={[2, 3, 2, 5, 4, 7]}
           />
@@ -76,7 +47,7 @@ const ClientDashboard = () => {
         <Card className="h-full lg:col-span-2">
           <DashboardHeading heading="Pipeline by Stage" />
 
-          <DonutChart
+          <DashboardDonutChart
             labels={["Approved", "Denied", "Pending"]}
             data={[25, 20, 15]}
             colors={["#047857", "#DC2626", "#EAB308"]}
@@ -85,11 +56,11 @@ const ClientDashboard = () => {
       </section>
 
       <section className="fade-up" style={{ "--fade-delay": "520ms" }}>
-        <ApplicantsScored />
+        <DashboardApplicantsScored />
       </section>
 
       <section className="fade-up" style={{ "--fade-delay": "600ms" }}>
-        <RecentApplicants />
+        <DashboardRecentApplicants />
       </section>
     </article>
   );

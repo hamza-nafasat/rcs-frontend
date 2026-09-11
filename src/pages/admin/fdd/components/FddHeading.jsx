@@ -1,7 +1,7 @@
 import { Plus } from "lucide-react";
 import Button from "../../../../components/shared/Button";
 import { useState } from "react";
-import AddFddModal from "./AddFddModal";
+import FddAddModal from "../modals/FddAddModal";
 
 const FddHeading = ({ heading, subheading, emoji, onAddFdd }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -12,7 +12,7 @@ const FddHeading = ({ heading, subheading, emoji, onAddFdd }) => {
   };
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4">
+    <header className="flex flex-wrap items-center justify-between gap-3 sm:gap-4">
       <div className="">
         <h1 className="heading-lg text-tertiary">
           {heading} <span className="ml-1">{emoji}</span>
@@ -30,14 +30,14 @@ const FddHeading = ({ heading, subheading, emoji, onAddFdd }) => {
       </Button>
 
       {isModalOpen && (
-        <AddFddModal
+        <FddAddModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           onSubmit={handleAddFdd}
           mode="add"
         />
       )}
-    </div>
+    </header>
   );
 };
 

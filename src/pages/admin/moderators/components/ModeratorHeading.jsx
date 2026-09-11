@@ -1,7 +1,7 @@
 import { Plus } from "lucide-react";
 import Button from "../../../../components/shared/Button";
 import { useState } from "react";
-import AddEditModeratorModal from "./AddEditModeratorModal";
+import ModeratorAddEditModal from "../../../../components/modals/ModeratorAddEditModal";
 
 const ModeratorHeading = ({ heading, subheading, emoji, onAddModerator }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -12,7 +12,7 @@ const ModeratorHeading = ({ heading, subheading, emoji, onAddModerator }) => {
   };
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4">
+    <header className="flex flex-wrap items-center justify-between gap-3 sm:gap-4">
       <div>
         <h1 className="heading-lg text-tertiary">
           {heading} <span className="ml-1">{emoji}</span>
@@ -30,14 +30,14 @@ const ModeratorHeading = ({ heading, subheading, emoji, onAddModerator }) => {
       </Button>
 
       {isModalOpen && (
-        <AddEditModeratorModal
+        <ModeratorAddEditModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           onSubmit={handleAddModerator}
           mode="add"
         />
       )}
-    </div>
+    </header>
   );
 };
 

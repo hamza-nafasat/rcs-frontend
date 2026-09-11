@@ -114,7 +114,7 @@ const Select = ({
       {label && (
         <label
           htmlFor={id ?? name}
-          className={`mb-1 block text-sm font-medium text-[#111111] ${labelClassName}`}
+          className={`mb-1 block text-sm font-medium text-tertiary ${labelClassName}`}
         >
           {label}
         </label>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import CreateTicketForm from "./components/CreateTicketForm"
+import SupportCreateTicketForm from "./components/SupportCreateTicketForm"
 
 const ClientSupport = () => {
     const [form, setForm] = useState({
@@ -19,14 +19,14 @@ const ClientSupport = () => {
         }));
       };
 
+      // TODO: submit the ticket once the support API lands
       const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(form);
       };
   return (
     <>
         <section>
-            <CreateTicketForm
+            <SupportCreateTicketForm
                 form={form}
                 onChange={handleChange}
                 onSubmit={handleSubmit}

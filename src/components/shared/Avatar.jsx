@@ -25,14 +25,14 @@ function getColorFromName(name = "") {
   return COLORS[index];
 }
 
-export default function Avatar({
+const Avatar = ({
   src,
   name = "",
   size = 40,
   rounded = "rounded-full",
   color,
   className = "",
-}) {
+}) => {
   const [imgError, setImgError] = useState(false);
 
   const initials = (name || "")
@@ -76,3 +76,5 @@ export default function Avatar({
     />
   );
 }
+
+export default Avatar;

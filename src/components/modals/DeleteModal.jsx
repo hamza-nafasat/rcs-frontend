@@ -6,8 +6,8 @@ const DeleteModal = ({
   onClose,
   onConfirm,
   icon,
-  heading = "Remove Member",
-  text = "Are you sure you want to remove this member? This action cannot be undone.",
+  heading = "Are you sure?",
+  text = "This action cannot be undone.",
   cancelText = "Cancel",
   confirmText = "Remove",
   showClose = true,
@@ -21,6 +21,7 @@ const DeleteModal = ({
         {showClose && (
           <div className="flex justify-end">
             <button
+              aria-label="Close dialog"
               type="button"
               onClick={onClose}
               className="rounded-full p-1 text-gray-500 hover:bg-gray-100 cursor-pointer"

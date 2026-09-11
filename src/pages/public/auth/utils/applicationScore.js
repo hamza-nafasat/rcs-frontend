@@ -30,7 +30,8 @@ export const DENSITY_OPTIONS = [
 export const DENSITY_SCORES = { low: 5, medium: 3, high: 1 };
 
 export const EMPTY_APPLICATION = {
-  applicantName: "",
+  firstName: "",
+  lastName: "",
   companyName: "",
   proposedTerritory: "",
   city: "",
