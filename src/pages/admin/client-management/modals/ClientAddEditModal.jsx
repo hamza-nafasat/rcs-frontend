@@ -55,11 +55,11 @@ const ClientAddEditModal = ({
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
-            label="Restaurant / Company Name *"
+            label="Restaurant Name *"
             name="restaurantName"
             value={formData.restaurantName}
             onChange={handleChange}
-            placeholder="Enter restaurant / company name"
+            placeholder="Enter restaurant name"
             required
           />
           <Input

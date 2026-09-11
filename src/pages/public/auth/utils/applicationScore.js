@@ -29,10 +29,20 @@ export const DENSITY_OPTIONS = [
 
 export const DENSITY_SCORES = { low: 5, medium: 3, high: 1 };
 
+export const CLIENT_STATUS_OPTIONS = [
+  { value: "active", label: "Active", activeClassName: "bg-(--color-revenue) text-white" },
+  { value: "at_risk", label: "At Risk", activeClassName: "bg-(--color-text-remove) text-white" },
+  { value: "on_hold", label: "On Hold", activeClassName: "bg-(--color-primary) text-white" },
+  { value: "pending", label: "Pending", activeClassName: "bg-(--color-secondary) text-white" },
+];
+
 export const EMPTY_APPLICATION = {
   firstName: "",
   lastName: "",
-  companyName: "",
+  restaurantName: "",
+  restaurantCuisine: "",
+  status: "active",
+  healthScore: "",
   proposedTerritory: "",
   city: "",
   state: "",

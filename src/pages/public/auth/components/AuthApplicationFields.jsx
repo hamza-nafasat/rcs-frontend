@@ -1,13 +1,12 @@
 import { useState } from "react";
-import { Briefcase, DollarSign, MapPin, Shield, User } from "lucide-react";
+import { Briefcase, DollarSign, MapPin, Shield, User, Utensils } from "lucide-react";
 import Input from "../../../../components/shared/Input";
 import SegmentedControl from "../../../../components/shared/SegmentedControl";
 import FormSection from "../../../../components/shared/FormSection";
-import { DENSITY_OPTIONS, YES_NO_OPTIONS } from "../utils/applicationScore";
+import { CLIENT_STATUS_OPTIONS, DENSITY_OPTIONS, YES_NO_OPTIONS } from "../utils/applicationScore";
 import { PASSWORD_MIN_LENGTH } from "../utils/accountRules";
 
-const fieldLabel =
-  "uppercase text-xs font-semibold tracking-wide text-tertiary";
+const fieldLabel = "uppercase text-xs font-semibold tracking-wide text-tertiary";
 
 const AuthApplicationFields = ({
   form,
@@ -21,19 +20,13 @@ const AuthApplicationFields = ({
 }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const inputClassName = disabled
-    ? "bg-gray-50/50 text-gray-500 cursor-not-allowed"
-    : "";
+  const inputClassName = disabled ? "bg-gray-50/50 text-gray-500 cursor-not-allowed" : "";
 
   return (
     <div className="grid grid-cols-1 items-stretch gap-4">
       {/* Applicant Information */}
-      <FormSection
-        icon={User}
-        iconClassName="text-secondary"
-        title="Applicant Information"
-      >
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+      <FormSection icon={User} iconClassName="text-secondary" title="Applicant Information">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <Input
             name="firstName"
             label="First Name *"
@@ -58,17 +51,6 @@ const AuthApplicationFields = ({
             required
           />
 
-          <Input
-            name="companyName"
-            label="Company Name *"
-            labelClassName={fieldLabel}
-            placeholder="e.g. Smith Ventures LLC"
-            value={form.companyName}
-            onChange={onChange}
-            disabled={disabled}
-            className={inputClassName}
-            required
-          />
         </div>
 
         <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-[2fr_1.2fr_0.8fr]">
@@ -173,12 +155,61 @@ const AuthApplicationFields = ({
         )}
       </FormSection>
 
+      {/* // resturent details  */}
+      <FormSection icon={Utensils} iconClassName="text-info" title="Restaurant Details">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <Input
+            name="restaurantName"
+            label="Restaurant Name *"
+            labelClassName={fieldLabel}
+            placeholder="e.g. The Harbor Kitchen"
+            value={form.restaurantName}
+            onChange={onChange}
+            disabled={disabled}
+            className={inputClassName}
+            required
+          />
+
+          <Input
+            name="restaurantCuisine"
+            label="Main Cuisine *"
+            labelClassName={fieldLabel}
+            placeholder="e.g. Italian"
+            value={form.restaurantCuisine}
+            onChange={onChange}
+            disabled={disabled}
+            className={inputClassName}
+            required
+          />
+
+          <Input
+            name="healthScore"
+            type="number"
+            min="0"
+            max="100"
+            label="Health Score *"
+            labelClassName={fieldLabel}
+            placeholder="0 - 100"
+            value={form.healthScore}
+            onChange={onChange}
+            disabled={disabled}
+            className={inputClassName}
+            required
+          />
+        </div>
+
+        <SegmentedControl
+          label="Status"
+          value={form.status}
+          onChange={(value) => onSelect("status", value)}
+          options={CLIENT_STATUS_OPTIONS}
+          disabled={disabled}
+          className="mt-3"
+        />
+      </FormSection>
+
       {/* Financial Strength */}
-      <FormSection
-        icon={DollarSign}
-        iconClassName="text-primary"
-        title="Financial Strength (35%)"
-      >
+      <FormSection icon={DollarSign} iconClassName="text-primary" title="Financial Strength (35%)">
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <Input
             name="liquidCapital"
@@ -228,11 +259,7 @@ const AuthApplicationFields = ({
       </FormSection>
 
       {/* Business Experience */}
-      <FormSection
-        icon={Briefcase}
-        iconClassName="text-info"
-        title="Business Experience (20%)"
-      >
+      <FormSection icon={Briefcase} iconClassName="text-info" title="Business Experience (20%)">
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <Input
             name="yearsMgmt"
@@ -270,11 +297,7 @@ const AuthApplicationFields = ({
       </FormSection>
 
       {/* Legal & Background */}
-      <FormSection
-        icon={Shield}
-        iconClassName="text-secondary"
-        title="Legal & Background (20%)"
-      >
+      <FormSection icon={Shield} iconClassName="text-secondary" title="Legal & Background (20%)">
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <SegmentedControl
             label="Bankruptcy (Past 7 Yrs)"
@@ -319,11 +342,7 @@ const AuthApplicationFields = ({
       </FormSection>
 
       {/* Market & Location Fit */}
-      <FormSection
-        icon={MapPin}
-        iconClassName="text-revenue"
-        title="Market & Location Fit (25%)"
-      >
+      <FormSection icon={MapPin} iconClassName="text-revenue" title="Market & Location Fit (25%)">
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <SegmentedControl
             label="Territory Available?"
