@@ -22,7 +22,7 @@ export const authApi = createApi({
     }),
     /////
     verifyInvite: builder.query({
-      query: (inviteToken) => `/invites/${encodeURIComponent(inviteToken)}`,
+      query: (inviteToken) => `/invites/verify/${encodeURIComponent(inviteToken)}`,
     }),
     /////
     acceptInvite: builder.mutation({

@@ -2,20 +2,32 @@ import { useNavigate } from "react-router-dom";
 import Dropdown from "./Dropdown";
 import Avatar from "./Avatar";
 import { ChevronDown, LogOut, UserRound } from "lucide-react";
+import { useLogoutMutation } from "../../store/apis/auth.apis";
 
 const UserMenu = ({ name, type = "admin" }) => {
   const navigate = useNavigate();
+  const [logout] = useLogoutMutation();
+
+  const handleSignOut = async () => {
+    try {
+      const res = await logout().unwrap();
+      if (res?.success) navigate("/signin");
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
+
   const profilePath =
     type === "user"
       ? "/user/dashboard/settings"
       : type === "client"
-      ? "/client/dashboard/settings"
-      : "/admin/dashboard/settings";
+        ? "/client/dashboard/settings"
+        : "/admin/dashboard/settings";
   const options = [
     {
       label: "Sign out",
       icon: <LogOut size={16} />,
-      onClick: () => navigate("/signin"),
+      onClick: handleSignOut,
     },
     {
       label: "My Profile",
