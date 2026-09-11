@@ -1,7 +1,8 @@
 export const initialData = [
   {
     id: 1,
-    ownerName: "John Doe",
+    firstName: "John",
+    lastName: "Doe",
     clientEmail: "john@example.com",
     restaurantName: "The Harbor Kitchen",
     restaurantCuisine: "Seafood",
@@ -13,7 +14,8 @@ export const initialData = [
   },
   {
     id: 2,
-    ownerName: "Jane Smith",
+    firstName: "Jane",
+    lastName: "Smith",
     clientEmail: "jane@example.com",
     restaurantName: "Sunset Grill",
     restaurantCuisine: "American",
@@ -25,7 +27,8 @@ export const initialData = [
   },
   {
     id: 3,
-    ownerName: "Marcus Williams",
+    firstName: "Marcus",
+    lastName: "Williams",
     clientEmail: "marcus@example.com",
     restaurantName: "The Rustic Table",
     restaurantCuisine: "Italian",
@@ -37,7 +40,8 @@ export const initialData = [
   },
   {
     id: 4,
-    ownerName: "Priya Patel",
+    firstName: "Priya",
+    lastName: "Patel",
     clientEmail: "priya@example.com",
     restaurantName: "Spice Route",
     restaurantCuisine: "Indian",
@@ -49,7 +53,8 @@ export const initialData = [
   },
   {
     id: 5,
-    ownerName: "Ana Torres",
+    firstName: "Ana",
+    lastName: "Torres",
     clientEmail: "ana@example.com",
     restaurantName: "Coastal Bistro",
     restaurantCuisine: "Mediterranean",
@@ -61,7 +66,8 @@ export const initialData = [
   },
   {
     id: 4,
-    ownerName: "Priya Patel",
+    firstName: "Priya",
+    lastName: "Patel",
     clientEmail: "priya@example.com",
     restaurantName: "Spice Route",
     restaurantCuisine: "Indian",
@@ -73,7 +79,8 @@ export const initialData = [
   },
   {
     id: 5,
-    ownerName: "Ana Torres",
+    firstName: "Ana",
+    lastName: "Torres",
     clientEmail: "ana@example.com",
     restaurantName: "Coastal Bistro",
     restaurantCuisine: "Mediterranean",
@@ -85,7 +92,8 @@ export const initialData = [
   },
   {
     id: 4,
-    ownerName: "Priya Patel",
+    firstName: "Priya",
+    lastName: "Patel",
     clientEmail: "priya@example.com",
     restaurantName: "Spice Route",
     restaurantCuisine: "Indian",
@@ -97,7 +105,8 @@ export const initialData = [
   },
   {
     id: 5,
-    ownerName: "Ana Torres",
+    firstName: "Ana",
+    lastName: "Torres",
     clientEmail: "ana@example.com",
     restaurantName: "Coastal Bistro",
     restaurantCuisine: "Mediterranean",
@@ -109,7 +118,8 @@ export const initialData = [
   },
   {
     id: 4,
-    ownerName: "Priya Patel",
+    firstName: "Priya",
+    lastName: "Patel",
     clientEmail: "priya@example.com",
     restaurantName: "Spice Route",
     restaurantCuisine: "Indian",
@@ -121,7 +131,8 @@ export const initialData = [
   },
   {
     id: 5,
-    ownerName: "Ana Torres",
+    firstName: "Ana",
+    lastName: "Torres",
     clientEmail: "ana@example.com",
     restaurantName: "Coastal Bistro",
     restaurantCuisine: "Mediterranean",
@@ -133,7 +144,8 @@ export const initialData = [
   },
   {
     id: 4,
-    ownerName: "Priya Patel",
+    firstName: "Priya",
+    lastName: "Patel",
     clientEmail: "priya@example.com",
     restaurantName: "Spice Route",
     restaurantCuisine: "Indian",
@@ -145,7 +157,8 @@ export const initialData = [
   },
   {
     id: 5,
-    ownerName: "Ana Torres",
+    firstName: "Ana",
+    lastName: "Torres",
     clientEmail: "ana@example.com",
     restaurantName: "Coastal Bistro",
     restaurantCuisine: "Mediterranean",
@@ -157,7 +170,8 @@ export const initialData = [
   },
   {
     id: 4,
-    ownerName: "Priya Patel",
+    firstName: "Priya",
+    lastName: "Patel",
     clientEmail: "priya@example.com",
     restaurantName: "Spice Route",
     restaurantCuisine: "Indian",
@@ -169,7 +183,8 @@ export const initialData = [
   },
   {
     id: 5,
-    ownerName: "Ana Torres",
+    firstName: "Ana",
+    lastName: "Torres",
     clientEmail: "ana@example.com",
     restaurantName: "Coastal Bistro",
     restaurantCuisine: "Mediterranean",
@@ -181,7 +196,8 @@ export const initialData = [
   },
   {
     id: 4,
-    ownerName: "Priya Patel",
+    firstName: "Priya",
+    lastName: "Patel",
     clientEmail: "priya@example.com",
     restaurantName: "Spice Route",
     restaurantCuisine: "Indian",
@@ -193,7 +209,8 @@ export const initialData = [
   },
   {
     id: 5,
-    ownerName: "Ana Torres",
+    firstName: "Ana",
+    lastName: "Torres",
     clientEmail: "ana@example.com",
     restaurantName: "Coastal Bistro",
     restaurantCuisine: "Mediterranean",

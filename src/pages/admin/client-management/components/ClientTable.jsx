@@ -44,7 +44,7 @@ const buildColumns = ({ handleEditClient, handleViewClient, setClientToDelete })
   },
   {
     name: "Owner",
-    selector: (row) => row.ownerName,
+    selector: (row) => `${row.firstName} ${row.lastName}`,
     sortable: true,
   },
   {
@@ -135,7 +135,9 @@ const ClientTable = ({ className, filters = emptyFilters }) => {
   const filteredClients = clients.filter((client) => {
     const matchRestaurant = client.restaurantName.toLowerCase().includes(filters.restaurant.trim().toLowerCase());
 
-    const matchOwner = client.ownerName.toLowerCase().includes(filters.owner.trim().toLowerCase());
+    const matchOwner = `${client.firstName} ${client.lastName}`
+      .toLowerCase()
+      .includes(filters.owner.trim().toLowerCase());
 
     const matchStatus = filters.status.length === 0 || filters.status.includes(client.status);
 
@@ -148,7 +150,7 @@ const ClientTable = ({ className, filters = emptyFilters }) => {
       type: client.franchise,
       status: client.status,
       location: client.location ?? "—",
-      owner: client.ownerName,
+      owner: `${client.firstName} ${client.lastName}`,
       email: client.clientEmail,
       phone: client.phone ?? "—",
       healthScore: client.healthScore,
@@ -167,7 +169,8 @@ const ClientTable = ({ className, filters = emptyFilters }) => {
         client.id === selectedClient?.id
           ? {
               ...client,
-              ownerName: formData.ownerName,
+              firstName: formData.firstName,
+              lastName: formData.lastName,
               clientEmail: formData.clientEmail,
               restaurantName: formData.restaurantName,
             }

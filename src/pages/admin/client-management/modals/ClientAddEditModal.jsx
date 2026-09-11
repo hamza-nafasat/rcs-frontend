@@ -13,7 +13,8 @@ const ClientAddEditModal = ({
   const [formData, setFormData] = useState(() => ({
     restaurantName: initialData?.restaurantName || "",
     clientEmail: initialData?.clientEmail || "",
-    ownerName: initialData?.ownerName || "",
+    firstName: initialData?.firstName || "",
+    lastName: initialData?.lastName || "",
   }));
 
   const handleChange = (e) => {
@@ -70,13 +71,24 @@ const ClientAddEditModal = ({
             placeholder="Enter client email"
             required
           />
-          <Input
-            label="Owner Name"
-            name="ownerName"
-            value={formData.ownerName}
-            onChange={handleChange}
-            placeholder="Enter owner name"
-          />
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <Input
+              label="Owner First Name *"
+              name="firstName"
+              value={formData.firstName}
+              onChange={handleChange}
+              placeholder="Enter first name"
+              required
+            />
+            <Input
+              label="Owner Last Name *"
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleChange}
+              placeholder="Enter last name"
+              required
+            />
+          </div>
 
           {/* Buttons */}
           <div className="flex gap-3 pt-4 text-sm">
