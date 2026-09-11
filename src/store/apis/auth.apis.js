@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { getEnv } from "../../utils/env";
+import { getEnv } from "../../configs/env";
 
 export const authApi = createApi({
   reducerPath: "authApi",

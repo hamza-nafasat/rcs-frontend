@@ -51,7 +51,7 @@ const AppRoutes = () => {
         <Route path="/signin" element={<SignIn />} />
         <Route path="/forget-password" element={<ForgetPassword />} />
         <Route path="/check-email" element={<CheckEmail />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/reset-password/:resetToken" element={<ResetPassword />} />
         <Route
           path="/reset-password-success"
           element={<ResetPasswordSuccess />}

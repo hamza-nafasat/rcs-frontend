@@ -3,6 +3,7 @@ import App from "./App";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
+import { Toaster } from "react-hot-toast";
 import { store } from "./store/store";
 
 // Handle browser back-forward cache (bfcache) transitions smoothly during dev
@@ -14,6 +15,7 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={store}>
       <App />
+      <Toaster position="top-right" />
     </Provider>
   </StrictMode>,
 );

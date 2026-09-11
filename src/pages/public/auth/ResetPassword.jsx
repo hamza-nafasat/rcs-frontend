@@ -3,13 +3,17 @@ import Button from "../../../components/shared/Button";
 import Input from "../../../components/shared/Input";
 import AuthHeading from "./components/AuthHeading";
 import AuthLayout from "./components/AuthLayout";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useResetPasswordMutation } from "../../../store/apis/auth.apis";
+import { validateAccount } from "./utils/accountRules";
 
 const ResetPassword = () => {
   const navigate = useNavigate();
+  const { resetToken } = useParams();
+  const [resetPassword, { isLoading }] = useResetPasswordMutation();
+  const [formErrors, setFormErrors] = useState({});
   const [showForNewPassword, setShowForNewPassword] = useState(false);
-  const [showForConfirmNewPassword, setShowForConfirmNewPassword] =
-    useState(false);
+  const [showForConfirmNewPassword, setShowForConfirmNewPassword] = useState(false);
   const [formData, setFormData] = useState({
     newPassword: "",
     confirmNewPassword: "",
@@ -23,9 +27,18 @@ const ResetPassword = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    navigate("/reset-password-success");
+    const errors = validateAccount({ password: formData.newPassword, confirmPassword: formData.confirmNewPassword });
+    setFormErrors(errors);
+    if (Object.keys(errors).length > 0) return;
+
+    try {
+      await resetPassword({ resetToken, newPassword: formData.newPassword }).unwrap();
+      navigate("/reset-password-success");
+    } catch (error) {
+      console.error("Reset password error:", error);
+    }
   };
 
   return (
@@ -47,8 +60,12 @@ const ResetPassword = () => {
               value={formData.newPassword}
               onChange={handleInputChange}
               name="newPassword"
+              autoComplete="new-password"
+              required
               showConfirm={showForNewPassword}
               setShowConfirm={setShowForNewPassword}
+              hint={formErrors.password}
+              hintClassName="text-remove"
             />
             <Input
               label="Confirm New Password"
@@ -58,15 +75,21 @@ const ResetPassword = () => {
               value={formData.confirmNewPassword}
               onChange={handleInputChange}
               name="confirmNewPassword"
+              autoComplete="new-password"
+              required
               showConfirm={showForConfirmNewPassword}
               setShowConfirm={setShowForConfirmNewPassword}
+              hint={formErrors.confirmPassword}
+              hintClassName="text-remove"
             />
+
             <Button
               type="submit"
+              disabled={isLoading}
               iconPosition="right"
               className="mt-1 h-10 w-full rounded-xl text-sm font-medium"
             >
-              Reset Password
+              {isLoading ? "Resetting..." : "Reset Password"}
             </Button>
           </form>
         </div>
