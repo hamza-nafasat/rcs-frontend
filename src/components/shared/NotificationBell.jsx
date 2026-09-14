@@ -11,7 +11,7 @@ import {
 import {
   TYPE_STYLES,
   getTypeIcon,
-} from "../../pages/public/notifications/utils/notificationTypes";
+} from "../../pages/shared/notifications/utils/notificationTypes";
 
 const RECENT_LIMIT = 5;
 

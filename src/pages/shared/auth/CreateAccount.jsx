@@ -4,7 +4,7 @@ import Loader from "../../../components/shared/Loader";
 import AuthLayout from "./components/AuthLayout";
 import AuthHeading from "./components/AuthHeading";
 import AuthCreateAccountForm from "./components/AuthCreateAccountForm";
-import { useVerifyInviteQuery } from "../../../store/apis/public/auth.apis";
+import { useVerifyInviteQuery } from "../../../store/apis/shared/auth.apis";
 
 const CreateAccount = () => {
   const navigate = useNavigate();

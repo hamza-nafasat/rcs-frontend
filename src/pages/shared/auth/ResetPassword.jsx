@@ -4,7 +4,7 @@ import Input from "../../../components/shared/Input";
 import AuthHeading from "./components/AuthHeading";
 import AuthLayout from "./components/AuthLayout";
 import { useNavigate, useParams } from "react-router-dom";
-import { useResetPasswordMutation } from "../../../store/apis/public/auth.apis";
+import { useResetPasswordMutation } from "../../../store/apis/shared/auth.apis";
 import { validateAccount } from "./utils/accountRules";
 
 const ResetPassword = () => {

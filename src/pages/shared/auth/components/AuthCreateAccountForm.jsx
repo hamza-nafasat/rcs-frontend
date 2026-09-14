@@ -8,7 +8,7 @@ import AuthApplicationFields from "./AuthApplicationFields";
 import AuthLocationAssign from "./AuthLocationAssign";
 import { EMPTY_ACCOUNT, validateAccount } from "../utils/accountRules";
 import { EMPTY_APPLICATION, scoreApplication } from "../utils/applicationScore";
-import { useAcceptInviteMutation } from "../../../../store/apis/public/auth.apis";
+import { useAcceptInviteMutation } from "../../../../store/apis/shared/auth.apis";
 import { ROLE_HOME } from "../../../../configs/constants";
 
 // invite holds what the admin already entered, so those fields start filled

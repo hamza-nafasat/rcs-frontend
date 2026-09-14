@@ -1,4 +1,4 @@
-import { useGetMyProfileQuery } from "../store/apis/public/auth.apis";
+import { useGetMyProfileQuery } from "../store/apis/shared/auth.apis";
 
 // a failed check means signed out, even if an old profile is still cached
 export const useAuthUser = () => {

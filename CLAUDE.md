@@ -9,7 +9,7 @@ The most important section. Names are the map of the codebase.
 ```
 src/
   pages/
-    <role>/                     admin | client | user | public
+    <role>/                     admin | client | user | shared
       <module>/                 auth, moderators, fdd, pipeline, client-management, …
         <Page>.jsx              page files, directly inside the module folder
         components/             components used ONLY by this module
@@ -28,7 +28,7 @@ src/
   assets/
 ```
 
-- `public/` holds pages that need no login — `auth`, and anything else public-facing.
+- `shared/` holds pages used by two or more roles — `auth`, `settings`, `notifications`.
 - Feature/module folders are **kebab-case**: `client-management`, `view-all-activity`.
 - The components folder is **always `components/`**, never `component/`.
 
@@ -77,7 +77,7 @@ other hand, tells a reader at a glance which module a component belongs to once 
 ✅ pages/client/moderators/components/ModeratorTable.jsx     module prefix, no role
 ❌ pages/client/moderators/components/ClientModeratorTable.jsx   role prefix — forbidden
 ❌ pages/admin/pipeline/components/FranchisePipelineFilter.jsx   folder is already pipeline/
-❌ pages/public/auth/components/BackLink.jsx                     missing module prefix → AuthBackLink
+❌ pages/shared/auth/components/BackLink.jsx                     missing module prefix → AuthBackLink
 ```
 
 - **Page files are the one exception to the no-role-prefix rule.** When the same module exists for
@@ -512,7 +512,7 @@ Do not copy these patterns; correct them when you're already in the file.
 
 **Size**
 
-- `public/auth/components/LocationAssign.jsx` is 1187 lines.
+- `shared/auth/components/LocationAssign.jsx` is 1187 lines.
 - `ModeratorTable.jsx` / `ClientTable.jsx` hold ~110-line `columns` arrays inside the component body.
 - `console.log` in `admin/fdd/FDD.jsx`; `alert()` in `AdminPipelineStageOverview.jsx`.
 

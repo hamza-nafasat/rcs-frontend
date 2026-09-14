@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { clientApi } from "./apis/admin/client.apis";
-import { authApi } from "./apis/public/auth.apis";
+import { authApi } from "./apis/shared/auth.apis";
 import notificationsReducer from "./slices/notificationsSlice";
 import { apiErrorToast, resetOnUserChange } from "./utils/store.utils";
 

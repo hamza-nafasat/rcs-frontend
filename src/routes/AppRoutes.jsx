@@ -1,9 +1,9 @@
 import { BrowserRouter, Route, Routes, Navigate, useLocation } from "react-router-dom";
 
-import SignIn from "../pages/public/auth/SignIn";
-import ForgetPassword from "../pages/public/auth/ForgetPassword";
-import CheckEmail from "../pages/public/auth/CheckEmail";
-import ResetPassword from "../pages/public/auth/ResetPassword";
+import SignIn from "../pages/shared/auth/SignIn";
+import ForgetPassword from "../pages/shared/auth/ForgetPassword";
+import CheckEmail from "../pages/shared/auth/CheckEmail";
+import ResetPassword from "../pages/shared/auth/ResetPassword";
 import Dashboard from "../components/layouts/Dashboard";
 import DashboardNotFound from "../components/layouts/DashboardNotFound";
 import AdminDashboard from "../pages/admin/dashboard/AdminDashboard";
@@ -11,14 +11,14 @@ import ClientManagement from "../pages/admin/client-management/ClientManagement"
 import AdminMessages from "../pages/admin/messages/AdminMessages";
 import AdminModerators from "../pages/admin/moderators/AdminModerators";
 import AdminFdd from "../pages/admin/fdd/AdminFdd";
-import ResetPasswordSuccess from "../pages/public/auth/ResetPasswordSuccess";
+import ResetPasswordSuccess from "../pages/shared/auth/ResetPasswordSuccess";
 import AdminSupport from "../pages/admin/support/AdminSupport";
-import Settings from "../pages/public/settings/Settings";
-import Notifications from "../pages/public/notifications/Notifications";
+import Settings from "../pages/shared/settings/Settings";
+import Notifications from "../pages/shared/notifications/Notifications";
 import AdminPipeline from "../pages/admin/pipeline/AdminPipeline";
 import AdminApplicantDetailPage from "../pages/admin/pipeline/AdminApplicantDetailPage";
 import ViewAllActivity from "../pages/admin/view-all-activity/ViewAllActivity";
-import CreateAccount from "../pages/public/auth/CreateAccount";
+import CreateAccount from "../pages/shared/auth/CreateAccount";
 import ClientDashboard from "../pages/client/dashboard/ClientDashboard";
 import ClientPipeline from "../pages/client/pipeline/ClientPipeline";
 import ClientApplicantDetailPage from "../pages/client/pipeline/ClientApplicantDetailPage";

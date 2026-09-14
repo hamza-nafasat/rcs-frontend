@@ -184,7 +184,7 @@ exists in this folder — check which one the route actually renders and **delet
 `AdminDocumentRequestCard` → `DashboardDocumentRequestCard` (an `Admin*` file under `pages/user/`) ·
 `UploadedDocumentsSection` → `DashboardUploadedDocumentsSection`
 
-**`public/auth/components/`** — add the `Auth` module prefix: `BackLink` → `AuthBackLink` ·
+**`shared/auth/components/`** — add the `Auth` module prefix: `BackLink` → `AuthBackLink` ·
 `FormSection` → `AuthFormSection` · `ApplicationNotice` → `AuthApplicationNotice` ·
 `ApplicationFields` → `AuthApplicationFields` · `CreateAccountForm` → `AuthCreateAccountForm` ·
 `LocationAssign` → `AuthLocationAssign`

@@ -1,5 +1,5 @@
 import { isAnyOf, isRejectedWithValue } from "@reduxjs/toolkit";
-import { authApi } from "../apis/public/auth.apis";
+import { authApi } from "../apis/shared/auth.apis";
 import { clientApi } from "../apis/admin/client.apis";
 import toast from "react-hot-toast";
 
