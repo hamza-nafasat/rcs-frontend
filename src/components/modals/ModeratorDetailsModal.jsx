@@ -1,4 +1,4 @@
-import { Mail, Shield, CalendarDays, X } from "lucide-react";
+import { Mail, Phone, MapPin, Shield, CalendarDays, X } from "lucide-react";
 import Avatar from "../shared/Avatar";
 import Button from "../shared/Button";
 
@@ -14,6 +14,8 @@ const ModeratorDetailsModal = ({ isOpen, onClose, member, onEdit, onRemove }) =>
 
   const details = [
     { icon: Mail, label: "Email", value: member.email },
+    { icon: Phone, label: "Phone", value: member.phone || undefined },
+    { icon: MapPin, label: "Location", value: [member.city, member.state].filter(Boolean).join(", ") || undefined },
     { icon: Shield, label: "Role", value: member.role },
     { icon: CalendarDays, label: "Joined", value: member.joined },
   ];
@@ -23,11 +25,11 @@ const ModeratorDetailsModal = ({ isOpen, onClose, member, onEdit, onRemove }) =>
       <div className="max-h-[90vh] w-full max-w-110 overflow-y-auto rounded-2xl bg-white p-6 shadow-xl">
         <header className="mb-6 flex items-start justify-between gap-4">
           <section className="flex min-w-0 items-center gap-3">
-            <Avatar name={member.name} src={member.src} size={48} rounded="rounded-xl" />
+            <Avatar name={member.fullName} src={member.src} size={48} rounded="rounded-xl" />
 
             <div className="min-w-0">
               <h2 className="truncate text-xl font-semibold text-tertiary">
-                {member.name}
+                {member.fullName}
               </h2>
 
               <span

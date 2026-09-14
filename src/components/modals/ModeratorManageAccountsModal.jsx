@@ -37,7 +37,7 @@ const ModeratorManageAccountsModal = ({
             members.map((member) => (
               <ModeratorUserListItem
                 key={member.id}
-                name={member.name}
+                name={member.fullName}
                 email={member.email}
                 status={member.status}
                 src={member.src}

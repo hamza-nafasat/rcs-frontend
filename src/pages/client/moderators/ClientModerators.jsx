@@ -19,7 +19,7 @@ const ClientModerators = () => {
   const statuses = [...new Set(moderators.map((mod) => mod.status))];
 
   const filteredModerators = moderators.filter((mod) => {
-    const matchName = mod.name
+    const matchName = mod.fullName
       .toLowerCase()
       .includes(filters.name.trim().toLowerCase());
 
@@ -35,14 +35,7 @@ const ClientModerators = () => {
   const handleAddModerator = (formData) => {
     setModerators((prev) => [
       ...prev,
-      {
-        id: Date.now(),
-        name: formData.name,
-        email: formData.email,
-        role: formData.role,
-        status: formData.status,
-        joined: "Added just now",
-      },
+      { ...formData, id: Date.now(), joined: "Added just now" },
     ]);
   };
 

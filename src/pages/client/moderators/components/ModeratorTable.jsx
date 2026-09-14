@@ -31,21 +31,21 @@ const tableStyles = {
 const buildColumns = ({ setMemberToEdit, setViewMember, setMemberToRemove }) => [
   {
     name: "Member",
-    selector: (row) => row.name,
+    selector: (row) => row.fullName,
     sortable: true,
     minWidth: "240px",
     grow: 2,
     cell: (row) => (
       <div className="flex items-center gap-2">
         <Avatar
-          name={row.name}
+          name={row.fullName}
           src={row.src}
           size={32}
           rounded="rounded-lg"
           color="#F97316"
         />
         <div className="min-w-0">
-          <p className="truncate text-sm text-gray-900">{row.name}</p>
+          <p className="truncate text-sm text-gray-900">{row.fullName}</p>
           <p className="truncate text-xs text-gray-500">{row.email}</p>
         </div>
       </div>
@@ -139,13 +139,7 @@ const ModeratorTable = ({ moderators, setModerators }) => {
     setModerators((prev) =>
       prev.map((member) =>
         member.id === memberToEdit?.id
-          ? {
-              ...member,
-              name: formData.name,
-              email: formData.email,
-              role: formData.role,
-              status: formData.status,
-            }
+          ? { ...member, ...formData }
           : member,
       ),
     );
@@ -206,7 +200,7 @@ const ModeratorTable = ({ moderators, setModerators }) => {
         onConfirm={handleConfirmRemove}
         heading="Remove Moderator"
         text={`Are you sure you want to remove ${
-          memberToRemove?.name ?? "this moderator"
+          memberToRemove?.fullName ?? "this moderator"
         }? This action cannot be undone.`}
       />
     </section>

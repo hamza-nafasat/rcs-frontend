@@ -3,8 +3,10 @@ import { X } from "lucide-react";
 import Input from "../shared/Input";
 import Button from "../shared/Button";
 import Select from "../shared/Select";
+import { US_STATES } from "../../utils/fddStateHelper";
 
 const STATUSES = ["Active", "Inactive"];
+const STATE_OPTIONS = US_STATES.map((state) => state.name);
 
 // Returns an error message, or "" when the password is acceptable.
 const validatePassword = (password) => {
@@ -24,12 +26,19 @@ const ModeratorAddEditModal = ({
   const isAdd = mode === "add";
 
   const [formData, setFormData] = useState(() => ({
-    name: initialData?.name || "",
+    firstName: initialData?.firstName || "",
+    lastName: initialData?.lastName || "",
     email: initialData?.email || "",
-    password: "",
+    phone: initialData?.phone || "",
+    address: initialData?.address || "",
+    city: initialData?.city || "",
+    state: initialData?.state || "",
+    postalCode: initialData?.postalCode || "",
+    country: initialData?.country || "United States",
     role: "Moderator", // the only role there is — see frontend-rules §0
     status: initialData?.status || "Active",
   }));
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [passwordError, setPasswordError] = useState("");
 
@@ -40,39 +49,32 @@ const ModeratorAddEditModal = ({
       ...prev,
       [name]: value,
     }));
+  };
 
-    if (name === "password") setPasswordError("");
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+    setPasswordError("");
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (isAdd) {
-      const error = validatePassword(formData.password);
-      if (error) {
-        setPasswordError(error);
-        return;
-      }
-    }
+    // TODO: fullName comes from the backend virtual once the moderators api exists
+    const moderator = { ...formData, fullName: `${formData.firstName} ${formData.lastName}`.trim() };
 
     // an existing moderator keeps their password — it is never re-sent on edit
-    onSubmit(
-      isAdd
-        ? formData
-        : {
-            name: formData.name,
-            email: formData.email,
-            role: formData.role,
-            status: formData.status,
-          },
-    );
+    if (!isAdd) return onSubmit(moderator);
+
+    const error = validatePassword(password);
+    if (error) return setPasswordError(error);
+    onSubmit(moderator, password);
   };
 
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-      <div className="w-full max-w-125 rounded-2xl bg-white p-6 shadow-xl">
+      <div className="max-h-[90vh] w-full max-w-150 overflow-y-auto rounded-2xl bg-white p-6 shadow-xl">
         {/* Header */}
         <div className="mb-6 flex items-center justify-between">
           <h2 className="text-xl font-semibold text-gray-900">
@@ -90,13 +92,21 @@ const ModeratorAddEditModal = ({
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Input
-            label="Full Name *"
-            name="name"
-            value={formData.name}
+            label="First Name *"
+            name="firstName"
+            value={formData.firstName}
             onChange={handleChange}
-            placeholder="Enter member name"
+            placeholder="Enter first name"
+            required
+          />
+          <Input
+            label="Last Name *"
+            name="lastName"
+            value={formData.lastName}
+            onChange={handleChange}
+            placeholder="Enter last name"
             required
           />
           <Input
@@ -105,28 +115,76 @@ const ModeratorAddEditModal = ({
             type="email"
             value={formData.email}
             onChange={handleChange}
-            placeholder="Enter member email"
+            placeholder="Enter email"
             required
+          />
+          <Input
+            label="Phone"
+            name="phone"
+            type="tel"
+            value={formData.phone}
+            onChange={handleChange}
+            placeholder="Enter phone number"
           />
 
           {isAdd && (
-            <Input
-              label="Password *"
-              name="password"
-              type={showPassword ? "text" : "password"}
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Set a password for this moderator"
-              isEyeButton
-              showConfirm={showPassword}
-              setShowConfirm={setShowPassword}
-              hint={passwordError}
-              hintClassName={passwordError ? "text-remove" : ""}
-              required
-            />
+            <div className="sm:col-span-2">
+              <Input
+                label="Password *"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={handlePasswordChange}
+                placeholder="Set a password for this moderator"
+                isEyeButton
+                showConfirm={showPassword}
+                setShowConfirm={setShowPassword}
+                hint={passwordError}
+                hintClassName={passwordError ? "text-remove" : ""}
+                required
+              />
+            </div>
           )}
 
-
+          <div className="sm:col-span-2">
+            <Input
+              label="Address"
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              placeholder="Enter street address"
+            />
+          </div>
+          <Input
+            label="City"
+            name="city"
+            value={formData.city}
+            onChange={handleChange}
+            placeholder="Enter city"
+          />
+          <Select
+            label="State"
+            name="state"
+            value={formData.state}
+            onChange={handleChange}
+            options={STATE_OPTIONS}
+            placeholder="Select state"
+            searchable
+          />
+          <Input
+            label="Postal Code"
+            name="postalCode"
+            value={formData.postalCode}
+            onChange={handleChange}
+            placeholder="Enter postal code"
+          />
+          <Input
+            label="Country"
+            name="country"
+            value={formData.country}
+            onChange={handleChange}
+            placeholder="Enter country"
+          />
           <Select
             label="Status"
             name="status"
@@ -134,11 +192,10 @@ const ModeratorAddEditModal = ({
             onChange={handleChange}
             options={STATUSES}
             placeholder="Select status"
-            labelClassName="mb-2"
           />
 
           {/* Buttons */}
-          <div className="flex  gap-3 pt-4">
+          <div className="flex gap-3 pt-4 sm:col-span-2">
             <Button
               type="button"
               variant="secondary"
