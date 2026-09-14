@@ -1,8 +1,9 @@
 import { Search } from "lucide-react";
 import Input from "../../shared/Input";
 import Select from "../../shared/Select";
+import { MODERATOR_STATUS_OPTIONS } from "../../../utils/moderatorStatus";
 
-const ModeratorFilter = ({ filters, setFilters, roles = [], statuses = [] }) => {
+const ModeratorFilter = ({ filters, setFilters }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -13,7 +14,7 @@ const ModeratorFilter = ({ filters, setFilters, roles = [], statuses = [] }) => 
   };
 
   return (
-    <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-[50fr_25fr_25fr]">
+    <section className="grid grid-cols-1 gap-4 sm:grid-cols-[2fr_1fr]">
       {/* Name */}
       <Input
         label="Name"
@@ -24,29 +25,15 @@ const ModeratorFilter = ({ filters, setFilters, roles = [], statuses = [] }) => 
         icon={<Search size={16} />}
       />
 
-      {/* Role */}
-      <Select
-        label="Role"
-        name="role"
-        value={filters.role}
-        onChange={handleChange}
-        options={roles}
-        placeholder="All Roles"
-        multiple
-        searchable
-        clearable
-      />
-
       {/* Status */}
       <Select
         label="Status"
         name="status"
         value={filters.status}
         onChange={handleChange}
-        options={statuses}
+        options={MODERATOR_STATUS_OPTIONS}
         placeholder="All Statuses"
         multiple
-        searchable
         clearable
       />
     </section>

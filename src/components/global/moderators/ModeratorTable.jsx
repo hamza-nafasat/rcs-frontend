@@ -1,17 +1,15 @@
-import DataTable from "react-data-table-component";
-import { ChevronDown, Eye, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
-import ModeratorDetailsModal from "../../../../components/modals/ModeratorDetailsModal";
-import ModeratorAddEditModal from "../../../../components/modals/ModeratorAddEditModal";
-import DeleteModal from "../../../../components/modals/DeleteModal";
-import Avatar from "../../../../components/shared/Avatar";
-import Dropdown from "../../../../components/shared/Dropdown";
-import Button from "../../../../components/shared/Button";
-
-const STATUS_STYLES = {
-  Active: { pill: "bg-green-50 text-green-700", dot: "bg-green-500" },
-  Inactive: { pill: "bg-gray-100 text-gray-600", dot: "bg-gray-400" },
-};
+import DataTable from "react-data-table-component";
+import toast from "react-hot-toast";
+import { ChevronDown, Eye, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import Avatar from "../../shared/Avatar";
+import Button from "../../shared/Button";
+import Dropdown from "../../shared/Dropdown";
+import DeleteModal from "../../modals/DeleteModal";
+import ModeratorAddEditModal from "../../modals/ModeratorAddEditModal";
+import ModeratorDetailsModal from "../../modals/ModeratorDetailsModal";
+import { MODERATOR_STATUS } from "../../../utils/moderatorStatus";
+import { useDeleteModeratorMutation, useUpdateModeratorMutation } from "../../../store/apis/shared/moderator.apis";
 
 const tableStyles = {
   table: { style: { width: "100%" } },
@@ -36,14 +34,8 @@ const buildColumns = ({ setMemberToEdit, setViewMember, setMemberToRemove }) => 
     minWidth: "240px",
     grow: 2,
     cell: (row) => (
-      <div className="flex items-center gap-2">
-        <Avatar
-          name={row.fullName}
-          src={row.src}
-          size={32}
-          rounded="rounded-lg"
-          color="#F97316"
-        />
+      <div className="flex min-w-0 items-center gap-2">
+        <Avatar name={row.fullName} src={row.image?.url} size={32} rounded="rounded-lg" color="#F97316" />
         <div className="min-w-0">
           <p className="truncate text-sm text-gray-900">{row.fullName}</p>
           <p className="truncate text-xs text-gray-500">{row.email}</p>
@@ -53,8 +45,7 @@ const buildColumns = ({ setMemberToEdit, setViewMember, setMemberToRemove }) => 
   },
   {
     name: "Role",
-    selector: (row) => row.role,
-    sortable: true,
+    selector: () => "Moderator",
     grow: 1,
   },
   {
@@ -63,25 +54,25 @@ const buildColumns = ({ setMemberToEdit, setViewMember, setMemberToRemove }) => 
     sortable: true,
     grow: 1,
     cell: (row) => {
-      const { pill, dot } =
-        STATUS_STYLES[row.status] ?? STATUS_STYLES.Inactive;
+      const { label, pill, dot } = MODERATOR_STATUS[row.status] ?? MODERATOR_STATUS.inactive;
 
       return (
         <span
           className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1 text-xs font-medium ${pill}`}
         >
           <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />
-          {row.status}
+          {label}
         </span>
       );
     },
   },
   {
     name: "Joined",
-    selector: (row) => row.joined,
+    selector: (row) => row.createdAt,
     sortable: true,
     minWidth: "160px",
     grow: 1,
+    cell: (row) => new Date(row.createdAt).toLocaleDateString(),
   },
   {
     name: <div className="pr-5">Actions</div>,
@@ -93,31 +84,20 @@ const buildColumns = ({ setMemberToEdit, setViewMember, setMemberToRemove }) => 
           align="right"
           portalClassName="max-w-12"
           trigger={
-            <Button
-              variant="menuTrigger"
-            >
+            <Button variant="menuTrigger">
               <MoreHorizontal size={18} />
             </Button>
           }
         >
-          <Button
-            variant="menuItem"
-            onClick={() => setMemberToEdit(row)}
-          >
+          <Button variant="menuItem" onClick={() => setMemberToEdit(row)}>
             <Pencil size={16} className="mt-0.5" />
             Edit
           </Button>
-          <Button
-            variant="menuItem"
-            onClick={() => setViewMember(row)}
-          >
+          <Button variant="menuItem" onClick={() => setViewMember(row)}>
             <Eye size={16} className="mt-0.5" />
             View
           </Button>
-          <Button
-            variant="menuItemDanger"
-            onClick={() => setMemberToRemove(row)}
-          >
+          <Button variant="menuItemDanger" onClick={() => setMemberToRemove(row)}>
             <Trash2 size={16} className="shrink-0" />
             Delete
           </Button>
@@ -130,28 +110,31 @@ const buildColumns = ({ setMemberToEdit, setViewMember, setMemberToRemove }) => 
   },
 ];
 
-const ModeratorTable = ({ moderators, setModerators }) => {
+const ModeratorTable = ({ moderators = [], isLoading = false }) => {
+  const [updateModerator, { isLoading: isUpdating }] = useUpdateModeratorMutation();
+  const [deleteModerator] = useDeleteModeratorMutation();
   const [viewMember, setViewMember] = useState(null);
   const [memberToRemove, setMemberToRemove] = useState(null);
   const [memberToEdit, setMemberToEdit] = useState(null);
 
-  const handleUpdateMember = (formData) => {
-    setModerators((prev) =>
-      prev.map((member) =>
-        member.id === memberToEdit?.id
-          ? { ...member, ...formData }
-          : member,
-      ),
-    );
-
-    setMemberToEdit(null);
+  const handleUpdateMember = async (formData) => {
+    try {
+      const response = await updateModerator({ id: memberToEdit?._id, ...formData }).unwrap();
+      toast.success(response?.message);
+      setMemberToEdit(null);
+    } catch (error) {
+      console.error("Update moderator error:", error);
+    }
   };
 
-  const handleConfirmRemove = () => {
-    setModerators((prev) =>
-      prev.filter((member) => member.id !== memberToRemove.id),
-    );
-    setMemberToRemove(null);
+  const handleConfirmRemove = async () => {
+    try {
+      const response = await deleteModerator(memberToRemove?._id).unwrap();
+      toast.success(response?.message);
+      setMemberToRemove(null);
+    } catch (error) {
+      console.error("Delete moderator error:", error);
+    }
   };
 
   const columns = buildColumns({ setMemberToEdit, setViewMember, setMemberToRemove });
@@ -160,6 +143,7 @@ const ModeratorTable = ({ moderators, setModerators }) => {
       <DataTable
         columns={columns}
         data={moderators}
+        progressPending={isLoading}
         pagination
         highlightOnHover
         responsive
@@ -175,6 +159,7 @@ const ModeratorTable = ({ moderators, setModerators }) => {
           isOpen={Boolean(memberToEdit)}
           onClose={() => setMemberToEdit(null)}
           onSubmit={handleUpdateMember}
+          isSubmitting={isUpdating}
           initialData={memberToEdit}
           mode="edit"
         />
@@ -199,9 +184,8 @@ const ModeratorTable = ({ moderators, setModerators }) => {
         onClose={() => setMemberToRemove(null)}
         onConfirm={handleConfirmRemove}
         heading="Remove Moderator"
-        text={`Are you sure you want to remove ${
-          memberToRemove?.fullName ?? "this moderator"
-        }? This action cannot be undone.`}
+        text={`Are you sure you want to remove ${memberToRemove?.fullName ?? "this moderator"}? This action cannot be undone.`}
+        confirmText="Delete"
       />
     </section>
   );

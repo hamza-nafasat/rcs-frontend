@@ -4,8 +4,8 @@ import Input from "../shared/Input";
 import Button from "../shared/Button";
 import Select from "../shared/Select";
 import { US_STATES } from "../../utils/fddStateHelper";
+import { MODERATOR_STATUS_OPTIONS } from "../../utils/moderatorStatus";
 
-const STATUSES = ["Active", "Inactive"];
 const STATE_OPTIONS = US_STATES.map((state) => state.name);
 
 // Returns an error message, or "" when the password is acceptable.
@@ -22,6 +22,7 @@ const ModeratorAddEditModal = ({
   onSubmit,
   initialData = null,
   mode = "add",
+  isSubmitting = false,
 }) => {
   const isAdd = mode === "add";
 
@@ -35,8 +36,7 @@ const ModeratorAddEditModal = ({
     state: initialData?.state || "",
     postalCode: initialData?.postalCode || "",
     country: initialData?.country || "United States",
-    role: "Moderator", // the only role there is — see frontend-rules §0
-    status: initialData?.status || "Active",
+    status: initialData?.status || "active",
   }));
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -59,15 +59,12 @@ const ModeratorAddEditModal = ({
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // TODO: fullName comes from the backend virtual once the moderators api exists
-    const moderator = { ...formData, fullName: `${formData.firstName} ${formData.lastName}`.trim() };
-
     // an existing moderator keeps their password — it is never re-sent on edit
-    if (!isAdd) return onSubmit(moderator);
+    if (!isAdd) return onSubmit(formData);
 
     const error = validatePassword(password);
     if (error) return setPasswordError(error);
-    onSubmit(moderator, password);
+    onSubmit(formData, password);
   };
 
   if (!isOpen) return null;
@@ -190,7 +187,7 @@ const ModeratorAddEditModal = ({
             name="status"
             value={formData.status}
             onChange={handleChange}
-            options={STATUSES}
+            options={MODERATOR_STATUS_OPTIONS}
             placeholder="Select status"
           />
 
@@ -205,8 +202,8 @@ const ModeratorAddEditModal = ({
               Cancel
             </Button>
 
-            <Button type="submit" className="w-1/2">
-              {mode === "edit" ? "Update" : "Save"}
+            <Button type="submit" disabled={isSubmitting} className="w-1/2">
+              {isSubmitting ? "Saving..." : mode === "edit" ? "Update" : "Save"}
             </Button>
           </div>
         </form>
