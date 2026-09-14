@@ -44,6 +44,7 @@ export const EMPTY_APPLICATION = {
   status: "active",
   healthScore: "",
   proposedTerritory: "",
+  country: "United States",
   city: "",
   state: "",
   liquidCapital: "",

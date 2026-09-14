@@ -3,6 +3,7 @@ import { Camera, Pencil } from "lucide-react";
 import Avatar from "../../../../components/shared/Avatar";
 import Input from "../../../../components/shared/Input";
 import Button from "../../../../components/shared/Button";
+import LocationFields from "../../../../components/global/LocationFields";
 import SettingsClientApplicationDetails from "./SettingsClientApplicationDetails";
 import { PASSWORD_MIN_LENGTH } from "../../auth/utils/accountRules";
 import {
@@ -169,6 +170,7 @@ const SettingsProfileSetting = ({
             />
           </div>
         ))}
+        <LocationFields values={form} onChange={handleChange} disabled={!isEditing} />
 
         <label className="md:col-span-2 flex items-center gap-2 text-sm text-tertiary">
           <input

@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Check, ChevronDown, Search, X } from "lucide-react";
+import { Check, ChevronDown, Plus, Search, X } from "lucide-react";
+
+const MAX_RENDERED_OPTIONS = 100;
 
 const normalizeOption = (option) =>
   typeof option === "string" || typeof option === "number"
@@ -16,6 +18,8 @@ const Select = ({
   multiple = false,
   searchable = false,
   clearable = false,
+  creatable = false,
+  isLoading = false,
   disabled = false,
   required = false,
   className = "",
@@ -51,6 +55,16 @@ const Select = ({
         option.label.toLowerCase().includes(query.trim().toLowerCase()),
       )
     : normalizedOptions;
+
+  // long lists show the first matches, typing narrows them
+  const renderedOptions = visibleOptions.slice(0, MAX_RENDERED_OPTIONS);
+
+  // a typed value that is not in the list yet
+  const trimmedQuery = query.trim();
+  const canCreate =
+    creatable &&
+    trimmedQuery !== "" &&
+    !normalizedOptions.some((option) => option.label.toLowerCase() === trimmedQuery.toLowerCase());
 
   const closeMenu = () => {
     setOpen(false);
@@ -94,6 +108,14 @@ const Select = ({
 
     emit(optionValue);
     closeMenu();
+  };
+
+  // enter picks the typed value or the only match, and never submits the form
+  const handleSearchKeyDown = (event) => {
+    if (event.key !== "Enter") return;
+    event.preventDefault();
+    if (canCreate) handleSelect(trimmedQuery);
+    else if (visibleOptions.length === 1) handleSelect(visibleOptions[0].value);
   };
 
   const handleClear = (event) => {
@@ -175,19 +197,37 @@ const Select = ({
                   autoFocus
                   value={query}
                   onChange={(event) => setQuery(event.target.value)}
-                  placeholder="Search..."
+                  onKeyDown={handleSearchKeyDown}
+                  placeholder={creatable ? "Search or type..." : "Search..."}
                   className="h-9 w-full rounded-lg border border-[#E5E7EB] pl-8 pr-3 text-sm outline-none focus:border-primary"
                 />
               </div>
             )}
 
             <div className="max-h-60 overflow-y-auto">
-              {visibleOptions.length === 0 ? (
-                <p className="px-3 py-4 text-center text-sm text-muted">
-                  No options found
-                </p>
+              {canCreate && (
+                <button
+                  type="button"
+                  role="option"
+                  aria-selected={false}
+                  onClick={() => handleSelect(trimmedQuery)}
+                  className="flex w-full cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-tertiary transition hover:bg-gray-50"
+                >
+                  <Plus size={14} className="shrink-0 text-(--color-primary)" />
+                  <span className="min-w-0 flex-1 truncate">Use "{trimmedQuery}"</span>
+                </button>
+              )}
+
+              {isLoading ? (
+                <p className="px-3 py-4 text-center text-sm text-muted">Loading...</p>
+              ) : visibleOptions.length === 0 ? (
+                !canCreate && (
+                  <p className="px-3 py-4 text-center text-sm text-muted">
+                    No options found
+                  </p>
+                )
               ) : (
-                visibleOptions.map((option) => {
+                renderedOptions.map((option) => {
                   const isSelected = selectedValues.includes(option.value);
 
                   return (
@@ -226,6 +266,12 @@ const Select = ({
                     </button>
                   );
                 })
+              )}
+
+              {visibleOptions.length > renderedOptions.length && (
+                <p className="px-3 py-2 text-center text-xs text-muted">
+                  Showing {renderedOptions.length} of {visibleOptions.length}, type to narrow down
+                </p>
               )}
             </div>
           </div>

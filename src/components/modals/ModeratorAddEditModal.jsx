@@ -3,10 +3,8 @@ import { X } from "lucide-react";
 import Input from "../shared/Input";
 import Button from "../shared/Button";
 import Select from "../shared/Select";
-import { US_STATES } from "../../utils/fddStateHelper";
+import LocationFields from "../global/LocationFields";
 import { MODERATOR_STATUS_OPTIONS } from "../../utils/moderatorStatus";
-
-const STATE_OPTIONS = US_STATES.map((state) => state.name);
 
 // Returns an error message, or "" when the password is acceptable.
 const validatePassword = (password) => {
@@ -34,7 +32,6 @@ const ModeratorAddEditModal = ({
     address: initialData?.address || "",
     city: initialData?.city || "",
     state: initialData?.state || "",
-    postalCode: initialData?.postalCode || "",
     country: initialData?.country || "United States",
     status: initialData?.status || "active",
   }));
@@ -152,36 +149,7 @@ const ModeratorAddEditModal = ({
               placeholder="Enter street address"
             />
           </div>
-          <Input
-            label="City"
-            name="city"
-            value={formData.city}
-            onChange={handleChange}
-            placeholder="Enter city"
-          />
-          <Select
-            label="State"
-            name="state"
-            value={formData.state}
-            onChange={handleChange}
-            options={STATE_OPTIONS}
-            placeholder="Select state"
-            searchable
-          />
-          <Input
-            label="Postal Code"
-            name="postalCode"
-            value={formData.postalCode}
-            onChange={handleChange}
-            placeholder="Enter postal code"
-          />
-          <Input
-            label="Country"
-            name="country"
-            value={formData.country}
-            onChange={handleChange}
-            placeholder="Enter country"
-          />
+          <LocationFields values={formData} onChange={handleChange} />
           <Select
             label="Status"
             name="status"

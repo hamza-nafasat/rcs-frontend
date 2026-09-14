@@ -8,7 +8,6 @@ export const PROFILE_FIELDS = [
   "address",
   "city",
   "state",
-  "postalCode",
   "country",
   "isEmailNotificationEnabled",
 ];
@@ -40,10 +39,6 @@ export const PERSONAL_INPUTS = [
   { label: "Email", name: "email", type: "email", isLocked: true },
   { label: "Phone Number", name: "phone", type: "tel" },
   { label: "Address", name: "address", isWide: true },
-  { label: "City", name: "city" },
-  { label: "State", name: "state" },
-  { label: "Postal Code", name: "postalCode" },
-  { label: "Country", name: "country" },
 ];
 
 export const PASSWORD_INPUTS = [
@@ -59,7 +54,6 @@ export const EMPTY_PROFILE = {
   email: "",
   phone: "",
   address: "",
-  postalCode: "",
   country: "",
   isEmailNotificationEnabled: true,
 };

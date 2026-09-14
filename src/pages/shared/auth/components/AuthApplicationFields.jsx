@@ -3,6 +3,7 @@ import { Briefcase, DollarSign, MapPin, Shield, User, Utensils } from "lucide-re
 import Input from "../../../../components/shared/Input";
 import SegmentedControl from "../../../../components/shared/SegmentedControl";
 import FormSection from "../../../../components/shared/FormSection";
+import LocationFields from "../../../../components/global/LocationFields";
 import { CLIENT_STATUS_OPTIONS, DENSITY_OPTIONS, YES_NO_OPTIONS } from "../utils/applicationScore";
 import { PASSWORD_MIN_LENGTH } from "../utils/accountRules";
 
@@ -53,7 +54,7 @@ const AuthApplicationFields = ({
 
         </div>
 
-        <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-[2fr_1.2fr_0.8fr]">
+        <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
           <Input
             name="proposedTerritory"
             label="Proposed Territory *"
@@ -66,27 +67,11 @@ const AuthApplicationFields = ({
             required
           />
 
-          <Input
-            name="city"
-            label="City *"
-            labelClassName={fieldLabel}
-            placeholder="Chicago"
-            value={form.city}
+          <LocationFields
+            values={form}
             onChange={onChange}
             disabled={disabled}
-            className={inputClassName}
-            required
-          />
-
-          <Input
-            name="state"
-            label="State *"
             labelClassName={fieldLabel}
-            placeholder="IL"
-            value={form.state}
-            onChange={onChange}
-            disabled={disabled}
-            className={inputClassName}
             required
           />
         </div>
