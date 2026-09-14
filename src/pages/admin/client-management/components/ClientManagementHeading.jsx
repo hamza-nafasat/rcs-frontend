@@ -1,13 +1,22 @@
 import { Plus } from "lucide-react";
+import toast from "react-hot-toast";
 import Button from "../../../../components/shared/Button";
 import ClientAddEditModal from "../modals/ClientAddEditModal";
 import { useState } from "react";
+import { useInviteClientMutation } from "../../../../store/apis/admin/client.apis";
 
 const ClientManagementHeading = ({ heading, subheading, emoji }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // TODO: persist the new client once the API lands
-  const handleAddClient = () => {
-    setIsModalOpen(false);
+  const [inviteClient, { isLoading }] = useInviteClientMutation();
+
+  const handleAddClient = async (formData) => {
+    try {
+      const response = await inviteClient(formData).unwrap();
+      toast.success(response?.message);
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("Invite client error:", error);
+    }
   };
   return (
     <section className="flex flex-wrap items-center justify-between gap-3 sm:gap-4">
@@ -32,6 +41,7 @@ const ClientManagementHeading = ({ heading, subheading, emoji }) => {
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           onSubmit={handleAddClient}
+          isSubmitting={isLoading}
           mode="add"
         />
       )}

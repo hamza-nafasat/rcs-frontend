@@ -2,9 +2,10 @@ import Card from "../../../components/shared/Card";
 import ClientManagementHeading from "./components/ClientManagementHeading";
 import ClientTable from "./components/ClientTable";
 import ClientFilter from "./components/ClientFilter";
-import { initialData } from "./utils/data";
 import { useState } from "react";
 import { cardData } from "./utils/data";
+import { CLIENT_STATUS, getClientStatus } from "./utils/clientStatus";
+import { useGetAllClientsQuery } from "../../../store/apis/admin/client.apis";
 
 const initialFilters = {
   restaurant: "",
@@ -12,11 +13,25 @@ const initialFilters = {
   status: [],
 };
 
+const includesText = (text, query) => String(text ?? "").toLowerCase().includes(query.trim().toLowerCase());
+
 const ClientManagement = () => {
   const [filters, setFilters] = useState(initialFilters);
+  const { data, isLoading } = useGetAllClientsQuery();
+  const clients = data?.data ?? [];
 
-  // this list will come from the backend later
-  const statuses = [...new Set(initialData.map((client) => client.status))];
+  const statuses = [...new Set(clients.map(getClientStatus))].map((status) => ({
+    value: status,
+    label: CLIENT_STATUS[status]?.label ?? status,
+  }));
+
+  const filteredClients = clients.filter((client) => {
+    const matchRestaurant = includesText(client?.restaurantName, filters.restaurant);
+    const matchOwner = includesText(client?.account?.fullName, filters.owner);
+    const matchStatus = filters.status.length === 0 || filters.status.includes(getClientStatus(client));
+
+    return matchRestaurant && matchOwner && matchStatus;
+  });
 
   return (
     <>
@@ -43,7 +58,7 @@ const ClientManagement = () => {
                 className="text-lg font-semibold"
                 style={{ color: card.valueColor }}
               >
-                {card.value}
+                {card.key === "totalClients" ? clients.length : card.value}
               </h2>
               <p className="text-xs sm:text-sm font-medium text-muted">
                 {card.label}
@@ -52,7 +67,7 @@ const ClientManagement = () => {
           </Card>
         ))}
       </section>
-      <ClientTable className="mt-5" filters={filters} />
+      <ClientTable className="mt-5" clients={filteredClients} isLoading={isLoading} />
     </>
   );
 };

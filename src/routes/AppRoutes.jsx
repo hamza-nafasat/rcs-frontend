@@ -53,7 +53,7 @@ const AppRoutes = () => {
           <Route path="/check-email" element={<CheckEmail />} />
           <Route path="/reset-password/:resetToken" element={<ResetPassword />} />
           <Route path="/reset-password-success" element={<ResetPasswordSuccess />} />
-          <Route path="/create-account" element={<CreateAccount />} />
+          <Route path="/accept-invite/:inviteToken" element={<CreateAccount />} />
         </Route>
 
         <Route path="/dashboard/*" element={<LegacyAdminRedirect />} />

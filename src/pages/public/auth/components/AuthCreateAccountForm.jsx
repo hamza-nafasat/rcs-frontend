@@ -8,11 +8,20 @@ import AuthApplicationFields from "./AuthApplicationFields";
 import AuthLocationAssign from "./AuthLocationAssign";
 import { EMPTY_ACCOUNT, validateAccount } from "../utils/accountRules";
 import { EMPTY_APPLICATION, scoreApplication } from "../utils/applicationScore";
+import { useAcceptInviteMutation } from "../../../../store/apis/public/auth.apis";
+import { ROLE_HOME } from "../../../../configs/constants";
 
-const AuthCreateAccountForm = () => {
+// invite holds what the admin already entered, so those fields start filled
+const AuthCreateAccountForm = ({ inviteToken, invite }) => {
   const navigate = useNavigate();
-  const [account, setAccount] = useState(EMPTY_ACCOUNT);
-  const [form, setForm] = useState(EMPTY_APPLICATION);
+  const [acceptInvite, { isLoading }] = useAcceptInviteMutation();
+  const [account, setAccount] = useState({ ...EMPTY_ACCOUNT, email: invite?.email ?? "" });
+  const [form, setForm] = useState({
+    ...EMPTY_APPLICATION,
+    firstName: invite?.firstName ?? "",
+    lastName: invite?.lastName ?? "",
+    restaurantName: invite?.restaurantName ?? "",
+  });
   const [accountErrors, setAccountErrors] = useState({});
   const [showNotice, setShowNotice] = useState(true);
   const scores = scoreApplication(form);
@@ -31,12 +40,23 @@ const AuthCreateAccountForm = () => {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const errors = validateAccount(account);
     setAccountErrors(errors);
     if (Object.keys(errors).length > 0) return;
-    navigate("/client/dashboard");
+
+    try {
+      const response = await acceptInvite({
+        inviteToken,
+        ...form,
+        phone: account.phone,
+        password: account.password,
+      }).unwrap();
+      navigate(ROLE_HOME[response?.data?.role] ?? "/");
+    } catch (error) {
+      console.error("Accept invite error:", error);
+    }
   };
 
   return (
@@ -82,9 +102,10 @@ const AuthCreateAccountForm = () => {
             </p>
             <Button
               type="submit"
+              disabled={isLoading}
               className="h-10 rounded-xl px-5 text-sm font-medium"
             >
-              Create Account
+              {isLoading ? "Creating account..." : "Create Account"}
             </Button>
           </div>
         </footer>

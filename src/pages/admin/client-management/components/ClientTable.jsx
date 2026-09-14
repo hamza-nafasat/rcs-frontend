@@ -1,20 +1,20 @@
 import DataTable from "react-data-table-component";
+import toast from "react-hot-toast";
 import Avatar from "../../../../components/shared/Avatar";
 import Dropdown from "../../../../components/shared/Dropdown";
 import ProgressBar from "../../../../components/shared/ProgressBar";
-import { Eye, MessageSquare, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import { Eye, MessageSquare, MoreHorizontal, Pencil, Send, Trash2 } from "lucide-react";
 import { useState } from "react";
-import { initialData } from "../utils/data";
 import ClientDetailsModal from "../modals/ClientDetailsModal";
 import ClientAddEditModal from "../modals/ClientAddEditModal";
 import Button from "../../../../components/shared/Button";
 import DeleteModal from "../../../../components/modals/DeleteModal";
-
-const STATUS_STYLES = {
-  Active: { pill: "bg-revenue text-[#22C55E]", dot: "bg-[#22C55E]" },
-  "At Risk": { pill: "bg-[#FEF2F2] text-[#EF4444]", dot: "bg-[#EF4444]" },
-  "On Hold": { pill: "bg-[#FFFBEB] text-[#F59E0B]", dot: "bg-[#F59E0B]" },
-};
+import { CLIENT_STATUS, getClientStatus } from "../utils/clientStatus";
+import {
+  useDeleteClientMutation,
+  useResendClientInviteMutation,
+  useUpdateClientMutation,
+} from "../../../../store/apis/admin/client.apis";
 
 const HEALTH_COLORS = [
   { min: 80, color: "#22C55E" },
@@ -24,9 +24,7 @@ const HEALTH_COLORS = [
 
 const getHealthColor = (score) => HEALTH_COLORS.find(({ min }) => score >= min).color;
 
-const emptyFilters = { restaurant: "", owner: "", status: [] };
-
-const buildColumns = ({ handleEditClient, handleViewClient, setClientToDelete }) => [
+const buildColumns = ({ handleEditClient, handleViewClient, handleResendInvite, setClientToDelete }) => [
   {
     name: "Restaurant",
     selector: (row) => row.restaurantName,
@@ -44,46 +42,49 @@ const buildColumns = ({ handleEditClient, handleViewClient, setClientToDelete })
   },
   {
     name: "Owner",
-    selector: (row) => `${row.firstName} ${row.lastName}`,
+    selector: (row) => row?.account?.fullName,
     sortable: true,
   },
   {
     name: "Status",
-    selector: (row) => row.status,
+    selector: (row) => CLIENT_STATUS[getClientStatus(row)]?.label,
     sortable: true,
     cell: (row) => {
-      const { pill, dot } = STATUS_STYLES[row.status] ?? STATUS_STYLES["On Hold"];
+      const { label, pill, dot } = CLIENT_STATUS[getClientStatus(row)] ?? CLIENT_STATUS.pending;
 
       return (
         <span
           className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1 text-xs font-medium ${pill}`}
         >
           <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />
-          {row.status}
+          {label}
         </span>
       );
     },
   },
   {
     name: "Health Score",
-    selector: (row) => row.healthScore,
+    selector: (row) => row.healthScore ?? -1,
     sortable: true,
     minWidth: "160px",
-    cell: (row) => (
-      <div className="flex w-full items-center gap-2">
-        <ProgressBar value={row.healthScore} color={getHealthColor(row.healthScore)} />
-        <span
-          className="shrink-0 whitespace-nowrap text-xs font-medium"
-          style={{ color: getHealthColor(row.healthScore) }}
-        >
-          {row.healthScore}%
-        </span>
-      </div>
-    ),
+    cell: (row) =>
+      row.healthScore == null ? (
+        <span className="text-xs text-gray-500">—</span>
+      ) : (
+        <div className="flex w-full items-center gap-2">
+          <ProgressBar value={row.healthScore} color={getHealthColor(row.healthScore)} />
+          <span
+            className="shrink-0 whitespace-nowrap text-xs font-medium"
+            style={{ color: getHealthColor(row.healthScore) }}
+          >
+            {row.healthScore}%
+          </span>
+        </div>
+      ),
   },
   {
-    name: "Franchise",
-    selector: (row) => row.franchise,
+    name: "Email",
+    selector: (row) => row.account?.email,
     sortable: true,
   },
   {
@@ -107,6 +108,12 @@ const buildColumns = ({ handleEditClient, handleViewClient, setClientToDelete })
             <Eye size={16} className="mt-0.5" />
             View
           </Button>
+          {getClientStatus(row) === "invited" && (
+            <Button variant="menuItem" onClick={() => handleResendInvite(row)}>
+              <Send size={14} className="mt-0.5" />
+              Resend Invite
+            </Button>
+          )}
           <Button variant="menuItem" onClick={() => {}}>
             <MessageSquare size={14} className="mt-0.5" />
             Send Message
@@ -125,81 +132,70 @@ const buildColumns = ({ handleEditClient, handleViewClient, setClientToDelete })
   },
 ];
 
-const ClientTable = ({ className, filters = emptyFilters }) => {
-  const [clients, setClients] = useState(initialData);
-  const [selectedClient, setSelectedClient] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [viewClient, setViewClient] = useState(null);
+const ClientTable = ({ className, clients = [], isLoading = false }) => {
+  const [updateClient, { isLoading: isUpdating }] = useUpdateClientMutation();
+  const [deleteClient] = useDeleteClientMutation();
+  const [resendClientInvite] = useResendClientInviteMutation();
+  const [clientToEdit, setClientToEdit] = useState(null);
+  const [viewClientId, setViewClientId] = useState(null);
   const [clientToDelete, setClientToDelete] = useState(null);
 
-  const filteredClients = clients.filter((client) => {
-    const matchRestaurant = client.restaurantName.toLowerCase().includes(filters.restaurant.trim().toLowerCase());
+  const handleViewClient = (client) => setViewClientId(client?._id);
 
-    const matchOwner = `${client.firstName} ${client.lastName}`
-      .toLowerCase()
-      .includes(filters.owner.trim().toLowerCase());
+  const handleEditClient = (client) => setClientToEdit(client);
 
-    const matchStatus = filters.status.length === 0 || filters.status.includes(client.status);
-
-    return matchRestaurant && matchOwner && matchStatus;
-  });
-
-  const handleViewClient = (client) => {
-    setViewClient({
-      name: client.restaurantName,
-      type: client.franchise,
-      status: client.status,
-      location: client.location ?? "—",
-      owner: `${client.firstName} ${client.lastName}`,
-      email: client.clientEmail,
-      phone: client.phone ?? "—",
-      healthScore: client.healthScore,
-      outstandingBalance: String(client.balance ?? "").replace("$", ""),
-    });
+  const handleUpdateClient = async (formData) => {
+    try {
+      const response = await updateClient({ id: clientToEdit?._id, ...formData }).unwrap();
+      toast.success(response?.message);
+      setClientToEdit(null);
+    } catch (error) {
+      console.error("Update client error:", error);
+    }
   };
 
-  const handleEditClient = (client) => {
-    setSelectedClient(client);
-    setIsModalOpen(true);
+  const handleDeleteClient = async () => {
+    try {
+      const response = await deleteClient(clientToDelete?._id).unwrap();
+      toast.success(response?.message);
+      setClientToDelete(null);
+    } catch (error) {
+      console.error("Delete client error:", error);
+    }
   };
 
-  const handleUpdateClient = (formData) => {
-    setClients((prev) =>
-      prev.map((client) =>
-        client.id === selectedClient?.id
-          ? {
-              ...client,
-              firstName: formData.firstName,
-              lastName: formData.lastName,
-              clientEmail: formData.clientEmail,
-              restaurantName: formData.restaurantName,
-            }
-          : client,
-      ),
-    );
-
-    setIsModalOpen(false);
-    setSelectedClient(null);
+  const handleResendInvite = async (client) => {
+    try {
+      const response = await resendClientInvite(client?._id).unwrap();
+      toast.success(response?.message);
+    } catch (error) {
+      console.error("Resend invite error:", error);
+    }
   };
 
-  const handleDeleteClient = () => {
-    setClients((prev) => prev.filter((client) => client.id !== clientToDelete?.id));
-    setClientToDelete(null);
-  };
-
-  const columns = buildColumns({ handleEditClient, handleViewClient, setClientToDelete });
+  const columns = buildColumns({ handleEditClient, handleViewClient, handleResendInvite, setClientToDelete });
   return (
     <section className={className}>
-      <DataTable columns={columns} data={filteredClients} pagination highlightOnHover responsive />
-      {isModalOpen && selectedClient && (
+      <DataTable
+        columns={columns}
+        data={clients}
+        progressPending={isLoading}
+        pagination
+        highlightOnHover
+        responsive
+      />
+      {clientToEdit && (
         <ClientAddEditModal
-          isOpen={isModalOpen}
-          onClose={() => {
-            setIsModalOpen(false);
-            setSelectedClient(null);
-          }}
+          isOpen={Boolean(clientToEdit)}
+          onClose={() => setClientToEdit(null)}
           onSubmit={handleUpdateClient}
-          initialData={selectedClient}
+          isSubmitting={isUpdating}
+          initialData={{
+            restaurantName: clientToEdit?.restaurantName,
+            clientEmail: clientToEdit?.account?.email,
+            firstName: clientToEdit?.account?.firstName,
+            lastName: clientToEdit?.account?.lastName,
+          }}
           mode="edit"
         />
       )}
@@ -213,7 +209,11 @@ const ClientTable = ({ className, filters = emptyFilters }) => {
         confirmText="Delete"
       />
 
-      <ClientDetailsModal isOpen={Boolean(viewClient)} onClose={() => setViewClient(null)} client={viewClient} />
+      <ClientDetailsModal
+        isOpen={Boolean(viewClientId)}
+        onClose={() => setViewClientId(null)}
+        clientId={viewClientId}
+      />
     </section>
   );
 };

@@ -9,6 +9,7 @@ const ClientAddEditModal = ({
   onSubmit,
   initialData = null,
   mode = "add",
+  isSubmitting = false,
 }) => {
   const [formData, setFormData] = useState(() => ({
     restaurantName: initialData?.restaurantName || "",
@@ -101,8 +102,8 @@ const ClientAddEditModal = ({
               Cancel
             </Button>
 
-            <Button type="submit" className="w-1/2">
-              {mode === "edit" ? "Update" : "Send Invite"}
+            <Button type="submit" disabled={isSubmitting} className="w-1/2">
+              {mode === "edit" ? (isSubmitting ? "Updating..." : "Update") : isSubmitting ? "Sending..." : "Send Invite"}
             </Button>
           </div>
         </form>
