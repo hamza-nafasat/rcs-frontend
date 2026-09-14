@@ -70,11 +70,11 @@ const SignIn = () => {
             </Link>
             <Button
               type="submit"
-              disabled={isLoading}
+              isLoading={isLoading}
               iconPosition="right"
               className="mt-1 h-10 w-full rounded-xl text-sm font-medium"
             >
-              {isLoading ? "Signing in..." : "Sign in"}
+              Sign in
             </Button>
           </form>
         </div>

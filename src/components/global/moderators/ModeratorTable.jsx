@@ -112,7 +112,7 @@ const buildColumns = ({ setMemberToEdit, setViewMember, setMemberToRemove }) => 
 
 const ModeratorTable = ({ moderators = [], isLoading = false }) => {
   const [updateModerator, { isLoading: isUpdating }] = useUpdateModeratorMutation();
-  const [deleteModerator] = useDeleteModeratorMutation();
+  const [deleteModerator, { isLoading: isDeleting }] = useDeleteModeratorMutation();
   const [viewMember, setViewMember] = useState(null);
   const [memberToRemove, setMemberToRemove] = useState(null);
   const [memberToEdit, setMemberToEdit] = useState(null);
@@ -186,6 +186,7 @@ const ModeratorTable = ({ moderators = [], isLoading = false }) => {
         heading="Remove Moderator"
         text={`Are you sure you want to remove ${memberToRemove?.fullName ?? "this moderator"}? This action cannot be undone.`}
         confirmText="Delete"
+        isLoading={isDeleting}
       />
     </section>
   );

@@ -1,5 +1,10 @@
+import { LoaderCircle } from "lucide-react";
+
 const BASE =
   "inline-flex items-center justify-center py-4 gap-2 rounded-xl cursor-pointer";
+
+// loading or disabled: no clicks, and the button fades
+const INACTIVE_CLASSES = "pointer-events-none opacity-60";
 
 // Appearance only. `type` stays the HTML button type: button | submit | reset.
 const VARIANT_CLASSES = {
@@ -28,15 +33,23 @@ const Button = ({
   className = "",
   type = "button",
   textClassName = "",
+  isLoading = false,
+  isDisabled = false,
   ...props
 }) => {
+  const isInactive = isLoading || isDisabled;
+
   return (
     <button
-      className={`${BASE} ${className} ${VARIANT_CLASSES[variant] ?? ""}`}
+      className={`${BASE} ${className} ${VARIANT_CLASSES[variant] ?? ""} ${isInactive ? INACTIVE_CLASSES : ""}`}
       {...props}
       type={type}
+      disabled={isInactive}
+      aria-busy={isLoading}
     >
-      {icon && iconPosition === "left" && icon}
+      {isLoading && <LoaderCircle size={16} className="shrink-0 motion-safe:animate-spin" />}
+
+      {icon && iconPosition === "left" && !isLoading && icon}
 
       <span className={`${VARIANT_TEXT_CLASSES[variant] ?? ""} ${textClassName}`}>
         {children}

@@ -45,11 +45,11 @@ const ForgetPassword = () => {
 
             <Button
               type="submit"
-              disabled={isLoading}
+              isLoading={isLoading}
               iconPosition="right"
               className="mt-6 h-10 w-full rounded-xl text-sm font-medium"
             >
-              {isLoading ? "Sending..." : "Send reset link"}
+              Send reset link
             </Button>
             <BackLink to="/signin" text="Back to sign in" className="mt-6" />
           </form>

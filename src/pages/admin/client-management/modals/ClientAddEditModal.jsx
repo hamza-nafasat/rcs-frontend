@@ -102,8 +102,8 @@ const ClientAddEditModal = ({
               Cancel
             </Button>
 
-            <Button type="submit" disabled={isSubmitting} className="w-1/2">
-              {mode === "edit" ? (isSubmitting ? "Updating..." : "Update") : isSubmitting ? "Sending..." : "Send Invite"}
+            <Button type="submit" isLoading={isSubmitting} className="w-1/2">
+              {mode === "edit" ? "Update" : "Send Invite"}
             </Button>
           </div>
         </form>

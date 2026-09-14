@@ -11,6 +11,7 @@ const DeleteModal = ({
   cancelText = "Cancel",
   confirmText = "Remove",
   showClose = true,
+  isLoading = false,
 }) => {
   if (!isOpen) return null;
 
@@ -57,6 +58,7 @@ const DeleteModal = ({
           <Button
             type="button"
             onClick={onConfirm}
+            isLoading={isLoading}
             className="w-1/2 px-3! py-2! sm:px-4! sm:py-2.5!"
           >
             {confirmText}

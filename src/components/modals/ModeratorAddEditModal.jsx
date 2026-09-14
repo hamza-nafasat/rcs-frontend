@@ -64,6 +64,11 @@ const ModeratorAddEditModal = ({
     onSubmit(formData, password);
   };
 
+  // every required field has a value
+  const isComplete =
+    [formData.firstName, formData.lastName, formData.email, formData.phone].every((value) => value.trim() !== "") &&
+    (!isAdd || password !== "");
+
   if (!isOpen) return null;
 
   return (
@@ -113,12 +118,13 @@ const ModeratorAddEditModal = ({
             required
           />
           <Input
-            label="Phone"
+            label="Phone *"
             name="phone"
             type="tel"
             value={formData.phone}
             onChange={handleChange}
             placeholder="Enter phone number"
+            required
           />
 
           {isAdd && (
@@ -170,8 +176,8 @@ const ModeratorAddEditModal = ({
               Cancel
             </Button>
 
-            <Button type="submit" disabled={isSubmitting} className="w-1/2">
-              {isSubmitting ? "Saving..." : mode === "edit" ? "Update" : "Save"}
+            <Button type="submit" isLoading={isSubmitting} isDisabled={!isComplete} className="w-1/2">
+              {mode === "edit" ? "Update" : "Save"}
             </Button>
           </div>
         </form>

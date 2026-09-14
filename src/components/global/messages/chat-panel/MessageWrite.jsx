@@ -62,7 +62,7 @@ const MessageWrite = ({ onSend }) => {
 
         <Button
           type="submit"
-          disabled={!message.trim() && !file}
+          isDisabled={!message.trim() && !file}
           className="h-10 w-10"
         >
           <Send size={14} />

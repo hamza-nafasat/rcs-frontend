@@ -16,12 +16,14 @@ import { NavLink } from "react-router-dom";
 import LogoCompany from "../../assets/SVGs/LogoCompany.svg";
 import SidebarClosedLogo from "../../assets/SVGs/SidebarClosedLogo.svg";
 import Avatar from "../shared/Avatar";
+import { USER_ROLES } from "../../configs/constants";
+import { useAuthUser } from "../../routes/useAuthUser";
 
 const adminNavItems = [
   { label: "Dashboard", to: "/admin/dashboard", icon: LayoutDashboard },
   { label: "Clients", to: "/admin/dashboard/clients", icon: Users },
   { label: "Messages", to: "/admin/dashboard/messages", icon: MessageSquare },
-  { label: "Moderators", to: "/admin/dashboard/moderators", icon: Award },
+  { label: "Moderators", to: "/admin/dashboard/moderators", icon: Award, isOwnerOnly: true },
   { label: "FDD", to: "/admin/dashboard/fdd", icon: FileIcon },
   {
     label: "Pipeline",
@@ -40,7 +42,7 @@ const clientNavItems = [
   { label: "Pipeline", to: "/client/dashboard/pipeline", icon: Award },
   { label: "Reports", to: "/client/dashboard/reports", icon: FileChartColumn },
   { label: "Messages", to: "/client/dashboard/messages", icon: MessageSquare },
-  { label: "Moderators", to: "/client/dashboard/moderators", icon: Award },
+  { label: "Moderators", to: "/client/dashboard/moderators", icon: Award, isOwnerOnly: true },
   { label: "FDD", to: "/client/dashboard/fdd", icon: FileIcon },
   { label: "Franchisee", to: "/client/dashboard/franchisee", icon: UserSquare },
 ];
@@ -90,8 +92,13 @@ const Sidebar = ({
   const isClient = type === "client";
   const isUser = type === "user";
 
+  // a signed in moderator never sees owner only links
+  const { user: account } = useAuthUser();
+  const isModerator = account?.role === USER_ROLES.MODERATOR;
+
   // Define menu items based on user type
-  const menuItems = isUser ? userNavItems : isClient ? clientNavItems : adminNavItems;
+  const navItems = isUser ? userNavItems : isClient ? clientNavItems : adminNavItems;
+  const menuItems = navItems.filter((item) => !(isModerator && item.isOwnerOnly));
   const profileLinks = isUser ? userProfileItems : isClient ? clientProfileItems : adminProfileItems;
   const homePath = isUser ? "/user/dashboard" : isClient ? "/client/dashboard" : "/admin/dashboard";
   const settingsPath = isUser

@@ -208,10 +208,10 @@ const SettingsProfileSetting = ({
 
             <Button
               type="submit"
-              disabled={isSaving}
+              isLoading={isSaving}
               className="px-3! py-2! sm:px-4! sm:py-2.5! text-sm rounded cursor-pointer text-white btn-primary-gradient hover:opacity-90 transition font-medium shadow-sm"
             >
-              {isSaving ? "Saving..." : "Save Changes"}
+              Save Changes
             </Button>
           </div>
         )}
@@ -243,12 +243,11 @@ const SettingsProfileSetting = ({
           <div className="flex justify-end border-t border-gray-100 pt-4">
             <Button
               type="submit"
-              disabled={
-                isChangingPassword || !passwords.currentPassword || !passwords.newPassword || !passwords.confirmPassword
-              }
-              className="px-3! py-2! sm:px-4! sm:py-2.5! text-sm font-medium text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+              isLoading={isChangingPassword}
+              isDisabled={!passwords.currentPassword || !passwords.newPassword || !passwords.confirmPassword}
+              className="px-3! py-2! sm:px-4! sm:py-2.5! text-sm font-medium text-white transition hover:opacity-90"
             >
-              {isChangingPassword ? "Updating..." : "Update Password"}
+              Update Password
             </Button>
           </div>
         </form>

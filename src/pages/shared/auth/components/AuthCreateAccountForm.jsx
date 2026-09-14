@@ -102,10 +102,10 @@ const AuthCreateAccountForm = ({ inviteToken, invite }) => {
             </p>
             <Button
               type="submit"
-              disabled={isLoading}
+              isLoading={isLoading}
               className="h-10 rounded-xl px-5 text-sm font-medium"
             >
-              {isLoading ? "Creating account..." : "Create Account"}
+              Create Account
             </Button>
           </div>
         </footer>

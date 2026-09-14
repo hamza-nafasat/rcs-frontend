@@ -118,7 +118,7 @@ const buildColumns = ({ onStatusChange, setTicketToDelete }) => [
         >
           <Button
             variant="menuItem"
-            disabled={row.status === "Resolved"}
+            isDisabled={row.status === "Resolved"}
             onClick={() => onStatusChange?.(row, "Resolved")}
           >
             <CheckCircle2 size={16} className="mt-0.5" />
@@ -126,7 +126,7 @@ const buildColumns = ({ onStatusChange, setTicketToDelete }) => [
           </Button>
           <Button
             variant="menuItem"
-            disabled={row.status === "Closed"}
+            isDisabled={row.status === "Closed"}
             onClick={() => onStatusChange?.(row, "Closed")}
           >
             <XCircle size={16} className="mt-0.5" />

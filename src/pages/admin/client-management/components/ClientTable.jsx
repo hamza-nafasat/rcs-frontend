@@ -134,7 +134,7 @@ const buildColumns = ({ handleEditClient, handleViewClient, handleResendInvite, 
 
 const ClientTable = ({ className, clients = [], isLoading = false }) => {
   const [updateClient, { isLoading: isUpdating }] = useUpdateClientMutation();
-  const [deleteClient] = useDeleteClientMutation();
+  const [deleteClient, { isLoading: isDeleting }] = useDeleteClientMutation();
   const [resendClientInvite] = useResendClientInviteMutation();
   const [clientToEdit, setClientToEdit] = useState(null);
   const [viewClientId, setViewClientId] = useState(null);
@@ -207,6 +207,7 @@ const ClientTable = ({ className, clients = [], isLoading = false }) => {
         heading="Delete Client"
         text={`Are you sure you want to delete ${clientToDelete?.restaurantName ?? "this client"}? This action cannot be undone.`}
         confirmText="Delete"
+        isLoading={isDeleting}
       />
 
       <ClientDetailsModal

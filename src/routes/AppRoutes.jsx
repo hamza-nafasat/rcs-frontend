@@ -33,6 +33,7 @@ import Franchisee from "../pages/client/franchisee/Franchisee";
 
 import ProtectedRoute from "./ProtectedRoute";
 import GuestRoute from "./GuestRoute";
+import NoModeratorRoute from "./NoModeratorRoute";
 import { USER_ROLES } from "../configs/constants";
 
 const LegacyAdminRedirect = () => {
@@ -63,7 +64,9 @@ const AppRoutes = () => {
             <Route index element={<AdminDashboard />} />
             <Route path="clients" element={<ClientManagement />} />
             <Route path="messages" element={<AdminMessages />} />
-            <Route path="moderators" element={<AdminModerators />} />
+            <Route element={<NoModeratorRoute />}>
+              <Route path="moderators" element={<AdminModerators />} />
+            </Route>
             <Route path="fdd" element={<AdminFdd />} />
             <Route path="support" element={<AdminSupport />} />
             <Route path="settings" element={<Settings />} />
@@ -84,7 +87,9 @@ const AppRoutes = () => {
             <Route path="pipeline/:id" element={<ClientApplicantDetailPage />} />
             <Route path="reports" element={<Reports />} />
             <Route path="fdd" element={<ClientFdd />} />
-            <Route path="moderators" element={<ClientModerators />} />
+            <Route element={<NoModeratorRoute />}>
+              <Route path="moderators" element={<ClientModerators />} />
+            </Route>
             <Route path="settings" element={<Settings />} />
             <Route path="notifications" element={<Notifications />} />
             <Route path="support" element={<ClientSupport />} />
