@@ -1,7 +1,17 @@
 import { EMPTY_APPLICATION } from "../../auth/utils/applicationScore";
 
 // what every account edits about itself
-export const PROFILE_FIELDS = ["firstName", "lastName", "phone", "address", "city", "state", "postalCode", "country"];
+export const PROFILE_FIELDS = [
+  "firstName",
+  "lastName",
+  "phone",
+  "address",
+  "city",
+  "state",
+  "postalCode",
+  "country",
+  "isEmailNotificationEnabled",
+];
 
 // what only a client edits about their restaurant
 export const CLIENT_FIELDS = [
@@ -25,8 +35,8 @@ export const CLIENT_FIELDS = [
 ];
 
 export const PERSONAL_INPUTS = [
-  { label: "First Name", name: "firstName" },
-  { label: "Last Name", name: "lastName" },
+  { label: "First Name", name: "firstName", isRequired: true },
+  { label: "Last Name", name: "lastName", isRequired: true },
   { label: "Email", name: "email", type: "email", isLocked: true },
   { label: "Phone Number", name: "phone", type: "tel" },
   { label: "Address", name: "address", isWide: true },
@@ -51,4 +61,5 @@ export const EMPTY_PROFILE = {
   address: "",
   postalCode: "",
   country: "",
+  isEmailNotificationEnabled: true,
 };

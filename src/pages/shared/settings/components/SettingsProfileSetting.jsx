@@ -44,27 +44,27 @@ const SettingsProfileSetting = ({
   const [passwordError, setPasswordError] = useState("");
 
   const handleChange = (event) => {
-    const { name, value } = event.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = event.target;
+    setForm((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
   };
 
   const handleSelect = (name, value) => setForm((prev) => ({ ...prev, [name]: value }));
 
-  const handleImageChange = (event) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
+  // swap the picked image and free the old preview
+  const replaceImage = (file) => {
+    if (imagePreview) URL.revokeObjectURL(imagePreview);
     setImage(file);
-    setImagePreview(URL.createObjectURL(file));
+    setImagePreview(file ? URL.createObjectURL(file) : "");
   };
 
-  const resetImage = () => {
-    setImage(null);
-    setImagePreview("");
+  const handleImageChange = (event) => {
+    const file = event.target.files?.[0];
+    if (file) replaceImage(file);
   };
 
   const handleCancel = () => {
     setForm(toForm(profile));
-    resetImage();
+    replaceImage(null);
     setIsEditing(false);
   };
 
@@ -72,7 +72,7 @@ const SettingsProfileSetting = ({
     event.preventDefault();
     try {
       await onSave?.(form, image);
-      resetImage();
+      replaceImage(null);
       setIsEditing(false);
     } catch (error) {
       console.error("Update profile error:", error);
@@ -153,21 +153,34 @@ const SettingsProfileSetting = ({
         onSubmit={handleSubmit}
         className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border-gray-100 flex-1 overflow-y-auto"
       >
-        {PERSONAL_INPUTS.map(({ label, name, type = "text", isLocked = false, isWide = false }) => (
+        {PERSONAL_INPUTS.map(({ label, name, type = "text", isLocked = false, isWide = false, isRequired = false }) => (
           <div key={name} className={isWide ? "md:col-span-2" : ""}>
             <Input
-              label={label}
+              label={isRequired ? `${label} *` : label}
               name={name}
               type={type}
               placeholder={`Enter ${label.toLowerCase()}`}
               value={form[name] ?? ""}
               onChange={handleChange}
               disabled={isLocked || !isEditing}
+              required={isRequired}
               hint={isLocked && isEditing ? "Email cannot be changed" : undefined}
               className={`px-4 py-3 shadow-sm transition-all ${isEditing && !isLocked ? EDITABLE_INPUT : LOCKED_INPUT}`}
             />
           </div>
         ))}
+
+        <label className="md:col-span-2 flex items-center gap-2 text-sm text-tertiary">
+          <input
+            type="checkbox"
+            name="isEmailNotificationEnabled"
+            checked={Boolean(form.isEmailNotificationEnabled)}
+            onChange={handleChange}
+            disabled={!isEditing}
+            className="h-4 w-4 accent-(--color-primary) disabled:cursor-not-allowed"
+          />
+          Send me email notifications
+        </label>
 
         {isClient && (
           <div className="md:col-span-2">

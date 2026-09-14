@@ -9,13 +9,15 @@ import {
   useUpdateMyProfileMutation,
 } from "../../../store/apis/shared/auth.apis";
 
-// multipart so the image travels with the fields, blank fields are left out
+// multipart so the image travels with the fields
 const toProfileFormData = (form, image, isClient) => {
   const body = new FormData();
-  const fields = isClient ? [...PROFILE_FIELDS, ...CLIENT_FIELDS] : PROFILE_FIELDS;
-  fields.forEach((field) => {
-    if (form?.[field] !== "" && form?.[field] != null) body.append(field, form[field]);
-  });
+  PROFILE_FIELDS.forEach((field) => body.append(field, form?.[field] ?? ""));
+  // a blank  field is left out, it cannot be cleared
+  if (isClient)
+    CLIENT_FIELDS.forEach((field) => {
+      if (form?.[field] !== "" && form?.[field] != null) body.append(field, form[field]);
+    });
   if (image) body.append("file", image);
   return body;
 };
@@ -28,7 +30,6 @@ const Settings = () => {
 
   if (!profile) return <Loader />;
 
-  // a moderator edits only their own account, never the restaurant
   const isClient = profile?.role === USER_ROLES.CLIENT;
 
   const handleSaveProfile = async (form, image) => {
