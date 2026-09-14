@@ -66,7 +66,7 @@ const AppRoutes = () => {
             <Route path="moderators" element={<AdminModerators />} />
             <Route path="fdd" element={<AdminFdd />} />
             <Route path="support" element={<AdminSupport />} />
-            <Route path="settings" element={<Settings type="admin" />} />
+            <Route path="settings" element={<Settings />} />
             <Route path="notifications" element={<Notifications />} />
             <Route path="pipeline" element={<AdminPipeline />} />
             <Route path="pipeline/:id" element={<AdminApplicantDetailPage />} />
@@ -85,7 +85,7 @@ const AppRoutes = () => {
             <Route path="reports" element={<Reports />} />
             <Route path="fdd" element={<ClientFdd />} />
             <Route path="moderators" element={<ClientModerators />} />
-            <Route path="settings" element={<Settings type="client" />} />
+            <Route path="settings" element={<Settings />} />
             <Route path="notifications" element={<Notifications />} />
             <Route path="support" element={<ClientSupport />} />
             <Route path="messages" element={<ClientMessages />} />
@@ -99,7 +99,7 @@ const AppRoutes = () => {
             <Route index element={<Application />} />
             <Route path="messages" element={<UserMessages />} />
             <Route path="notifications" element={<Notifications />} />
-            <Route path="settings" element={<Settings type="user" />} />
+            <Route path="settings" element={<Settings />} />
           </Route>
         </Route>
 

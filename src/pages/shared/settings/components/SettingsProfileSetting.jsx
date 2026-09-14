@@ -4,132 +4,114 @@ import Avatar from "../../../../components/shared/Avatar";
 import Input from "../../../../components/shared/Input";
 import Button from "../../../../components/shared/Button";
 import SettingsClientApplicationDetails from "./SettingsClientApplicationDetails";
-import { DUMMY_PROFILE, DUMMY_APPLICATION } from "../utils/data";
+import { PASSWORD_MIN_LENGTH } from "../../auth/utils/accountRules";
+import {
+  CLIENT_FIELDS,
+  EMPTY_PASSWORDS,
+  EMPTY_PROFILE,
+  PASSWORD_INPUTS,
+  PERSONAL_INPUTS,
+  PROFILE_FIELDS,
+} from "../utils/data";
 
-const SettingsProfileSetting = ({ profile, onSave, onUpdatePassword, type = "admin" }) => {
-  const [formData, setFormData] = useState({ ...DUMMY_PROFILE, ...profile });
-  const [applicationForm, setApplicationForm] = useState({
-    ...DUMMY_APPLICATION,
-    ...profile?.application,
-  });
+const EDITABLE_INPUT = "border-gray-200 focus:border-[#F97316] focus:ring-4 focus:ring-indigo-500/10 bg-white";
+const LOCKED_INPUT = "bg-gray-50/50 text-gray-500 border-gray-100 cursor-not-allowed";
+
+// only the values the api actually has, the empty profile covers the rest
+const pickFilled = (source, fields) =>
+  Object.fromEntries(fields.filter((field) => source?.[field] != null).map((field) => [field, source[field]]));
+
+const toForm = (profile) => ({
+  ...EMPTY_PROFILE,
+  ...pickFilled(profile, [...PROFILE_FIELDS, "email"]),
+  ...pickFilled(profile?.client, CLIENT_FIELDS),
+});
+
+const SettingsProfileSetting = ({
+  profile,
+  isClient = false,
+  isSaving = false,
+  isChangingPassword = false,
+  onSave,
+  onUpdatePassword,
+}) => {
+  const [form, setForm] = useState(() => toForm(profile));
+  const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState("");
   const [isEditing, setIsEditing] = useState(false);
-  const [formError, setFormError] = useState("");
-  const [isUpdating, setIsUpdating] = useState(false);
-  const [passwords, setPasswords] = useState({
-    currentPassword: "",
-    newPassword: "",
-    confirmPassword: "",
-  });
+  const [passwords, setPasswords] = useState(EMPTY_PASSWORDS);
   const [visiblePasswords, setVisiblePasswords] = useState({});
   const [passwordError, setPasswordError] = useState("");
-  const [isPasswordUpdating, setIsPasswordUpdating] = useState(false);
 
-  const onChange = (event) => {
+  const handleChange = (event) => {
     const { name, value } = event.target;
-    setFormData((current) => ({ ...current, [name]: value }));
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const fileChangeHandler = (event) => {
+  const handleSelect = (name, value) => setForm((prev) => ({ ...prev, [name]: value }));
+
+  const handleImageChange = (event) => {
     const file = event.target.files?.[0];
     if (!file) return;
-
-    setFormData((current) => ({
-      ...current,
-      imagePreview: URL.createObjectURL(file),
-    }));
+    setImage(file);
+    setImagePreview(URL.createObjectURL(file));
   };
 
-  const onEdit = () => {
-    setFormError("");
-    setIsEditing(true);
+  const resetImage = () => {
+    setImage(null);
+    setImagePreview("");
   };
 
-  const onApplicationChange = (event) => {
-    const { name, value } = event.target;
-    setApplicationForm((current) => ({ ...current, [name]: value }));
-  };
-
-  const onApplicationSelect = (name, value) => {
-    setApplicationForm((current) => ({ ...current, [name]: value }));
-  };
-
-  const onCancel = () => {
-    setFormData({ ...DUMMY_PROFILE, ...profile });
-    setApplicationForm({ ...DUMMY_APPLICATION, ...profile?.application });
-    setFormError("");
+  const handleCancel = () => {
+    setForm(toForm(profile));
+    resetImage();
     setIsEditing(false);
   };
 
-  const onSubmit = async (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    setIsUpdating(true);
-    setFormError("");
-
     try {
-      await onSave?.({ ...formData, application: applicationForm });
+      await onSave?.(form, image);
+      resetImage();
       setIsEditing(false);
-    } catch {
-      setFormError("Unable to save your profile. Please try again.");
-    } finally {
-      setIsUpdating(false);
+    } catch (error) {
+      console.error("Update profile error:", error);
     }
   };
 
   const handlePasswordChange = (event) => {
     const { name, value } = event.target;
-    setPasswords((current) => ({ ...current, [name]: value }));
+    setPasswords((prev) => ({ ...prev, [name]: value }));
     setPasswordError("");
   };
 
-  const togglePasswordVisibility = (name) => {
-    setVisiblePasswords((current) => ({
-      ...current,
-      [name]: !current[name],
-    }));
-  };
+  const togglePasswordVisibility = (name) => setVisiblePasswords((prev) => ({ ...prev, [name]: !prev[name] }));
 
   const handlePasswordSubmit = async (event) => {
     event.preventDefault();
-
-    if (passwords.newPassword.length < 8) {
-      setPasswordError("Your new password must be at least 8 characters.");
-      return;
-    }
-
-    if (passwords.newPassword !== passwords.confirmPassword) {
-      setPasswordError("New password and confirmation do not match.");
-      return;
-    }
-
-    setIsPasswordUpdating(true);
-    setPasswordError("");
+    if (passwords.newPassword.length < PASSWORD_MIN_LENGTH)
+      return setPasswordError(`Your new password must be at least ${PASSWORD_MIN_LENGTH} characters.`);
+    if (passwords.newPassword !== passwords.confirmPassword)
+      return setPasswordError("New password and confirmation do not match.");
 
     try {
       await onUpdatePassword?.(passwords);
-      setPasswords({
-        currentPassword: "",
-        newPassword: "",
-        confirmPassword: "",
-      });
-    } catch {
-      setPasswordError("Unable to update your password. Please try again.");
-    } finally {
-      setIsPasswordUpdating(false);
+      setPasswords(EMPTY_PASSWORDS);
+    } catch (error) {
+      console.error("Change password error:", error);
     }
   };
 
   return (
-    <article className=" rounded-xl bg-white relative h-full flex flex-col">
+    <article className="rounded-xl bg-white relative h-full flex flex-col">
       <section className="shrink-0 p-4">
         <div className="flex items-center justify-between mb-4">
-          <h1 className="text-2xl font-bold">
-            {isEditing ? "Edit Profile" : "My Profile"}
-          </h1>
+          <h1 className="text-2xl font-bold">{isEditing ? "Edit Profile" : "My Profile"}</h1>
 
           {!isEditing && (
             <button
               type="button"
-              onClick={onEdit}
+              onClick={() => setIsEditing(true)}
               aria-label="Edit profile"
               title="Edit profile"
               className="flex items-center justify-center w-10 h-10 rounded-lg cursor-pointer hover:bg-gray-100 transition"
@@ -139,183 +121,60 @@ const SettingsProfileSetting = ({ profile, onSave, onUpdatePassword, type = "adm
           )}
         </div>
 
-        {/*  Profile */}
+        {/* Profile */}
         <div className="flex flex-col sm:flex-row items-center gap-6 mb-8 text-center sm:text-left">
           <div className="relative">
-            {formData.imagePreview ? (
-              <img
-                src={formData.imagePreview}
-                className="w-24 h-24 md:w-28 md:h-28 rounded-full object-cover shadow-sm"
-              />
-            ) : (
-              <Avatar
-                src={formData?.url}
-                name={formData?.firstName}
-                size={100}
-              />
-            )}
+            <Avatar src={imagePreview || profile?.image?.url} name={profile?.fullName} size={100} />
             {isEditing && (
               <label
                 title="Change Image"
                 className="absolute bottom-1 right-1 bg-white text-black rounded-full cursor-pointer text-xs p-1"
               >
                 <Camera size={17} />
-                <Input
+                <input
                   type="file"
-                  onChange={fileChangeHandler}
+                  accept="image/*"
+                  aria-label="Change image"
+                  onChange={handleImageChange}
                   className="hidden"
                 />
               </label>
             )}
           </div>
 
-          {/* Info */}
-          <div>
-            <h2 className="text-xl font-bold">{formData.firstName}</h2>
-            <p className="text-gray-500">{formData.email}</p>
+          <div className="min-w-0">
+            <h2 className="truncate text-xl font-bold">{profile?.fullName}</h2>
+            <p className="truncate text-gray-500">{profile?.email}</p>
           </div>
         </div>
       </section>
 
       <form
-        onSubmit={onSubmit}
+        onSubmit={handleSubmit}
         className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border-gray-100 flex-1 overflow-y-auto"
       >
-        {[
-          { label: "First Name", name: "firstName", type: "text" },
-          { label: "Last Name", name: "lastName", type: "text" },
-
-          { label: "Email", name: "email", type: "email" },
-          { label: "Phone Number", name: "phone", type: "tel" },
-        ].map((field, idx) => (
-          <div key={idx} className="flex flex-col gap-1.5">
-            <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-              {field.label}
-            </label>
-
+        {PERSONAL_INPUTS.map(({ label, name, type = "text", isLocked = false, isWide = false }) => (
+          <div key={name} className={isWide ? "md:col-span-2" : ""}>
             <Input
-              name={field.name}
-              type={field.type}
-              min={field.min}
-              max={field.max}
-              placeholder={`Enter ${field.label.toLowerCase()}`}
-              value={field.value ?? formData[field.name]}
-              onChange={onChange}
-              disabled={field.name === "role" ? true : !isEditing}
-              className={`w-full px-4 py-3 rounded-xl border text-sm transition-all outline-none shadow-sm
-          ${
-            isEditing && field.name !== "role"
-              ? "border-gray-200 focus:border-[#F97316] focus:ring-4 focus:ring-indigo-500/10 bg-white"
-              : "bg-gray-50/50 text-gray-500 border-gray-100 cursor-not-allowed"
-          }
-        `}
+              label={label}
+              name={name}
+              type={type}
+              placeholder={`Enter ${label.toLowerCase()}`}
+              value={form[name] ?? ""}
+              onChange={handleChange}
+              disabled={isLocked || !isEditing}
+              hint={isLocked && isEditing ? "Email cannot be changed" : undefined}
+              className={`px-4 py-3 shadow-sm transition-all ${isEditing && !isLocked ? EDITABLE_INPUT : LOCKED_INPUT}`}
             />
           </div>
         ))}
 
-        {/* Address */}
-        <div className="md:col-span-2 flex flex-col gap-1.5">
-          <Input
-            label="Address"
-            name="address"
-            placeholder="Enter your address"
-            value={formData.address}
-            onChange={onChange}
-            disabled={!isEditing}
-            className={`w-full px-4 py-3 rounded-xl border text-sm transition-all outline-none shadow-sm
-        ${
-          isEditing
-            ? "border-gray-200 focus:border-[#F97316] focus:ring-4 focus:ring-indigo-500/10 bg-white"
-            : "bg-gray-50/50 text-gray-500 border-gray-100 cursor-not-allowed"
-        }
-      `}
-          />
-        </div>
-
-        <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="flex flex-col gap-1.5">
-            <Input
-              label="City"
-              name="city"
-              placeholder="City"
-              value={formData.city || ""}
-              onChange={onChange}
-              disabled={!isEditing}
-              className={`w-full px-4 py-3 rounded-xl border text-sm transition-all outline-none shadow-sm
-              ${
-                isEditing
-                  ? "border-gray-200 focus:border-[#F97316] focus:ring-4 focus:ring-indigo-500/10 bg-white"
-                  : "bg-gray-50/50 text-gray-500 border-gray-100 cursor-not-allowed"
-              }
-            `}
-            />
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <Input
-              label="State"
-              name="state"
-              placeholder="State"
-              value={formData.state || ""}
-              onChange={onChange}
-              disabled={!isEditing}
-              className={`
-              ${
-                isEditing
-                  ? "border-gray-200 focus:border-[#F97316] focus:ring-4 focus:ring-indigo-500/10 bg-white"
-                  : "bg-gray-50/50 text-gray-500 border-gray-100 cursor-not-allowed"
-              }
-            `}
-            />
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <Input
-              label="Postal Code"
-              name="postalCode"
-              placeholder="Postal Code"
-              value={formData.postalCode || ""}
-              onChange={onChange}
-              disabled={!isEditing}
-              className={`w-full px-4 py-3 rounded-xl border text-sm transition-all outline-none shadow-sm
-              ${
-                isEditing
-                  ? "border-gray-200 focus:border-[#F97316] focus:ring-4 focus:ring-indigo-500/10 bg-white"
-                  : "bg-gray-50/50 text-gray-500 border-gray-100 cursor-not-allowed"
-              }
-            `}
-            />
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <Input
-              label="Country"
-              name="country"
-              placeholder="Country"
-              value={formData.country || ""}
-              onChange={onChange}
-              disabled={!isEditing}
-              className={`w-full px-4 py-3 rounded-xl border text-sm transition-all outline-none shadow-sm
-          ${
-            isEditing
-              ? "border-gray-200 focus:border-[#F97316] focus:ring-4 focus:ring-indigo-500/10 bg-white"
-              : "bg-gray-50/50 text-gray-500 border-gray-100 cursor-not-allowed"
-          }
-        `}
-            />
-          </div>
-        </div>
-
-        {/* Error */}
-        {formError && (
-          <p className="md:col-span-2 text-sm text-red-500 whitespace-pre-line">
-            {formError}
-          </p>
-        )}
-
-        {type === "client" && (
+        {isClient && (
           <div className="md:col-span-2">
             <SettingsClientApplicationDetails
-              form={applicationForm}
-              onChange={onApplicationChange}
-              onSelect={onApplicationSelect}
+              form={form}
+              onChange={handleChange}
+              onSelect={handleSelect}
               disabled={!isEditing}
             />
           </div>
@@ -326,7 +185,7 @@ const SettingsProfileSetting = ({ profile, onSave, onUpdatePassword, type = "adm
           <div className="md:col-span-2 flex justify-end gap-3 mt-4">
             <Button
               variant="bare"
-              onClick={onCancel}
+              onClick={handleCancel}
               className="px-3! py-2! sm:px-4! sm:py-2.5! text-sm rounded cursor-pointer border border-gray-200 transition font-medium"
             >
               Cancel
@@ -334,10 +193,10 @@ const SettingsProfileSetting = ({ profile, onSave, onUpdatePassword, type = "adm
 
             <Button
               type="submit"
-              disabled={isUpdating}
+              disabled={isSaving}
               className="px-3! py-2! sm:px-4! sm:py-2.5! text-sm rounded cursor-pointer text-white btn-primary-gradient hover:opacity-90 transition font-medium shadow-sm"
             >
-              {isUpdating ? "Saving..." : "Save Changes"}
+              {isSaving ? "Saving..." : "Save Changes"}
             </Button>
           </div>
         )}
@@ -346,29 +205,11 @@ const SettingsProfileSetting = ({ profile, onSave, onUpdatePassword, type = "adm
       <section className="mt-6 p-4">
         <div className="mb-4">
           <h2 className="text-lg font-bold">Password Update</h2>
-          <p className="mt-1 text-sm text-gray-500">
-            Change your account password securely.
-          </p>
+          <p className="mt-1 text-sm text-gray-500">Change your account password securely.</p>
         </div>
 
         <form onSubmit={handlePasswordSubmit} className="space-y-4">
-          {[
-            {
-              name: "currentPassword",
-              label: "Current Password",
-              placeholder: "Enter current password",
-            },
-            {
-              name: "newPassword",
-              label: "New Password",
-              placeholder: "Enter new password",
-            },
-            {
-              name: "confirmPassword",
-              label: "Confirm New Password",
-              placeholder: "Confirm new password",
-            },
-          ].map((field) => (
+          {PASSWORD_INPUTS.map((field) => (
             <Input
               key={field.name}
               {...field}
@@ -382,22 +223,17 @@ const SettingsProfileSetting = ({ profile, onSave, onUpdatePassword, type = "adm
             />
           ))}
 
-          {passwordError && (
-            <p className="text-sm text-red-500">{passwordError}</p>
-          )}
+          {passwordError && <p className="text-sm text-red-500">{passwordError}</p>}
 
           <div className="flex justify-end border-t border-gray-100 pt-4">
             <Button
               type="submit"
               disabled={
-                isPasswordUpdating ||
-                !passwords.currentPassword ||
-                !passwords.newPassword ||
-                !passwords.confirmPassword
+                isChangingPassword || !passwords.currentPassword || !passwords.newPassword || !passwords.confirmPassword
               }
               className="px-3! py-2! sm:px-4! sm:py-2.5! text-sm font-medium text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {isPasswordUpdating ? "Updating..." : "Update Password"}
+              {isChangingPassword ? "Updating..." : "Update Password"}
             </Button>
           </div>
         </form>

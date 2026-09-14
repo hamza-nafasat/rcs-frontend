@@ -1,41 +1,54 @@
 import { EMPTY_APPLICATION } from "../../auth/utils/applicationScore";
 
-export const DUMMY_PROFILE = {
-  firstName: "Marco",
-  lastName: "Ricci",
-  email: "marco@goldenfork.com",
-  phone: "+1 (555) 000-0000",
-  address: "123 Market Street",
-  city: "Austin",
-  state: "TX",
-  postalCode: "78701",
-  country: "United States",
-  teamSize: 12,
-  url: "",
-  imagePreview: "",
-};
+// what every account edits about itself
+export const PROFILE_FIELDS = ["firstName", "lastName", "phone", "address", "city", "state", "postalCode", "country"];
 
-export const DUMMY_APPLICATION = {
+// what only a client edits about their restaurant
+export const CLIENT_FIELDS = [
+  "restaurantName",
+  "restaurantCuisine",
+  "status",
+  "healthScore",
+  "proposedTerritory",
+  "territoryAvailable",
+  "density",
+  "liquidCapital",
+  "netWorth",
+  "creditScore",
+  "yearsMgmt",
+  "foodExp",
+  "multiUnit",
+  "bankruptcy",
+  "litigation",
+  "criminal",
+  "nonCompete",
+];
+
+export const PERSONAL_INPUTS = [
+  { label: "First Name", name: "firstName" },
+  { label: "Last Name", name: "lastName" },
+  { label: "Email", name: "email", type: "email", isLocked: true },
+  { label: "Phone Number", name: "phone", type: "tel" },
+  { label: "Address", name: "address", isWide: true },
+  { label: "City", name: "city" },
+  { label: "State", name: "state" },
+  { label: "Postal Code", name: "postalCode" },
+  { label: "Country", name: "country" },
+];
+
+export const PASSWORD_INPUTS = [
+  { name: "currentPassword", label: "Current Password", placeholder: "Enter current password" },
+  { name: "newPassword", label: "New Password", placeholder: "Enter new password" },
+  { name: "confirmPassword", label: "Confirm New Password", placeholder: "Confirm new password" },
+];
+
+export const EMPTY_PASSWORDS = { currentPassword: "", newPassword: "", confirmPassword: "" };
+
+export const EMPTY_PROFILE = {
   ...EMPTY_APPLICATION,
-  firstName: "Marco",
-  lastName: "Ricci",
-  restaurantName: "Golden Fork",
-  restaurantCuisine: "Italian",
-  status: "active",
-  healthScore: "92",
-  proposedTerritory: "Austin Metro",
-  city: "Austin",
-  state: "TX",
-  liquidCapital: "150000",
-  netWorth: "500000",
-  creditScore: "720",
-  yearsMgmt: "8",
-  foodExp: "Y",
-  multiUnit: "N",
-  bankruptcy: "N",
-  litigation: "N",
-  criminal: "N",
-  nonCompete: "N",
-  territoryAvailable: "Y",
-  density: "medium",
+  email: "",
+  phone: "",
+  address: "",
+  postalCode: "",
+  country: "",
 };

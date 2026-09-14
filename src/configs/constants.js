@@ -2,6 +2,7 @@ const USER_ROLES = {
   ADMIN: "admin",
   CLIENT: "client",
   USER: "user",
+  MODERATOR: "moderator",
 };
 
 const USER_STATUSES = {

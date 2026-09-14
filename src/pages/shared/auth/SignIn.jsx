@@ -6,6 +6,7 @@ import AuthHeading from "./components/AuthHeading";
 import AuthLayout from "./components/AuthLayout";
 import { useLoginMutation } from "../../../store/apis/shared/auth.apis";
 import { ROLE_HOME } from "../../../configs/constants";
+import { getDashboardRole } from "../../../utils/roleHelper";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ const SignIn = () => {
     event.preventDefault();
     try {
       const result = await login(formData).unwrap();
-      navigate(ROLE_HOME[result?.data?.role] ?? "/");
+      navigate(ROLE_HOME[getDashboardRole(result?.data)] ?? "/");
     } catch (error) {
       console.error("Login error:", error);
     }
