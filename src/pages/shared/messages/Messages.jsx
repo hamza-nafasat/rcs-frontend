@@ -60,17 +60,14 @@ const Messages = () => {
     return () => unsubscribes.forEach((unsubscribe) => unsubscribe());
   }, [dispatch]);
 
-  const handleSelectConversation = async (conversationId) => {
-    setSelectedConversationId(conversationId);
-    const conversation = conversations.find((item) => item?._id === conversationId);
-    if (!conversation?.unreadCount) return;
+  // an open chat keeps nothing unread
+  useEffect(() => {
+    if (!selectedConversationId || !selectedConversation?.unreadCount) return;
 
-    try {
-      await markConversationRead(conversationId).unwrap();
-    } catch (error) {
-      console.error("Mark conversation read error:", error);
-    }
-  };
+    markConversationRead(selectedConversationId)
+      .unwrap()
+      .catch((error) => console.error("Mark conversation read error:", error));
+  }, [selectedConversationId, selectedConversation?.unreadCount, markConversationRead]);
 
   const handleStartConversation = async (contact) => {
     try {
@@ -106,7 +103,7 @@ const Messages = () => {
       isLoadingConversations={isLoadingConversations}
       isLoadingMessages={isLoadingMessages && messages.length === 0}
       isSending={isSending}
-      onSelectConversation={handleSelectConversation}
+      onSelectConversation={setSelectedConversationId}
       onStartConversation={handleStartConversation}
       onSend={handleSend}
       onDeleteMessage={handleDeleteMessage}
