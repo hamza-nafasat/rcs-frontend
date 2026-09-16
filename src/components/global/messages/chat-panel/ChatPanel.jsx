@@ -4,20 +4,22 @@ import MessageWrite from "./MessageWrite";
 
 const ChatPanel = ({
   conversation,
-  messages,
+  messages = [],
   currentUserId,
+  isLoading = false,
+  isSending = false,
   onSend,
+  onDeleteMessage,
   onBack,
 }) => {
   if (!conversation) {
     return (
       <section className="flex h-full items-center justify-center">
-        <p className="text-sm text-gray-400">
-          Select a conversation to start messaging
-        </p>
+        <p className="text-sm text-gray-400">Select a conversation to start messaging</p>
       </section>
     );
   }
+
   return (
     <section className="flex h-full min-h-0 flex-col">
       {/* Chat Header */}
@@ -27,12 +29,17 @@ const ChatPanel = ({
 
       {/* Messages */}
       <div className="min-h-0 flex-1 overflow-y-auto">
-        <MessageList messages={messages} currentUserId={currentUserId} />
+        <MessageList
+          messages={messages}
+          currentUserId={currentUserId}
+          isLoading={isLoading}
+          onDeleteMessage={onDeleteMessage}
+        />
       </div>
 
       {/* Composer */}
       <footer className="shrink-0">
-        <MessageWrite onSend={onSend} />
+        <MessageWrite onSend={onSend} isSending={isSending} />
       </footer>
     </section>
   );

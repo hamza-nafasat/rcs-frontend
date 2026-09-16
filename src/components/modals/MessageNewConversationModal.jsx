@@ -3,10 +3,10 @@ import { Search, X } from "lucide-react";
 import Avatar from "../shared/Avatar";
 import Input from "../shared/Input";
 
-// the people are grouped by what they are, clients and users for an admin
+// the api answers with accounts, they are grouped by what each one is
 const groupContacts = (contacts) =>
   contacts.reduce((groups, contact) => {
-    const group = contact.group ?? "People";
+    const group = contact?.role ?? "people";
     return { ...groups, [group]: [...(groups[group] ?? []), contact] };
   }, {});
 
@@ -17,9 +17,8 @@ const MessageNewConversationModal = ({ isOpen, onClose, contacts = [], onSelect 
 
   const query = search.trim().toLowerCase();
   const visibleContacts = query
-    ? contacts.filter(
-        ({ name, company }) =>
-          name.toLowerCase().includes(query) || String(company ?? "").toLowerCase().includes(query),
+    ? contacts.filter(({ fullName, email }) =>
+        [fullName, email].some((value) => String(value ?? "").toLowerCase().includes(query)),
       )
     : contacts;
 
@@ -60,25 +59,20 @@ const MessageNewConversationModal = ({ isOpen, onClose, contacts = [], onSelect 
           ) : (
             groups.map(([group, people]) => (
               <div key={group} className="mb-3">
-                <p className="mb-1 px-1 text-xs font-semibold uppercase tracking-wide text-secondary">{group}</p>
+                <p className="mb-1 px-1 text-xs font-semibold uppercase tracking-wide text-secondary">{group}s</p>
 
                 {people.map((contact) => (
                   <button
-                    key={contact.id}
+                    key={contact._id}
                     type="button"
                     onClick={() => onSelect?.(contact)}
                     className="flex w-full items-center gap-3 rounded-xl px-2 py-2 text-left transition hover:bg-muted"
                   >
-                    <div className="relative shrink-0">
-                      <Avatar src={contact.avatar} name={contact.name} size={36} rounded="rounded-full" />
-                      {contact.status === "online" && (
-                        <span className="absolute right-0 bottom-0 h-2.5 w-2.5 rounded-full border-2 border-white bg-green-500" />
-                      )}
-                    </div>
+                    <Avatar src={contact?.image?.url} name={contact?.fullName} size={36} rounded="rounded-full" />
 
                     <div className="min-w-0">
-                      <p className="truncate text-sm font-medium text-tertiary">{contact.name}</p>
-                      <p className="truncate text-xs text-muted">{contact.company}</p>
+                      <p className="truncate text-sm font-medium text-tertiary">{contact?.fullName}</p>
+                      <p className="truncate text-xs text-muted">{contact?.email}</p>
                     </div>
                   </button>
                 ))}

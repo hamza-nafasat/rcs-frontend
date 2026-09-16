@@ -1,43 +1,36 @@
 import Avatar from "../../../shared/Avatar";
+import { formatChatTime } from "../../../../utils/formatTime";
+
+// what the list shows when the last message was not words
+const ATTACHMENT_PREVIEW = {
+  image: "Photo",
+  voice: "Voice note",
+  file: "File",
+};
 
 const ConversationItem = ({ conversation, isSelected, onSelect }) => {
-  const {
-    id,
-    name,
-    company,
-    lastMessage,
-    lastMessageTime,
-    unreadCount,
-    avatar,
-    status,
-  } = conversation;
+  const { _id, contact, lastMessage, lastMessageAt, unreadCount } = conversation;
+  const preview = lastMessage?.text || ATTACHMENT_PREVIEW[lastMessage?.attachmentType] || "";
 
   return (
     <button
       type="button"
-      onClick={() => onSelect(id)}
+      onClick={() => onSelect(_id)}
       className={`flex w-full items-center gap-3 px-4 py-3 text-left transition-colors ${
         isSelected ? "bg-orange-50" : "hover:bg-gray-50"
       }`}
     >
-      {/* Avatar */}
-      <div className="relative shrink-0">
-        <Avatar src={avatar} name={name} size={40} rounded="rounded-full" />
-        {status === "online" && (
-          <span className="absolute right-0 bottom-0 h-2.5 w-2.5 rounded-full border-2 border-white bg-green-500" />
-        )}
-      </div>
+      <Avatar src={contact?.image?.url} name={contact?.fullName} size={40} rounded="rounded-full" />
 
       {/* Conversation Content */}
       <div className="min-w-0 flex-1">
         <div className="flex items-center justify-between gap-2">
-          <p className="truncate text-sm font-semibold text-gray-900">{name}</p>
-          <span className="shrink-0 text-xs text-gray-400">
-            {lastMessageTime}
-          </span>
+          <p className="truncate text-sm font-semibold text-gray-900">{contact?.fullName}</p>
+          <span className="shrink-0 text-xs text-gray-400">{formatChatTime(lastMessageAt)}</span>
         </div>
-        <p className="truncate text-xs text-gray-500">{company}</p>
-        <p className="mt-0.5 truncate text-xs text-gray-400">{lastMessage}</p>
+
+        <p className="truncate text-xs text-gray-500">{contact?.email}</p>
+        <p className="mt-0.5 truncate text-xs text-gray-400">{preview}</p>
       </div>
 
       {/* Unread Count */}

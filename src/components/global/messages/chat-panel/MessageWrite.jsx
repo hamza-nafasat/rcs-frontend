@@ -6,7 +6,7 @@ import MessageVoiceNote from "./MessageVoiceNote";
 import Button from "../../../shared/Button";
 import { formatDuration } from "../../../../utils/formatDuration";
 
-const MessageWrite = ({ onSend }) => {
+const MessageWrite = ({ onSend, isSending = false }) => {
   const [message, setMessage] = useState("");
   const [file, setFile] = useState(null);
   const [voiceNote, setVoiceNote] = useState(null);
@@ -20,30 +20,41 @@ const MessageWrite = ({ onSend }) => {
     setVoiceNote(null);
   };
 
-  const handleSubmit = (event) => {
+  // a message carries one attachment, so each choice replaces the other
+  const handleFileSelect = (selectedFile) => {
+    removeVoiceNote();
+    setFile(selectedFile);
+  };
+
+  const handleRecorded = (recording) => {
+    setFile(null);
+    setVoiceNote(recording);
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     const trimmedMessage = message.trim();
-
     if (!trimmedMessage && !file && !voiceNote) return;
 
-    onSend(trimmedMessage, file, voiceNote);
-    setMessage("");
-    setFile(null);
-    // the message keeps the recording, so its url is not released here
-    setVoiceNote(null);
+    try {
+      await onSend?.(trimmedMessage, file, voiceNote);
+      // the composer only empties once the api has the message
+      setMessage("");
+      setFile(null);
+      setVoiceNote(null);
+    } catch (error) {
+      console.error("Send message error:", error);
+    }
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="border-t border-gray-200 px-4 py-3 sm:px-5 sm:py-4"
-    >
+    <form onSubmit={handleSubmit} className="border-t border-gray-200 px-4 py-3 sm:px-5 sm:py-4">
       {/* Attachment, emoji and voice note options */}
       <div className="mb-2 flex items-center gap-3">
-        <MessageAttachment onFileSelect={setFile} />
+        <MessageAttachment onFileSelect={handleFileSelect} />
         <MessageEmoji onEmojiSelect={handleEmojiSelect} />
-        <MessageVoiceNote onRecorded={setVoiceNote} />
+        <MessageVoiceNote onRecorded={handleRecorded} />
       </div>
 
       {/* Selected file */}
@@ -90,6 +101,7 @@ const MessageWrite = ({ onSend }) => {
 
         <Button
           type="submit"
+          isLoading={isSending}
           isDisabled={!message.trim() && !file && !voiceNote}
           className="h-10 w-10"
         >

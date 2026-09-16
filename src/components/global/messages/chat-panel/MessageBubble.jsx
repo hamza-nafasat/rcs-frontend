@@ -1,34 +1,55 @@
+import { Paperclip, Trash2 } from "lucide-react";
+import { formatChatTime } from "../../../../utils/formatTime";
 import { formatDuration } from "../../../../utils/formatDuration";
 
-const MessageBubble = ({ message, isOwnMessage }) => {
+const MessageBubble = ({ message, isOwnMessage, onDelete }) => {
+  const { text, attachment, attachmentType, duration, createdAt } = message;
+
   return (
-    <div className={`flex ${isOwnMessage ? "justify-end" : "justify-start"}`}>
+    <div className={`group flex items-center gap-2 ${isOwnMessage ? "justify-end" : "justify-start"}`}>
+      {isOwnMessage && (
+        <button
+          type="button"
+          onClick={() => onDelete?.(message)}
+          aria-label="Delete message"
+          className="hidden shrink-0 rounded-full p-1 text-gray-400 transition hover:bg-gray-100 hover:text-remove group-hover:block"
+        >
+          <Trash2 className="h-3.5 w-3.5" />
+        </button>
+      )}
+
       <div
         className={`max-w-[80%] rounded-2xl sm:max-w-[70%] px-4 py-2.5 ${
-          isOwnMessage
-            ? "rounded-br-md bg-orange-500 text-white"
-            : "rounded-bl-md bg-gray-100 text-gray-900"
+          isOwnMessage ? "rounded-br-md bg-orange-500 text-white" : "rounded-bl-md bg-gray-100 text-gray-900"
         }`}
       >
-        {message.text && <p className="text-sm leading-5">{message.text}</p>}
+        {text && <p className="text-sm leading-5">{text}</p>}
 
-        {message.attachment && (
-          <p className="mt-1 text-xs underline">{message.attachment}</p>
+        {attachmentType === "image" && (
+          <img src={attachment?.url} alt={attachment?.name} className="mt-1 max-h-60 rounded-lg" />
         )}
 
-        {message.voiceNote && (
+        {attachmentType === "voice" && (
           <div className="mt-1 flex items-center gap-2">
-            <audio controls src={message.voiceNote.url} className="h-9 w-48 max-w-full" />
-            <span className="shrink-0 text-[10px] tabular-nums">{formatDuration(message.voiceNote.duration)}</span>
+            <audio controls src={attachment?.url} className="h-9 w-48 max-w-full" />
+            <span className="shrink-0 text-[10px] tabular-nums">{formatDuration(duration ?? 0)}</span>
           </div>
         )}
 
-        <p
-          className={`mt-1 text-[10px] ${
-            isOwnMessage ? "text-orange-100" : "text-gray-400"
-          }`}
-        >
-          {message.time}
+        {attachmentType === "file" && (
+          <a
+            href={attachment?.url}
+            target="_blank"
+            rel="noreferrer"
+            className="mt-1 flex items-center gap-1.5 text-xs underline"
+          >
+            <Paperclip className="h-3.5 w-3.5 shrink-0" />
+            <span className="truncate">{attachment?.name}</span>
+          </a>
+        )}
+
+        <p className={`mt-1 text-[10px] ${isOwnMessage ? "text-orange-100" : "text-gray-400"}`}>
+          {formatChatTime(createdAt)}
         </p>
       </div>
     </div>
