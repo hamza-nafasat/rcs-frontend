@@ -196,3 +196,13 @@ export const initialMessagesByConversation = {
     },
   ],
 };
+
+// everyone an admin can start a conversation with
+export const contacts = [
+  { id: "1", name: "Marco Ricci", company: "The Golden Fork", group: "Clients", status: "online" },
+  { id: "2", name: "Ravi Kapoor", company: "Spice Route", group: "Clients", status: "offline" },
+  { id: "3", name: "Julia Chen", company: "Urban Eats", group: "Clients", status: "offline" },
+  { id: "client-4", name: "Sofia Almeida", company: "Casa Verde", group: "Clients", status: "offline" },
+  { id: "user-1", name: "Daniel Brooks", company: "Applicant", group: "Users", status: "offline" },
+  { id: "user-2", name: "Aisha Rahman", company: "Applicant", group: "Users", status: "online" },
+];

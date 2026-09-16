@@ -3,10 +3,12 @@ import ConversationSidebar from "./conversation-sidebar/ConversationSidebar";
 import ChatPanel from "./chat-panel/ChatPanel";
 
 const MessagesView = ({
-  conversations = [],
+  conversations: initialConversations = [],
   initialMessages = {},
+  contacts = [],
   currentUserId,
 }) => {
+  const [conversations, setConversations] = useState(initialConversations);
   const [selectedConversationId, setSelectedConversationId] = useState(null);
   const [messagesByConversation, setMessagesByConversation] =
     useState(initialMessages);
@@ -18,6 +20,29 @@ const MessagesView = ({
   const messages = selectedConversationId
     ? (messagesByConversation[selectedConversationId] ?? [])
     : [];
+
+  // an existing chat reopens, anyone else gets a conversation of their own
+  const handleStartConversation = (contact) => {
+    setConversations((previous) =>
+      previous.some((conversation) => conversation.id === contact.id)
+        ? previous
+        : [
+            {
+              id: contact.id,
+              name: contact.name,
+              company: contact.company ?? "",
+              lastMessage: "",
+              lastMessageTime: "",
+              unreadCount: 0,
+              avatar: contact.avatar,
+              status: contact.status ?? "offline",
+            },
+            ...previous,
+          ],
+    );
+
+    setSelectedConversationId(contact.id);
+  };
 
   const handleSendMessage = (text, file, voiceNote) => {
     const newMessage = {
@@ -54,8 +79,10 @@ const MessagesView = ({
         >
           <ConversationSidebar
             conversations={conversations}
+            contacts={contacts}
             selectedConversationId={selectedConversationId}
             onSelectConversation={setSelectedConversationId}
+            onStartConversation={handleStartConversation}
           />
         </section>
 

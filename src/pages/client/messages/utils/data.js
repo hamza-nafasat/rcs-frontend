@@ -196,3 +196,8 @@ export const initialMessagesByConversation = {
     },
   ],
 };
+
+// a client and a user can only message the admin
+export const contacts = [
+  { id: "admin-1", name: "Ahmed Khan", company: "RCS Admin", group: "Admin", status: "online" },
+];
