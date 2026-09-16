@@ -8,13 +8,13 @@ import Dashboard from "../components/layouts/Dashboard";
 import DashboardNotFound from "../components/layouts/DashboardNotFound";
 import AdminDashboard from "../pages/admin/dashboard/AdminDashboard";
 import ClientManagement from "../pages/admin/client-management/ClientManagement";
-import AdminMessages from "../pages/admin/messages/AdminMessages";
 import AdminModerators from "../pages/admin/moderators/AdminModerators";
 import AdminFdd from "../pages/admin/fdd/AdminFdd";
 import ResetPasswordSuccess from "../pages/shared/auth/ResetPasswordSuccess";
 import AdminSupport from "../pages/admin/support/AdminSupport";
 import Settings from "../pages/shared/settings/Settings";
 import Notifications from "../pages/shared/notifications/Notifications";
+import Messages from "../pages/shared/messages/Messages";
 import AdminPipeline from "../pages/admin/pipeline/AdminPipeline";
 import AdminApplicantDetailPage from "../pages/admin/pipeline/AdminApplicantDetailPage";
 import ViewAllActivity from "../pages/admin/view-all-activity/ViewAllActivity";
@@ -27,8 +27,6 @@ import ClientFdd from "../pages/client/fdd/ClientFdd";
 import ClientModerators from "../pages/client/moderators/ClientModerators";
 import ClientSupport from "../pages/client/support/ClientSupport";
 import Application from "../pages/user/application/Application";
-import ClientMessages from "../pages/client/messages/ClientMessages";
-import UserMessages from "../pages/user/messages/UserMessages";
 import Franchisee from "../pages/client/franchisee/Franchisee";
 
 import ProtectedRoute from "./ProtectedRoute";
@@ -63,7 +61,7 @@ const AppRoutes = () => {
           <Route path="/admin/dashboard" element={<Dashboard type="admin" />}>
             <Route index element={<AdminDashboard />} />
             <Route path="clients" element={<ClientManagement />} />
-            <Route path="messages" element={<AdminMessages />} />
+            <Route path="messages" element={<Messages />} />
             <Route element={<NoModeratorRoute />}>
               <Route path="moderators" element={<AdminModerators />} />
             </Route>
@@ -93,7 +91,7 @@ const AppRoutes = () => {
             <Route path="settings" element={<Settings />} />
             <Route path="notifications" element={<Notifications />} />
             <Route path="support" element={<ClientSupport />} />
-            <Route path="messages" element={<ClientMessages />} />
+            <Route path="messages" element={<Messages />} />
             <Route path="franchisee" element={<Franchisee />} />
           </Route>
         </Route>
@@ -102,7 +100,7 @@ const AppRoutes = () => {
         <Route element={<ProtectedRoute role={USER_ROLES.USER} />}>
           <Route path="/user/dashboard" element={<Dashboard type="user" />}>
             <Route index element={<Application />} />
-            <Route path="messages" element={<UserMessages />} />
+            <Route path="messages" element={<Messages />} />
             <Route path="notifications" element={<Notifications />} />
             <Route path="settings" element={<Settings />} />
           </Route>

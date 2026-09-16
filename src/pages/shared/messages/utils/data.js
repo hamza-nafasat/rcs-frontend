@@ -197,12 +197,22 @@ export const initialMessagesByConversation = {
   ],
 };
 
-// everyone an admin can start a conversation with
-export const contacts = [
-  { id: "1", name: "Marco Ricci", company: "The Golden Fork", group: "Clients", status: "online" },
-  { id: "2", name: "Ravi Kapoor", company: "Spice Route", group: "Clients", status: "offline" },
-  { id: "3", name: "Julia Chen", company: "Urban Eats", group: "Clients", status: "offline" },
-  { id: "client-4", name: "Sofia Almeida", company: "Casa Verde", group: "Clients", status: "offline" },
-  { id: "user-1", name: "Daniel Brooks", company: "Applicant", group: "Users", status: "offline" },
-  { id: "user-2", name: "Aisha Rahman", company: "Applicant", group: "Users", status: "online" },
-];
+// the one person a client or a user may message
+const ADMIN_CONTACT = { id: "admin-1", name: "Ahmed Khan", company: "RCS Admin", group: "Admin", status: "online" };
+
+// who each role is, and who it may start a conversation with
+export const MESSAGES_BY_ROLE = {
+  admin: {
+    currentUserId: "admin-1",
+    contacts: [
+      { id: "1", name: "Marco Ricci", company: "The Golden Fork", group: "Clients", status: "online" },
+      { id: "2", name: "Ravi Kapoor", company: "Spice Route", group: "Clients", status: "offline" },
+      { id: "3", name: "Julia Chen", company: "Urban Eats", group: "Clients", status: "offline" },
+      { id: "client-4", name: "Sofia Almeida", company: "Casa Verde", group: "Clients", status: "offline" },
+      { id: "user-1", name: "Daniel Brooks", company: "Applicant", group: "Users", status: "offline" },
+      { id: "user-2", name: "Aisha Rahman", company: "Applicant", group: "Users", status: "online" },
+    ],
+  },
+  client: { currentUserId: "client-1", contacts: [ADMIN_CONTACT] },
+  user: { currentUserId: "user-1", contacts: [ADMIN_CONTACT] },
+};
