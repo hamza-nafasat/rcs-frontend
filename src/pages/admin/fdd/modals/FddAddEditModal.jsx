@@ -1,0 +1,232 @@
+import { useState } from "react";
+import { X } from "lucide-react";
+import Input from "../../../../components/shared/Input";
+import Select from "../../../../components/shared/Select";
+import FileUpload from "../../../../components/shared/FileUpload";
+import Button from "../../../../components/shared/Button";
+import { FDD_STATE_OPTIONS, GENERAL_FDD_STATE } from "../../../../utils/fddStateHelper";
+
+// a new document is always pending, an admin approves it later
+const FDD_STATUSES = ["Pending", "Approved"];
+
+const INITIAL_FORM = {
+  title: "",
+  version: "",
+  brand: "",
+  country: "United States",
+  state: GENERAL_FDD_STATE,
+  status: FDD_STATUSES[0],
+  isFillRequired: true,
+};
+
+// an existing row carries its name with the .pdf suffix
+const toForm = (document) =>
+  document
+    ? {
+        ...INITIAL_FORM,
+        title: String(document.document ?? "").replace(/\.pdf$/i, ""),
+        version: document.version ?? "",
+        brand: Array.isArray(document.brand) ? document.brand[0] : (document.brand ?? ""),
+        country: document.country ?? INITIAL_FORM.country,
+        state: document.state ?? INITIAL_FORM.state,
+        status: document.status ?? INITIAL_FORM.status,
+        isFillRequired: document.isFillRequired ?? INITIAL_FORM.isFillRequired,
+      }
+    : INITIAL_FORM;
+
+const FddAddEditModal = ({
+  isOpen,
+  onClose,
+  onSubmit,
+  initialData = null,
+  mode = "add",
+  isSubmitting = false,
+  brands = [],
+}) => {
+  const isAdd = mode === "add";
+  const [formData, setFormData] = useState(() => toForm(initialData));
+  const [file, setFile] = useState(null);
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+
+    setFormData((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const documentName = file ? file.name : `${formData.title}.pdf`;
+
+    onSubmit({
+      ...formData,
+      status: isAdd ? FDD_STATUSES[0] : formData.status,
+      document: documentName,
+      file,
+    });
+  };
+
+  // a new document needs its pdf, an edit keeps the one already uploaded
+  const isComplete =
+    formData.title.trim() !== "" && formData.version.trim() !== "" && formData.brand !== "" && (!isAdd || file);
+
+  if (!isOpen) return null;
+
+  return (
+    <article className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/40 px-4 py-4 sm:items-center sm:py-6">
+      <article className="max-h-[calc(100dvh-2rem)] w-full max-w-150 overflow-y-auto rounded-2xl bg-white p-4 shadow-xl sm:max-h-[calc(100dvh-3rem)] sm:p-6">
+        {/* Header */}
+        <section className="mb-6 flex items-start justify-between gap-4">
+          <div>
+            <h2 className="text-xl font-semibold text-gray-900">
+              {isAdd ? "Upload FDD Document" : "Edit FDD Document"}
+            </h2>
+
+            <p className="mt-1 text-sm text-secondary">
+              {isAdd
+                ? "Add a new version of the franchise disclosure document. It stays pending until you approve it."
+                : "Update the details of this franchise disclosure document, or replace the PDF."}
+            </p>
+          </div>
+
+          <button
+            aria-label="Close dialog"
+            type="button"
+            onClick={onClose}
+            className="rounded-full p-1 text-gray-500 hover:bg-gray-100"
+          >
+            <X size={20} />
+          </button>
+        </section>
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Title & version */}
+          <section className="grid grid-cols-1 gap-4 sm:grid-cols-12">
+            <div className="sm:col-span-7">
+              <Input
+                label="Document Title *"
+                name="title"
+                value={formData.title}
+                onChange={handleChange}
+                placeholder="e.g. California State FDD 2025"
+                required
+              />
+            </div>
+
+            <div className="sm:col-span-5">
+              <Input
+                label="Version Identifier *"
+                name="version"
+                value={formData.version}
+                onChange={handleChange}
+                placeholder="e.g. v3.2"
+                required
+              />
+            </div>
+          </section>
+
+          {/* Which restaurant it belongs to */}
+          <section>
+            <Select
+              label="Restaurant Brand *"
+              name="brand"
+              value={formData.brand}
+              onChange={handleChange}
+              placeholder={brands.length === 0 ? "No clients yet" : "Select a restaurant"}
+              options={brands}
+              searchable
+              required
+            />
+          </section>
+
+          {/* Where it applies and where it stands */}
+          <section className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <Select
+              label="FDD State *"
+              name="state"
+              value={formData.state}
+              onChange={handleChange}
+              placeholder="Select state"
+              options={FDD_STATE_OPTIONS}
+              searchable
+              required
+            />
+
+            <div className="flex flex-col gap-1">
+              <Select
+                label="Status"
+                name="status"
+                value={formData.status}
+                onChange={handleChange}
+                options={FDD_STATUSES}
+                placeholder="Select status"
+                disabled={isAdd}
+              />
+
+              {isAdd && <p className="text-xs text-muted">New documents start as pending.</p>}
+            </div>
+          </section>
+
+          {/* PDF File Upload */}
+          <section>
+            <FileUpload
+              label={isAdd ? "PDF Document *" : "Replace PDF Document"}
+              accept=".pdf"
+              hint="An FDD is always a PDF, up to 10MB"
+              file={file}
+              onFileChange={setFile}
+            />
+          </section>
+
+          {/* Does the client have to sign it */}
+          <section>
+            <label
+              className={`flex cursor-pointer items-start gap-3 rounded-xl border px-4 py-3 transition ${
+                formData.isFillRequired ? "border-primary bg-moderator" : "color-border bg-white hover:bg-muted"
+              }`}
+            >
+              <input
+                type="checkbox"
+                name="isFillRequired"
+                checked={formData.isFillRequired}
+                onChange={handleChange}
+                className="mt-0.5 h-4 w-4 shrink-0 accent-(--color-primary)"
+              />
+
+              <span className="min-w-0">
+                <span className="block text-sm font-medium text-tertiary">Fill required from client</span>
+                <span className="block text-xs text-muted">
+                  The client sees the Fill FDD action only when this is on
+                </span>
+              </span>
+            </label>
+          </section>
+
+          {/* Actions */}
+          <section className="flex gap-3 pt-4">
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={onClose}
+              className="w-1/2 text-gray-700! bg-gray-100! px-3! py-2! sm:px-4! sm:py-2.5!"
+            >
+              Cancel
+            </Button>
+
+            <Button
+              type="submit"
+              isLoading={isSubmitting}
+              isDisabled={!isComplete}
+              className="w-1/2 px-3! py-2! sm:px-4! sm:py-2.5!"
+            >
+              {isAdd ? "Upload FDD" : "Save Changes"}
+            </Button>
+          </section>
+        </form>
+      </article>
+    </article>
+  );
+};
+
+export default FddAddEditModal;

@@ -1,11 +1,6 @@
 import DataTable from "react-data-table-component";
-import {
-  ChevronDown,
-  Download,
-  Eye,
-  MoreHorizontal,
-  PenLine,
-} from "lucide-react";
+import { ChevronDown, Download, Eye, FileSignature, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import Button from "../shared/Button";
 import Dropdown from "../shared/Dropdown";
 
 const STATUS_STYLES = {
@@ -30,7 +25,7 @@ const tableStyles = {
   },
 };
 
-const buildColumns = ({ onReview, onESign, onDownload }) => [
+const buildColumns = ({ canManage, onView, onEdit, onFill, onDownload, onDelete }) => [
   {
     name: "Document",
     selector: (row) => row.document,
@@ -98,42 +93,44 @@ const buildColumns = ({ onReview, onESign, onDownload }) => [
       <div className="flex justify-end">
         <Dropdown
           align="right"
+          portalClassName="max-w-12"
           trigger={
-            <button
-              type="button"
-              className="rounded-md p-2 text-gray-500 transition hover:bg-gray-100 hover:text-gray-700"
-              aria-label="Open actions menu"
-            >
+            <Button variant="menuTrigger">
               <MoreHorizontal size={18} />
-            </button>
+            </Button>
           }
         >
-          <button
-            type="button"
-            className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-gray-700 transition hover:bg-gray-100"
-            onClick={() => onReview?.(row)}
-          >
-            <Eye size={16} className="shrink-0" />
-            Review
-          </button>
+          <Button variant="menuItem" onClick={() => onView?.(row)}>
+            <Eye size={16} className="mt-0.5" />
+            View
+          </Button>
 
-          <button
-            type="button"
-            className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-gray-700 transition hover:bg-gray-100"
-            onClick={() => onESign?.(row)}
-          >
-            <PenLine size={16} className="shrink-0" />
-            E-sign
-          </button>
+          {canManage && (
+            <Button variant="menuItem" onClick={() => onEdit?.(row)}>
+              <Pencil size={16} className="mt-0.5" />
+              Edit
+            </Button>
+          )}
 
-          <button
-            type="button"
-            className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-gray-700 transition hover:bg-gray-100"
-            onClick={() => onDownload?.(row)}
-          >
-            <Download size={16} className="shrink-0" />
+          {/* a client only fills the documents that ask for it */}
+          {(canManage || row.isFillRequired) && (
+            <Button variant="menuItem" onClick={() => onFill?.(row)}>
+              <FileSignature size={16} className="mt-0.5" />
+              Fill FDD
+            </Button>
+          )}
+
+          <Button variant="menuItem" onClick={() => onDownload?.(row)}>
+            <Download size={16} className="mt-0.5" />
             Download
-          </button>
+          </Button>
+
+          {canManage && (
+            <Button variant="menuItemDanger" onClick={() => onDelete?.(row)}>
+              <Trash2 size={16} className="shrink-0" />
+              Delete
+            </Button>
+          )}
         </Dropdown>
       </div>
     ),
@@ -143,8 +140,9 @@ const buildColumns = ({ onReview, onESign, onDownload }) => [
   },
 ];
 
-const FddTable = ({ documents, onReview, onESign, onDownload }) => {
-  const columns = buildColumns({ onReview, onESign, onDownload });
+// canManage adds the admin only actions, edit and delete
+const FddTable = ({ documents, canManage = false, onView, onEdit, onFill, onDownload, onDelete }) => {
+  const columns = buildColumns({ canManage, onView, onEdit, onFill, onDownload, onDelete });
   return (
     <section className="flex h-full w-full min-h-0 flex-col">
       <DataTable

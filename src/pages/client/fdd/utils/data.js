@@ -7,6 +7,8 @@ export const initialDocuments = [
     country: "United States",
     state: "California",
     status: "Approved",
+    isFillRequired: true,
+    fileUrl: "/sample-fdd.pdf",
   },
   {
     id: 2,
@@ -16,6 +18,8 @@ export const initialDocuments = [
     country: "United States",
     state: "New York",
     status: "Approved",
+    isFillRequired: true,
+    fileUrl: "/sample-fdd.pdf",
   },
   {
     id: 3,
@@ -25,6 +29,8 @@ export const initialDocuments = [
     country: "United States",
     state: "Texas",
     status: "Approved",
+    isFillRequired: true,
+    fileUrl: "/sample-fdd.pdf",
   },
   {
     id: 4,
@@ -34,6 +40,8 @@ export const initialDocuments = [
     country: "USA",
     state: "Ontario",
     status: "Pending",
+    isFillRequired: true,
+    fileUrl: "/sample-fdd.pdf",
   },
   {
     id: 5,
@@ -43,5 +51,7 @@ export const initialDocuments = [
     country: "United Kingdom",
     state: "London",
     status: "Draft",
+    isFillRequired: false,
+    fileUrl: "/sample-fdd.pdf",
   },
 ];

@@ -25,14 +25,14 @@ const UserMenu = ({ name, type = "admin" }) => {
         : "/admin/dashboard/settings";
   const options = [
     {
-      label: "Sign out",
-      icon: <LogOut size={16} />,
-      onClick: handleSignOut,
-    },
-    {
       label: "My Profile",
       icon: <UserRound size={16} />,
       onClick: () => navigate(profilePath),
+    },
+    {
+      label: "Sign out",
+      icon: <LogOut size={16} />,
+      onClick: handleSignOut,
     },
   ];
   return (

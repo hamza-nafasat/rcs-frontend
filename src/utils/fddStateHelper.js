@@ -1,3 +1,6 @@
+// 14 states require their own FDD, every other state is covered by the general one
+export const GENERAL_FDD_STATE = "General";
+
 export const US_STATES = [
   { name: "Alabama", code: "AL", isRegistrationState: false },
   { name: "Alaska", code: "AK", isRegistrationState: false },
@@ -49,4 +52,10 @@ export const US_STATES = [
   { name: "West Virginia", code: "WV", isRegistrationState: false },
   { name: "Wisconsin", code: "WI", isRegistrationState: true },
   { name: "Wyoming", code: "WY", isRegistrationState: false },
+];
+
+// the only states an FDD can be filed for: the general document, then the 14 registration states
+export const FDD_STATE_OPTIONS = [
+  GENERAL_FDD_STATE,
+  ...US_STATES.filter((state) => state.isRegistrationState).map((state) => state.name),
 ];

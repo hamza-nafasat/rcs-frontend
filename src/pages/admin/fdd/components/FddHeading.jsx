@@ -1,9 +1,9 @@
 import { Plus } from "lucide-react";
 import Button from "../../../../components/shared/Button";
 import { useState } from "react";
-import FddAddModal from "../modals/FddAddModal";
+import FddAddEditModal from "../modals/FddAddEditModal";
 
-const FddHeading = ({ heading, subheading, emoji, onAddFdd }) => {
+const FddHeading = ({ heading, subheading, emoji, brands = [], onAddFdd }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleAddFdd = (formData) => {
@@ -30,10 +30,11 @@ const FddHeading = ({ heading, subheading, emoji, onAddFdd }) => {
       </Button>
 
       {isModalOpen && (
-        <FddAddModal
+        <FddAddEditModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           onSubmit={handleAddFdd}
+          brands={brands}
           mode="add"
         />
       )}
