@@ -1,11 +1,11 @@
 import { Store, X } from "lucide-react";
-import Input from "../../../../components/shared/Input";
-import LocationFields from "../../../../components/global/LocationFields";
+import Input from "../../shared/Input";
+import LocationFields from "../LocationFields";
 
 // needs a name and place
 const isComplete = (form) => Boolean(form?.name?.trim() && form?.state && form?.city);
 
-const AuthFranchiseFormModal = ({ form, location, isEditing = false, onChange, onSubmit, onClose }) => (
+const MapFranchiseFormModal = ({ form, location, isEditing = false, onChange, onSubmit, onClose }) => (
   <div
     className="fixed inset-0 flex items-center justify-center p-4"
     style={{ zIndex: 10000, background: "rgba(0,0,0,0.5)" }}
@@ -78,4 +78,4 @@ const AuthFranchiseFormModal = ({ form, location, isEditing = false, onChange, o
   </div>
 );
 
-export default AuthFranchiseFormModal;
+export default MapFranchiseFormModal;

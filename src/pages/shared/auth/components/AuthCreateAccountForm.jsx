@@ -5,7 +5,7 @@ import Button from "../../../../components/shared/Button";
 import AuthHeading from "./AuthHeading";
 import AuthApplicationNotice from "./AuthApplicationNotice";
 import AuthApplicationFields from "./AuthApplicationFields";
-import AuthLocationAssign from "./AuthLocationAssign";
+import MapLocationAssign from "../../../../components/global/map/MapLocationAssign";
 import { EMPTY_ACCOUNT, validateAccount } from "../utils/accountRules";
 import { EMPTY_APPLICATION, scoreApplication } from "../utils/applicationScore";
 import { useAcceptInviteMutation } from "../../../../store/apis/shared/auth.apis";
@@ -87,7 +87,7 @@ const AuthCreateAccountForm = ({ inviteToken, invite }) => {
         />
 
         {/* Franchises and territory areas */}
-        <AuthLocationAssign onTerritoryChange={setMap} />
+        <MapLocationAssign franchises={map.franchises} areas={map.areas} onChange={setMap} />
 
         <footer className="flex flex-wrap items-center justify-between gap-3 border-t color-border pt-4">
           <Button

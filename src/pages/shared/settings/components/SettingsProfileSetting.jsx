@@ -4,6 +4,7 @@ import Avatar from "../../../../components/shared/Avatar";
 import Input from "../../../../components/shared/Input";
 import Button from "../../../../components/shared/Button";
 import LocationFields from "../../../../components/global/LocationFields";
+import MapLocationAssign from "../../../../components/global/map/MapLocationAssign";
 import SettingsClientApplicationDetails from "./SettingsClientApplicationDetails";
 import { PASSWORD_MIN_LENGTH } from "../../auth/utils/accountRules";
 import {
@@ -33,6 +34,8 @@ const SettingsProfileSetting = ({
   isClient = false,
   isSaving = false,
   isChangingPassword = false,
+  franchises = [],
+  areas = [],
   onSave,
   onUpdatePassword,
 }) => {
@@ -40,6 +43,7 @@ const SettingsProfileSetting = ({
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState("");
   const [isEditing, setIsEditing] = useState(false);
+  const [mapDraft, setMapDraft] = useState(null);
   const [passwords, setPasswords] = useState(EMPTY_PASSWORDS);
   const [visiblePasswords, setVisiblePasswords] = useState({});
   const [passwordError, setPasswordError] = useState("");
@@ -66,14 +70,16 @@ const SettingsProfileSetting = ({
   const handleCancel = () => {
     setForm(toForm(profile));
     replaceImage(null);
+    setMapDraft(null);
     setIsEditing(false);
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await onSave?.(form, image);
+      await onSave?.(form, image, mapDraft);
       replaceImage(null);
+      setMapDraft(null);
       setIsEditing(false);
     } catch (error) {
       console.error("Update profile error:", error);
@@ -87,6 +93,9 @@ const SettingsProfileSetting = ({
   };
 
   const togglePasswordVisibility = (name) => setVisiblePasswords((prev) => ({ ...prev, [name]: !prev[name] }));
+
+  // unsaved edits beat saved data
+  const map = mapDraft ?? { franchises, areas };
 
   const handlePasswordSubmit = async (event) => {
     event.preventDefault();
@@ -185,12 +194,19 @@ const SettingsProfileSetting = ({
         </label>
 
         {isClient && (
-          <div className="md:col-span-2">
+          <div className="md:col-span-2 flex flex-col gap-4">
             <SettingsClientApplicationDetails
               form={form}
               onChange={handleChange}
               onSelect={handleSelect}
               disabled={!isEditing}
+            />
+
+            <MapLocationAssign
+              franchises={map.franchises}
+              areas={map.areas}
+              canEdit={isEditing}
+              onChange={setMapDraft}
             />
           </div>
         )}

@@ -12,7 +12,7 @@ import {
   isNearPoint,
   redrawPolygon,
   strokePolygon,
-} from "../../../../utils/canvasDrawing";
+} from "../../../utils/canvasDrawing";
 import {
   AREA_COLORS,
   DEFAULT_CENTER,
@@ -31,17 +31,23 @@ import {
   pixelToLng,
   searchLocation,
   sizeCanvas,
-} from "../utils/mapHelpers";
+} from "../../../utils/mapHelpers";
 import { Check, Layers, MapPin, PenTool, RotateCcw, Search, Store, X } from "lucide-react";
-import AuthFranchiseFormModal from "./AuthFranchiseFormModal";
-import AuthMapDataModal from "./AuthMapDataModal";
+import MapFranchiseFormModal from "./MapFranchiseFormModal";
+import MapDataModal from "./MapDataModal";
 
 const MODE_IDLE = "idle";
 const MODE_AREA = "area";
 const MODE_LOCATION = "location";
 const EMPTY_FRANCHISE = { name: "", country: "United States", state: "", city: "" };
 
-const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [], initialFranchises = [] }) => {
+const MapTerritoryDrawing = ({
+  onClose,
+  onComplete,
+  initialAreas = [],
+  initialFranchises = [],
+  canEdit = true,
+}) => {
   const containerRef = useRef(null);
   const mapCanvasRef = useRef(null);
   const drawCanvasRef = useRef(null);
@@ -64,12 +70,16 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [], initialF
   // the franchise form modal
   const [pendingFranchise, setPendingFranchise] = useState(null);
   const [editingFranchiseId, setEditingFranchiseId] = useState(null);
+  // keeps the saved database id
+  const [editingFranchiseDbId, setEditingFranchiseDbId] = useState(null);
   const [franchiseForm, setFranchiseForm] = useState(EMPTY_FRANCHISE);
 
   // Save Area Form Modal State
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [pendingGeoPoints, setPendingGeoPoints] = useState(null);
   const [editingAreaId, setEditingAreaId] = useState(null);
+  // keeps the saved area id
+  const [editingAreaDbId, setEditingAreaDbId] = useState(null);
   const [formAreaName, setFormAreaName] = useState("");
   const [formAreaDistance, setFormAreaDistance] = useState("5");
 
@@ -409,7 +419,7 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [], initialF
   };
 
   const handleSaveAndExit = () => {
-    onComplete({ areas: completedAreas, franchises });
+    onComplete?.({ areas: completedAreas, franchises });
     onClose();
   };
 
@@ -425,6 +435,7 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [], initialF
     const finalDistance = parseFloat(formAreaDistance) || 0;
 
     const updatedArea = {
+      ...(editingAreaDbId && { _id: editingAreaDbId }),
       id: editingAreaId || `area-${Date.now()}`,
       name: finalName,
       distanceKm: finalDistance,
@@ -445,12 +456,14 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [], initialF
     });
 
     setEditingAreaId(null);
+    setEditingAreaDbId(null);
     setPendingGeoPoints(null);
     setShowSaveModal(false);
   };
 
   const handleEditAreaShape = (area) => {
     setEditingAreaId(area.id);
+    setEditingAreaDbId(area._id ?? null);
     setCompletedAreas((prev) => prev.filter((a) => a.id !== area.id));
     setActiveGeoPoints(area.geoPoints);
     setFormAreaName(area.name);
@@ -465,6 +478,7 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [], initialF
   const handleCloseFranchiseForm = () => {
     setPendingFranchise(null);
     setEditingFranchiseId(null);
+    setEditingFranchiseDbId(null);
     setFranchiseForm(EMPTY_FRANCHISE);
   };
 
@@ -474,6 +488,7 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [], initialF
 
     const franchise = {
       ...franchiseForm,
+      ...(editingFranchiseDbId && { _id: editingFranchiseDbId }),
       id: editingFranchiseId || `franchise-${Date.now()}`,
       name: franchiseForm.name.trim(),
       lat: pendingFranchise.lat,
@@ -488,6 +503,7 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [], initialF
 
   const handleEditFranchise = (franchise) => {
     setEditingFranchiseId(franchise.id);
+    setEditingFranchiseDbId(franchise._id ?? null);
     setPendingFranchise({ lat: franchise.lat, lng: franchise.lng });
     setFranchiseForm({
       name: franchise.name,
@@ -589,48 +605,61 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [], initialF
               className="inline-flex items-center gap-1.5 rounded-lg border color-border bg-white px-3 py-1.5 text-xs font-medium text-tertiary cursor-pointer hover:bg-gray-50 transition"
             >
               <Layers size={13} className="text-primary" />
-              Manage Data
+              {canEdit ? "Manage Data" : "View Data"}
             </button>
           )}
 
-          {/* drop a franchise pin */}
-          <button
-            type="button"
-            onClick={handleTogglePlaceMode}
-            title="Click the map to drop a franchise"
-            className={`inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-semibold cursor-pointer transition ${
-              isPlacingFranchise
-                ? "bg-orange-600 text-white shadow-xs"
-                : "border color-border bg-white text-tertiary hover:bg-gray-50"
-            }`}
-          >
-            <Store size={13} />
-            {isPlacingFranchise ? "Click Map To Drop" : "Add Location"}
-          </button>
+          {canEdit ? (
+            <>
+              {/* drop a franchise pin */}
+              <button
+                type="button"
+                onClick={handleTogglePlaceMode}
+                title="Click the map to drop a franchise"
+                className={`inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-semibold cursor-pointer transition ${
+                  isPlacingFranchise
+                    ? "bg-orange-600 text-white shadow-xs"
+                    : "border color-border bg-white text-tertiary hover:bg-gray-50"
+                }`}
+              >
+                <Store size={13} />
+                {isPlacingFranchise ? "Click Map To Drop" : "Add Location"}
+              </button>
 
-          {/* draw a territory polygon */}
-          <button
-            type="button"
-            onClick={handleToggleDrawMode}
-            title={isDrawingActive ? "Stop drawing and clear the points" : "Draw a new territory area"}
-            className={`inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-semibold cursor-pointer transition ${
-              isDrawingActive
-                ? "bg-red-500 text-white shadow-xs"
-                : "border color-border bg-white text-tertiary hover:bg-gray-50"
-            }`}
-          >
-            <PenTool size={13} />
-            {isDrawingActive ? "Stop Drawing" : "Draw Area"}
-          </button>
+              {/* draw a territory polygon */}
+              <button
+                type="button"
+                onClick={handleToggleDrawMode}
+                title={isDrawingActive ? "Stop drawing and clear the points" : "Draw a new territory area"}
+                className={`inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-semibold cursor-pointer transition ${
+                  isDrawingActive
+                    ? "bg-red-500 text-white shadow-xs"
+                    : "border color-border bg-white text-tertiary hover:bg-gray-50"
+                }`}
+              >
+                <PenTool size={13} />
+                {isDrawingActive ? "Stop Drawing" : "Draw Area"}
+              </button>
 
-          <button
-            type="button"
-            onClick={handleSaveAndExit}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-(--color-primary) text-white px-4 py-1.5 text-xs font-semibold cursor-pointer hover:opacity-90 transition"
-          >
-            <Check size={14} />
-            Save Data
-          </button>
+              <button
+                type="button"
+                onClick={handleSaveAndExit}
+                className="inline-flex items-center gap-1.5 rounded-lg bg-(--color-primary) text-white px-4 py-1.5 text-xs font-semibold cursor-pointer hover:opacity-90 transition"
+              >
+                <Check size={14} />
+                Save Data
+              </button>
+            </>
+          ) : (
+            <button
+              type="button"
+              onClick={onClose}
+              className="inline-flex items-center gap-1.5 rounded-lg bg-(--color-primary) text-white px-4 py-1.5 text-xs font-semibold cursor-pointer hover:opacity-90 transition"
+            >
+              <X size={14} />
+              Close
+            </button>
+          )}
         </div>
       </header>
 
@@ -847,7 +876,7 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [], initialF
 
       {/* the franchise details form */}
       {pendingFranchise && (
-        <AuthFranchiseFormModal
+        <MapFranchiseFormModal
           form={franchiseForm}
           location={pendingFranchise}
           isEditing={Boolean(editingFranchiseId)}
@@ -858,9 +887,10 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [], initialF
       )}
 
       {showDataModal && (
-        <AuthMapDataModal
+        <MapDataModal
           franchises={franchises}
           areas={completedAreas}
+          canEdit={canEdit}
           onEditFranchise={handleEditFranchise}
           onDeleteFranchise={handleDeleteFranchise}
           onEditArea={handleEditAreaShape}
@@ -874,4 +904,4 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [], initialF
   );
 };
 
-export default AuthTerritoryDrawing;
+export default MapTerritoryDrawing;

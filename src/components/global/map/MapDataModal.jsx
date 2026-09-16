@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Building2, ChevronDown, ChevronUp, Layers, MapPin, Pencil, Trash2, X } from "lucide-react";
-import { AREA_COLORS } from "../utils/mapHelpers";
+import { AREA_COLORS } from "../../../utils/mapHelpers";
 
 const TAB_FRANCHISES = "franchises";
 const TAB_AREAS = "areas";
@@ -9,9 +9,10 @@ const TAB_AREAS = "areas";
 const formatArea = (areaKm2 = 0) =>
   areaKm2 < 1 ? `${(areaKm2 * 1000).toFixed(0)} m²` : `${areaKm2.toFixed(2)} km²`;
 
-const AuthMapDataModal = ({
+const MapDataModal = ({
   franchises = [],
   areas = [],
+  canEdit = true,
   onEditFranchise,
   onDeleteFranchise,
   onEditArea,
@@ -101,24 +102,26 @@ const AuthMapDataModal = ({
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-1.5">
-                    <button
-                      type="button"
-                      onClick={() => onEditFranchise(franchise)}
-                      title="Edit franchise details"
-                      className="cursor-pointer rounded-lg border border-orange-200 bg-orange-50 p-1.5 text-(--color-primary) transition hover:bg-orange-100"
-                    >
-                      <Pencil size={13} />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => onDeleteFranchise(franchise.id)}
-                      title="Delete this franchise"
-                      className="cursor-pointer rounded-lg border border-red-200 p-1.5 text-red-500 transition hover:bg-red-50"
-                    >
-                      <Trash2 size={13} />
-                    </button>
-                  </div>
+                  {canEdit && (
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => onEditFranchise(franchise)}
+                        title="Edit franchise details"
+                        className="cursor-pointer rounded-lg border border-orange-200 bg-orange-50 p-1.5 text-(--color-primary) transition hover:bg-orange-100"
+                      >
+                        <Pencil size={13} />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => onDeleteFranchise(franchise.id)}
+                        title="Delete this franchise"
+                        className="cursor-pointer rounded-lg border border-red-200 p-1.5 text-red-500 transition hover:bg-red-50"
+                      >
+                        <Trash2 size={13} />
+                      </button>
+                    </div>
+                  )}
                 </div>
               ))
             ))}
@@ -150,22 +153,26 @@ const AuthMapDataModal = ({
                       </div>
 
                       <div className="flex items-center gap-1.5" onClick={(event) => event.stopPropagation()}>
-                        <button
-                          type="button"
-                          onClick={() => onEditArea(area)}
-                          title="Edit area shape and details"
-                          className="cursor-pointer rounded-lg border border-orange-200 bg-orange-50 p-1.5 text-(--color-primary) transition hover:bg-orange-100"
-                        >
-                          <Pencil size={13} />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => onDeleteArea(area.id)}
-                          title="Delete this area"
-                          className="cursor-pointer rounded-lg border border-red-200 p-1.5 text-red-500 transition hover:bg-red-50"
-                        >
-                          <Trash2 size={13} />
-                        </button>
+                        {canEdit && (
+                          <>
+                            <button
+                              type="button"
+                              onClick={() => onEditArea(area)}
+                              title="Edit area shape and details"
+                              className="cursor-pointer rounded-lg border border-orange-200 bg-orange-50 p-1.5 text-(--color-primary) transition hover:bg-orange-100"
+                            >
+                              <Pencil size={13} />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => onDeleteArea(area.id)}
+                              title="Delete this area"
+                              className="cursor-pointer rounded-lg border border-red-200 p-1.5 text-red-500 transition hover:bg-red-50"
+                            >
+                              <Trash2 size={13} />
+                            </button>
+                          </>
+                        )}
                         <button
                           type="button"
                           aria-label={isExpanded ? "Collapse coordinates" : "Expand coordinates"}
@@ -209,7 +216,7 @@ const AuthMapDataModal = ({
         </div>
 
         <div className="flex items-center justify-between border-t color-border px-5 py-3.5">
-          {franchises.length > 0 || areas.length > 0 ? (
+          {canEdit && (franchises.length > 0 || areas.length > 0) ? (
             <button
               type="button"
               onClick={onClearAll}
@@ -236,4 +243,4 @@ const AuthMapDataModal = ({
   );
 };
 
-export default AuthMapDataModal;
+export default MapDataModal;

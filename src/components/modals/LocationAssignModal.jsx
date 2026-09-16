@@ -14,7 +14,7 @@ import {
   pixelToLat,
   pixelToLng,
   searchLocation,
-} from "../../utils/mapTiles";
+} from "../../utils/mapHelpers";
 import { INITIAL_BRANCHES } from "./locationBranches";
 
 const findConflictAt = (point, branches) => {
