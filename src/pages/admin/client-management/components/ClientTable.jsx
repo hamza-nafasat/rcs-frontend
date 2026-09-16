@@ -46,6 +46,11 @@ const buildColumns = ({ handleEditClient, handleViewClient, handleResendInvite, 
     sortable: true,
   },
   {
+    name: "Email",
+    selector: (row) => row.account?.email,
+    sortable: true,
+  },
+  {
     name: "Status",
     selector: (row) => CLIENT_STATUS[getClientStatus(row)]?.label,
     sortable: true,
@@ -82,11 +87,7 @@ const buildColumns = ({ handleEditClient, handleViewClient, handleResendInvite, 
         </div>
       ),
   },
-  {
-    name: "Email",
-    selector: (row) => row.account?.email,
-    sortable: true,
-  },
+
   {
     name: "Actions",
     cell: (row) => (
@@ -176,14 +177,7 @@ const ClientTable = ({ className, clients = [], isLoading = false }) => {
   const columns = buildColumns({ handleEditClient, handleViewClient, handleResendInvite, setClientToDelete });
   return (
     <section className={className}>
-      <DataTable
-        columns={columns}
-        data={clients}
-        progressPending={isLoading}
-        pagination
-        highlightOnHover
-        responsive
-      />
+      <DataTable columns={columns} data={clients} progressPending={isLoading} pagination highlightOnHover responsive />
       {clientToEdit && (
         <ClientAddEditModal
           isOpen={Boolean(clientToEdit)}

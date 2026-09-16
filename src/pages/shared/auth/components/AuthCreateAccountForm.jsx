@@ -83,7 +83,7 @@ const AuthCreateAccountForm = ({ inviteToken, invite }) => {
           onAccountChange={handleAccountChange}
         />
 
-        {/* Territory drawing on real USA map — display only until the backend stores polygons */}
+        {/* Franchises and territory areas */}
         <AuthLocationAssign />
 
         <footer className="flex flex-wrap items-center justify-between gap-3 border-t color-border pt-4">

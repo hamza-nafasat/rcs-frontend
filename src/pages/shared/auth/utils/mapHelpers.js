@@ -86,6 +86,60 @@ export const drawTiles = (ctx, width, height, center, zoom, tileCache, layer = L
   }
 };
 
+// a franchise pin with its label
+export const drawFranchisePin = (ctx, point, label, { color = "#1e293b", radius = 14 } = {}) => {
+  ctx.save();
+  ctx.shadowColor = "rgba(0,0,0,0.25)";
+  ctx.shadowBlur = 8;
+  ctx.shadowOffsetY = 3;
+
+  ctx.beginPath();
+  ctx.arc(point.x, point.y, radius, 0, Math.PI * 2);
+  ctx.fillStyle = color;
+  ctx.fill();
+  ctx.lineWidth = 2.5;
+  ctx.strokeStyle = "#ffffff";
+  ctx.stroke();
+
+  // the storefront inside the pin
+  ctx.fillStyle = "#ffffff";
+  ctx.beginPath();
+  ctx.moveTo(point.x - 6, point.y - 1);
+  ctx.lineTo(point.x, point.y - 7);
+  ctx.lineTo(point.x + 6, point.y - 1);
+  ctx.fill();
+  ctx.fillRect(point.x - 5, point.y - 1, 10, 7);
+  ctx.fillStyle = color;
+  ctx.fillRect(point.x - 1.5, point.y + 2, 3, 4);
+  ctx.restore();
+
+  if (!label) return;
+
+  ctx.save();
+  ctx.font = "bold 11px Inter, system-ui, sans-serif";
+  const boxWidth = ctx.measureText(label).width + 16;
+  const boxHeight = 20;
+  const boxX = point.x - boxWidth / 2;
+  const boxY = point.y + radius + 5;
+
+  ctx.shadowColor = "rgba(0,0,0,0.15)";
+  ctx.shadowBlur = 6;
+  ctx.shadowOffsetY = 2;
+  ctx.fillStyle = "#ffffff";
+  ctx.beginPath();
+  ctx.roundRect(boxX, boxY, boxWidth, boxHeight, 5);
+  ctx.fill();
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = "#cbd5e1";
+  ctx.stroke();
+
+  ctx.fillStyle = "#0f172a";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(label, point.x, boxY + boxHeight / 2);
+  ctx.restore();
+};
+
 export const sizeCanvas = (container, ...canvases) => {
   if (!container) return;
   const { width, height } = container.getBoundingClientRect();

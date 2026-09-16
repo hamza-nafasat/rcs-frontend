@@ -23,6 +23,7 @@ import {
   MAX_ZOOM,
   MIN_ZOOM,
   TILE_SIZE,
+  drawFranchisePin,
   drawTiles,
   latToPixel,
   lngToPixel,
@@ -31,23 +32,16 @@ import {
   searchLocation,
   sizeCanvas,
 } from "../utils/mapHelpers";
-import {
-  Check,
-  ChevronDown,
-  ChevronUp,
-  Layers,
-  MapPin,
-  PenTool,
-  Pencil,
-  RotateCcw,
-  Search,
-  Trash2,
-  X,
-} from "lucide-react";
+import { Check, Layers, MapPin, PenTool, RotateCcw, Search, Store, X } from "lucide-react";
+import AuthFranchiseFormModal from "./AuthFranchiseFormModal";
+import AuthMapDataModal from "./AuthMapDataModal";
 
-// FULLSCREEN MULTI-AREA OVERLAY
+const MODE_IDLE = "idle";
+const MODE_AREA = "area";
+const MODE_LOCATION = "location";
+const EMPTY_FRANCHISE = { name: "", country: "United States", state: "", city: "" };
 
-const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
+const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [], initialFranchises = [] }) => {
   const containerRef = useRef(null);
   const mapCanvasRef = useRef(null);
   const drawCanvasRef = useRef(null);
@@ -57,11 +51,20 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
   const [zoom, setZoom] = useState(FULLSCREEN_ZOOM);
   const [mapLayer, setMapLayer] = useState(LAYER_STREET);
 
-  // Completed areas & active drawing state
+  // saved areas, franchises, and the active drawing
   const [completedAreas, setCompletedAreas] = useState(initialAreas);
+  const [franchises, setFranchises] = useState(initialFranchises);
   const [activeGeoPoints, setActiveGeoPoints] = useState([]);
-  const [isDrawingActive, setIsDrawingActive] = useState(false);
+  const [mode, setMode] = useState(MODE_IDLE);
   const [cursor, setCursor] = useState(null);
+
+  const isDrawingActive = mode === MODE_AREA;
+  const isPlacingFranchise = mode === MODE_LOCATION;
+
+  // the franchise form modal
+  const [pendingFranchise, setPendingFranchise] = useState(null);
+  const [editingFranchiseId, setEditingFranchiseId] = useState(null);
+  const [franchiseForm, setFranchiseForm] = useState(EMPTY_FRANCHISE);
 
   // Save Area Form Modal State
   const [showSaveModal, setShowSaveModal] = useState(false);
@@ -70,9 +73,8 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
   const [formAreaName, setFormAreaName] = useState("");
   const [formAreaDistance, setFormAreaDistance] = useState("5");
 
-  // Summary side panel & modal states
-  const [showSummaryModal, setShowSummaryModal] = useState(false);
-  const [expandedAreaId, setExpandedAreaId] = useState(null);
+  // the manage data modal
+  const [showDataModal, setShowDataModal] = useState(false);
 
   // the place search state
   const [searchQuery, setSearchQuery] = useState("");
@@ -175,6 +177,16 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
       drawAreaLabel(ctx, centroidPx, displayLabel, color.stroke);
     });
 
+    // saved franchise pins
+    franchises.forEach((franchise) => {
+      drawFranchisePin(ctx, latLngToCanvas(franchise.lat, franchise.lng), franchise.name);
+    });
+
+    // the pin follows the cursor
+    if (isPlacingFranchise && cursor) {
+      drawFranchisePin(ctx, cursor, "Click to drop", { color: "#ea580c", radius: 16 });
+    }
+
     // 2. Draw currently active drawing area
     if (activeGeoPoints.length > 0) {
       const activePx = activeGeoPoints.map((g) => latLngToCanvas(g.lat, g.lng));
@@ -182,7 +194,7 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
       const currentFill = AREA_COLORS[completedAreas.length % AREA_COLORS.length].fill;
       redrawPolygon(ctx, width, height, activePx, false, cursor, currentColor, currentFill);
     }
-  }, [completedAreas, activeGeoPoints, cursor, latLngToCanvas]);
+  }, [completedAreas, franchises, isPlacingFranchise, activeGeoPoints, cursor, latLngToCanvas]);
 
 // scroll zoom and trackpad handlers
 
@@ -274,7 +286,7 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
       return;
     }
 
-    if (isDrawingActive) {
+    if (isDrawingActive || isPlacingFranchise) {
       setCursor(getCanvasPoint(dc, e));
     } else {
       setCursor(null);
@@ -286,11 +298,22 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
     pointerDownInfo.current = null;
 
     if (!info || info.isDragging) return;
-    if (!isDrawingActive) return;
 
     const dc = drawCanvasRef.current;
     if (!dc) return;
     const pt = getCanvasPoint(dc, e);
+
+    // drop a franchise where clicked
+    if (isPlacingFranchise) {
+      setPendingFranchise(canvasToLatLng(pt.x, pt.y));
+      setEditingFranchiseId(null);
+      setFranchiseForm(EMPTY_FRANCHISE);
+      setMode(MODE_IDLE);
+      setCursor(null);
+      return;
+    }
+
+    if (!isDrawingActive) return;
 
     // geo points to pixels for snapping
     const pxPoints = activeGeoPoints.map((g) => latLngToCanvas(g.lat, g.lng));
@@ -305,7 +328,7 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
 
       setActiveGeoPoints([]);
       setCursor(null);
-      setIsDrawingActive(false);
+      setMode(MODE_IDLE);
       return;
     }
 
@@ -359,16 +382,18 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
 
   const handleClearActive = () => {
     setActiveGeoPoints([]);
-    setIsDrawingActive(false);
+    setMode(MODE_IDLE);
     setCursor(null);
   };
 
   const handleToggleDrawMode = () => {
-    if (isDrawingActive) {
-      handleClearActive();
-    } else {
-      setIsDrawingActive(true);
-    }
+    if (isDrawingActive) handleClearActive();
+    else setMode(MODE_AREA);
+  };
+
+  const handleTogglePlaceMode = () => {
+    setMode((prev) => (prev === MODE_LOCATION ? MODE_IDLE : MODE_LOCATION));
+    setCursor(null);
   };
 
   const handleDeleteArea = (id) => {
@@ -377,13 +402,14 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
 
   const handleClearAll = () => {
     setCompletedAreas([]);
+    setFranchises([]);
     setActiveGeoPoints([]);
-    setIsDrawingActive(false);
+    setMode(MODE_IDLE);
     setCursor(null);
   };
 
   const handleSaveAndExit = () => {
-    onComplete(completedAreas);
+    onComplete({ areas: completedAreas, franchises });
     onClose();
   };
 
@@ -429,9 +455,50 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
     setActiveGeoPoints(area.geoPoints);
     setFormAreaName(area.name);
     setFormAreaDistance(area.distanceKm ? String(area.distanceKm) : "5");
-    setIsDrawingActive(true);
-    setShowSummaryModal(false);
+    setMode(MODE_AREA);
+    setShowDataModal(false);
   };
+
+  const handleFranchiseFormChange = ({ target }) =>
+    setFranchiseForm((prev) => ({ ...prev, [target.name]: target.value }));
+
+  const handleCloseFranchiseForm = () => {
+    setPendingFranchise(null);
+    setEditingFranchiseId(null);
+    setFranchiseForm(EMPTY_FRANCHISE);
+  };
+
+  const handleConfirmFranchise = (event) => {
+    event.preventDefault();
+    if (!pendingFranchise) return;
+
+    const franchise = {
+      ...franchiseForm,
+      id: editingFranchiseId || `franchise-${Date.now()}`,
+      name: franchiseForm.name.trim(),
+      lat: pendingFranchise.lat,
+      lng: pendingFranchise.lng,
+    };
+
+    setFranchises((prev) =>
+      editingFranchiseId ? prev.map((item) => (item.id === editingFranchiseId ? franchise : item)) : [...prev, franchise],
+    );
+    handleCloseFranchiseForm();
+  };
+
+  const handleEditFranchise = (franchise) => {
+    setEditingFranchiseId(franchise.id);
+    setPendingFranchise({ lat: franchise.lat, lng: franchise.lng });
+    setFranchiseForm({
+      name: franchise.name,
+      country: franchise.country,
+      state: franchise.state,
+      city: franchise.city,
+    });
+    setShowDataModal(false);
+  };
+
+  const handleDeleteFranchise = (id) => setFranchises((prev) => prev.filter((item) => item.id !== id));
 
   return createPortal(
     <div
@@ -460,9 +527,10 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
         <div className="flex items-center gap-2.5 shrink-0">
           <MapPin size={18} className="text-revenue" />
           <div>
-            <h2 className="text-sm font-bold text-tertiary leading-tight">Select Territory Areas</h2>
+            <h2 className="text-sm font-bold text-tertiary leading-tight">Manage Franchises Details</h2>
             <p className="text-[11px] text-secondary">
-              {completedAreas.length} Area{completedAreas.length !== 1 ? "s" : ""} selected
+              {franchises.length} franchise{franchises.length !== 1 ? "s" : ""} · {completedAreas.length} area
+              {completedAreas.length !== 1 ? "s" : ""}
             </p>
           </div>
         </div>
@@ -514,44 +582,54 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
             </button>
           )}
 
-          {completedAreas.length > 0 && (
+          {(franchises.length > 0 || completedAreas.length > 0) && (
             <button
               type="button"
-              onClick={() => setShowSummaryModal(true)}
+              onClick={() => setShowDataModal(true)}
               className="inline-flex items-center gap-1.5 rounded-lg border color-border bg-white px-3 py-1.5 text-xs font-medium text-tertiary cursor-pointer hover:bg-gray-50 transition"
             >
               <Layers size={13} className="text-primary" />
-              View Data
+              Manage Data
             </button>
           )}
 
-          {/* Draw Button */}
+          {/* drop a franchise pin */}
+          <button
+            type="button"
+            onClick={handleTogglePlaceMode}
+            title="Click the map to drop a franchise"
+            className={`inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-semibold cursor-pointer transition ${
+              isPlacingFranchise
+                ? "bg-orange-600 text-white shadow-xs"
+                : "border color-border bg-white text-tertiary hover:bg-gray-50"
+            }`}
+          >
+            <Store size={13} />
+            {isPlacingFranchise ? "Click Map To Drop" : "Add Location"}
+          </button>
+
+          {/* draw a territory polygon */}
           <button
             type="button"
             onClick={handleToggleDrawMode}
+            title={isDrawingActive ? "Stop drawing and clear the points" : "Draw a new territory area"}
             className={`inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-semibold cursor-pointer transition ${
               isDrawingActive
                 ? "bg-red-500 text-white shadow-xs"
                 : "border color-border bg-white text-tertiary hover:bg-gray-50"
             }`}
-            title={
-              isDrawingActive
-                ? "Click to stop drawing and clear in-progress dots"
-                : "Click to start drawing a new territory area"
-            }
           >
             <PenTool size={13} />
-            {isDrawingActive ? "Stop Drawing" : "Draw"}
+            {isDrawingActive ? "Stop Drawing" : "Draw Area"}
           </button>
 
-          {/* Save Button */}
           <button
             type="button"
             onClick={handleSaveAndExit}
             className="inline-flex items-center gap-1.5 rounded-lg bg-(--color-primary) text-white px-4 py-1.5 text-xs font-semibold cursor-pointer hover:opacity-90 transition"
           >
             <Check size={14} />
-            Save
+            Save Data
           </button>
         </div>
       </header>
@@ -562,7 +640,7 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
         style={{
           flex: 1,
           position: "relative",
-          cursor: isDrawingActive ? "pointer" : "grab",
+          cursor: isDrawingActive || isPlacingFranchise ? "pointer" : "grab",
           touchAction: "none",
         }}
         onContextMenu={(e) => e.preventDefault()}
@@ -583,6 +661,13 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
             <span className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 text-white px-3.5 py-1.5 text-xs font-semibold shadow-md">
               <PenTool size={13} />
               Drawing Mode Active
+            </span>
+          )}
+
+          {isPlacingFranchise && (
+            <span className="inline-flex items-center gap-2 rounded-lg bg-orange-600 text-white px-3.5 py-1.5 text-xs font-semibold shadow-md">
+              <Store size={13} />
+              Click the map to drop a franchise
             </span>
           )}
 
@@ -760,166 +845,29 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
         </div>
       )}
 
-      {/* ── COORDINATES & MULTI-AREA SUMMARY MODAL ── */}
-      {showSummaryModal && (
-        <div
-          className="fixed inset-0 flex items-center justify-center"
-          style={{ zIndex: 10000, background: "rgba(0,0,0,0.45)" }}
-          onClick={(e) => {
-            if (e.target === e.currentTarget) setShowSummaryModal(false);
-          }}
-        >
-          <div
-            className="bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col"
-            style={{ width: 540, maxHeight: "85vh" }}
-          >
-            {/* Modal Header */}
-            <div
-              className="flex items-center justify-between px-5 py-4"
-              style={{ borderBottom: "1px solid var(--color-border)" }}
-            >
-              <div className="flex items-center gap-2.5">
-                <Layers size={18} className="text-primary" />
-                <div>
-                  <h3 className="text-base font-bold text-tertiary">Territory Coordinates Summary</h3>
-                  <p className="text-xs text-secondary">
-                    {completedAreas.length} Area{completedAreas.length !== 1 ? "s" : ""} selected
-                  </p>
-                </div>
-              </div>
+      {/* the franchise details form */}
+      {pendingFranchise && (
+        <AuthFranchiseFormModal
+          form={franchiseForm}
+          location={pendingFranchise}
+          isEditing={Boolean(editingFranchiseId)}
+          onChange={handleFranchiseFormChange}
+          onSubmit={handleConfirmFranchise}
+          onClose={handleCloseFranchiseForm}
+        />
+      )}
 
-              <div className="flex items-center gap-2">
-                <button
-                  aria-label="Close panel"
-                  type="button"
-                  onClick={() => setShowSummaryModal(false)}
-                  className="p-1.5 rounded-full hover:bg-gray-100 cursor-pointer transition text-secondary"
-                >
-                  <X size={16} />
-                </button>
-              </div>
-            </div>
-
-            {/* Modal Body */}
-            <div className="p-5 flex-1 overflow-y-auto flex flex-col gap-4">
-              {completedAreas.length === 0 ? (
-                <div className="py-12 text-center text-secondary text-sm">
-                  No areas completed yet. Click &quot;Draw New Area&quot; to place points on the map.
-                </div>
-              ) : (
-                completedAreas.map((area, index) => {
-                  const color = AREA_COLORS[index % AREA_COLORS.length];
-                  const isExpanded = expandedAreaId === area.id;
-
-                  return (
-                    <div key={area.id} className="rounded-xl border color-border overflow-hidden bg-white shadow-2xs">
-                      {/* Area Card Header */}
-                      <div
-                        className="flex items-center justify-between p-3.5 cursor-pointer hover:bg-gray-50/80 transition"
-                        onClick={() => setExpandedAreaId(isExpanded ? null : area.id)}
-                      >
-                        <div className="flex items-center gap-3">
-                          <span
-                            className="w-3.5 h-3.5 rounded-full shrink-0"
-                            style={{ backgroundColor: color.stroke }}
-                          />
-                          <div>
-                            <span className="text-sm font-bold text-tertiary">{area.name}</span>
-                            <span className="ml-2 text-xs text-secondary">
-                              ({area.geoPoints.length} vertices ·{" "}
-                              {area.areaKm2 < 1
-                                ? `${(area.areaKm2 * 1000).toFixed(0)} m²`
-                                : `${area.areaKm2.toFixed(2)} km²`}
-                              )
-                            </span>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
-                          {/* Single Edit button: Start editing from dots */}
-                          <button
-                            type="button"
-                            onClick={() => handleEditAreaShape(area)}
-                            className="p-1.5 rounded-lg  border border-orange-200 bg-orange-50 text-(--color-primary) hover:bg-orange-100 cursor-pointer transition"
-                            title="Edit area shape dots and details"
-                          >
-                            <Pencil size={13} />
-                          </button>
-
-                          <button
-                            type="button"
-                            onClick={() => handleDeleteArea(area.id)}
-                            className="p-1.5 rounded-lg border border-red-200 text-red-500 hover:bg-red-50 cursor-pointer transition"
-                            title="Delete this area"
-                          >
-                            <Trash2 size={13} />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setExpandedAreaId(isExpanded ? null : area.id)}
-                            className="p-1.5 text-secondary hover:text-tertiary cursor-pointer"
-                          >
-                            {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Expandable Coordinates List */}
-                      {isExpanded && (
-                        <div className="border-t color-border p-3 bg-gray-50/50 flex flex-col gap-2">
-                          <p className="text-[11px] font-semibold text-secondary uppercase tracking-wide">
-                            All Coordinates (Lat, Lng)
-                          </p>
-                          <div className="grid grid-cols-2 gap-1.5 max-h-48 overflow-y-auto p-1">
-                            {area.geoPoints.map((p, idx) => (
-                              <div
-                                key={idx}
-                                className="flex items-center gap-2 rounded-md bg-white border color-border px-2.5 py-1 text-xs"
-                              >
-                                <span
-                                  className="w-4 h-4 rounded-full text-[10px] font-bold text-white flex items-center justify-center shrink-0"
-                                  style={{ backgroundColor: color.stroke }}
-                                >
-                                  {idx + 1}
-                                </span>
-                                <span className="font-mono text-tertiary">
-                                  {p.lat.toFixed(5)}°, {p.lng.toFixed(5)}°
-                                </span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })
-              )}
-            </div>
-
-            {/* Modal Footer */}
-            <div
-              className="flex items-center justify-between px-5 py-3.5"
-              style={{ borderTop: "1px solid var(--color-border)" }}
-            >
-              {completedAreas.length > 0 && (
-                <button
-                  type="button"
-                  onClick={handleClearAll}
-                  className="text-xs font-semibold text-red-600 hover:underline cursor-pointer"
-                >
-                  Clear All Areas
-                </button>
-              )}
-              <button
-                type="button"
-                onClick={() => setShowSummaryModal(false)}
-                className="px-5 py-2 rounded-xl bg-(--color-primary) text-white text-xs font-semibold cursor-pointer hover:opacity-90 transition"
-              >
-                Close Summary
-              </button>
-            </div>
-          </div>
-        </div>
+      {showDataModal && (
+        <AuthMapDataModal
+          franchises={franchises}
+          areas={completedAreas}
+          onEditFranchise={handleEditFranchise}
+          onDeleteFranchise={handleDeleteFranchise}
+          onEditArea={handleEditAreaShape}
+          onDeleteArea={handleDeleteArea}
+          onClearAll={handleClearAll}
+          onClose={() => setShowDataModal(false)}
+        />
       )}
     </div>,
     document.body,

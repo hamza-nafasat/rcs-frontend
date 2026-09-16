@@ -33,7 +33,14 @@ const useListFor = (key, load) => {
 };
 
 // country, then states, then cities
-const LocationFields = ({ values, onChange, disabled = false, required = false, labelClassName = "" }) => {
+const LocationFields = ({
+  values,
+  onChange,
+  disabled = false,
+  required = false,
+  labelClassName = "",
+  showCountry = true,
+}) => {
   const countries = useListFor("all", loadCountries);
   const countryCode = countries.items.find((country) => country.name === values?.country)?.iso2;
   const states = useListFor(countryCode, getStatesOfCountry);
@@ -63,20 +70,22 @@ const LocationFields = ({ values, onChange, disabled = false, required = false, 
 
   return (
     <>
-      <Select
-        label={toLabel("Country")}
-        name="country"
-        value={values?.country ?? ""}
-        onChange={handleCountryChange}
-        options={countryNames}
-        isLoading={countries.isLoading}
-        placeholder="Select country"
-        labelClassName={labelClassName}
-        disabled={disabled}
-        required={required}
-        searchable
-        creatable
-      />
+      {showCountry && (
+        <Select
+          label={toLabel("Country")}
+          name="country"
+          value={values?.country ?? ""}
+          onChange={handleCountryChange}
+          options={countryNames}
+          isLoading={countries.isLoading}
+          placeholder="Select country"
+          labelClassName={labelClassName}
+          disabled={disabled}
+          required={required}
+          searchable
+          creatable
+        />
+      )}
       <Select
         label={toLabel("State")}
         name="state"
