@@ -10,10 +10,12 @@ import DashboardRecentActivity from "./components/DashboardRecentActivity";
 import DashboardClientsNeedingAttention from "./components/DashboardClientsNeedingAttention";
 import { activities } from "./utils/data";
 import { useNavigate } from "react-router-dom";
+import { useAuthUser } from "../../../routes/useAuthUser";
 import { clients, leadsPerClient, cardData } from "./utils/data";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
+  const { user } = useAuthUser();
 
   return (
     <article className="flex flex-col gap-4">
@@ -21,7 +23,7 @@ const AdminDashboard = () => {
       <DashboardHeading
         className="fade-up"
         emoji="👋"
-        heading="Good morning, Marco"
+        heading={user?.firstName ? `Good morning, ${user.firstName}` : "Good morning"}
         subheading="Monday, August 3, 2026 · You had 0 leads yesterday and 8 messages awaiting response."
       />
 

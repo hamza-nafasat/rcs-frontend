@@ -83,7 +83,6 @@ const SectionTitle = ({ children, isCollapsed }) => (
 const Sidebar = ({
   isOpen,
   onClose,
-  user,
   isCollapsed,
   onToggleCollapse,
   type = "admin",
@@ -212,14 +211,10 @@ const Sidebar = ({
             className={`flex items-center gap-3 rounded-lg px-2 py-2 hover:bg-(--color-bg-primary) cursor-pointer ${isCollapsed ? "lg:justify-center lg:px-0" : ""
               }`}
           >
-            <Avatar name={user?.name || "Marco"} size={34} />
+            <Avatar src={account?.image?.url} name={account?.fullName} size={34} />
             <div className={`min-w-0 flex-1 ${hideOnCollapse}`}>
-              <p className="truncate text-sm font-medium text-white">
-                {user?.name || "Marco"}
-              </p>
-              <p className="truncate text-xs text-muted">
-                {user?.email || "marco@example.com"}
-              </p>
+              <p className="truncate text-sm font-medium text-white">{account?.fullName}</p>
+              <p className="truncate text-xs text-muted">{account?.email}</p>
             </div>
           </div>
         </NavLink>

@@ -3,9 +3,11 @@ import Dropdown from "./Dropdown";
 import Avatar from "./Avatar";
 import { ChevronDown, LogOut, UserRound } from "lucide-react";
 import { useLogoutMutation } from "../../store/apis/shared/auth.apis";
+import { useAuthUser } from "../../routes/useAuthUser";
 
-const UserMenu = ({ name, type = "admin" }) => {
+const UserMenu = ({ type = "admin" }) => {
   const navigate = useNavigate();
+  const { user } = useAuthUser();
   const [logout] = useLogoutMutation();
 
   const handleSignOut = async () => {
@@ -39,10 +41,10 @@ const UserMenu = ({ name, type = "admin" }) => {
     <Dropdown
       trigger={
         <div className="flex items-center gap-2 border border-[#E8E8E8] rounded-xl px-2 py-1 hover:bg-gray-50 cursor-pointer">
-          <Avatar name={name} size={32} />
+          <Avatar src={user?.image?.url} name={user?.fullName} size={32} />
 
           <div className="hidden text-left sm:block">
-            <p className="text-sm font-medium text-tertiary">{name}</p>
+            <p className="text-sm font-medium text-tertiary">{user?.fullName}</p>
           </div>
 
           <ChevronDown size={16} className="cursor-pointer" />

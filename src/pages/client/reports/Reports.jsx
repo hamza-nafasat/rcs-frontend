@@ -3,6 +3,7 @@ import ReportHeading from "./components/ReportHeading";
 import DetailedReport from "./components/DetailedReport";
 import { recentApplicants } from "../dashboard/utils/data";
 import Card from "../../../components/shared/Card";
+import { useAuthUser } from "../../../routes/useAuthUser";
 import { cardData } from "./utils/data";
 
 const toISODate = (submitted) => {
@@ -12,6 +13,8 @@ const toISODate = (submitted) => {
 
 const Reports = () => {
   const [dates, setDates] = useState({ startDate: "", endDate: "" });
+  const { user } = useAuthUser();
+  const generatedOn = new Date().toLocaleDateString([], { day: "numeric", month: "long", year: "numeric" });
 
   const handleDateChange = (event) => {
     const { name, value } = event.target;
@@ -29,7 +32,7 @@ const Reports = () => {
     <article className="flex flex-col gap-6">
       <ReportHeading
         heading="Pipeline Report"
-        subheading="Marco · Generated August 4, 2026"
+        subheading={[user?.fullName, `Generated ${generatedOn}`].filter(Boolean).join(" · ")}
         dates={dates}
         onDateChange={handleDateChange}
       />

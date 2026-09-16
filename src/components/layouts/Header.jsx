@@ -30,7 +30,7 @@ const Header = ({ onMenuClick, type = "admin" }) => {
         <NotificationBell type={type} />
 
         {/* User Menu */}
-        <UserMenu name="Marco" type={type} />
+        <UserMenu type={type} />
       </div>
     </header>
   );
