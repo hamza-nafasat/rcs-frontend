@@ -2,13 +2,7 @@ import DataTable from "react-data-table-component";
 import { ChevronDown, Download, Eye, FileSignature, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import Button from "../shared/Button";
 import Dropdown from "../shared/Dropdown";
-
-const STATUS_STYLES = {
-  Approved: { pill: "bg-green-50 text-green-700", dot: "bg-green-500" },
-  Pending: { pill: "bg-amber-50 text-amber-700", dot: "bg-amber-500" },
-  Draft: { pill: "bg-gray-100 text-gray-600", dot: "bg-gray-400" },
-  Expired: { pill: "bg-red-50 text-red-700", dot: "bg-red-500" },
-};
+import { FDD_STATUS } from "../../utils/fddStatus";
 
 const tableStyles = {
   table: { style: { width: "100%" } },
@@ -28,35 +22,26 @@ const tableStyles = {
 const buildColumns = ({ canManage, onView, onEdit, onFill, onDownload, onDelete }) => [
   {
     name: "Document",
-    selector: (row) => row.document,
+    selector: (row) => row.title,
     sortable: true,
-    minWidth: "240px",
-    grow: 2,
     cell: (row) => (
-      <div className="flex items-center gap-2">
-        <div className="min-w-0">
-          <p className="truncate text-sm text-gray-900">{row.document}</p>
-          <p className="truncate text-xs text-gray-500">
-            Version {row.version}
-          </p>
-        </div>
+      <div className="min-w-0">
+        <p className="truncate text-sm text-gray-900">{row.title}</p>
+        <p className="truncate text-xs text-gray-500">Version {row.version}</p>
       </div>
     ),
   },
   {
     name: "Restaurant Brand",
-    selector: (row) =>
-      Array.isArray(row.brand) ? row.brand.join(", ") : row.brand,
+    // the api populates the linked client
+    selector: (row) => row.client?.restaurantName ?? "",
     sortable: true,
-    minWidth: "160px",
-    grow: 1,
+    cell: (row) => <p className="truncate text-sm text-gray-900">{row.client?.restaurantName ?? "—"}</p>,
   },
   {
     name: "Country",
     selector: (row) => row.country,
     sortable: true,
-    minWidth: "160px",
-    grow: 1,
     cell: (row) => (
       <div className="min-w-0">
         <p className="truncate text-sm text-gray-900">{row.country}</p>
@@ -68,16 +53,15 @@ const buildColumns = ({ canManage, onView, onEdit, onFill, onDownload, onDelete 
     name: "Status",
     selector: (row) => row.status,
     sortable: true,
-    grow: 1,
     cell: (row) => {
-      const { pill, dot } = STATUS_STYLES[row.status] ?? STATUS_STYLES.Draft;
+      const { label, pill, dot } = FDD_STATUS[row.status] ?? FDD_STATUS.pending;
 
       return (
         <span
           className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1 text-xs font-medium ${pill}`}
         >
           <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />
-          {row.status}
+          {label}
         </span>
       );
     },
@@ -141,13 +125,24 @@ const buildColumns = ({ canManage, onView, onEdit, onFill, onDownload, onDelete 
 ];
 
 // canManage adds the admin only actions, edit and delete
-const FddTable = ({ documents, canManage = false, onView, onEdit, onFill, onDownload, onDelete }) => {
+const FddTable = ({
+  documents = [],
+  isLoading = false,
+  canManage = false,
+  onView,
+  onEdit,
+  onFill,
+  onDownload,
+  onDelete,
+}) => {
   const columns = buildColumns({ canManage, onView, onEdit, onFill, onDownload, onDelete });
   return (
     <section className="flex h-full w-full min-h-0 flex-col">
       <DataTable
         columns={columns}
         data={documents}
+        keyField="_id"
+        progressPending={isLoading}
         pagination
         highlightOnHover
         responsive
@@ -156,9 +151,7 @@ const FddTable = ({ documents, canManage = false, onView, onEdit, onFill, onDown
         sortIcon={<ChevronDown size={14} />}
         customStyles={tableStyles}
         className="flex min-h-0 flex-1 flex-col"
-        noDataComponent={
-          <p className="py-8 text-sm text-gray-500">No documents found</p>
-        }
+        noDataComponent={<p className="py-8 text-sm text-gray-500">No documents found</p>}
       />
     </section>
   );

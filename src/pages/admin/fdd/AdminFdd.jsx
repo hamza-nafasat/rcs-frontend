@@ -3,101 +3,100 @@ import toast from "react-hot-toast";
 import DeleteModal from "../../../components/modals/DeleteModal";
 import Loader from "../../../components/shared/Loader";
 import FddTable from "../../../components/global/FddTable";
+import FddFilter from "../../../components/global/fdd/FddFilter";
 import FddHeading from "./components/FddHeading";
-import FddFilter from "./components/FddFilter";
 import FddAddEditModal from "./modals/FddAddEditModal";
 import { downloadFile } from "../../../utils/downloadFile";
+import { toFddFormData, toFilledFormData, toFddFileName, toFddFileUrl } from "../../../utils/fddRequest";
 import { useGetAllClientsQuery } from "../../../store/apis/admin/client.apis";
-import { initialDocuments } from "./utils/data";
+import {
+  useCreateFddMutation,
+  useDeleteFddMutation,
+  useFillFddMutation,
+  useGetAllFddsQuery,
+  useUpdateFddMutation,
+} from "../../../store/apis/shared/fdd.apis";
 
 // the pdf reader and writer only load once a document is opened
 const FddViewModal = lazy(() => import("../../../components/modals/FddViewModal"));
 const FddFillModal = lazy(() => import("../../../components/modals/FddFillModal"));
 
 const initialFilters = {
-  country: [],
+  search: "",
+  client: "",
   state: "",
-  brand: [],
-  document: "",
+  status: "",
 };
 
-// the row the table shows, built from what the upload form collected
-const toDocument = (form) => ({
-  document: form.document || `${form.title}.pdf`,
-  version: form.version || "1.0",
-  brand: form.brand || "",
-  country: form.country || "United States",
-  state: form.state || "General (Non-Registration States)",
-  status: form.status || "Pending",
-  isFillRequired: Boolean(form.isFillRequired),
-  // a freshly uploaded pdf is only available for this session
-  ...(form.file ? { fileUrl: URL.createObjectURL(form.file) } : {}),
-});
+// the api filters on what is actually set
+const toQueryParams = (filters) => Object.fromEntries(Object.entries(filters).filter(([, value]) => value !== ""));
 
 const AdminFdd = () => {
-  const [documents, setDocuments] = useState(initialDocuments);
   const [filters, setFilters] = useState(initialFilters);
+  const { data, isFetching } = useGetAllFddsQuery(toQueryParams(filters));
+  const { data: clientData } = useGetAllClientsQuery();
+  const [createFdd, { isLoading: isCreating }] = useCreateFddMutation();
+  const [updateFdd, { isLoading: isUpdating }] = useUpdateFddMutation();
+  const [fillFdd] = useFillFddMutation();
+  const [deleteFdd, { isLoading: isDeleting }] = useDeleteFddMutation();
+
   const [documentToView, setDocumentToView] = useState(null);
   const [documentToEdit, setDocumentToEdit] = useState(null);
   const [documentToFill, setDocumentToFill] = useState(null);
   const [documentToDelete, setDocumentToDelete] = useState(null);
 
-  const { data: clientData } = useGetAllClientsQuery();
-
-  const countries = [...new Set(documents.map((doc) => doc.country))];
-  const brands = [...new Set(documents.map((doc) => doc.brand))];
+  const documents = data?.data ?? [];
 
   // an FDD belongs to one client's restaurant
-  const restaurantBrands = [
-    ...new Set((clientData?.data ?? []).map((client) => client?.restaurantName).filter(Boolean)),
-  ];
+  const clients = (clientData?.data ?? []).map((client) => ({
+    value: client?._id,
+    label: client?.restaurantName,
+  }));
 
-  const handleAddFdd = (form) => {
-    setDocuments((prev) => [{ id: Date.now(), ...toDocument(form) }, ...prev]);
-    toast.success("FDD uploaded successfully");
+  const handleAddFdd = async (form) => {
+    const response = await createFdd(toFddFormData(form)).unwrap();
+    toast.success(response?.message);
   };
 
-  const handleUpdateFdd = (form) => {
-    setDocuments((prev) =>
-      prev.map((doc) => (doc.id === documentToEdit?.id ? { ...doc, ...toDocument(form) } : doc)),
-    );
-    setDocumentToEdit(null);
-    toast.success("FDD updated successfully");
+  const handleUpdateFdd = async (form) => {
+    try {
+      const response = await updateFdd({
+        id: documentToEdit?._id,
+        body: toFddFormData(form, { withStatus: true }),
+      }).unwrap();
+      toast.success(response?.message);
+      setDocumentToEdit(null);
+    } catch (error) {
+      console.error("Update FDD error:", error);
+    }
   };
 
-  const handleDeleteFdd = () => {
-    setDocuments((prev) => prev.filter((doc) => doc.id !== documentToDelete?.id));
-    setDocumentToDelete(null);
-    toast.success("FDD deleted successfully");
+  const handleDeleteFdd = async () => {
+    try {
+      const response = await deleteFdd(documentToDelete?._id).unwrap();
+      toast.success(response?.message);
+      setDocumentToDelete(null);
+    } catch (error) {
+      console.error("Delete FDD error:", error);
+    }
   };
 
-  // the filled copy replaces the one on screen until the api stores it
-  const handleSaveFilled = (filledFile) => {
-    const fileUrl = URL.createObjectURL(filledFile);
-    setDocuments((prev) => prev.map((doc) => (doc.id === documentToFill?.id ? { ...doc, fileUrl } : doc)));
+  const handleSaveFilled = async (filledFile) => {
+    const response = await fillFdd({
+      id: documentToFill?._id,
+      body: toFilledFormData(filledFile, documentToFill),
+    }).unwrap();
+    toast.success(response?.message);
     setDocumentToFill(null);
-    toast.success("FDD filled successfully");
   };
 
-  const handleDownload = (doc) => downloadFile(doc?.fileUrl, doc?.document);
-
-  const filteredDocuments = documents.filter((doc) => {
-    const matchCountry =
-      filters.country.length === 0 || filters.country.includes(doc.country);
-
-    const matchBrand =
-      filters.brand.length === 0 || filters.brand.includes(doc.brand);
-
-    const matchState = doc.state
-      .toLowerCase()
-      .includes(filters.state.trim().toLowerCase());
-
-    const matchDocument = doc.document
-      .toLowerCase()
-      .includes(filters.document.trim().toLowerCase());
-
-    return matchCountry && matchBrand && matchState && matchDocument;
-  });
+  const handleDownload = async (doc) => {
+    try {
+      await downloadFile(toFddFileUrl(doc), toFddFileName(doc));
+    } catch (error) {
+      console.error("Download FDD error:", error);
+    }
+  };
 
   return (
     <article className="flex h-full min-h-0 flex-col">
@@ -105,23 +104,20 @@ const AdminFdd = () => {
         <FddHeading
           heading="FDD Document"
           subheading="Manage your Franchise Disclosure Documents versions."
-          brands={restaurantBrands}
+          clients={clients}
+          isSubmitting={isCreating}
           onAddFdd={handleAddFdd}
         />
       </section>
 
       <section className="mt-6">
-        <FddFilter
-          filters={filters}
-          setFilters={setFilters}
-          countries={countries}
-          brands={brands}
-        />
+        <FddFilter filters={filters} setFilters={setFilters} clients={clients} />
       </section>
 
       <section className="mt-6 min-h-0 flex-1">
         <FddTable
-          documents={filteredDocuments}
+          documents={documents}
+          isLoading={isFetching}
           canManage
           onView={setDocumentToView}
           onEdit={setDocumentToEdit}
@@ -157,7 +153,8 @@ const AdminFdd = () => {
           onClose={() => setDocumentToEdit(null)}
           onSubmit={handleUpdateFdd}
           initialData={documentToEdit}
-          brands={restaurantBrands}
+          clients={clients}
+          isSubmitting={isUpdating}
           mode="edit"
         />
       )}
@@ -167,8 +164,9 @@ const AdminFdd = () => {
         onClose={() => setDocumentToDelete(null)}
         onConfirm={handleDeleteFdd}
         heading="Delete FDD Document"
-        text={`Are you sure you want to delete ${documentToDelete?.document ?? "this document"}? This action cannot be undone.`}
+        text={`Are you sure you want to delete ${documentToDelete?.title ?? "this document"}? This action cannot be undone.`}
         confirmText="Delete"
+        isLoading={isDeleting}
       />
     </article>
   );

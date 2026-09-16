@@ -2,58 +2,50 @@ import { lazy, Suspense, useState } from "react";
 import toast from "react-hot-toast";
 import Loader from "../../../components/shared/Loader";
 import FddTable from "../../../components/global/FddTable";
+import FddFilter from "../../../components/global/fdd/FddFilter";
 import FddHeading from "./components/FddHeading";
-import FddFilter from "./components/FddFilter";
 import { downloadFile } from "../../../utils/downloadFile";
-import { initialDocuments } from "./utils/data";
+import { toFilledFormData, toFddFileName, toFddFileUrl } from "../../../utils/fddRequest";
+import { useFillFddMutation, useGetAllFddsQuery } from "../../../store/apis/shared/fdd.apis";
 
 // the pdf reader and writer only load once a document is opened
 const FddViewModal = lazy(() => import("../../../components/modals/FddViewModal"));
 const FddFillModal = lazy(() => import("../../../components/modals/FddFillModal"));
 
 const initialFilters = {
-  country: [],
+  search: "",
   state: "",
-  brand: [],
-  document: "",
+  status: "",
 };
 
+// the api filters on what is actually set
+const toQueryParams = (filters) => Object.fromEntries(Object.entries(filters).filter(([, value]) => value !== ""));
+
 const ClientFdd = () => {
-  const [documents, setDocuments] = useState(initialDocuments);
   const [filters, setFilters] = useState(initialFilters);
+  const { data, isFetching } = useGetAllFddsQuery(toQueryParams(filters));
+  const [fillFdd] = useFillFddMutation();
   const [documentToView, setDocumentToView] = useState(null);
   const [documentToFill, setDocumentToFill] = useState(null);
 
-  const countries = [...new Set(documents.map((doc) => doc.country))];
-  const brands = [...new Set(documents.map((doc) => doc.brand))];
+  const documents = data?.data ?? [];
 
-  // the filled copy replaces the one on screen until the api stores it
-  const handleSaveFilled = (filledFile) => {
-    const fileUrl = URL.createObjectURL(filledFile);
-    setDocuments((prev) => prev.map((doc) => (doc.id === documentToFill?.id ? { ...doc, fileUrl } : doc)));
+  const handleSaveFilled = async (filledFile) => {
+    const response = await fillFdd({
+      id: documentToFill?._id,
+      body: toFilledFormData(filledFile, documentToFill),
+    }).unwrap();
+    toast.success(response?.message);
     setDocumentToFill(null);
-    toast.success("FDD filled successfully");
   };
 
-  const handleDownload = (doc) => downloadFile(doc?.fileUrl, doc?.document);
-
-  const filteredDocuments = documents.filter((doc) => {
-    const matchCountry =
-      filters.country.length === 0 || filters.country.includes(doc.country);
-
-    const matchBrand =
-      filters.brand.length === 0 || filters.brand.includes(doc.brand);
-
-    const matchState = doc.state
-      .toLowerCase()
-      .includes(filters.state.trim().toLowerCase());
-
-    const matchDocument = doc.document
-      .toLowerCase()
-      .includes(filters.document.trim().toLowerCase());
-
-    return matchCountry && matchBrand && matchState && matchDocument;
-  });
+  const handleDownload = async (doc) => {
+    try {
+      await downloadFile(toFddFileUrl(doc), toFddFileName(doc));
+    } catch (error) {
+      console.error("Download FDD error:", error);
+    }
+  };
 
   return (
     <article className="flex h-full min-h-0 flex-col">
@@ -65,17 +57,13 @@ const ClientFdd = () => {
       </section>
 
       <section className="mt-6">
-        <FddFilter
-          filters={filters}
-          setFilters={setFilters}
-          countries={countries}
-          brands={brands}
-        />
+        <FddFilter filters={filters} setFilters={setFilters} />
       </section>
 
       <section className="mt-6 min-h-0 flex-1">
         <FddTable
-          documents={filteredDocuments}
+          documents={documents}
+          isLoading={isFetching}
           onView={setDocumentToView}
           onFill={setDocumentToFill}
           onDownload={handleDownload}

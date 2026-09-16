@@ -1,15 +1,19 @@
 import { Download, X } from "lucide-react";
 import Button from "../shared/Button";
 import PdfDocumentView from "../global/fdd/PdfDocumentView";
+import { FDD_STATUS } from "../../utils/fddStatus";
 
 const FddViewModal = ({ isOpen, onClose, document, onDownload }) => {
   if (!isOpen || !document) return null;
 
+  // the signed copy once it exists, otherwise the original
+  const fileUrl = document.currentFile?.url ?? document.file?.url;
+
   const details = [
     ["Version", document.version],
-    ["Brand", Array.isArray(document.brand) ? document.brand.join(", ") : document.brand],
+    ["Restaurant", document.client?.restaurantName],
     ["Location", [document.state, document.country].filter(Boolean).join(", ")],
-    ["Status", document.status],
+    ["Status", FDD_STATUS[document.status]?.label ?? document.status],
   ];
 
   return (
@@ -18,7 +22,7 @@ const FddViewModal = ({ isOpen, onClose, document, onDownload }) => {
         {/* Header */}
         <header className="flex items-start justify-between gap-4 border-b color-border p-6">
           <div className="min-w-0">
-            <h2 className="truncate text-xl font-semibold text-tertiary">{document.document}</h2>
+            <h2 className="truncate text-xl font-semibold text-tertiary">{document.title}</h2>
             <p className="mt-1 flex flex-wrap gap-x-3 text-sm text-muted">
               {details.map(([label, value]) => (
                 <span key={label}>
@@ -40,7 +44,7 @@ const FddViewModal = ({ isOpen, onClose, document, onDownload }) => {
 
         {/* The document itself */}
         <section className="min-h-0 flex-1 overflow-auto bg-muted p-6">
-          <PdfDocumentView file={document.fileUrl} />
+          <PdfDocumentView file={fileUrl} />
         </section>
 
         <footer className="flex justify-end gap-3 border-t color-border p-4">

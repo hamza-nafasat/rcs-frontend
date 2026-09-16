@@ -68,6 +68,9 @@ const FddFillModal = ({ isOpen, onClose, document, onSave }) => {
 
   if (!isOpen || !document) return null;
 
+  // the signed copy once it exists, otherwise the original
+  const fileUrl = document.currentFile?.url ?? document.file?.url;
+
   const activeValue = activeTool === "signature" ? signature : text.trim();
 
   // a click drops the active tool, dragging a placed one moves it
@@ -90,7 +93,7 @@ const FddFillModal = ({ isOpen, onClose, document, onSave }) => {
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      const filledFile = await stampPlacements(document.fileUrl, placements);
+      const filledFile = await stampPlacements(fileUrl, placements);
       await onSave?.(filledFile);
     } catch (error) {
       console.error("Fill document error:", error);
@@ -105,7 +108,7 @@ const FddFillModal = ({ isOpen, onClose, document, onSave }) => {
         {/* Header */}
         <header className="flex items-start justify-between gap-4 border-b color-border p-6">
           <div className="min-w-0">
-            <h2 className="truncate text-xl font-semibold text-tertiary">Fill {document.document}</h2>
+            <h2 className="truncate text-xl font-semibold text-tertiary">Fill {document.title}</h2>
             <p className="mt-1 text-sm text-muted">
               {activeValue
                 ? "Click a page to place it, drag it to move it, and use as many pages as you need."
@@ -140,7 +143,7 @@ const FddFillModal = ({ isOpen, onClose, document, onSave }) => {
 
           {/* Pages */}
           <section className="min-h-0 flex-1 overflow-auto rounded-xl bg-muted p-4">
-            <PdfDocumentView file={document.fileUrl} width={PAGE_WIDTH}>
+            <PdfDocumentView file={fileUrl} width={PAGE_WIDTH}>
               {(page) => (
                 <div
                   onClick={(event) => handlePageClick(event, page)}

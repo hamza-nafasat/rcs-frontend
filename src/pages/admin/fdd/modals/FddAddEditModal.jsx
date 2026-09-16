@@ -5,28 +5,26 @@ import Select from "../../../../components/shared/Select";
 import FileUpload from "../../../../components/shared/FileUpload";
 import Button from "../../../../components/shared/Button";
 import { FDD_STATE_OPTIONS, GENERAL_FDD_STATE } from "../../../../utils/fddStateHelper";
-
-// a new document is always pending, an admin approves it later
-const FDD_STATUSES = ["Pending", "Approved"];
+import { FDD_STATUS_OPTIONS } from "../../../../utils/fddStatus";
 
 const INITIAL_FORM = {
   title: "",
   version: "",
-  brand: "",
+  client: "",
   country: "United States",
   state: GENERAL_FDD_STATE,
-  status: FDD_STATUSES[0],
+  status: FDD_STATUS_OPTIONS[0].value,
   isFillRequired: true,
 };
 
-// an existing row carries its name with the .pdf suffix
+// an existing document carries its restaurant as a populated record
 const toForm = (document) =>
   document
     ? {
         ...INITIAL_FORM,
-        title: String(document.document ?? "").replace(/\.pdf$/i, ""),
+        title: document.title ?? "",
         version: document.version ?? "",
-        brand: Array.isArray(document.brand) ? document.brand[0] : (document.brand ?? ""),
+        client: document.client?._id ?? document.client ?? "",
         country: document.country ?? INITIAL_FORM.country,
         state: document.state ?? INITIAL_FORM.state,
         status: document.status ?? INITIAL_FORM.status,
@@ -41,7 +39,7 @@ const FddAddEditModal = ({
   initialData = null,
   mode = "add",
   isSubmitting = false,
-  brands = [],
+  clients = [],
 }) => {
   const isAdd = mode === "add";
   const [formData, setFormData] = useState(() => toForm(initialData));
@@ -55,20 +53,12 @@ const FddAddEditModal = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    const documentName = file ? file.name : `${formData.title}.pdf`;
-
-    onSubmit({
-      ...formData,
-      status: isAdd ? FDD_STATUSES[0] : formData.status,
-      document: documentName,
-      file,
-    });
+    onSubmit({ ...formData, file });
   };
 
   // a new document needs its pdf, an edit keeps the one already uploaded
   const isComplete =
-    formData.title.trim() !== "" && formData.version.trim() !== "" && formData.brand !== "" && (!isAdd || file);
+    formData.title.trim() !== "" && formData.version.trim() !== "" && formData.client !== "" && (!isAdd || file);
 
   if (!isOpen) return null;
 
@@ -130,11 +120,11 @@ const FddAddEditModal = ({
           <section>
             <Select
               label="Restaurant Brand *"
-              name="brand"
-              value={formData.brand}
+              name="client"
+              value={formData.client}
               onChange={handleChange}
-              placeholder={brands.length === 0 ? "No clients yet" : "Select a restaurant"}
-              options={brands}
+              placeholder={clients.length === 0 ? "No clients yet" : "Select a restaurant"}
+              options={clients}
               searchable
               required
             />
@@ -159,7 +149,7 @@ const FddAddEditModal = ({
                 name="status"
                 value={formData.status}
                 onChange={handleChange}
-                options={FDD_STATUSES}
+                options={FDD_STATUS_OPTIONS}
                 placeholder="Select status"
                 disabled={isAdd}
               />
@@ -173,7 +163,7 @@ const FddAddEditModal = ({
             <FileUpload
               label={isAdd ? "PDF Document *" : "Replace PDF Document"}
               accept=".pdf"
-              hint="An FDD is always a PDF, up to 10MB"
+              hint="An FDD is always a PDF, up to 25MB"
               file={file}
               onFileChange={setFile}
             />

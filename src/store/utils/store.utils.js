@@ -1,6 +1,7 @@
 import { isAnyOf, isRejectedWithValue } from "@reduxjs/toolkit";
 import { authApi } from "../apis/shared/auth.apis";
 import { clientApi } from "../apis/admin/client.apis";
+import { fddApi } from "../apis/shared/fdd.apis";
 import { moderatorApi } from "../apis/shared/moderator.apis";
 import toast from "react-hot-toast";
 
@@ -15,6 +16,7 @@ const resetOnUserChange = (storeApi) => (next) => (action) => {
   const result = next(action);
   if (isUserChange(action)) {
     storeApi.dispatch(clientApi.util.resetApiState());
+    storeApi.dispatch(fddApi.util.resetApiState());
     storeApi.dispatch(moderatorApi.util.resetApiState());
   }
   return result;
