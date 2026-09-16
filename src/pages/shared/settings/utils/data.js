@@ -18,7 +18,6 @@ export const CLIENT_FIELDS = [
   "restaurantCuisine",
   "status",
   "healthScore",
-  "proposedTerritory",
   "territoryAvailable",
   "density",
   "liquidCapital",

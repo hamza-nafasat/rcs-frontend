@@ -43,7 +43,6 @@ export const EMPTY_APPLICATION = {
   restaurantCuisine: "",
   status: "active",
   healthScore: "",
-  proposedTerritory: "",
   country: "United States",
   city: "",
   state: "",

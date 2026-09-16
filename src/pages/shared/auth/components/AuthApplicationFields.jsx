@@ -54,19 +54,7 @@ const AuthApplicationFields = ({
 
         </div>
 
-        <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <Input
-            name="proposedTerritory"
-            label="Proposed Territory *"
-            labelClassName={fieldLabel}
-            placeholder="e.g. Downtown Chicago"
-            value={form.proposedTerritory}
-            onChange={onChange}
-            disabled={disabled}
-            className={inputClassName}
-            required
-          />
-
+        <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
           <LocationFields
             values={form}
             onChange={onChange}

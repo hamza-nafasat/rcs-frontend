@@ -51,7 +51,7 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [], initialF
   const [zoom, setZoom] = useState(FULLSCREEN_ZOOM);
   const [mapLayer, setMapLayer] = useState(LAYER_STREET);
 
-  // saved areas, franchises, and the active drawing
+  // saved areas, franchises, active drawing
   const [completedAreas, setCompletedAreas] = useState(initialAreas);
   const [franchises, setFranchises] = useState(initialFranchises);
   const [activeGeoPoints, setActiveGeoPoints] = useState([]);

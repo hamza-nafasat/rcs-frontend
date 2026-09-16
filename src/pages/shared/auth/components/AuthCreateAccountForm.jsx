@@ -24,6 +24,7 @@ const AuthCreateAccountForm = ({ inviteToken, invite }) => {
   });
   const [accountErrors, setAccountErrors] = useState({});
   const [showNotice, setShowNotice] = useState(true);
+  const [map, setMap] = useState({ franchises: [], areas: [] });
   const scores = scoreApplication(form);
 
   const handleAccountChange = (event) => {
@@ -52,6 +53,8 @@ const AuthCreateAccountForm = ({ inviteToken, invite }) => {
         ...form,
         phone: account.phone,
         password: account.password,
+        franchises: map.franchises,
+        areas: map.areas,
       }).unwrap();
       navigate(ROLE_HOME[response?.data?.role] ?? "/");
     } catch (error) {
@@ -84,7 +87,7 @@ const AuthCreateAccountForm = ({ inviteToken, invite }) => {
         />
 
         {/* Franchises and territory areas */}
-        <AuthLocationAssign />
+        <AuthLocationAssign onTerritoryChange={setMap} />
 
         <footer className="flex flex-wrap items-center justify-between gap-3 border-t color-border pt-4">
           <Button

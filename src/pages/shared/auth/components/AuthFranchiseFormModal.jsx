@@ -2,7 +2,7 @@ import { Store, X } from "lucide-react";
 import Input from "../../../../components/shared/Input";
 import LocationFields from "../../../../components/global/LocationFields";
 
-// a franchise needs a name and a place
+// needs a name and place
 const isComplete = (form) => Boolean(form?.name?.trim() && form?.state && form?.city);
 
 const AuthFranchiseFormModal = ({ form, location, isEditing = false, onChange, onSubmit, onClose }) => (
