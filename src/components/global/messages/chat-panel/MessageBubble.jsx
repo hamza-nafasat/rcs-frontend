@@ -12,7 +12,7 @@ const MessageBubble = ({ message, isOwnMessage, onDelete }) => {
           type="button"
           onClick={() => onDelete?.(message)}
           aria-label="Delete message"
-          className="hidden shrink-0 rounded-full p-1 text-gray-400 transition hover:bg-gray-100 hover:text-remove group-hover:block"
+          className="shrink-0 rounded-full border color-border bg-white p-1.5 text-secondary opacity-0 shadow-sm transition hover:border-cancel hover:text-remove focus-visible:opacity-100 group-hover:opacity-100"
         >
           <Trash2 className="h-3.5 w-3.5" />
         </button>

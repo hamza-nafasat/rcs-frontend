@@ -28,7 +28,7 @@ const ChatPanel = ({
       </header>
 
       {/* Messages */}
-      <div className="min-h-0 flex-1 overflow-y-auto">
+      <div className="min-h-0 flex-1">
         <MessageList
           messages={messages}
           currentUserId={currentUserId}

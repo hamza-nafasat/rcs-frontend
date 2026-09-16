@@ -1,14 +1,16 @@
 import { useState } from "react";
-import { Send, X } from "lucide-react";
+import { Paperclip, Send, X } from "lucide-react";
 import MessageAttachment from "./MessageAttachment";
 import MessageEmoji from "./MessageEmoji";
 import MessageVoiceNote from "./MessageVoiceNote";
 import Button from "../../../shared/Button";
 import { formatDuration } from "../../../../utils/formatDuration";
+import { formatFileSize } from "../../../../utils/formatFileSize";
 
 const MessageWrite = ({ onSend, isSending = false }) => {
   const [message, setMessage] = useState("");
   const [file, setFile] = useState(null);
+  const [filePreview, setFilePreview] = useState("");
   const [voiceNote, setVoiceNote] = useState(null);
 
   const handleEmojiSelect = (emoji) => {
@@ -20,14 +22,21 @@ const MessageWrite = ({ onSend, isSending = false }) => {
     setVoiceNote(null);
   };
 
-  // a message carries one attachment, so each choice replaces the other
+  // swap the file and free the old preview
+  const replaceFile = (nextFile) => {
+    if (filePreview) URL.revokeObjectURL(filePreview);
+    setFile(nextFile);
+    setFilePreview(nextFile?.type?.startsWith("image/") ? URL.createObjectURL(nextFile) : "");
+  };
+
+  // a message carries one attachment
   const handleFileSelect = (selectedFile) => {
     removeVoiceNote();
-    setFile(selectedFile);
+    replaceFile(selectedFile);
   };
 
   const handleRecorded = (recording) => {
-    setFile(null);
+    replaceFile(null);
     setVoiceNote(recording);
   };
 
@@ -39,9 +48,8 @@ const MessageWrite = ({ onSend, isSending = false }) => {
 
     try {
       await onSend?.(trimmedMessage, file, voiceNote);
-      // the composer only empties once the api has the message
       setMessage("");
-      setFile(null);
+      replaceFile(null);
       setVoiceNote(null);
     } catch (error) {
       console.error("Send message error:", error);
@@ -59,33 +67,44 @@ const MessageWrite = ({ onSend, isSending = false }) => {
 
       {/* Selected file */}
       {file && (
-        <div className="mb-2 flex items-center gap-2 rounded-lg bg-gray-100 px-3 py-1.5 text-xs text-gray-700">
-          <span className="truncate">{file.name}</span>
+        <div className="mb-2 flex items-center gap-3 rounded-xl border color-border bg-muted p-2">
+          <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-lg border color-border bg-white">
+            {filePreview ? (
+              <img src={filePreview} alt={file.name} className="h-full w-full object-cover" />
+            ) : (
+              <Paperclip className="h-5 w-5 text-secondary" />
+            )}
+          </div>
+
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-xs font-medium text-tertiary">{file.name}</p>
+            <p className="text-[10px] text-muted">{formatFileSize(file.size)}</p>
+          </div>
 
           <button
             type="button"
-            onClick={() => setFile(null)}
-            className="text-gray-400 transition-colors hover:text-gray-600"
+            onClick={() => replaceFile(null)}
+            className="shrink-0 rounded-full p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
             aria-label="Remove file"
           >
-            <X className="h-3.5 w-3.5" />
+            <X className="h-4 w-4" />
           </button>
         </div>
       )}
 
       {/* Recorded voice note */}
       {voiceNote && (
-        <div className="mb-2 flex items-center gap-2 rounded-lg bg-gray-100 px-3 py-1.5 text-xs text-gray-700">
+        <div className="mb-2 flex items-center gap-2 rounded-xl border color-border bg-muted px-3 py-2 text-xs text-gray-700">
           <audio controls src={voiceNote.url} className="h-8 min-w-0 flex-1" />
           <span className="shrink-0 tabular-nums">{formatDuration(voiceNote.duration)}</span>
 
           <button
             type="button"
             onClick={removeVoiceNote}
-            className="shrink-0 text-gray-400 transition-colors hover:text-gray-600"
+            className="shrink-0 rounded-full p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
             aria-label="Remove voice note"
           >
-            <X className="h-3.5 w-3.5" />
+            <X className="h-4 w-4" />
           </button>
         </div>
       )}
@@ -105,7 +124,7 @@ const MessageWrite = ({ onSend, isSending = false }) => {
           isDisabled={!message.trim() && !file && !voiceNote}
           className="h-10 w-10"
         >
-          <Send size={14} />
+          {!isSending && <Send size={14} />}
         </Button>
       </div>
     </form>
