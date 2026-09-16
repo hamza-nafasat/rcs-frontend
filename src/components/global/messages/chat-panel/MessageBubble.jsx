@@ -1,3 +1,5 @@
+import { formatDuration } from "../../../../utils/formatDuration";
+
 const MessageBubble = ({ message, isOwnMessage }) => {
   return (
     <div className={`flex ${isOwnMessage ? "justify-end" : "justify-start"}`}>
@@ -12,6 +14,13 @@ const MessageBubble = ({ message, isOwnMessage }) => {
 
         {message.attachment && (
           <p className="mt-1 text-xs underline">{message.attachment}</p>
+        )}
+
+        {message.voiceNote && (
+          <div className="mt-1 flex items-center gap-2">
+            <audio controls src={message.voiceNote.url} className="h-9 w-48 max-w-full" />
+            <span className="shrink-0 text-[10px] tabular-nums">{formatDuration(message.voiceNote.duration)}</span>
+          </div>
         )}
 
         <p

@@ -19,12 +19,13 @@ const MessagesView = ({
     ? (messagesByConversation[selectedConversationId] ?? [])
     : [];
 
-  const handleSendMessage = (text, file) => {
+  const handleSendMessage = (text, file, voiceNote) => {
     const newMessage = {
       id: crypto.randomUUID(),
       senderId: currentUserId,
       text,
       attachment: file ? file.name : null,
+      voiceNote: voiceNote ? { url: voiceNote.url, duration: voiceNote.duration } : null,
       time: new Date().toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit",
