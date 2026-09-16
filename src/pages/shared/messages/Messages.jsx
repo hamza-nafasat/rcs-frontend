@@ -1,8 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import MessagesView from "../../../components/global/messages/MessagesView";
 import { useAuthUser } from "../../../routes/useAuthUser";
 import { getActingAccountId } from "../../../utils/roleHelper";
+import { onSocketEvent } from "../../../utils/socket";
+import { SOCKET_EVENTS } from "../../../configs/constants";
 import {
+  messageApi,
   useDeleteMessageMutation,
   useGetContactsQuery,
   useGetMessagesQuery,
@@ -12,10 +16,7 @@ import {
   useStartConversationMutation,
 } from "../../../store/apis/shared/message.apis";
 
-// there are no sockets yet, so both lists ask the api again on a timer
-const POLL_INTERVAL = 10000;
-
-// one message carries one attachment, a voice note is a recorded file
+// one message carries one attachment
 const toMessageFormData = (text, file, voiceNote) => {
   const body = new FormData();
   if (text) body.append("text", text);
@@ -28,16 +29,14 @@ const toMessageFormData = (text, file, voiceNote) => {
 };
 
 const Messages = () => {
+  const dispatch = useDispatch();
   const { user } = useAuthUser();
   const [selectedConversationId, setSelectedConversationId] = useState(null);
 
-  const { data: conversationData, isLoading: isLoadingConversations } = useGetMyConversationsQuery(undefined, {
-    pollingInterval: POLL_INTERVAL,
-  });
+  const { data: conversationData, isLoading: isLoadingConversations } = useGetMyConversationsQuery();
   const { data: contactData } = useGetContactsQuery();
   const { data: messageData, isFetching: isLoadingMessages } = useGetMessagesQuery(selectedConversationId, {
     skip: !selectedConversationId,
-    pollingInterval: POLL_INTERVAL,
   });
 
   const [startConversation] = useStartConversationMutation();
@@ -50,7 +49,17 @@ const Messages = () => {
   const currentUserId = getActingAccountId(user);
   const selectedConversation = conversations.find((conversation) => conversation?._id === selectedConversationId);
 
-  // opening a conversation clears what was waiting in it
+  // the server pushes, the cache refetches
+  useEffect(() => {
+    const unsubscribes = Object.values(SOCKET_EVENTS).map((event) =>
+      onSocketEvent(event, ({ conversationId } = {}) =>
+        dispatch(messageApi.util.invalidateTags(["Conversations", { type: "Messages", id: conversationId }])),
+      ),
+    );
+
+    return () => unsubscribes.forEach((unsubscribe) => unsubscribe());
+  }, [dispatch]);
+
   const handleSelectConversation = async (conversationId) => {
     setSelectedConversationId(conversationId);
     const conversation = conversations.find((item) => item?._id === conversationId);
@@ -72,7 +81,6 @@ const Messages = () => {
     }
   };
 
-  // the composer clears only once the api has taken the message
   const handleSend = async (text, file, voiceNote) => {
     await sendMessage({
       conversationId: selectedConversationId,

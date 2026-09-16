@@ -3,7 +3,7 @@ import { getEnv } from "../configs/env";
 
 let socket = null;
 
-// one connection for the whole app, the session cookie authenticates it
+// one connection, cookie authenticated
 const connectSocket = () => {
   if (socket) return socket;
   socket = io(getEnv("VITE_SERVER_URL"), { withCredentials: true });
@@ -17,10 +17,11 @@ const disconnectSocket = () => {
   socket = null;
 };
 
-// hands back the unsubscribe, so an effect cleans up exactly what it added
+// hands back its own unsubscribe
 const onSocketEvent = (event, handler) => {
-  socket?.on(event, handler);
-  return () => socket?.off(event, handler);
+  const liveSocket = connectSocket();
+  liveSocket.on(event, handler);
+  return () => liveSocket.off(event, handler);
 };
 
 export { connectSocket, disconnectSocket, getSocket, onSocketEvent };
