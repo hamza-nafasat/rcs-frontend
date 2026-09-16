@@ -2,7 +2,7 @@ import ProgressBar from "../../shared/ProgressBar";
 
 const MAX = 5;
 
-// `definitions` comes from the calling module's own scorecard data (§1.2: data is never shared)
+// definitions come from the calling module
 const CategoryScores = ({ categories, definitions = [] }) => {
   return (
     <section className="rounded-xl border border-gray-200 bg-white p-4">

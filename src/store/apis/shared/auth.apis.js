@@ -37,10 +37,7 @@ export const authApi = createApi({
     /////
     logout: builder.mutation({
       query: () => ({ url: "/logout", method: "GET" }),
-      // async onQueryStarted(_, { dispatch, queryFulfilled }) {
       //   await queryFulfilled.catch(() => {});
-      //   dispatch(authApi.util.resetApiState());
-      // },
       invalidatesTags: (result) => (result ? ["Profile"] : []),
     }),
     /////

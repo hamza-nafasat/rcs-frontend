@@ -4,7 +4,7 @@ import Dropdown from "../../../../components/shared/Dropdown";
 import DateField from "../../../../components/shared/DateField";
 
 const ReportHeading = ({ heading, subheading, dates, onDateChange }) => {
-  // TODO: wire exports once the reporting API lands
+  // TODO: wire the reporting API
   const handleExportCsv = () => {};
   const handleExportPdf = () => {};
 

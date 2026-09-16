@@ -56,10 +56,10 @@ const Select = ({
       )
     : normalizedOptions;
 
-  // long lists show the first matches, typing narrows them
+  // long lists show first matches
   const renderedOptions = visibleOptions.slice(0, MAX_RENDERED_OPTIONS);
 
-  // a typed value that is not in the list yet
+  // a typed value, not listed
   const trimmedQuery = query.trim();
   const canCreate =
     creatable &&
@@ -91,7 +91,7 @@ const Select = ({
     };
   }, [open]);
 
-  // Emits an event-like object so callers can keep using `e.target.name/value`
+  // emits an event like object
   const emit = (nextValue) =>
     onChange?.({ target: { name, value: nextValue } });
 
@@ -110,7 +110,7 @@ const Select = ({
     closeMenu();
   };
 
-  // enter picks the typed value or the only match, and never submits the form
+  // enter picks, never submits
   const handleSearchKeyDown = (event) => {
     if (event.key !== "Enter") return;
     event.preventDefault();

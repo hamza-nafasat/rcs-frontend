@@ -45,9 +45,7 @@ import {
   X,
 } from "lucide-react";
 
-// ═════════════════════════════════════════════════════════════════════════════
 // FULLSCREEN MULTI-AREA OVERLAY
-// ═════════════════════════════════════════════════════════════════════════════
 
 const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
   const containerRef = useRef(null);
@@ -76,7 +74,7 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
   const [showSummaryModal, setShowSummaryModal] = useState(false);
   const [expandedAreaId, setExpandedAreaId] = useState(null);
 
-  // Search state
+  // the place search state
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [showResults, setShowResults] = useState(false);
@@ -152,7 +150,7 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
     return () => clearInterval(id);
   }, [paintMapTiles]);
 
-  // Redraw all areas & active drawing on the vector canvas layer
+  // redraw areas and active drawing
   useEffect(() => {
     const dc = drawCanvasRef.current;
     if (!dc) return;
@@ -186,7 +184,7 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
     }
   }, [completedAreas, activeGeoPoints, cursor, latLngToCanvas]);
 
-  // ── Scroll Zoom & Mac Touchpad Trackpad Handlers ──────────────────────────
+// scroll zoom and trackpad handlers
 
   useEffect(() => {
     const el = containerRef.current;
@@ -201,10 +199,10 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
 
       const now = Date.now();
 
-      // 1. MAC TOUCHPAD PINCH-TO-ZOOM (e.ctrlKey === true)
+      // touchpad pinch to zoom
       if (e.ctrlKey) {
         pinchAccumulator += e.deltaY;
-        // Require 75px accumulated pinch delta AND at least 250ms delay between zoom steps
+        // needs 75px and 250ms between steps
         if (Math.abs(pinchAccumulator) >= 75 && now - lastZoomTime > 250) {
           const deltaZoom = pinchAccumulator < 0 ? 1 : -1; // separating fingers = zoom in (+1), closing = zoom out (-1)
           setZoom((z) => Math.min(Math.max(z + deltaZoom, MIN_ZOOM), MAX_ZOOM));
@@ -214,7 +212,7 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
         return;
       }
 
-      // 2. MOUSE SCROLL WHEEL ZOOM (vertical wheel scroll)
+      // mouse wheel zoom
       const isMouseWheel = e.deltaMode === 1 || (Math.abs(e.deltaY) >= 50 && e.deltaX === 0);
       if (isMouseWheel) {
         mouseWheelAccumulator += e.deltaY;
@@ -227,8 +225,7 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
         return;
       }
 
-      // 3. MAC TOUCHPAD TWO-FINGER PANNING (swiping 2 fingers side-to-side / up-down)
-      // Very smooth, low speed panning multiplier (0.25x)
+      // touchpad two finger panning
       const dx = e.deltaX * 0.25;
       const dy = e.deltaY * 0.25;
       const totalPx = TILE_SIZE * Math.pow(2, zoom);
@@ -245,7 +242,7 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
     return () => el.removeEventListener("wheel", onWheel);
   }, [zoom]);
 
-  // ── Pointer Handlers (Drag vs. Click to Draw) ──────────────────────────────
+// pointer drag versus click
 
   const handlePointerDown = (e) => {
     if (e.button !== 0) return;
@@ -295,10 +292,10 @@ const AuthTerritoryDrawing = ({ onClose, onComplete, initialAreas = [] }) => {
     if (!dc) return;
     const pt = getCanvasPoint(dc, e);
 
-    // Convert activeGeoPoints to pixel points for snapping check
+    // geo points to pixels for snapping
     const pxPoints = activeGeoPoints.map((g) => latLngToCanvas(g.lat, g.lng));
 
-    // Check if snapping to the first point to close the area
+    // snap to close the area
     if (pxPoints.length >= 3 && isNearPoint(pt, pxPoints[0])) {
       const defaultNum = completedAreas.length + 1;
       setPendingGeoPoints(activeGeoPoints);

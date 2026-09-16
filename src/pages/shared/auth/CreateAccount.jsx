@@ -8,7 +8,7 @@ import { useVerifyInviteQuery } from "../../../store/apis/shared/auth.apis";
 
 const CreateAccount = () => {
   const navigate = useNavigate();
-  // token comes from the link in the invite email
+  // the token comes from the invite
   const { inviteToken } = useParams();
   const { data, isLoading, error } = useVerifyInviteQuery(inviteToken);
 

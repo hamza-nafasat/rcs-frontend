@@ -12,7 +12,7 @@ export const PROFILE_FIELDS = [
   "isEmailNotificationEnabled",
 ];
 
-// what only a client edits about their restaurant
+// what only a client edits
 export const CLIENT_FIELDS = [
   "restaurantName",
   "restaurantCuisine",

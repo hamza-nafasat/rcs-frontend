@@ -1,4 +1,4 @@
-// how each moderator account status reads and looks
+// how each status reads and looks
 const MODERATOR_STATUS = {
   active: { label: "Active", pill: "bg-green-50 text-green-700", dot: "bg-green-500" },
   inactive: { label: "Inactive", pill: "bg-gray-100 text-gray-600", dot: "bg-gray-400" },

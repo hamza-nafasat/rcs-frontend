@@ -109,7 +109,7 @@ export const drawAreaLabel = (ctx, point, label, color = "#f97316") => {
   const x = point.x - w / 2;
   const y = point.y - h / 2;
 
-  // Background box
+  // the label background box
   ctx.fillStyle = "#ffffff";
   ctx.shadowColor = "rgba(0,0,0,0.15)";
   ctx.shadowBlur = 4;
@@ -122,7 +122,7 @@ export const drawAreaLabel = (ctx, point, label, color = "#f97316") => {
   ctx.lineWidth = 1.5;
   ctx.stroke();
 
-  // Text
+  // the label text
   ctx.fillStyle = color;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
@@ -152,7 +152,7 @@ export const redrawPolygon = (
       drawLine(ctx, points[i - 1], points[i], { color, width: 2.5 });
     }
 
-    // Faded dashed line connecting last point to first point when 3+ points exist
+    // a faded line closing the shape
     if (points.length >= 3) {
       drawLine(ctx, points[points.length - 1], points[0], {
         color: "rgba(249, 115, 22, 0.4)",

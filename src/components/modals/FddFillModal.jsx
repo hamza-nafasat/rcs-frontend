@@ -7,11 +7,11 @@ import FddFillTools from "../global/fdd/FddFillTools";
 
 const PAGE_WIDTH = 620;
 
-// each one is a share of the page, so a placement survives any zoom
+// shares of the page, zoom safe
 const SIGNATURE_WIDTH_RATIO = 0.26;
 const TEXT_SIZE_RATIO = 0.022;
 
-// where the click or drop landed on the page
+// where it landed on the page
 const dropRatios = (event, element) => {
   const rect = element.getBoundingClientRect();
   return {
@@ -42,7 +42,7 @@ const stampPlacements = async (fileUrl, placements) => {
       continue;
     }
 
-    // the same signature is embedded once and reused on every page
+    // embedded once, reused per page
     if (!images.has(value)) images.set(value, await pdf.embedPng(value));
     const image = images.get(value);
     const drawWidth = width * SIGNATURE_WIDTH_RATIO;
@@ -68,15 +68,15 @@ const FddFillModal = ({ isOpen, onClose, document, onSave }) => {
 
   if (!isOpen || !document) return null;
 
-  // the signed copy once it exists, otherwise the original
+  // signed copy, else the original
   const fileUrl = document.currentFile?.url ?? document.file?.url;
 
   const activeValue = activeTool === "signature" ? signature : text.trim();
 
-  // a click drops the active tool, dragging a placed one moves it
+  // click drops it, drag moves it
   const handlePageClick = (event, page) => {
     if (!activeValue || draggingId) return;
-    // react clears currentTarget once the handler returns, so measure before updating state
+    // measure before updating state
     const ratios = dropRatios(event, event.currentTarget);
     setPlacements((prev) => [...prev, { id: Date.now(), page, type: activeTool, value: activeValue, ...ratios }]);
   };

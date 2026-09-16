@@ -6,7 +6,7 @@ import Select from "../shared/Select";
 import LocationFields from "../global/LocationFields";
 import { MODERATOR_STATUS_OPTIONS } from "../../utils/moderatorStatus";
 
-// Returns an error message, or "" when the password is acceptable.
+// an error message, or empty
 const validatePassword = (password) => {
   if (!password) return "Password is required";
 
@@ -56,7 +56,7 @@ const ModeratorAddEditModal = ({
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // an existing moderator keeps their password — it is never re-sent on edit
+    // an edit never resends the password
     if (!isAdd) return onSubmit(formData);
 
     const error = validatePassword(password);

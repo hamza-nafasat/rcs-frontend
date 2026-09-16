@@ -15,7 +15,7 @@ const IDLE_TOOL_CARD = "color-border bg-white text-secondary hover:bg-muted";
 
 const todayText = () => new Date().toLocaleDateString();
 
-// what gets dropped on a page: a signature image, or a line of text such as a date or a name
+// a signature or a line
 const FddFillTools = ({
   activeTool,
   onToolChange,

@@ -17,7 +17,7 @@ import {
   useUpdateFddMutation,
 } from "../../../store/apis/shared/fdd.apis";
 
-// the pdf reader and writer only load once a document is opened
+// pdf code loads when opened
 const FddViewModal = lazy(() => import("../../../components/modals/FddViewModal"));
 const FddFillModal = lazy(() => import("../../../components/modals/FddFillModal"));
 
@@ -28,7 +28,7 @@ const initialFilters = {
   status: "",
 };
 
-// the api filters on what is actually set
+// only the filters that are set
 const toQueryParams = (filters) => Object.fromEntries(Object.entries(filters).filter(([, value]) => value !== ""));
 
 const AdminFdd = () => {
@@ -47,7 +47,7 @@ const AdminFdd = () => {
 
   const documents = data?.data ?? [];
 
-  // an FDD belongs to one client's restaurant
+  // an FDD belongs to one restaurant
   const clients = (clientData?.data ?? []).map((client) => ({
     value: client?._id,
     label: client?.restaurantName,

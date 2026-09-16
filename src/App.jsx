@@ -7,7 +7,7 @@ const App = () => {
   const { user } = useAuthUser();
   const accountId = user?._id;
 
-  // the socket follows the signed in account, and goes when they do
+  // the socket follows the account
   useEffect(() => {
     if (!accountId) return;
     connectSocket();

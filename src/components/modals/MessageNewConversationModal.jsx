@@ -3,7 +3,7 @@ import { Search, X } from "lucide-react";
 import Avatar from "../shared/Avatar";
 import Input from "../shared/Input";
 
-// the api answers with accounts, they are grouped by what each one is
+// accounts grouped by their role
 const groupContacts = (contacts) =>
   contacts.reduce((groups, contact) => {
     const group = contact?.role ?? "people";

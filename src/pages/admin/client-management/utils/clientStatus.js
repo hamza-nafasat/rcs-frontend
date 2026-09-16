@@ -8,6 +8,6 @@ export const CLIENT_STATUS = {
   pending: { label: "Pending", pill: "bg-gray-100 text-gray-600", dot: "bg-gray-400" },
 };
 
-// an invite not accepted yet, otherwise the status the client chose
+// invited, else the chosen status
 export const getClientStatus = (client) =>
   client?.account?.status === USER_STATUSES.INVITED ? "invited" : (client?.status ?? "pending");

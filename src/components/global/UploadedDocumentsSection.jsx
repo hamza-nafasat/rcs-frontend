@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import Button from "../shared/Button";
 
-// Initial mock uploaded documents submitted with the franchise request
+// mock documents from the request
 const INITIAL_DOCUMENTS = [
   {
     id: "doc-1",
@@ -69,7 +69,7 @@ const UploadedDocumentsSection = ({
   showUploadButton = true,
   className = "",
 }) => {
-  // TODO: wire upload + download once the documents API lands
+  // TODO: wire the documents API
   const handleUploadDocument = () => {};
   const handleDownloadDocument = () => {};
   const handleDownloadFile = () => {};

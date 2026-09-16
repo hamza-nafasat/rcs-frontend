@@ -1,4 +1,4 @@
-// the clock time for today, the date for anything older
+// time today, date when older
 const formatChatTime = (value) => {
   if (!value) return "";
 

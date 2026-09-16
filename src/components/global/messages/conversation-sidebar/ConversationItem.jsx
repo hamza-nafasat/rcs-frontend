@@ -1,7 +1,7 @@
 import Avatar from "../../../shared/Avatar";
 import { formatChatTime } from "../../../../utils/formatTime";
 
-// what the list shows when the last message was not words
+// preview when there are no words
 const ATTACHMENT_PREVIEW = {
   image: "Photo",
   voice: "Voice note",

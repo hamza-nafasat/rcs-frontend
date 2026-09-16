@@ -8,7 +8,7 @@ import { downloadFile } from "../../../utils/downloadFile";
 import { toFilledFormData, toFddFileName, toFddFileUrl } from "../../../utils/fddRequest";
 import { useFillFddMutation, useGetAllFddsQuery } from "../../../store/apis/shared/fdd.apis";
 
-// the pdf reader and writer only load once a document is opened
+// pdf code loads when opened
 const FddViewModal = lazy(() => import("../../../components/modals/FddViewModal"));
 const FddFillModal = lazy(() => import("../../../components/modals/FddFillModal"));
 
@@ -18,7 +18,7 @@ const initialFilters = {
   status: "",
 };
 
-// the api filters on what is actually set
+// only the filters that are set
 const toQueryParams = (filters) => Object.fromEntries(Object.entries(filters).filter(([, value]) => value !== ""));
 
 const ClientFdd = () => {

@@ -3,10 +3,10 @@ import { LoaderCircle } from "lucide-react";
 const BASE =
   "inline-flex items-center justify-center py-4 gap-2 rounded-xl cursor-pointer";
 
-// loading or disabled: no clicks, and the button fades
+// no clicks, and it fades
 const INACTIVE_CLASSES = "pointer-events-none opacity-60";
 
-// Appearance only. `type` stays the HTML button type: button | submit | reset.
+// appearance only, type stays html
 const VARIANT_CLASSES = {
   primary: "bg-(--color-primary) text-white",
   bare: "",
@@ -15,7 +15,7 @@ const VARIANT_CLASSES = {
   menuItemDanger: "w-full py-0! px-0! border-t border-gray-300 rounded-none!",
 };
 
-// Dropdown rows put their padding on the inner span so the whole row stays clickable.
+// padding inside keeps rows clickable
 const VARIANT_TEXT_CLASSES = {
   menuTrigger:
     "flex w-full h-full gap-2 text-sm text-gray-700 transition hover:bg-gray-100",

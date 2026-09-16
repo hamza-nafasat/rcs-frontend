@@ -3,7 +3,6 @@ import { DEFAULT_CENTER, PREVIEW_ZOOM, drawTiles, sizeCanvas } from "../utils/ma
 import AuthTerritoryDrawing from "./AuthTerritoryDrawing";
 import { Check, MapPin, Maximize2 } from "lucide-react";
 
-// ═════════════════════════════════════════════════════════════════════════════
 
 const AuthLocationAssign = ({ onTerritoryChange }) => {
   const containerRef = useRef(null);

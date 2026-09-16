@@ -91,11 +91,11 @@ const Sidebar = ({
   const isClient = type === "client";
   const isUser = type === "user";
 
-  // a signed in moderator never sees owner only links
+  // moderators never see owner links
   const { user: account } = useAuthUser();
   const isModerator = account?.role === USER_ROLES.MODERATOR;
 
-  // Define menu items based on user type
+  // menu items for this role
   const navItems = isUser ? userNavItems : isClient ? clientNavItems : adminNavItems;
   const menuItems = navItems.filter((item) => !(isModerator && item.isOwnerOnly));
   const profileLinks = isUser ? userProfileItems : isClient ? clientProfileItems : adminProfileItems;

@@ -15,7 +15,7 @@ const AdminSupport = () => {
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useState(initialFilters);
 
-  // these lists will come from the backend later
+  // these lists come from the api
   const priorities = [...new Set(tickets.map((ticket) => ticket.priority))];
   const statuses = [...new Set(tickets.map((ticket) => ticket.status))];
   const categories = [...new Set(tickets.map((ticket) => ticket.category))];

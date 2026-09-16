@@ -1,5 +1,4 @@
-// a browser only downloads a file through an anchor click, and it ignores
-// the download name on another origin, so the file is fetched first
+// fetched first, so the name sticks
 const downloadFile = async (url, name = "document.pdf") => {
   if (!url) return;
 

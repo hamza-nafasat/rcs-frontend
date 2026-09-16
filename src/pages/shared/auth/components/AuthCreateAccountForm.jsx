@@ -11,7 +11,7 @@ import { EMPTY_APPLICATION, scoreApplication } from "../utils/applicationScore";
 import { useAcceptInviteMutation } from "../../../../store/apis/shared/auth.apis";
 import { ROLE_HOME } from "../../../../configs/constants";
 
-// invite holds what the admin already entered, so those fields start filled
+// the invite prefills these fields
 const AuthCreateAccountForm = ({ inviteToken, invite }) => {
   const navigate = useNavigate();
   const [acceptInvite, { isLoading }] = useAcceptInviteMutation();

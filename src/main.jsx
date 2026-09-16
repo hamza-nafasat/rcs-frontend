@@ -6,7 +6,7 @@ import { Provider } from "react-redux";
 import { Toaster } from "react-hot-toast";
 import { store } from "./store/store";
 
-// Handle browser back-forward cache (bfcache) transitions smoothly during dev
+// smooth bfcache transitions in dev
 if (import.meta.env.DEV && typeof window !== "undefined") {
   window.addEventListener("pagehide", () => {}, { passive: true });
 }

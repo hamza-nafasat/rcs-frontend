@@ -4,7 +4,7 @@ import { ROLE_HOME } from "../configs/constants";
 import { getDashboardRole } from "../utils/roleHelper";
 import { useAuthUser } from "./useAuthUser";
 
-// signed in users go back to their own dashboard
+// signed in users go home
 const GuestRoute = () => {
   const { user, isChecking } = useAuthUser();
   if (isChecking) return <Loader />;

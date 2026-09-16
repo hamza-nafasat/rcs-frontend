@@ -6,12 +6,12 @@ const EMPTY_LIST = [];
 
 const loadCountries = () => getCountries();
 
-// the cities key carries both codes, like "US|CA"
+// the key carries both codes
 const loadCities = (key) => getCitiesOfState(...key.split("|"));
 
 const toNames = (items) => [...new Set(items.map((item) => item.name))];
 
-// the list for the current key; a stale answer is ignored, a failed download gives an empty list
+// stale answers and failures are ignored
 const useListFor = (key, load) => {
   const [result, setResult] = useState({ key: null, items: EMPTY_LIST });
 
@@ -32,7 +32,7 @@ const useListFor = (key, load) => {
   return { items: isReady ? result.items : EMPTY_LIST, isLoading: Boolean(key) && !isReady };
 };
 
-// country, then its states, then that state's cities; each one can also be typed
+// country, then states, then cities
 const LocationFields = ({ values, onChange, disabled = false, required = false, labelClassName = "" }) => {
   const countries = useListFor("all", loadCountries);
   const countryCode = countries.items.find((country) => country.name === values?.country)?.iso2;
@@ -47,7 +47,7 @@ const LocationFields = ({ values, onChange, disabled = false, required = false, 
   const emit = (name, value) => onChange?.({ target: { name, value } });
   const toLabel = (label) => (required ? `${label} *` : label);
 
-  // a new country or state empties the fields below it
+  // clears the fields below it
   const handleCountryChange = ({ target }) => {
     if (target.value === values?.country) return;
     emit("country", target.value);

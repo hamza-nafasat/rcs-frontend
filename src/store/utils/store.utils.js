@@ -6,7 +6,7 @@ import { messageApi } from "../apis/shared/message.apis";
 import { moderatorApi } from "../apis/shared/moderator.apis";
 import toast from "react-hot-toast";
 
-// clear module caches when the signed in user changes
+// clear caches when the user changes
 const isUserChange = isAnyOf(
   authApi.endpoints.login.matchFulfilled,
   authApi.endpoints.acceptInvite.matchFulfilled,

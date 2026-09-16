@@ -4,12 +4,12 @@ import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 import Loader from "../../shared/Loader";
 
-// the worker must be set in the same module that renders the pdf
+// the worker belongs in this module
 pdfjs.GlobalWorkerOptions.workerSrc = new URL("pdfjs-dist/build/pdf.worker.min.mjs", import.meta.url).toString();
 
 const PAGE_WIDTH = 620;
 
-// every page of the file, children render an overlay on the page they are given
+// children overlay the page given
 const PdfDocumentView = ({ file, width = PAGE_WIDTH, onLoad, children, className = "" }) => {
   const [pageCount, setPageCount] = useState(0);
 

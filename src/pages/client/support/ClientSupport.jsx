@@ -19,7 +19,7 @@ const ClientSupport = () => {
         }));
       };
 
-      // TODO: submit the ticket once the support API lands
+      // TODO: wire the support API
       const handleSubmit = (e) => {
         e.preventDefault();
       };

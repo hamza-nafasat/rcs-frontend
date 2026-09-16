@@ -6,7 +6,7 @@ import { FDD_STATUS } from "../../utils/fddStatus";
 const FddViewModal = ({ isOpen, onClose, document, onDownload }) => {
   if (!isOpen || !document) return null;
 
-  // the signed copy once it exists, otherwise the original
+  // signed copy, else the original
   const fileUrl = document.currentFile?.url ?? document.file?.url;
 
   const details = [

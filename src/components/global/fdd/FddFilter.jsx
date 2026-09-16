@@ -4,7 +4,7 @@ import Select from "../../shared/Select";
 import { FDD_STATE_OPTIONS } from "../../../utils/fddStateHelper";
 import { FDD_STATUS_OPTIONS } from "../../../utils/fddStatus";
 
-// clients is only passed on the admin side, a client is already one restaurant
+// clients are passed on admin only
 const FddFilter = ({ filters, setFilters, clients = [] }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;

@@ -9,11 +9,11 @@ import {
   useUpdateMyProfileMutation,
 } from "../../../store/apis/shared/auth.apis";
 
-// multipart so the image travels with the fields
+// the image travels with the fields
 const toProfileFormData = (form, image, isClient) => {
   const body = new FormData();
   PROFILE_FIELDS.forEach((field) => body.append(field, form?.[field] ?? ""));
-  // a blank  field is left out, it cannot be cleared
+  // a blank field cannot be cleared
   if (isClient)
     CLIENT_FIELDS.forEach((field) => {
       if (form?.[field] !== "" && form?.[field] != null) body.append(field, form[field]);

@@ -453,9 +453,10 @@ const { pill, dot } = STATUS_STYLES[row.status] ?? STATUS_STYLES.Inactive;
 
 - **Section markers in longer JSX only** — `{/* Heading */}`, `{/* Actions */}`. Skip them in short
   components; they are navigation aids, not decoration.
+- **Every comment is 3 to 6 words** — a label for the step, never a sentence. Write one only where
+  the code cannot say it itself; a good name beats a comment.
 - **Explain the non-obvious, never the obvious.** Good examples already in the code:
-  `// Emits an event-like object so callers can keep using e.target.name/value`,
-  `// these lists will come from the backend later`.
+  `// emits an event like object`, `// these lists come from the api`.
 - No commented-out code.
 - **Import order:** `react` → `react-router-dom` → third-party (`lucide-react`, `@tanstack/*`) →
   `components/shared` + `components/modals` → local `./components/*` → data / utils / assets.

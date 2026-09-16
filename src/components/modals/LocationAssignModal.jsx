@@ -30,21 +30,21 @@ const LocationAssignModal = ({ isOpen, applicant, onClose, onSaveLocation }) => 
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
 
-  // Map state
+  // the map view state
   const [center, setCenter] = useState({ lat: 30.2672, lng: -97.7431 }); // default Austin, TX
   const [zoom, setZoom] = useState(11);
-  // Size is measured into state so render never reads a ref
+  // size in state, never a ref
   const [size, setSize] = useState({ width: 1000, height: 700 });
   const [mapLayer, setMapLayer] = useState(LAYER_STREET);
 
-  // Branch state
+  // the saved branch state
   const [branches, setBranches] = useState(INITIAL_BRANCHES);
   const [isPlacingBranch, setIsPlacingBranch] = useState(false);
   const [cursor, setCursor] = useState(null);
   const [conflictToast, setConflictToast] = useState(null);
   const [showBranchListModal, setShowBranchListModal] = useState(false);
 
-  // Search state
+  // the place search state
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [showResults, setShowResults] = useState(false);
@@ -57,13 +57,13 @@ const LocationAssignModal = ({ isOpen, applicant, onClose, onSaveLocation }) => 
   const [formBranchName, setFormBranchName] = useState("");
   const [formBranchDistance, setFormBranchDistance] = useState("5");
 
-  // Drag state
+  // the map drag state
   const isDragging = useRef(false);
   const dragStart = useRef({ x: 0, y: 0 });
   const dragStartCenter = useRef({ lat: 0, lng: 0 });
   const pointerDownInfo = useRef({ x: 0, y: 0, centerLat: 0, centerLng: 0 });
 
-  // Center map on applicant's city when opened
+  // centre on the applicant city
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -92,7 +92,7 @@ const LocationAssignModal = ({ isOpen, applicant, onClose, onSaveLocation }) => 
     }
   }, [applicant]);
 
-  // Coordinate Conversion
+  // pixels to coordinates
   const latLngToCanvas = useCallback(
     (lat, lng) => {
       const el = containerRef.current;
@@ -132,7 +132,7 @@ const LocationAssignModal = ({ isOpen, applicant, onClose, onSaveLocation }) => 
     [center, zoom, size],
   );
 
-  // Branch pairs whose radii surpass or intersect each other
+  // branch pairs whose radii overlap
   const overlappingBranchIds = useMemo(() => {
     const ids = new Set();
 
@@ -152,11 +152,11 @@ const LocationAssignModal = ({ isOpen, applicant, onClose, onSaveLocation }) => 
     return ids;
   }, [branches]);
 
-  // Derived, not stored: the conflict under the cursor while placing a branch
+  // the conflict under the cursor
   const activeConflict =
     cursor && isPlacingBranch ? findConflictAt(canvasToLatLng(cursor.x, cursor.y), branches) : null;
 
-  // Check live edit input radius surpass conflict preview
+  // preview a radius edit conflict
   const liveFormRadius = parseFloat(formBranchDistance) || 0;
   let liveFormConflict = null;
 
@@ -184,7 +184,7 @@ const LocationAssignModal = ({ isOpen, applicant, onClose, onSaveLocation }) => 
     }
   }
 
-  // ── Render Map Canvas & Saved Branch Pins ─────────────────────────────────
+// draw the map and pins
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -199,7 +199,7 @@ const LocationAssignModal = ({ isOpen, applicant, onClose, onSaveLocation }) => 
     const ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, width, height);
 
-    // 1. Draw Existing & Newly Saved Branches
+    // draw the saved branches
     branches.forEach((branch) => {
       const px = latLngToCanvas(branch.lat, branch.lng);
       if (px.x < -100 || px.x > width + 100 || px.y < -100 || px.y > height + 100) return;
@@ -208,7 +208,7 @@ const LocationAssignModal = ({ isOpen, applicant, onClose, onSaveLocation }) => 
       const isOverlapConflict = overlappingBranchIds.has(branch.id);
       const isConflict = isCursorConflict || isOverlapConflict;
 
-      // Draw Radius Circle (HIGHLIGHTS RED ON CONFLICT OR OVERLAP)
+      // the radius circle, red on conflict
       if (branch.radiusKm > 0) {
         const radiusPx =
           (branch.radiusKm * 1000) / ((156543.03392 * Math.cos((branch.lat * Math.PI) / 180)) / Math.pow(2, zoom));
@@ -252,7 +252,7 @@ const LocationAssignModal = ({ isOpen, applicant, onClose, onSaveLocation }) => 
       ctx.strokeStyle = "#ffffff";
       ctx.stroke();
 
-      // Branch Store/Building Icon (Roof + Base + Door)
+      // the branch building icon
       ctx.fillStyle = "#ffffff";
       ctx.beginPath();
       ctx.moveTo(px.x - 6, px.y - 1);
@@ -301,7 +301,7 @@ const LocationAssignModal = ({ isOpen, applicant, onClose, onSaveLocation }) => 
       ctx.restore();
     });
 
-    // 2. Draw Floating Branch Pin Icon following cursor when "Add Branch" mode is active
+    // the pin that follows the cursor
     if (isPlacingBranch && cursor) {
       const isConflict = !!activeConflict;
 
@@ -310,7 +310,7 @@ const LocationAssignModal = ({ isOpen, applicant, onClose, onSaveLocation }) => 
       ctx.shadowBlur = 10;
       ctx.shadowOffsetY = 4;
 
-      // Floating Pin Circle (RED if conflict, ORANGE if clean)
+      // red on conflict, orange when clean
       const floatRadius = 16;
       ctx.beginPath();
       ctx.arc(cursor.x, cursor.y, floatRadius, 0, Math.PI * 2);
@@ -334,7 +334,7 @@ const LocationAssignModal = ({ isOpen, applicant, onClose, onSaveLocation }) => 
 
       ctx.restore();
 
-      // Floating Helper text badge attached next to cursor
+      // the helper badge by the cursor
       ctx.save();
       ctx.font = "bold 11px Inter, system-ui, sans-serif";
       const helperText = isConflict ? `⚠️ CANNOT ADD HERE!` : `Click on map`;
@@ -356,7 +356,7 @@ const LocationAssignModal = ({ isOpen, applicant, onClose, onSaveLocation }) => 
     }
   }, [branches, isPlacingBranch, cursor, activeConflict, overlappingBranchIds, latLngToCanvas, zoom]);
 
-  // ── Wheel Scroll Zoom & Trackpad Pan ──────────────────────────────────────
+// wheel zoom and trackpad pan
 
   useEffect(() => {
     const el = containerRef.current;
@@ -380,7 +380,7 @@ const LocationAssignModal = ({ isOpen, applicant, onClose, onSaveLocation }) => 
         return;
       }
 
-      // Trackpad panning
+      // trackpad two finger panning
       const dx = e.deltaX * 0.25;
       const dy = e.deltaY * 0.25;
       const totalPx = TILE_SIZE * Math.pow(2, zoom);
@@ -457,7 +457,7 @@ const LocationAssignModal = ({ isOpen, applicant, onClose, onSaveLocation }) => 
       const clickY = e.clientY - rect.top;
       const geo = canvasToLatLng(clickX, clickY);
 
-      // DIRECTLY SAVE branch using applicant's Franchise Name!
+      // saved under the franchise name
       const branchName = applicant?.franchise || applicant?.name || "Branch";
       const newBranch = {
         id: `branch-${Date.now()}`,

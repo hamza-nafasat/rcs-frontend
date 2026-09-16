@@ -26,7 +26,7 @@ const PipelineApplicantProgress = ({
 
   const handleRequestSubmit = (requestData) => {
     onMakeRequestSubmit?.(requestData);
-    // NOTE: this alert is visible UI — replace with a real notification, do not just delete
+    // TODO: replace with a real notification
     alert(`Request "${requestData.title}" sent to user successfully.`);
   };
 

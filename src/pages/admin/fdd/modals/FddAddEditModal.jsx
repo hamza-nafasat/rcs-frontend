@@ -17,7 +17,7 @@ const INITIAL_FORM = {
   isFillRequired: true,
 };
 
-// an existing document carries its restaurant as a populated record
+// the restaurant arrives populated
 const toForm = (document) =>
   document
     ? {
@@ -56,7 +56,7 @@ const FddAddEditModal = ({
     onSubmit({ ...formData, file });
   };
 
-  // a new document needs its pdf, an edit keeps the one already uploaded
+  // a new document needs its pdf
   const isComplete =
     formData.title.trim() !== "" && formData.version.trim() !== "" && formData.client !== "" && (!isAdd || file);
 

@@ -1,4 +1,4 @@
-// must match PASSWORD_MIN_LENGTH in the backend's global/configs/constants.js
+// must match the backend minimum
 export const PASSWORD_MIN_LENGTH = 8;
 
 export const EMPTY_ACCOUNT = {

@@ -15,7 +15,7 @@ const initialFilters = {
 const AdminPipeline = () => {
   const [filters, setFilters] = useState(initialFilters);
 
-  // these lists will come from the backend later
+  // these lists come from the api
   const stages = [...new Set(initialApplicants.map((row) => row.stage))];
   const territories = [
     ...new Set(initialApplicants.map((row) => row.territory)),

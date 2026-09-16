@@ -124,7 +124,7 @@ const buildColumns = ({ canManage, onView, onEdit, onFill, onDownload, onDelete 
   },
 ];
 
-// canManage adds the admin only actions, edit and delete
+// canManage adds edit and delete
 const FddTable = ({
   documents = [],
   isLoading = false,

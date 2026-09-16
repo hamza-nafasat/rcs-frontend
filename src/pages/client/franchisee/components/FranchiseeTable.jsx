@@ -126,7 +126,7 @@ const FranchiseeTable = ({ className, filters = emptyFilters }) => {
     return matchRestaurant && matchOwner && matchStatus;
   });
 
-  // TODO: wire View + Send Message once the franchisee detail/message APIs land
+  // TODO: wire the franchisee APIs
   const handleViewClient = () => {};
   const handleSendMessage = () => {};
 

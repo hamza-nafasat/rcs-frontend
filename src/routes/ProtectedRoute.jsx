@@ -4,7 +4,7 @@ import { ROLE_HOME } from "../configs/constants";
 import { getDashboardRole } from "../utils/roleHelper";
 import { useAuthUser } from "./useAuthUser";
 
-// only a signed in user of this role gets through
+// only this role gets through
 const ProtectedRoute = ({ role }) => {
   const { user, isChecking } = useAuthUser();
   if (isChecking) return <Loader />;

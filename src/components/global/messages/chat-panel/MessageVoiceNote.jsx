@@ -17,14 +17,14 @@ const MessageVoiceNote = ({ onRecorded }) => {
   const analyserRef = useRef(null);
   const barsRef = useRef([]);
 
-  // the counter only runs while the mic is open
+  // the counter runs while recording
   useEffect(() => {
     if (!isRecording) return;
     const timer = setInterval(() => setSeconds((prev) => prev + 1), 1000);
     return () => clearInterval(timer);
   }, [isRecording]);
 
-  // the bars are driven straight from the analyser, so react never renders at 60fps
+  // bars driven straight from the analyser
   useEffect(() => {
     if (!isRecording || !analyserRef.current) return;
 
@@ -49,7 +49,7 @@ const MessageVoiceNote = ({ onRecorded }) => {
     return () => cancelAnimationFrame(frame);
   }, [isRecording]);
 
-  // a closed tab or a left page must not keep the mic on
+  // never leave the mic on
   useEffect(() => () => recorderRef.current?.stream?.getTracks?.().forEach((track) => track.stop()), []);
 
   const releaseMic = () => {
@@ -81,7 +81,7 @@ const MessageVoiceNote = ({ onRecorded }) => {
         releaseMic();
         if (isCancelledRef.current) return;
         const blob = new Blob(chunksRef.current, { type: recorder.mimeType });
-        // the clock is the truth, a counter read here would be one render behind
+        // the clock, not the counter
         onRecorded({
           blob,
           url: URL.createObjectURL(blob),

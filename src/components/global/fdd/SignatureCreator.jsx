@@ -7,13 +7,13 @@ import SegmentedControl from "../../shared/SegmentedControl";
 const CANVAS_SIZE = { width: 520, height: 170 };
 const SCRIPT_FONT = "'Snell Roundhand', 'Brush Script MT', 'Segoe Script', cursive";
 
-// quieter than the tool cards above it, this is a detail of the signature
+// quieter than the tool cards
 const SIGNATURE_MODES = [
   { value: "type", label: "Type it", activeClassName: "bg-primary text-primary" },
   { value: "draw", label: "Draw it", activeClassName: "bg-primary text-primary" },
 ];
 
-// a transparent png of the typed name in a handwriting face
+// the typed name as png
 const typedSignatureToImage = (name) => {
   const canvas = document.createElement("canvas");
   canvas.width = CANVAS_SIZE.width;
@@ -27,7 +27,7 @@ const typedSignatureToImage = (name) => {
   return canvas.toDataURL("image/png");
 };
 
-// type a name or draw with a mouse or finger, then hand the image back
+// type or draw a signature
 const SignatureCreator = ({ onCreate }) => {
   const [mode, setMode] = useState("type");
   const [name, setName] = useState("");

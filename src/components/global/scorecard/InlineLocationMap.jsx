@@ -18,15 +18,15 @@ const InlineLocationMap = ({ applicant, onOpenFullMap }) => {
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
 
-  // Size is measured into state so render never reads a ref
+  // size in state, never a ref
   const [size, setSize] = useState({ width: 360, height: 180 });
 
   const zoom = 11;
 
-  // Filter branches matching applicant's city or franchise
+  // branches in the applicant city
   const branches = applicant?.branches || INITIAL_BRANCHES;
 
-  // Derived, not stored: the map centres on the first branch (§6.2)
+  // centres on the first branch
   const center = useMemo(
     () => (branches.length > 0 ? { lat: branches[0].lat, lng: branches[0].lng } : { lat: 30.2672, lng: -97.7431 }), // default Austin, TX
     [branches],
@@ -119,7 +119,7 @@ const InlineLocationMap = ({ applicant, onOpenFullMap }) => {
       ctx.strokeStyle = "#ffffff";
       ctx.stroke();
 
-      // Building Icon
+      // the branch building icon
       ctx.fillStyle = "#ffffff";
       ctx.beginPath();
       ctx.moveTo(px.x - 5, px.y - 1);
@@ -157,7 +157,7 @@ const InlineLocationMap = ({ applicant, onOpenFullMap }) => {
     });
   }, [branches, latLngToCanvas, zoom]);
 
-  // Tiles calculations
+  // which tiles to draw
   const numTiles = Math.pow(2, zoom);
   const centerPxX = lngToPixel(center.lng, zoom);
   const centerPxY = latToPixel(center.lat, zoom);

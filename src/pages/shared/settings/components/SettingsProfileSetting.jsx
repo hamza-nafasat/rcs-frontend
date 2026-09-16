@@ -18,7 +18,7 @@ import {
 const EDITABLE_INPUT = "border-gray-200 focus:border-[#F97316] focus:ring-4 focus:ring-indigo-500/10 bg-white";
 const LOCKED_INPUT = "bg-gray-50/50 text-gray-500 border-gray-100 cursor-not-allowed";
 
-// only the values the api actually has, the empty profile covers the rest
+// only the values the api has
 const pickFilled = (source, fields) =>
   Object.fromEntries(fields.filter((field) => source?.[field] != null).map((field) => [field, source[field]]));
 
@@ -51,7 +51,7 @@ const SettingsProfileSetting = ({
 
   const handleSelect = (name, value) => setForm((prev) => ({ ...prev, [name]: value }));
 
-  // swap the picked image and free the old preview
+  // swap image, free old preview
   const replaceImage = (file) => {
     if (imagePreview) URL.revokeObjectURL(imagePreview);
     setImage(file);

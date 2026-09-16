@@ -1,4 +1,4 @@
-// ── OpenStreetMap & Esri Tile Configuration ──────────────────────────────────
+// openstreetmap and esri tiles
 
 export const TILE_SIZE = 256;
 export const DEFAULT_CENTER = { lat: 39.8283, lng: -98.5795 };

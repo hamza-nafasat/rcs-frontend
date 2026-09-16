@@ -22,7 +22,7 @@ const MessageWrite = ({ onSend, isSending = false }) => {
     setVoiceNote(null);
   };
 
-  // swap the file and free the old preview
+  // swap file, free old preview
   const replaceFile = (nextFile) => {
     if (filePreview) URL.revokeObjectURL(filePreview);
     setFile(nextFile);

@@ -6,7 +6,7 @@ export const LAYER_SATELLITE = "satellite";
 
 // Dummy saved branches data for franchises
 
-// Haversine formula to compute exact geographical distance in km between two lat/lng points
+// distance in km between two points
 export function getDistanceKm(lat1, lon1, lat2, lon2) {
   const R = 6371; // Earth's radius in km
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
@@ -53,7 +53,7 @@ export async function searchLocation(query) {
       lng: parseFloat(item.lon),
     }));
   } catch {
-    // Geocoding is best-effort: on failure the caller simply shows no suggestions
+    // geocoding failure means no suggestions
     return [];
   }
 }
