@@ -48,7 +48,7 @@ const DashboardDonutChart = ({ labels, data, colors }) => {
       </div>
 
       {/* Custom Legend */}
-      <div className="mt-5 flex  justify-center gap-4">
+      <div className="mt-5 flex justify-center gap-4">
         {labels.map((label, index) => (
           <div
             key={label}
@@ -61,7 +61,7 @@ const DashboardDonutChart = ({ labels, data, colors }) => {
               }}
             />
 
-            <span className="text-sm text-gray-600">{label}</span>
+            <span className="text-sm text-secondary">{label}</span>
           </div>
         ))}
       </div>

@@ -1,7 +1,4 @@
-import TotalUsersIcon from "../../../../assets/SVGs/TotalUsersIcon.svg";
-import SuccessIcon from "../../../../assets/SVGs/SuccessIcon.svg";
-import RevenueIcon from "../../../../assets/SVGs/RevenueIcon.svg";
-import TotalMembersIcon from "../../../../assets/SVGs/TotalMembersIcon.svg";
+import { FileText, GitBranch, MessageSquare, Users } from "lucide-react";
 
 export const activities = [
     {
@@ -180,78 +177,113 @@ export const clients = [
   },
 ];
 
-export const leadsPerClient = [
-  {
-    id: 1,
-    name: "Coastal Bistro",
-    owner: "Ahmed Sarfaz",
-    leads: 7,
-    status: "Active",
-  },
-  {
-    id: 2,
-    name: "Spice Route",
-    owner: "Priya Patel",
-    leads: 5,
-    status: "Needs Attention",
-  },
-  {
-    id: 3,
-    name: "The Rustic Table",
-    owner: "Marcus Williams",
-    leads: 4,
-    status: "Needs Attention",
-  },
-  {
-    id: 4,
-    name: "Urban Greens",
-    owner: "Sofia Chen",
-    leads: 3,
-    status: "Active",
-  },
-  {
-    id: 5,
-    name: "Golden Harvest",
-    owner: "James Liu",
-    leads: 4,
-    status: "Active",
-  },
-  {
-    id: 6,
-    name: "Harbour Grill",
-    owner: "Elena Rossi",
-    leads: 4,
-    status: "Needs Attention",
-  },
-];
 
 export const cardData = [
   {
-    icon: TotalUsersIcon,
+    icon: Users,
+    iconTile: { color: "#2563eb", bg: "#eff6ff" },
     badge: "+3",
     value: "1,245",
     label: "Total Clients",
     comparison: "↑ 12% vs last month",
   },
   {
-    icon: SuccessIcon,
+    icon: MessageSquare,
+    iconTile: { color: "#06b6d4", bg: "#ecfeff" },
     badge: "+5",
     value: "2,345",
     label: "Total Messages",
     comparison: "↑ 8% vs last month",
   },
   {
-    icon: RevenueIcon,
+    icon: GitBranch,
+    iconTile: { color: "#f97316", bg: "#fff7ed" },
     badge: "+2",
     value: "567",
-    label: "Total Leads",
+    label: "Total Pipelines",
     comparison: "↑ 15% vs last month",
   },
   {
-    icon: TotalMembersIcon,
+    icon: FileText,
+    iconTile: { color: "#22c55e", bg: "#f0fdf4" },
     badge: "+72",
-    value: "567",
-    label: "Total Leads",
+    value: "48",
+    label: "Total FDDs",
     comparison: "↑ 15% vs last month",
+  },
+];
+
+export const chartMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
+
+export const fddVsSupports = [
+  {
+    label: "FDDs",
+    data: [8, 14, 11, 19, 16, 24],
+    borderColor: "#22C55E",
+    backgroundColor: "transparent",
+    tension: 0.4,
+  },
+  {
+    label: "Supports",
+    data: [5, 9, 13, 10, 18, 15],
+    borderColor: "#F97316",
+    backgroundColor: "transparent",
+    tension: 0.4,
+  },
+];
+
+export const clientsVsLeads = [
+  { label: "Clients", data: [20, 35, 28, 50, 45, 70], backgroundColor: "#F97316" },
+  { label: "Leads", data: [15, 30, 40, 35, 55, 60], backgroundColor: "#2563EB" },
+];
+
+export const leadsOutcome = {
+  labels: ["Approved", "Denied", "Pending"],
+  data: [25, 20, 15],
+  colors: ["#047857", "#DC2626", "#EAB308"],
+};
+
+export const recentSupports = [
+  {
+    _id: "tkt-1",
+    ticketId: "#TKT-4A19C2",
+    subject: "Cannot upload signed FDD",
+    status: "in_progress",
+    restaurant: { restaurantName: "Coastal Bistro" },
+  },
+  {
+    _id: "tkt-2",
+    ticketId: "#TKT-77B0E4",
+    subject: "Billing invoice mismatch",
+    status: "in_progress",
+    restaurant: { restaurantName: "Spice Route" },
+  },
+  {
+    _id: "tkt-3",
+    ticketId: "#TKT-2D5F91",
+    subject: "Franchisee cannot sign in",
+    status: "resolved",
+    restaurant: { restaurantName: "The Rustic Table" },
+  },
+  {
+    _id: "tkt-4",
+    ticketId: "#TKT-9C3A08",
+    subject: "Territory map not loading",
+    status: "in_progress",
+    restaurant: { restaurantName: "Urban Greens" },
+  },
+  {
+    _id: "tkt-5",
+    ticketId: "#TKT-5E8B73",
+    subject: "Request to change owner email",
+    status: "closed",
+    restaurant: { restaurantName: "Golden Harvest" },
+  },
+  {
+    _id: "tkt-6",
+    ticketId: "#TKT-1F6D42",
+    subject: "Duplicate applicant record",
+    status: "resolved",
+    restaurant: { restaurantName: "Harbour Grill" },
   },
 ];

@@ -1,16 +1,9 @@
 import { useEffect, useRef } from "react";
-import {
-  Chart,
-  BarController,
-  BarElement,
-  CategoryScale,
-  LinearScale,
-  Tooltip,
-} from "chart.js";
+import { Chart, BarController, BarElement, CategoryScale, LinearScale, Legend, Tooltip } from "chart.js";
 
-Chart.register(BarController, BarElement, CategoryScale, LinearScale, Tooltip);
+Chart.register(BarController, BarElement, CategoryScale, LinearScale, Legend, Tooltip);
 
-const DashboardBarChart = ({ labels, data }) => {
+const DashboardBarChart = ({ labels = [], datasets = [] }) => {
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
 
@@ -19,25 +12,13 @@ const DashboardBarChart = ({ labels, data }) => {
 
     chartInstance.current = new Chart(ctx, {
       type: "bar",
-      data: {
-        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-        datasets: [
-          {
-            data: [20, 35, 28, 50, 45, 70],
-            backgroundColor: "#F97316",
-            borderRadius: 6,
-          },
-          {
-            data: [15, 30, 40, 35, 55, 60],
-            backgroundColor: "#2563EB",
-            borderRadius: 6,
-          },
-        ],
-      },
+      data: { labels, datasets: datasets.map((set) => ({ borderRadius: 6, ...set })) },
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
+        plugins: {
+          legend: { display: datasets.length > 1, position: "bottom", labels: { usePointStyle: true, boxWidth: 8 } },
+        },
         scales: { y: { beginAtZero: true } },
       },
     });
@@ -45,7 +26,7 @@ const DashboardBarChart = ({ labels, data }) => {
     return () => {
       chartInstance.current?.destroy();
     };
-  }, [labels, data]);
+  }, [labels, datasets]);
 
   return (
     <div className="min-h-56 w-full flex-1 sm:min-h-64 lg:min-h-72">

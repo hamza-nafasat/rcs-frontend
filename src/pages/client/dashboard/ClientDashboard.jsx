@@ -1,7 +1,7 @@
 import DashboardStatsCard from "../../admin/dashboard/components/DashboardStatsCard";
 import DashboardHeading from "../../../components/global/DashboardHeading";
 
-import DashboardDonutChart from "./components/DashboardDonutChart";
+import DashboardDonutChart from "../../../components/global/DashboardDonutChart";
 import DashboardBarChart from "./components/DashboardBarChart";
 import Card from "../../../components/shared/Card";
 import DashboardApplicantsScored from "./components/DashboardApplicantsScored";
