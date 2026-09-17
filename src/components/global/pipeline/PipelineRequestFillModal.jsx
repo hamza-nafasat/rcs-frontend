@@ -6,17 +6,26 @@ import FileUpload from "../../shared/FileUpload";
 const PipelineRequestFillModal = ({ isOpen, onClose, onSubmit, request }) => {
   const [message, setMessage] = useState("");
   const [files, setFiles] = useState([]);
+  const [isSaving, setIsSaving] = useState(false);
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!message.trim()) return;
 
-    onSubmit?.({ message, files });
-    setMessage("");
-    setFiles([]);
-    onClose?.();
+    setIsSaving(true);
+
+    try {
+      await onSubmit?.({ message, files });
+      setMessage("");
+      setFiles([]);
+      onClose?.();
+    } catch {
+      // the toast already reported it
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -68,14 +77,21 @@ const PipelineRequestFillModal = ({ isOpen, onClose, onSubmit, request }) => {
             <Button
               type="button"
               variant="bare"
+              isDisabled={isSaving}
               onClick={onClose}
               className="w-1/2 border border-cancel bg-white px-3! py-2.5! text-cancel transition hover:bg-muted"
             >
               Cancel
             </Button>
 
-            <Button type="submit" icon={<Send size={15} />} className="w-1/2 px-3! py-2.5! text-white">
-              Save
+            <Button
+              type="submit"
+              icon={<Send size={15} />}
+              isLoading={isSaving}
+              isDisabled={isSaving}
+              className="w-1/2 px-3! py-2.5! text-white"
+            >
+              {isSaving ? "Saving…" : "Save"}
             </Button>
           </div>
         </form>

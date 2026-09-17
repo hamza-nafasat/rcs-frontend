@@ -13,10 +13,8 @@ const PipelineApplicantProgress = ({ currentStage, canRequest = false, onMakeReq
   const activeIndex = TRACK_STAGES.findIndex(([stage]) => stage === currentStage);
   const currentIndex = activeIndex === -1 ? 0 : activeIndex;
 
-  const handleRequestSubmit = (requestData) => {
-    onMakeRequestSubmit?.(requestData);
-    setIsModalOpen(false);
-  };
+  // the modal closes once it saves
+  const handleRequestSubmit = (requestData) => onMakeRequestSubmit?.(requestData);
 
   return (
     <section className={`flex flex-col gap-4 rounded-2xl border color-border bg-white p-4 shadow-sm sm:p-5 ${className}`}>

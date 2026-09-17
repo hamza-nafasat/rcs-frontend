@@ -9,19 +9,18 @@ const longDate = (value) =>
 const FileList = ({ files = [] }) => (
   <ul className="mt-2 flex flex-col gap-2">
     {files.map((file) => (
-      <li key={file.name} className="flex items-center gap-3 rounded-xl border color-border p-3">
+      <li key={file.public_id ?? file.name} className="flex items-center gap-3 rounded-xl border color-border p-3">
         <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-active">
           <Paperclip size={16} className="text-muted" />
         </span>
 
-        <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-medium text-tertiary">{file.name}</p>
-          <p className="text-xs text-muted">{file.size || "Unknown size"}</p>
-        </div>
+        <p className="min-w-0 flex-1 truncate text-sm font-medium text-tertiary">{file.name}</p>
 
         <a
           href={file.url}
           download={file.name}
+          target="_blank"
+          rel="noreferrer"
           aria-label={`Download ${file.name}`}
           className="flex size-9 shrink-0 items-center justify-center rounded-lg text-muted transition hover:bg-active hover:text-primary"
         >
@@ -36,7 +35,7 @@ const PipelineRequestModal = ({ isOpen, onClose, request, canFill = false, onFil
   if (!isOpen || !request) return null;
 
   const { label, color, bg } = statusOf(request.status);
-  const files = request.files ?? [];
+  const attachments = request.attachments ?? [];
   const response = request.response;
   const isPending = request.status === REQUEST_STATUSES.PENDING;
 
@@ -89,13 +88,13 @@ const PipelineRequestModal = ({ isOpen, onClose, request, canFill = false, onFil
           {/* Attachments */}
           <section>
             <h3 className="text-xs font-semibold tracking-wide text-secondary uppercase">
-              Attachments {files.length > 0 && `(${files.length})`}
+              Attachments {attachments.length > 0 && `(${attachments.length})`}
             </h3>
 
-            {files.length === 0 ? (
+            {attachments.length === 0 ? (
               <p className="mt-2 rounded-xl bg-active p-4 text-sm text-muted">No attachments included</p>
             ) : (
-              <FileList files={files} />
+              <FileList files={attachments} />
             )}
           </section>
 
@@ -113,7 +112,7 @@ const PipelineRequestModal = ({ isOpen, onClose, request, canFill = false, onFil
                 {response.message}
               </p>
 
-              {response.files?.length > 0 && <FileList files={response.files} />}
+              {response.attachments?.length > 0 && <FileList files={response.attachments} />}
             </section>
           )}
 

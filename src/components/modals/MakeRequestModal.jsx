@@ -13,26 +13,35 @@ const MakeRequestModal = ({ isOpen, onClose, onSubmit, mode = "add", initialData
   const [message, setMessage] = useState(initialData?.message ?? "");
   const [status, setStatus] = useState(initialData?.status ?? REQUEST_STATUSES.PENDING);
   const [files, setFiles] = useState([]);
+  const [isSaving, setIsSaving] = useState(false);
 
   if (!isOpen) return null;
 
-  const savedFiles = initialData?.files ?? [];
+  const savedFiles = initialData?.attachments ?? [];
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!title.trim() || !message.trim()) return;
 
-    onSubmit?.({ title, message, files, status });
+    setIsSaving(true);
 
-    // a new request starts empty again
-    if (!isEdit) {
-      setTitle("");
-      setMessage("");
-      setFiles([]);
-      setStatus(REQUEST_STATUSES.PENDING);
+    try {
+      await onSubmit?.({ title, message, files, status });
+
+      // a new request starts empty again
+      if (!isEdit) {
+        setTitle("");
+        setMessage("");
+        setFiles([]);
+        setStatus(REQUEST_STATUSES.PENDING);
+      }
+
+      onClose?.();
+    } catch {
+      // the toast already reported it
+    } finally {
+      setIsSaving(false);
     }
-
-    onClose?.();
   };
 
   return (
@@ -110,10 +119,12 @@ const MakeRequestModal = ({ isOpen, onClose, onSubmit, mode = "add", initialData
           {isEdit && files.length === 0 && savedFiles.length > 0 && (
             <ul className="flex flex-col gap-1.5">
               {savedFiles.map((saved) => (
-                <li key={saved.name} className="flex items-center gap-2 rounded-xl bg-active p-3 text-xs text-secondary">
+                <li
+                  key={saved.public_id ?? saved.name}
+                  className="flex items-center gap-2 rounded-xl bg-active p-3 text-xs text-secondary"
+                >
                   <Paperclip size={14} className="shrink-0 text-muted" />
                   <span className="truncate">{saved.name}</span>
-                  <span className="shrink-0 text-muted">{saved.size}</span>
                 </li>
               ))}
             </ul>
@@ -123,14 +134,21 @@ const MakeRequestModal = ({ isOpen, onClose, onSubmit, mode = "add", initialData
             <Button
               type="button"
               variant="bare"
+              isDisabled={isSaving}
               onClick={onClose}
               className="w-1/2 border border-cancel bg-white px-3! py-2.5! text-cancel transition hover:bg-muted"
             >
               Cancel
             </Button>
 
-            <Button type="submit" icon={<Send size={15} />} className="w-1/2 px-3! py-2.5! text-white">
-              {isEdit ? "Save Changes" : "Send Request"}
+            <Button
+              type="submit"
+              icon={<Send size={15} />}
+              isLoading={isSaving}
+              isDisabled={isSaving}
+              className="w-1/2 px-3! py-2.5! text-white"
+            >
+              {isSaving ? "Saving…" : isEdit ? "Save Changes" : "Send Request"}
             </Button>
           </div>
         </form>

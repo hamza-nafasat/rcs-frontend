@@ -40,20 +40,20 @@ const buildColumns = ({ onView, onEdit, onAsk }) => {
     },
     {
       name: "Attachments",
-      selector: (row) => row.files?.length ?? 0,
+      selector: (row) => row.attachments?.length ?? 0,
       sortable: true,
       minWidth: "150px",
       maxWidth: "230px",
       wrap: true,
       cell: (row) => {
-        const files = row.files ?? [];
-        if (files.length === 0) return <span className="text-muted">—</span>;
+        const attachments = row.attachments ?? [];
+        if (attachments.length === 0) return <span className="text-muted">—</span>;
 
         return (
           <span className="flex min-w-0 items-center gap-1.5 text-tablecell">
             <Paperclip size={14} className="shrink-0 text-muted" />
-            <span className="truncate">{files[0].name}</span>
-            {files.length > 1 && <span className="shrink-0 text-muted">+{files.length - 1}</span>}
+            <span className="truncate">{attachments[0].name}</span>
+            {attachments.length > 1 && <span className="shrink-0 text-muted">+{attachments.length - 1}</span>}
           </span>
         );
       },

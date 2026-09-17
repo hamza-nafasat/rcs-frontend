@@ -1,4 +1,4 @@
-import { BadgeCheck, FileText, LifeBuoy, Settings, UserPlus } from "lucide-react";
+import { BadgeCheck, FileText, LifeBuoy, MapPin, Settings, UserPlus } from "lucide-react";
 
 const ICON_STYLES = {
   document: "bg-blue-50 text-blue-600",
@@ -56,6 +56,24 @@ const NOTIFICATION_KINDS = {
     style: ICON_STYLES.system,
     title: () => "Your profile was updated",
     description: ({ name }) => `${name ?? "You"} saved changes to your profile.`,
+  },
+  pipeline_request_sent: {
+    icon: FileText,
+    style: ICON_STYLES.document,
+    title: ({ title }) => `Documents requested: ${title ?? "a new request"}`,
+    description: ({ name }) => `${name ?? "An admin"} asked you for more information.`,
+  },
+  pipeline_request_filled: {
+    icon: FileText,
+    style: ICON_STYLES.document,
+    title: ({ title }) => `${title ?? "A request"} was filled`,
+    description: ({ name }) => `${name ?? "An applicant"} sent the requested documents.`,
+  },
+  pipeline_location_assigned: {
+    icon: MapPin,
+    style: ICON_STYLES.account,
+    title: ({ name }) => `Location assigned: ${name ?? "a new franchise"}`,
+    description: ({ city, state }) => [city, state].filter(Boolean).join(", "),
   },
 };
 

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { DollarSign, Briefcase, Scale, MapPin } from "lucide-react";
+import { DollarSign, Briefcase, Scale, MapPin, ArrowRight } from "lucide-react";
 import ScoreRadar from "../../../components/global/scorecard/ScoreRadar";
 import CategoryScores from "../../../components/global/scorecard/CategoryScores";
 import ScorecardSection from "../../../components/global/scorecard/ScorecardSection";
@@ -10,24 +10,32 @@ import MapLocationAssign from "../../../components/global/map/MapLocationAssign"
 import PipelineRequestTable from "../../../components/global/pipeline/PipelineRequestTable";
 import PipelineRequestModal from "../../../components/global/pipeline/PipelineRequestModal";
 import MakeRequestModal from "../../../components/modals/MakeRequestModal";
+import DeleteModal from "../../../components/modals/DeleteModal";
 import { buildScorecard, getRecommendation, SCORE_CATEGORIES } from "../../../utils/pipelineScorecard";
-import { useGetPipelineByIdQuery, useUpdatePipelineStageMutation } from "../../../store/apis/shared/pipeline.apis";
+import {
+  useAssignPipelineLocationMutation,
+  useCreatePipelineRequestMutation,
+  useDeletePipelineRequestMutation,
+  useGetPipelineByIdQuery,
+  useGetPipelineRequestsQuery,
+  useUpdatePipelineRequestMutation,
+  useUpdatePipelineStageMutation,
+} from "../../../store/apis/shared/pipeline.apis";
 import { useGetAllClientsQuery, useGetClientByIdQuery } from "../../../store/apis/admin/client.apis";
-import { PIPELINE_STAGES } from "../../../utils/pipelineStage";
+import { PIPELINE_STAGES, stageOf } from "../../../utils/pipelineStage";
 import { withMapId } from "../../../utils/mapHelpers";
-import { REQUEST_STATUSES } from "../../../utils/requestStatus";
-import { toFileRecords } from "../../../utils/fileRecords";
-import { initialRequests } from "./utils/data";
+import { firstNewFranchise, toRequestFormData } from "../../../utils/pipelineRequest";
 
 const AdminApplicantDetailPage = () => {
   const { id } = useParams();
   const { data, isLoading } = useGetPipelineByIdQuery(id);
-  const [updatePipelineStage, { isLoading: isUpdating }] = useUpdatePipelineStageMutation();
+  const { data: requestsData, isFetching: isLoadingRequests } = useGetPipelineRequestsQuery(id, { skip: !id });
 
-  // TODO: move to requests api
-  const [requests, setRequests] = useState(initialRequests);
-  const [requestToView, setRequestToView] = useState(null);
-  const [requestToEdit, setRequestToEdit] = useState(null);
+  const [updatePipelineStage, { isLoading: isUpdating }] = useUpdatePipelineStageMutation();
+  const [createPipelineRequest] = useCreatePipelineRequestMutation();
+  const [updatePipelineRequest] = useUpdatePipelineRequestMutation();
+  const [deletePipelineRequest] = useDeletePipelineRequestMutation();
+  const [assignPipelineLocation] = useAssignPipelineLocationMutation();
 
   const application = data?.data;
 
@@ -37,12 +45,15 @@ const AdminApplicantDetailPage = () => {
   const restaurantId = clientsData?.data?.find((client) => client?.account?._id === clientAccountId)?._id;
   const { data: clientData } = useGetClientByIdQuery(restaurantId, { skip: !restaurantId });
 
-  // TODO: persist the assigned franchise
   const [mapData, setMapData] = useState(null);
+  const [requestToView, setRequestToView] = useState(null);
+  const [requestToEdit, setRequestToEdit] = useState(null);
+  const [pendingStage, setPendingStage] = useState(null);
 
   if (isLoading) return <p className="p-6 text-center text-secondary">Loading application…</p>;
   if (!application) return <p className="p-6 text-center text-secondary">Application not found.</p>;
 
+  const requests = requestsData?.data ?? [];
   const isAssigningLocation = application.stage === PIPELINE_STAGES.ASSIGN_LOCATION;
   const franchises = mapData?.franchises ?? withMapId(clientData?.data?.franchises ?? []);
   const areas = mapData?.areas ?? withMapId(clientData?.data?.territories ?? []);
@@ -50,58 +61,51 @@ const AdminApplicantDetailPage = () => {
   const scorecard = buildScorecard(application);
   const recommendation = getRecommendation(application.stage, scorecard.score);
 
-  const handleStageChange = async (stage) => {
+  // the stage moves only once confirmed
+  const handleStageChange = async () => {
     try {
-      await updatePipelineStage({ id, stage }).unwrap();
+      await updatePipelineStage({ id, stage: pendingStage }).unwrap();
     } catch {
       // the toast already reported it
     }
+    setPendingStage(null);
   };
 
-  // an assigned location approves the applicant
+  // the backend approves the applicant
   const handleAssignLocation = async (records) => {
     setMapData(records);
+    const franchise = firstNewFranchise(records?.franchises);
+    if (!franchise) return;
 
     try {
-      await updatePipelineStage({ id, stage: PIPELINE_STAGES.APPROVED }).unwrap();
+      await assignPipelineLocation({
+        id,
+        franchise: {
+          name: franchise.name,
+          country: franchise.country,
+          state: franchise.state,
+          city: franchise.city,
+          lat: franchise.lat,
+          lng: franchise.lng,
+        },
+      }).unwrap();
     } catch {
       // the toast already reported it
     }
   };
 
-  const handleSendRequest = ({ title, message, files }) => {
-    setRequests((prev) => [
-      {
-        _id: crypto.randomUUID(),
-        title,
-        message,
-        files: toFileRecords(files),
-        status: REQUEST_STATUSES.PENDING,
-        createdAt: new Date().toISOString(),
-      },
-      ...prev,
-    ]);
-  };
+  // the modal stays open on failure
+  const handleSendRequest = (form) => createPipelineRequest({ id, body: toRequestFormData(form) }).unwrap();
 
-  const handleEditRequest = ({ title, message, files, status }) => {
-    setRequests((prev) =>
-      prev.map((item) =>
-        item._id === requestToEdit?._id
-          ? {
-              ...item,
-              title,
-              message,
-              status,
-              files: files.length > 0 ? toFileRecords(files) : item.files,
-            }
-          : item,
-      ),
-    );
-    setRequestToEdit(null);
-  };
+  const handleEditRequest = (form) =>
+    updatePipelineRequest({ id, requestId: requestToEdit?._id, body: toRequestFormData(form) }).unwrap();
 
-  const handleDeleteRequest = (request) => {
-    setRequests((prev) => prev.filter((item) => item._id !== request?._id));
+  const handleDeleteRequest = async (request) => {
+    try {
+      await deletePipelineRequest({ id, requestId: request?._id }).unwrap();
+    } catch {
+      // the toast already reported it
+    }
   };
 
   return (
@@ -148,7 +152,7 @@ const AdminApplicantDetailPage = () => {
 
         {/* Stage update */}
         <footer className="mt-4 border-t color-border pt-4">
-          <StageSelector value={application.stage} onChange={handleStageChange} disabled={isUpdating} />
+          <StageSelector value={application.stage} onChange={setPendingStage} disabled={isUpdating} />
         </footer>
       </section>
 
@@ -177,6 +181,7 @@ const AdminApplicantDetailPage = () => {
       {/* Requests sent to the applicant */}
       <PipelineRequestTable
         requests={requests}
+        isLoading={isLoadingRequests}
         onView={setRequestToView}
         onEdit={setRequestToEdit}
         onDelete={handleDeleteRequest}
@@ -186,6 +191,18 @@ const AdminApplicantDetailPage = () => {
         isOpen={Boolean(requestToView)}
         onClose={() => setRequestToView(null)}
         request={requestToView}
+      />
+
+      {/* a stage change is confirmed first */}
+      <DeleteModal
+        isOpen={Boolean(pendingStage)}
+        onClose={() => setPendingStage(null)}
+        onConfirm={handleStageChange}
+        isLoading={isUpdating}
+        icon={<ArrowRight size={26} />}
+        heading="Update Application Stage"
+        text={`Move this application to ${stageOf(pendingStage).label}? The applicant sees this change.`}
+        confirmText="Update Stage"
       />
 
       {/* the key reloads the edit fields */}
