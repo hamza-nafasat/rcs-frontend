@@ -47,6 +47,26 @@ export const pixelToLat = (py, zoom) => {
   return (180 / Math.PI) * Math.atan(0.5 * (Math.exp(n) - Math.exp(-n)));
 };
 
+// what a save would actually store
+export const serializeMapData = (franchises = [], areas = []) =>
+  JSON.stringify({
+    franchises: franchises.map((item) => ({
+      id: item?._id ?? item?.id,
+      name: item?.name,
+      country: item?.country,
+      state: item?.state,
+      city: item?.city,
+      lat: item?.lat,
+      lng: item?.lng,
+    })),
+    areas: areas.map((item) => ({
+      id: item?._id ?? item?.id,
+      name: item?.name,
+      distanceKm: item?.distanceKm,
+      geoPoints: item?.geoPoints,
+    })),
+  });
+
 // the map keys records by id
 export const withMapId = (records = []) => records.map((record) => ({ ...record, id: record._id }));
 

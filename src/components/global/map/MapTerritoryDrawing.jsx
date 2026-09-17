@@ -32,6 +32,7 @@ import {
   pixelToLat,
   pixelToLng,
   searchLocation,
+  serializeMapData,
   sizeCanvas,
 } from "../../../utils/mapHelpers";
 import { ArrowLeft, Check, Layers, MapPin, PenTool, RotateCcw, Search, Store, X } from "lucide-react";
@@ -90,9 +91,13 @@ const MapTerritoryDrawing = ({
 
   const hasViolation = violationById.size > 0;
 
-  // a fresh pin has no database id
+  // the map as it arrived
+  const [openedWith] = useState(() => serializeMapData(initialFranchises, initialAreas));
+  const isDirty = serializeMapData(franchises, completedAreas) !== openedWith;
+
+  // a fresh pin has no id
   const hasNewFranchise = franchises.some((franchise) => !franchise._id);
-  const canSave = !hasViolation && (!requireNewFranchise || hasNewFranchise);
+  const canSave = isDirty && !hasViolation && (!requireNewFranchise || hasNewFranchise);
 
   // the franchise form modal
   const [pendingFranchise, setPendingFranchise] = useState(null);
@@ -708,9 +713,11 @@ const MapTerritoryDrawing = ({
                 title={
                   hasViolation
                     ? "Move the red franchise before saving"
-                    : !canSave
-                      ? "Add a franchise location before saving"
-                      : undefined
+                    : !isDirty
+                      ? "Make a change before saving"
+                      : !canSave
+                        ? "Add a franchise location before saving"
+                        : undefined
                 }
                 className={`inline-flex items-center gap-1.5 rounded-lg px-4 py-1.5 text-xs font-semibold text-white transition ${
                   canSave
