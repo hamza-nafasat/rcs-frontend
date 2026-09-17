@@ -1,10 +1,15 @@
+import { useEffect } from "react";
 import { Bell } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import Dropdown from "./Dropdown";
 import Button from "./Button";
 import { readNotification } from "../../utils/notificationCatalog";
 import { formatRelativeTime } from "../../utils/formatTime";
+import { onSocketEvent } from "../../utils/socket";
+import { SOCKET_EVENTS } from "../../configs/constants";
 import {
+  receiveNotification,
   useGetMyNotificationsQuery,
   useMarkNotificationReadMutation,
 } from "../../store/apis/shared/notification.apis";
@@ -13,8 +18,18 @@ const RECENT_LIMIT = 5;
 
 const NotificationBell = ({ type = "admin" }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { data } = useGetMyNotificationsQuery();
   const [markNotificationRead] = useMarkNotificationReadMutation();
+
+  // socket payload lands in cache
+  useEffect(
+    () =>
+      onSocketEvent(SOCKET_EVENTS.NOTIFICATION_NEW, ({ notification } = {}) =>
+        dispatch(receiveNotification(notification)),
+      ),
+    [dispatch],
+  );
 
   const notificationsPath = `/${type}/dashboard/notifications`;
   const notifications = data?.data?.notifications ?? [];

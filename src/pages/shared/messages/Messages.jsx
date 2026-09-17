@@ -4,7 +4,7 @@ import MessagesView from "../../../components/global/messages/MessagesView";
 import { useAuthUser } from "../../../routes/useAuthUser";
 import { getActingAccountId } from "../../../utils/roleHelper";
 import { onSocketEvent } from "../../../utils/socket";
-import { SOCKET_EVENTS } from "../../../configs/constants";
+import { MESSAGE_EVENTS } from "../../../configs/constants";
 import {
   messageApi,
   useDeleteMessageMutation,
@@ -51,7 +51,7 @@ const Messages = () => {
 
   // the server pushes, the cache refetches
   useEffect(() => {
-    const unsubscribes = Object.values(SOCKET_EVENTS).map((event) =>
+    const unsubscribes = MESSAGE_EVENTS.map((event) =>
       onSocketEvent(event, ({ conversationId } = {}) =>
         dispatch(messageApi.util.invalidateTags(["Conversations", { type: "Messages", id: conversationId }])),
       ),

@@ -30,6 +30,16 @@ export const notificationApi = createApi({
   }),
 });
 
+// the pushed notification goes straight in
+export const receiveNotification = (notification) =>
+  notificationApi.util.updateQueryData("getMyNotifications", undefined, (draft) => {
+    const existing = draft?.data?.notifications;
+    if (!notification?._id || !existing || existing.some((item) => item._id === notification._id)) return;
+
+    existing.unshift(notification);
+    draft.data.unreadCount += 1;
+  });
+
 export const {
   useGetMyNotificationsQuery,
   useMarkNotificationReadMutation,
