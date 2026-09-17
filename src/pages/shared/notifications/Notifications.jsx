@@ -1,26 +1,31 @@
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import NotificationHeading from "./components/NotificationHeading";
 import NotificationTabs from "./components/NotificationTabs";
 import NotificationList from "./components/NotificationList";
-import { useDispatch, useSelector } from "react-redux";
+import { notificationsForRole } from "../../../utils/notificationCatalog";
+import { getDashboardRole } from "../../../utils/roleHelper";
+import { useAuthUser } from "../../../routes/useAuthUser";
 import {
   markAllRead,
   markRead,
   removeNotification,
   selectNotifications,
-  selectUnreadCount,
 } from "../../../store/slices/notificationsSlice";
 
 const Notifications = () => {
+  const { user } = useAuthUser();
   const notifications = useSelector(selectNotifications);
-  const unreadCount = useSelector(selectUnreadCount);
   const dispatch = useDispatch();
   const [activeTab, setActiveTab] = useState("all");
 
-  const filteredNotifications = notifications.filter((item) => {
+  // each role reads its own events
+  const myNotifications = notificationsForRole(notifications, getDashboardRole(user));
+  const unreadCount = myNotifications.filter((item) => !item.isRead).length;
+
+  const filteredNotifications = myNotifications.filter((item) => {
     if (activeTab === "unread") return !item.isRead;
     if (activeTab === "read") return item.isRead;
-
     return true;
   });
 
@@ -36,11 +41,7 @@ const Notifications = () => {
       </div>
 
       <div className="mt-6">
-        <NotificationTabs
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          unreadCount={unreadCount}
-        />
+        <NotificationTabs activeTab={activeTab} setActiveTab={setActiveTab} unreadCount={unreadCount} />
       </div>
 
       <div className="mt-6 min-h-0 flex-1 overflow-y-auto">

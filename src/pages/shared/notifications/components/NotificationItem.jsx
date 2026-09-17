@@ -1,8 +1,10 @@
 import { Check, Trash2 } from "lucide-react";
-import { TYPE_STYLES, getTypeIcon } from "../utils/notificationTypes";
+import { readNotification } from "../../../../utils/notificationCatalog";
+import { formatRelativeTime } from "../../../../utils/formatTime";
 
 const NotificationItem = ({ notification, onMarkRead, onDelete }) => {
-  const { title, description, time, type, isRead } = notification;
+  const { icon: Icon, style, title, description } = readNotification(notification);
+  const { id, isRead, createdAt } = notification;
 
   return (
     <article
@@ -11,25 +13,20 @@ const NotificationItem = ({ notification, onMarkRead, onDelete }) => {
       }`}
     >
       {/* Icon */}
-      <span
-        className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
-          TYPE_STYLES[type] ?? TYPE_STYLES.system
-        }`}
-      >
-        {getTypeIcon(type)}
+      <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${style}`}>
+        <Icon size={18} />
       </span>
 
       {/* Content */}
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
-          <p className="truncate text-sm font-medium text-gray-900">{title}</p>
-
-          {!isRead && <span className="h-2 w-2 rounded-full bg-blue-500" />}
+          <p className="truncate text-sm font-medium text-tertiary">{title}</p>
+          {!isRead && <span className="h-2 w-2 shrink-0 rounded-full bg-blue-500" />}
         </div>
 
-        <p className="mt-1 text-sm text-secondary">{description}</p>
+        {description && <p className="mt-1 text-sm text-secondary">{description}</p>}
 
-        <p className="mt-2 text-xs text-muted">{time}</p>
+        <p className="mt-2 text-xs text-muted">{formatRelativeTime(createdAt)}</p>
       </div>
 
       {/* Actions */}
@@ -37,8 +34,8 @@ const NotificationItem = ({ notification, onMarkRead, onDelete }) => {
         {!isRead && (
           <button
             type="button"
-            onClick={() => onMarkRead?.(notification.id)}
-            className="rounded-md p-2 text-gray-500 transition hover:bg-gray-100 hover:text-gray-700"
+            onClick={() => onMarkRead?.(id)}
+            className="rounded-md p-2 text-secondary transition hover:bg-gray-100 hover:text-tertiary"
             aria-label="Mark as read"
             title="Mark as read"
           >
@@ -48,8 +45,8 @@ const NotificationItem = ({ notification, onMarkRead, onDelete }) => {
 
         <button
           type="button"
-          onClick={() => onDelete?.(notification.id)}
-          className="rounded-md p-2 text-gray-500 transition hover:bg-gray-100 hover:text-red-600"
+          onClick={() => onDelete?.(id)}
+          className="rounded-md p-2 text-secondary transition hover:bg-gray-100 hover:text-red-600"
           aria-label="Delete notification"
           title="Delete"
         >
