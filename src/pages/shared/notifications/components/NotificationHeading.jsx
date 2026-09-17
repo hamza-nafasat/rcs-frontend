@@ -4,6 +4,7 @@ const NotificationHeading = ({
   heading,
   subheading,
   unreadCount = 0,
+  isLoading = false,
   onMarkAllRead,
 }) => {
   return (
@@ -15,6 +16,7 @@ const NotificationHeading = ({
 
       <Button
         onClick={onMarkAllRead}
+        isLoading={isLoading}
         isDisabled={unreadCount === 0}
         className="shrink-0 text-sm whitespace-nowrap px-3! py-2! sm:px-4! sm:py-2.5! sm:text-base w-full sm:w-auto"
       >

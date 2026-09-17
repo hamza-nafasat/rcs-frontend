@@ -4,7 +4,7 @@ import { formatRelativeTime } from "../../../../utils/formatTime";
 
 const NotificationItem = ({ notification, onMarkRead, onDelete }) => {
   const { icon: Icon, style, title, description } = readNotification(notification);
-  const { id, isRead, createdAt } = notification;
+  const { _id, isRead, createdAt } = notification;
 
   return (
     <article
@@ -34,7 +34,7 @@ const NotificationItem = ({ notification, onMarkRead, onDelete }) => {
         {!isRead && (
           <button
             type="button"
-            onClick={() => onMarkRead?.(id)}
+            onClick={() => onMarkRead?.(_id)}
             className="rounded-md p-2 text-secondary transition hover:bg-gray-100 hover:text-tertiary"
             aria-label="Mark as read"
             title="Mark as read"
@@ -45,7 +45,7 @@ const NotificationItem = ({ notification, onMarkRead, onDelete }) => {
 
         <button
           type="button"
-          onClick={() => onDelete?.(id)}
+          onClick={() => onDelete?.(_id)}
           className="rounded-md p-2 text-secondary transition hover:bg-gray-100 hover:text-red-600"
           aria-label="Delete notification"
           title="Delete"

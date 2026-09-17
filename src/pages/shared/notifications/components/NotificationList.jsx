@@ -13,7 +13,7 @@ const NotificationList = ({ notifications, onMarkRead, onDelete }) => {
     <div className="flex flex-col gap-3">
       {notifications.map((notification) => (
         <NotificationItem
-          key={notification.id}
+          key={notification._id}
           notification={notification}
           onMarkRead={onMarkRead}
           onDelete={onDelete}

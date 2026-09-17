@@ -1,33 +1,59 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import toast from "react-hot-toast";
 import NotificationHeading from "./components/NotificationHeading";
 import NotificationTabs from "./components/NotificationTabs";
 import NotificationList from "./components/NotificationList";
-import { notificationsForRole } from "../../../utils/notificationCatalog";
-import { getDashboardRole } from "../../../utils/roleHelper";
-import { useAuthUser } from "../../../routes/useAuthUser";
+import Loader from "../../../components/shared/Loader";
 import {
-  markAllRead,
-  markRead,
-  removeNotification,
-  selectNotifications,
-} from "../../../store/slices/notificationsSlice";
+  useDeleteNotificationMutation,
+  useGetMyNotificationsQuery,
+  useMarkAllNotificationsReadMutation,
+  useMarkNotificationReadMutation,
+} from "../../../store/apis/shared/notification.apis";
 
 const Notifications = () => {
-  const { user } = useAuthUser();
-  const notifications = useSelector(selectNotifications);
-  const dispatch = useDispatch();
+  const { data, isLoading } = useGetMyNotificationsQuery();
+  const [markNotificationRead] = useMarkNotificationReadMutation();
+  const [markAllNotificationsRead, { isLoading: isMarkingAll }] = useMarkAllNotificationsReadMutation();
+  const [deleteNotification] = useDeleteNotificationMutation();
   const [activeTab, setActiveTab] = useState("all");
 
-  // each role reads its own events
-  const myNotifications = notificationsForRole(notifications, getDashboardRole(user));
-  const unreadCount = myNotifications.filter((item) => !item.isRead).length;
+  const notifications = data?.data?.notifications ?? [];
+  const unreadCount = data?.data?.unreadCount ?? 0;
 
-  const filteredNotifications = myNotifications.filter((item) => {
+  const filteredNotifications = notifications.filter((item) => {
     if (activeTab === "unread") return !item.isRead;
     if (activeTab === "read") return item.isRead;
     return true;
   });
+
+  const handleMarkRead = async (id) => {
+    try {
+      await markNotificationRead(id).unwrap();
+    } catch (error) {
+      console.error("Mark notification read error:", error);
+    }
+  };
+
+  const handleMarkAllRead = async () => {
+    try {
+      const response = await markAllNotificationsRead().unwrap();
+      toast.success(response?.message);
+    } catch (error) {
+      console.error("Mark all notifications read error:", error);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await deleteNotification(id).unwrap();
+      toast.success(response?.message);
+    } catch (error) {
+      console.error("Delete notification error:", error);
+    }
+  };
+
+  if (isLoading) return <Loader />;
 
   return (
     <section className="flex h-full min-h-0 flex-col">
@@ -36,7 +62,8 @@ const Notifications = () => {
           heading="Notifications"
           subheading="Stay updated with the latest activity across the franchise platform."
           unreadCount={unreadCount}
-          onMarkAllRead={() => dispatch(markAllRead())}
+          isLoading={isMarkingAll}
+          onMarkAllRead={handleMarkAllRead}
         />
       </div>
 
@@ -47,8 +74,8 @@ const Notifications = () => {
       <div className="mt-6 min-h-0 flex-1 overflow-y-auto">
         <NotificationList
           notifications={filteredNotifications}
-          onMarkRead={(id) => dispatch(markRead(id))}
-          onDelete={(id) => dispatch(removeNotification(id))}
+          onMarkRead={handleMarkRead}
+          onDelete={handleDelete}
         />
       </div>
     </section>

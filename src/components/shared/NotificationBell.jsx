@@ -1,30 +1,36 @@
 import { Bell } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 import Dropdown from "./Dropdown";
 import Button from "./Button";
-import { markRead, selectNotifications } from "../../store/slices/notificationsSlice";
-import { notificationsForRole, readNotification } from "../../utils/notificationCatalog";
+import { readNotification } from "../../utils/notificationCatalog";
 import { formatRelativeTime } from "../../utils/formatTime";
+import {
+  useGetMyNotificationsQuery,
+  useMarkNotificationReadMutation,
+} from "../../store/apis/shared/notification.apis";
 
 const RECENT_LIMIT = 5;
 
 const NotificationBell = ({ type = "admin" }) => {
   const navigate = useNavigate();
-  const notifications = useSelector(selectNotifications);
-  const dispatch = useDispatch();
+  const { data } = useGetMyNotificationsQuery();
+  const [markNotificationRead] = useMarkNotificationReadMutation();
 
   const notificationsPath = `/${type}/dashboard/notifications`;
-
-  // each role reads its own events
-  const myNotifications = notificationsForRole(notifications, type);
-  const unreadCount = myNotifications.filter((item) => !item.isRead).length;
-  const recent = myNotifications.slice(0, RECENT_LIMIT);
+  const notifications = data?.data?.notifications ?? [];
+  const unreadCount = data?.data?.unreadCount ?? 0;
+  const recent = notifications.slice(0, RECENT_LIMIT);
   const unreadLabel = unreadCount > 99 ? "99+" : unreadCount;
 
-  const handleSelect = (notification) => {
-    dispatch(markRead(notification.id));
+  const handleSelect = async (notification) => {
     navigate(notificationsPath);
+    if (notification?.isRead) return;
+
+    try {
+      await markNotificationRead(notification?._id).unwrap();
+    } catch (error) {
+      console.error("Mark notification read error:", error);
+    }
   };
 
   return (
@@ -63,7 +69,7 @@ const NotificationBell = ({ type = "admin" }) => {
 
             return (
               <button
-                key={notification.id}
+                key={notification._id}
                 type="button"
                 onClick={() => handleSelect(notification)}
                 className={`flex w-full cursor-pointer items-start gap-3 px-4 py-3 text-left transition hover:bg-gray-50 ${
