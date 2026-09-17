@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import {
   calcBoundingBox,
@@ -24,7 +24,9 @@ import {
   MIN_ZOOM,
   TILE_SIZE,
   drawFranchisePin,
+  drawSpacingRing,
   drawTiles,
+  findSpacingViolation,
   latToPixel,
   lngToPixel,
   pixelToLat,
@@ -35,6 +37,9 @@ import {
 import { Check, Layers, MapPin, PenTool, RotateCcw, Search, Store, X } from "lucide-react";
 import MapFranchiseFormModal from "./MapFranchiseFormModal";
 import MapDataModal from "./MapDataModal";
+
+const FRANCHISE_PIN_RADIUS = 14;
+const BREACH_RING_RADIUS = FRANCHISE_PIN_RADIUS + 10;
 
 const MODE_IDLE = "idle";
 const MODE_AREA = "area";
@@ -48,6 +53,7 @@ const MapTerritoryDrawing = ({
   initialFranchises = [],
   canEdit = true,
   canDrawArea = true,
+  canEditSavedFranchises = true,
 }) => {
   const containerRef = useRef(null);
   const mapCanvasRef = useRef(null);
@@ -64,9 +70,24 @@ const MapTerritoryDrawing = ({
   const [activeGeoPoints, setActiveGeoPoints] = useState([]);
   const [mode, setMode] = useState(MODE_IDLE);
   const [cursor, setCursor] = useState(null);
+  const [hoverViolation, setHoverViolation] = useState(null);
 
   const isDrawingActive = mode === MODE_AREA;
   const isPlacingFranchise = mode === MODE_LOCATION;
+
+  // pins too close inside an area
+  const violationById = useMemo(() => {
+    const breaches = new Map();
+
+    franchises.forEach((franchise) => {
+      const breach = findSpacingViolation(franchise, franchises, completedAreas);
+      if (breach) breaches.set(franchise.id, breach);
+    });
+
+    return breaches;
+  }, [franchises, completedAreas]);
+
+  const hasViolation = violationById.size > 0;
 
   // the franchise form modal
   const [pendingFranchise, setPendingFranchise] = useState(null);
@@ -190,7 +211,11 @@ const MapTerritoryDrawing = ({
 
     // saved franchise pins
     franchises.forEach((franchise) => {
-      drawFranchisePin(ctx, latLngToCanvas(franchise.lat, franchise.lng), franchise.name);
+      const point = latLngToCanvas(franchise.lat, franchise.lng);
+      const breach = violationById.get(franchise.id);
+
+      if (breach) drawSpacingRing(ctx, point, BREACH_RING_RADIUS);
+      drawFranchisePin(ctx, point, franchise.name, breach ? { color: "#dc2626" } : undefined);
     });
 
     // the pin follows the cursor
@@ -205,7 +230,7 @@ const MapTerritoryDrawing = ({
       const currentFill = AREA_COLORS[completedAreas.length % AREA_COLORS.length].fill;
       redrawPolygon(ctx, width, height, activePx, false, cursor, currentColor, currentFill);
     }
-  }, [completedAreas, franchises, isPlacingFranchise, activeGeoPoints, cursor, latLngToCanvas]);
+  }, [completedAreas, franchises, isPlacingFranchise, activeGeoPoints, cursor, latLngToCanvas, violationById]);
 
 // scroll zoom and trackpad handlers
 
@@ -299,9 +324,23 @@ const MapTerritoryDrawing = ({
 
     if (isDrawingActive || isPlacingFranchise) {
       setCursor(getCanvasPoint(dc, e));
-    } else {
-      setCursor(null);
+      setHoverViolation(null);
+      return;
     }
+
+    setCursor(null);
+
+    // the hovered ring explains itself
+    const point = getCanvasPoint(dc, e);
+    const hovered = franchises.find((franchise) => {
+      const breach = violationById.get(franchise.id);
+      if (!breach) return false;
+
+      const pin = latLngToCanvas(franchise.lat, franchise.lng);
+      return Math.hypot(point.x - pin.x, point.y - pin.y) <= BREACH_RING_RADIUS;
+    });
+
+    setHoverViolation(hovered ? { point, breach: violationById.get(hovered.id) } : null);
   };
 
   const handlePointerUp = (e) => {
@@ -420,6 +459,7 @@ const MapTerritoryDrawing = ({
   };
 
   const handleSaveAndExit = () => {
+    if (hasViolation) return;
     onComplete?.({ areas: completedAreas, franchises });
     onClose();
   };
@@ -647,7 +687,13 @@ const MapTerritoryDrawing = ({
               <button
                 type="button"
                 onClick={handleSaveAndExit}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-(--color-primary) text-white px-4 py-1.5 text-xs font-semibold cursor-pointer hover:opacity-90 transition"
+                disabled={hasViolation}
+                title={hasViolation ? "Move the red franchise before saving" : undefined}
+                className={`inline-flex items-center gap-1.5 rounded-lg px-4 py-1.5 text-xs font-semibold text-white transition ${
+                  hasViolation
+                    ? "cursor-not-allowed bg-gray-300"
+                    : "cursor-pointer bg-(--color-primary) hover:opacity-90"
+                }`}
               >
                 <Check size={14} />
                 Save Data
@@ -686,6 +732,18 @@ const MapTerritoryDrawing = ({
           onPointerUp={handlePointerUp}
           onDoubleClick={handleDoubleClick}
         />
+
+        {/* why this pin blocks saving */}
+        {hoverViolation && (
+          <div
+            className="pointer-events-none absolute z-20 max-w-xs rounded-lg bg-red-600 px-3 py-2 text-xs font-medium text-white shadow-lg"
+            style={{ left: hoverViolation.point.x + 16, top: hoverViolation.point.y + 16 }}
+          >
+            You cannot add a franchise under this area. {hoverViolation.breach.area.name} needs at least{" "}
+            {hoverViolation.breach.requiredKm} km between franchises, but the nearest is{" "}
+            {hoverViolation.breach.distanceKm.toFixed(1)} km away.
+          </div>
+        )}
 
         {/* Top-left floating status */}
         <div className="absolute top-3 left-3 flex flex-col gap-1.5 pointer-events-none">
@@ -895,6 +953,7 @@ const MapTerritoryDrawing = ({
           areas={completedAreas}
           canEdit={canEdit}
           canEditAreas={canDrawArea}
+          canEditSavedFranchises={canEditSavedFranchises}
           onEditFranchise={handleEditFranchise}
           onDeleteFranchise={handleDeleteFranchise}
           onEditArea={handleEditAreaShape}

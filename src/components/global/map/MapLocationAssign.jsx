@@ -3,7 +3,14 @@ import { Check, MapPin, Maximize2 } from "lucide-react";
 import MapTerritoryDrawing from "./MapTerritoryDrawing";
 import { DEFAULT_CENTER, PREVIEW_ZOOM, drawTiles, sizeCanvas } from "../../../utils/mapHelpers";
 
-const MapLocationAssign = ({ franchises = [], areas = [], canEdit = true, canDrawArea = true, onChange }) => {
+const MapLocationAssign = ({
+  franchises = [],
+  areas = [],
+  canEdit = true,
+  canDrawArea = true,
+  canEditSavedFranchises = true,
+  onChange,
+}) => {
   const containerRef = useRef(null);
   const mapCanvasRef = useRef(null);
   const tileCache = useRef(new Map());
@@ -76,6 +83,7 @@ const MapLocationAssign = ({ franchises = [], areas = [], canEdit = true, canDra
         <MapTerritoryDrawing
           canEdit={canEdit}
           canDrawArea={canDrawArea}
+          canEditSavedFranchises={canEditSavedFranchises}
           onClose={() => setIsFullscreen(false)}
           onComplete={onChange}
           initialAreas={areas}

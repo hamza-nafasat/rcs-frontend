@@ -14,6 +14,7 @@ const MapDataModal = ({
   areas = [],
   canEdit = true,
   canEditAreas = true,
+  canEditSavedFranchises = true,
   onEditFranchise,
   onDeleteFranchise,
   onEditArea,
@@ -103,7 +104,7 @@ const MapDataModal = ({
                     </div>
                   </div>
 
-                  {canEdit && (
+                  {canEdit && (canEditSavedFranchises || !franchise._id) && (
                     <div className="flex items-center gap-1.5">
                       <button
                         type="button"

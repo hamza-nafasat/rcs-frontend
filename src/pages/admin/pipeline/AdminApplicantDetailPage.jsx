@@ -156,6 +156,7 @@ const AdminApplicantDetailPage = () => {
             areas={areas}
             canEdit
             canDrawArea={false}
+            canEditSavedFranchises={false}
             onChange={setMapData}
           />
         </section>
