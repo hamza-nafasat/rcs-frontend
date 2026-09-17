@@ -1,4 +1,5 @@
 import { BadgeCheck, FileText, LifeBuoy, MapPin, Settings, UserPlus } from "lucide-react";
+import { stageOf } from "./pipelineStage";
 
 const ICON_STYLES = {
   document: "bg-blue-50 text-blue-600",
@@ -82,6 +83,12 @@ const NOTIFICATION_KINDS = {
     title: ({ name }) => `New application from ${name ?? "an applicant"}`,
     description: ({ franchiseName }) =>
       franchiseName ? `They applied for ${franchiseName}.` : "A new applicant came through your site.",
+  },
+  pipeline_stage_changed: {
+    icon: BadgeCheck,
+    style: ICON_STYLES.document,
+    title: ({ to }) => `Application moved to ${stageOf(to).label}`,
+    description: ({ from, to }) => `Status updated from ${stageOf(from).label} to ${stageOf(to).label}.`,
   },
   pipeline_location_assigned: {
     icon: MapPin,
