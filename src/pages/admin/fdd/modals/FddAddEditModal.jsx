@@ -10,7 +10,7 @@ import { FDD_STATUS_OPTIONS } from "../../../../utils/fddStatus";
 const INITIAL_FORM = {
   title: "",
   version: "",
-  client: "",
+  restaurant: "",
   country: "United States",
   state: GENERAL_FDD_STATE,
   status: FDD_STATUS_OPTIONS[0].value,
@@ -24,7 +24,7 @@ const toForm = (document) =>
         ...INITIAL_FORM,
         title: document.title ?? "",
         version: document.version ?? "",
-        client: document.client?._id ?? document.client ?? "",
+        restaurant: document.restaurant?._id ?? document.restaurant ?? "",
         country: document.country ?? INITIAL_FORM.country,
         state: document.state ?? INITIAL_FORM.state,
         status: document.status ?? INITIAL_FORM.status,
@@ -58,7 +58,7 @@ const FddAddEditModal = ({
 
   // a new document needs its pdf
   const isComplete =
-    formData.title.trim() !== "" && formData.version.trim() !== "" && formData.client !== "" && (!isAdd || file);
+    formData.title.trim() !== "" && formData.version.trim() !== "" && formData.restaurant !== "" && (!isAdd || file);
 
   if (!isOpen) return null;
 
@@ -120,8 +120,8 @@ const FddAddEditModal = ({
           <section>
             <Select
               label="Restaurant Brand *"
-              name="client"
-              value={formData.client}
+              name="restaurant"
+              value={formData.restaurant}
               onChange={handleChange}
               placeholder={clients.length === 0 ? "No clients yet" : "Select a restaurant"}
               options={clients}

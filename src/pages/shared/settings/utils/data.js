@@ -13,7 +13,7 @@ export const PROFILE_FIELDS = [
 ];
 
 // what only a client edits
-export const CLIENT_FIELDS = [
+export const RESTAURANT_FIELDS = [
   "restaurantName",
   "restaurantCuisine",
   "status",

@@ -1,5 +1,5 @@
 // status only moves on an edit
-const FDD_FIELDS = ["title", "version", "client", "country", "state", "isFillRequired"];
+const FDD_FIELDS = ["title", "version", "restaurant", "country", "state", "isFillRequired"];
 
 // the pdf travels with the fields
 const toFddFormData = (form, { withStatus = false } = {}) => {

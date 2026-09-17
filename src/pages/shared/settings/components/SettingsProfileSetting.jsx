@@ -8,7 +8,7 @@ import MapLocationAssign from "../../../../components/global/map/MapLocationAssi
 import SettingsClientApplicationDetails from "./SettingsClientApplicationDetails";
 import { PASSWORD_MIN_LENGTH } from "../../auth/utils/accountRules";
 import {
-  CLIENT_FIELDS,
+  RESTAURANT_FIELDS,
   EMPTY_PASSWORDS,
   EMPTY_PROFILE,
   PASSWORD_INPUTS,
@@ -26,7 +26,7 @@ const pickFilled = (source, fields) =>
 const toForm = (profile) => ({
   ...EMPTY_PROFILE,
   ...pickFilled(profile, [...PROFILE_FIELDS, "email"]),
-  ...pickFilled(profile?.client, CLIENT_FIELDS),
+  ...pickFilled(profile?.restaurant, RESTAURANT_FIELDS),
 });
 
 const SettingsProfileSetting = ({

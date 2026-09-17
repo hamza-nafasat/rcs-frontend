@@ -11,7 +11,7 @@ const FddViewModal = ({ isOpen, onClose, document, onDownload }) => {
 
   const details = [
     ["Version", document.version],
-    ["Restaurant", document.client?.restaurantName],
+    ["Restaurant", document.restaurant?.restaurantName],
     ["Location", [document.state, document.country].filter(Boolean).join(", ")],
     ["Status", FDD_STATUS[document.status]?.label ?? document.status],
   ];

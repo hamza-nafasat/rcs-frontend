@@ -2,7 +2,7 @@ import toast from "react-hot-toast";
 import Loader from "../../../components/shared/Loader";
 import SettingsProfileSetting from "./components/SettingsProfileSetting";
 import { USER_ROLES } from "../../../configs/constants";
-import { CLIENT_FIELDS, PROFILE_FIELDS } from "./utils/data";
+import { RESTAURANT_FIELDS, PROFILE_FIELDS } from "./utils/data";
 import { withMapId } from "../../../utils/mapHelpers";
 import { areaPayload, franchisePayload } from "./utils/mapPayload";
 import {
@@ -17,7 +17,7 @@ const toProfileFormData = (form, image, isClient, map) => {
   PROFILE_FIELDS.forEach((field) => body.append(field, form?.[field] ?? ""));
   // a blank field cannot be cleared
   if (isClient)
-    CLIENT_FIELDS.forEach((field) => {
+    RESTAURANT_FIELDS.forEach((field) => {
       if (form?.[field] !== "" && form?.[field] != null) body.append(field, form[field]);
     });
 
@@ -40,8 +40,8 @@ const Settings = () => {
   if (!profile) return <Loader />;
 
   const isClient = profile?.role === USER_ROLES.CLIENT;
-  const franchises = withMapId(profile?.client?.franchises ?? []);
-  const areas = withMapId(profile?.client?.territories ?? []);
+  const franchises = withMapId(profile?.restaurant?.franchises ?? []);
+  const areas = withMapId(profile?.restaurant?.territories ?? []);
 
   const handleSaveProfile = async (form, image, map) => {
     const response = await updateMyProfile(toProfileFormData(form, image, isClient, map)).unwrap();

@@ -12,7 +12,7 @@ const SupportDetailsModal = ({ isOpen, onClose, ticket }) => {
     { label: "Category", value: ticket?.category ?? "—" },
     { label: "Received On", value: asDate(ticket?.createdAt) },
     { label: "Last Updated", value: asDate(ticket?.updatedAt) },
-    { label: "Raised By", value: ticket?.client?.restaurantName ?? ticket?.raisedBy?.fullName ?? "—" },
+    { label: "Raised By", value: ticket?.restaurant?.restaurantName ?? ticket?.raisedBy?.fullName ?? "—" },
   ];
 
   return (

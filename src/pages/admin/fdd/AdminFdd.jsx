@@ -23,7 +23,7 @@ const FddFillModal = lazy(() => import("../../../components/modals/FddFillModal"
 
 const initialFilters = {
   search: "",
-  client: "",
+  restaurant: "",
   state: "",
   status: "",
 };

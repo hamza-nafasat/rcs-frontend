@@ -34,9 +34,9 @@ const buildColumns = ({ canManage, onView, onEdit, onFill, onDownload, onDelete 
   {
     name: "Restaurant Brand",
     // the api populates the linked client
-    selector: (row) => row.client?.restaurantName ?? "",
+    selector: (row) => row.restaurant?.restaurantName ?? "",
     sortable: true,
-    cell: (row) => <p className="truncate text-sm text-gray-900">{row.client?.restaurantName ?? "—"}</p>,
+    cell: (row) => <p className="truncate text-sm text-gray-900">{row.restaurant?.restaurantName ?? "—"}</p>,
   },
   {
     name: "Country",

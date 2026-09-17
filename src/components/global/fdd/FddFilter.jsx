@@ -27,8 +27,8 @@ const FddFilter = ({ filters, setFilters, clients = [] }) => {
       {clients.length > 0 && (
         <Select
           label="Restaurant"
-          name="client"
-          value={filters.client}
+          name="restaurant"
+          value={filters.restaurant}
           onChange={handleChange}
           options={clients}
           placeholder="All Restaurants"
