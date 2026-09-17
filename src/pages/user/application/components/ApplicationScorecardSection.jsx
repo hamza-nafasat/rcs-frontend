@@ -42,11 +42,11 @@ const ApplicationScorecardSection = ({ application }) => {
       </div>
 
       {/* Answers */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <ScorecardSection icon={DollarSign} title="Financial Profile" items={scorecard.financialProfile} />
-        <ScorecardSection icon={Briefcase} title="Business Experience" items={scorecard.experience} />
-        <ScorecardSection icon={Scale} title="Legal & Background" items={scorecard.legal} />
-        <ScorecardSection icon={MapPin} title="Market & Location Fit" items={scorecard.market} />
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-6">
+        <ScorecardSection icon={DollarSign} title="Financial Profile" items={scorecard.financialProfile} className="md:col-span-3" />
+        <ScorecardSection icon={Briefcase} title="Business Experience" items={scorecard.experience} className="md:col-span-3" />
+        <ScorecardSection icon={Scale} title="Legal & Background" items={scorecard.legal} className="md:col-span-4" />
+        <ScorecardSection icon={MapPin} title="Market & Location Fit" items={scorecard.market} className="md:col-span-2" />
       </div>
     </section>
   );

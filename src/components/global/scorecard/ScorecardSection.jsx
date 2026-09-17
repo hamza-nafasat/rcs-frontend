@@ -1,3 +1,6 @@
+// the row fits the item count
+const COLUMN_CLASSES = { 1: "grid-cols-1", 2: "grid-cols-2", 3: "grid-cols-3", 4: "grid-cols-2 sm:grid-cols-4" };
+
 // a failed check reads red
 const valueClass = (ok) => {
   if (ok === true) return "text-revenue";
@@ -13,7 +16,7 @@ const ScorecardSection = ({ icon: Icon, title, items = [], className = "" }) => 
         {title}
       </h3>
 
-      <div className="mt-3 grid grid-cols-3 gap-2">
+      <div className={`mt-3 grid gap-2 ${COLUMN_CLASSES[items.length] ?? "grid-cols-3"}`}>
         {items.map((item) => (
           <div key={item.label} className="rounded-lg bg-active p-3 text-center">
             <p className={`text-sm font-semibold ${valueClass(item.ok)}`}>{item.value}</p>
