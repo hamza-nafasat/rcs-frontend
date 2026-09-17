@@ -17,7 +17,7 @@ const ApplicationDocumentRequestCard = ({
   },
 }) => {
   return (
-    <section className="flex flex-col gap-3 rounded-2xl bg-white p-5 shadow-xs border border-gray-200">
+    <section className="flex flex-col gap-3 rounded-2xl bg-white p-5 shadow-xs border color-border">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <div
@@ -35,7 +35,7 @@ const ApplicationDocumentRequestCard = ({
 
           <div>
             <div className="flex items-center gap-2 flex-wrap">
-              <h3 className="text-base font-bold text-gray-900">
+              <h3 className="text-base font-bold text-tertiary">
                 {hasRequest
                   ? "Admin Document Request"
                   : "Admin Document Request Status"}
@@ -49,7 +49,7 @@ const ApplicationDocumentRequestCard = ({
                 {hasRequest ? "Action Required" : "No Request"}
               </span>
             </div>
-            <p className="text-xs text-gray-500 mt-0.5">
+            <p className="text-xs text-secondary mt-0.5">
               {hasRequest
                 ? "Admin has requested additional documentation for your application."
                 : "No pending document requests from the admin at this time."}
@@ -61,7 +61,7 @@ const ApplicationDocumentRequestCard = ({
         <button
           type="button"
           onClick={() => onRequestToggle?.(!hasRequest)}
-          className="self-start sm:self-auto text-xs font-semibold px-3 py-1.5 rounded-lg border border-gray-300 bg-gray-50 hover:bg-gray-100 text-gray-700 transition"
+          className="self-start sm:self-auto text-xs font-semibold px-3 py-1.5 rounded-lg border border-cancel bg-muted hover:bg-active text-cancel transition"
         >
           Toggle Demo State ({hasRequest ? "Simulate No Request" : "Simulate Admin Request"})
         </button>
@@ -87,10 +87,10 @@ const ApplicationDocumentRequestCard = ({
           </p>
         </div>
       ) : (
-        <div className="mt-1 p-3.5 rounded-xl border border-gray-100 bg-gray-50/70 flex items-center gap-2.5 text-gray-600 text-xs">
+        <div className="mt-1 p-3.5 rounded-xl border color-border bg-muted flex items-center gap-2.5 text-secondary text-xs">
           <CheckCircle2 size={16} className="text-emerald-600 shrink-0" />
           <span>
-            <strong className="text-gray-900 font-semibold">No Request:</strong> All required documents are up to date. The upload button in the documents section is hidden until requested by admin.
+            <strong className="text-tertiary font-semibold">No Request:</strong> All required documents are up to date. The upload button in the documents section is hidden until requested by admin.
           </span>
         </div>
       )}

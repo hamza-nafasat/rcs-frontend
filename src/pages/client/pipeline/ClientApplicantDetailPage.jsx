@@ -1,133 +1,58 @@
-import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { DollarSign, Briefcase, Scale, MapPin } from "lucide-react";
-import PipelineApplicantProgress from "./components/PipelineApplicantProgress";
-import PipelineScoreRadar from "./components/scorecard/PipelineScoreRadar";
+import ScoreRadar from "../../../components/global/scorecard/ScoreRadar";
 import CategoryScores from "../../../components/global/scorecard/CategoryScores";
-import PipelineScorecardSection from "./components/scorecard/PipelineScorecardSection";
-import LocationAssignModal from "../../../components/modals/LocationAssignModal";
-import { initialApplicants } from "./utils/data";
-import {
-  buildScorecard,
-  getRecommendation,
-} from "./utils/scorecardData";
-import { SCORE_CATEGORIES } from "./utils/scorecardData";
+import ScorecardSection from "../../../components/global/scorecard/ScorecardSection";
+import PipelineApplicantProgress from "../../../components/global/pipeline/PipelineApplicantProgress";
+import { buildScorecard, getRecommendation, SCORE_CATEGORIES } from "../../../utils/pipelineScorecard";
+import { useGetPipelineByIdQuery } from "../../../store/apis/shared/pipeline.apis";
 
 const ClientApplicantDetailPage = () => {
   const { id } = useParams();
+  const { data, isLoading } = useGetPipelineByIdQuery(id);
 
-  const [applicants] = useState(initialApplicants);
-  const [showMapModal, setShowMapModal] = useState(false);
+  const application = data?.data;
 
-  const applicant = applicants.find((a) => String(a.id) === String(id)) || applicants[0];
+  if (isLoading) return <p className="p-6 text-center text-secondary">Loading application…</p>;
+  if (!application) return <p className="p-6 text-center text-secondary">Application not found.</p>;
 
-  if (!applicant) {
-    return (
-      <article className="p-6 text-center">
-        <p className="text-gray-500">Applicant not found.</p>
-      </article>
-    );
-  }
-
-  const stage = applicant.stage;
-  const data = buildScorecard(applicant);
-  const recommendation = getRecommendation(stage, data.score);
+  const scorecard = buildScorecard(application);
+  const recommendation = getRecommendation(application.stage, scorecard.score);
 
   return (
-    <article className="flex flex-col gap-6 animate-fade-in">
-      {/* Application Progress Stage Overview */}
-      <PipelineApplicantProgress currentStage={stage} />
+    <article className="flex flex-col gap-6">
+      <PipelineApplicantProgress currentStage={application.stage} />
 
-
-
-      {/* Main Scorecard Container (Matching User Page Layout) */}
-      <div className="flex flex-col gap-5 rounded-2xl bg-white p-5 sm:p-6 shadow-xs border border-gray-200">
-        {/* Header & Score Overview */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-100 pb-4">
-          <div>
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-xs font-semibold text-gray-400">
-                {data.id}
-              </span>
-            </div>
-            <h1 className="mt-1 text-xl sm:text-2xl font-bold text-gray-900">
-              {data.name}
-            </h1>
-            <p className="text-xs text-gray-500">{data.company}</p>
+      <section className="flex flex-col gap-5 rounded-2xl border color-border bg-white p-5 shadow-xs sm:p-6">
+        {/* Applicant */}
+        <header className="flex flex-col justify-between gap-4 border-b color-border pb-4 sm:flex-row sm:items-center">
+          <div className="min-w-0">
+            <h1 className="heading-xl text-tertiary">{scorecard.name}</h1>
+            <p className="text-xs text-secondary">{scorecard.company}</p>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="text-right">
-              <p
-                className="text-3xl font-extrabold leading-tight"
-                style={{ color: recommendation.color }}
-              >
-                {data.score.toFixed(1)}
-              </p>
-              <p className="text-[11px] font-medium text-gray-400">
-                Overall Score / 100
-              </p>
-            </div>
+          <div className="shrink-0 text-right">
+            <p className="text-3xl leading-tight font-extrabold" style={{ color: recommendation.color }}>
+              {scorecard.score.toFixed(1)}
+            </p>
+            <p className="text-[11px] font-medium text-muted">Overall Score / 100</p>
           </div>
+        </header>
+
+        {/* Scores */}
+        <div className="grid grid-cols-1 items-center gap-5 md:grid-cols-2">
+          <ScoreRadar categories={scorecard.categories} />
+          <CategoryScores categories={scorecard.categories} definitions={SCORE_CATEGORIES} />
         </div>
 
-
-
-        {/* Radar Chart & Category Scores Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-center">
-          <PipelineScoreRadar categories={data.categories} />
-          <CategoryScores
-            categories={data.categories}
-            definitions={SCORE_CATEGORIES}
-          />
+        {/* Answers */}
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <ScorecardSection icon={DollarSign} title="Financial Profile" items={scorecard.financialProfile} />
+          <ScorecardSection icon={Briefcase} title="Business Experience" items={scorecard.experience} />
+          <ScorecardSection icon={Scale} title="Legal & Background" items={scorecard.legal} />
+          <ScorecardSection icon={MapPin} title="Market & Location Fit" items={scorecard.market} />
         </div>
-
-        {/* Category Breakdown */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <PipelineScorecardSection
-            icon={DollarSign}
-            title="Financial Profile"
-            items={data.financialProfile}
-            categoryKey="financial"
-          />
-
-          <PipelineScorecardSection
-            icon={Briefcase}
-            title="Business Experience"
-            items={data.experience}
-            categoryKey="experience"
-          />
-
-          <PipelineScorecardSection
-            icon={Scale}
-            title="Legal & Background"
-            items={data.legal}
-            categoryKey="legal"
-          />
-
-          <PipelineScorecardSection
-            icon={MapPin}
-            title="Market & Location Fit"
-            items={data.market}
-            categoryKey="market"
-          />
-        </div>
-
-      </div>
-
-      {/* Full Map Modal */}
-      {showMapModal && (
-        <LocationAssignModal
-          isOpen={showMapModal}
-          applicant={applicant}
-          onClose={() => setShowMapModal(false)}
-          onSaveLocation={(updatedAreas) => {
-            if (applicant) {
-              applicant.territories = updatedAreas;
-            }
-          }}
-        />
-      )}
+      </section>
     </article>
   );
 };

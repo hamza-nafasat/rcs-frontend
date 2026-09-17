@@ -1,38 +1,19 @@
 import { useState } from "react";
-import PipelineFilter from "./components/PipelineFilter";
+import { useNavigate } from "react-router-dom";
 import PipelineHeading from "../../../components/global/PipelineHeading";
-import PipelineTable from "./components/PipelineTable";
-import PipelineStageOverview from "./components/PipelineStageOverview";
-import { initialApplicants } from "./utils/data";
-
-const initialFilters = {
-  applicant: "",
-  franchise: "",
-  stage: [],
-  territory: [],
-};
+import PipelineFilter from "../../../components/global/pipeline/PipelineFilter";
+import PipelineStageOverview from "../../../components/global/pipeline/PipelineStageOverview";
+import PipelineTable from "../../../components/global/pipeline/PipelineTable";
+import { filterApplications, PIPELINE_INITIAL_FILTERS, territoriesOf } from "../../../utils/pipelineFilters";
+import { useGetAllPipelinesQuery } from "../../../store/apis/shared/pipeline.apis";
 
 const ClientPipeline = () => {
-  const [filters, setFilters] = useState(initialFilters);
-  const [applicants, setApplicants] = useState(initialApplicants);
+  const navigate = useNavigate();
+  const { data, isLoading } = useGetAllPipelinesQuery();
+  const [filters, setFilters] = useState(PIPELINE_INITIAL_FILTERS);
 
-  // these lists come from the api
-  const stages = [...new Set(initialApplicants.map((row) => row.stage))];
-  const territories = [
-    ...new Set(initialApplicants.map((row) => row.territory)),
-  ];
+  const applications = data?.data ?? [];
 
-  const handleFilterChange = (name, value) => {
-    setFilters((current) => ({
-      ...current,
-      [name]: value,
-    }));
-  };
-  const handleStageChange = (applicant, stage) => {
-    setApplicants((rows) =>
-      rows.map((row) => (row.id === applicant.id ? { ...row, stage } : row)),
-    );
-  };
   return (
     <article className="flex flex-col gap-4">
       <PipelineHeading
@@ -40,22 +21,14 @@ const ClientPipeline = () => {
         subheading="Applicant qualification scorecard — automated scoring engine"
       />
 
-      {/* Filters */}
-      <PipelineFilter
-        filters={filters}
-        onFilterChange={handleFilterChange}
-        stages={stages}
-        territories={territories}
-      />
+      <PipelineFilter filters={filters} setFilters={setFilters} territories={territoriesOf(applications)} />
 
-      {/* Stage overview */}
-      <PipelineStageOverview />
+      <PipelineStageOverview applications={applications} />
 
-      {/* Applicants */}
       <PipelineTable
-        filters={filters}
-        applicants={applicants}
-        onStageChange={handleStageChange}
+        applications={filterApplications(applications, filters)}
+        isLoading={isLoading}
+        onRowClick={(row) => navigate(`/client/dashboard/pipeline/${row?._id}`)}
       />
     </article>
   );

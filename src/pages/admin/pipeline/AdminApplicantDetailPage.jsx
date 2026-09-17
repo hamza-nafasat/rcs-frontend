@@ -1,173 +1,84 @@
-import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { DollarSign, Briefcase, Scale, MapPin } from "lucide-react";
 import ScoreRadar from "../../../components/global/scorecard/ScoreRadar";
 import CategoryScores from "../../../components/global/scorecard/CategoryScores";
 import ScorecardSection from "../../../components/global/scorecard/ScorecardSection";
 import StageSelector from "../../../components/global/scorecard/StageSelector";
-import LocationAssignModal from "../../../components/modals/LocationAssignModal";
-import InlineLocationMap from "../../../components/global/scorecard/InlineLocationMap";
-import PipelineApplicantProgress from "./components/PipelineApplicantProgress";
+import PipelineApplicantProgress from "../../../components/global/pipeline/PipelineApplicantProgress";
 import UploadedDocumentsSection from "../../../components/global/UploadedDocumentsSection";
-import { initialApplicants } from "./utils/data";
-import {
-  buildScorecard,
-  getRecommendation,
-} from "./utils/scorecardData";
-import { SCORE_CATEGORIES } from "./utils/scorecardData";
+import { buildScorecard, getRecommendation, SCORE_CATEGORIES } from "../../../utils/pipelineScorecard";
+import { useGetPipelineByIdQuery, useUpdatePipelineStageMutation } from "../../../store/apis/shared/pipeline.apis";
 
 const AdminApplicantDetailPage = () => {
   const { id } = useParams();
+  const { data, isLoading } = useGetPipelineByIdQuery(id);
+  const [updatePipelineStage, { isLoading: isUpdating }] = useUpdatePipelineStageMutation();
 
-  const [applicants, setApplicants] = useState(initialApplicants);
-  const [showMapModal, setShowMapModal] = useState(false);
+  const application = data?.data;
 
-  const applicant = applicants.find((a) => String(a.id) === String(id)) || applicants[0];
+  if (isLoading) return <p className="p-6 text-center text-secondary">Loading application…</p>;
+  if (!application) return <p className="p-6 text-center text-secondary">Application not found.</p>;
 
-  if (!applicant) {
-    return (
-      <article className="p-6 text-center">
-        <p className="text-gray-500">Applicant not found.</p>
-      </article>
-    );
-  }
+  const scorecard = buildScorecard(application);
+  const recommendation = getRecommendation(application.stage, scorecard.score);
 
-  const stage = applicant.stage;
-  const data = buildScorecard(applicant);
-  const recommendation = getRecommendation(stage, data.score);
-
-  const handleStageChange = (nextStage) => {
-    setApplicants((prev) =>
-      prev.map((a) => (a.id === applicant.id ? { ...a, stage: nextStage } : a)),
-    );
-  };
-
-  const handleSaveLocation = (updatedAreas) => {
-    setApplicants((prev) =>
-      prev.map((a) =>
-        a.id === applicant.id ? { ...a, territories: updatedAreas } : a,
-      ),
-    );
+  const handleStageChange = async (stage) => {
+    try {
+      await updatePipelineStage({ id, stage }).unwrap();
+    } catch {
+      // the toast already reported it
+    }
   };
 
   return (
-    <article className="flex flex-col gap-6 animate-fade-in">
-      {/* Visual Pipeline Stage Overview Cards (Admin Dedicated View) */}
-      <PipelineApplicantProgress currentStage={stage} />
-      {/* Header with Card Background */}
+    <article className="flex flex-col gap-6">
+      <PipelineApplicantProgress currentStage={application.stage} canRequest />
 
+      <section className="flex flex-col gap-5 rounded-2xl border color-border bg-white p-5 shadow-xs sm:p-6">
+        {/* Applicant */}
+        <header>
+          <h1 className="heading-xl text-tertiary">{scorecard.name}</h1>
+          <p className="text-xs text-secondary">{scorecard.company}</p>
+        </header>
 
-
-
-      {/* Main Scorecard Page Container */}
-      <div className="flex flex-col gap-5 rounded-2xl bg-white p-5 sm:p-6 shadow-xs border border-gray-200">
-        {/* Recommendation Banner */}
-
-
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl bg-white ">
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold text-gray-400">
-                {data.id}
-              </span>
-            </div>
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mt-0.5">
-              {data.name}
-            </h1>
-            <p className="text-xs text-gray-500">{data.company}</p>
-          </div>
-        </div>
-        <div
-          className={`flex items-start justify-between gap-3 rounded-xl border p-4 ${recommendation.bg} ${recommendation.border}`}
-        >
-          <div>
+        {/* Recommendation */}
+        <div className={`flex items-start justify-between gap-3 rounded-xl border p-4 ${recommendation.bg} ${recommendation.border}`}>
+          <div className="min-w-0">
             <p className={`text-sm font-bold ${recommendation.text}`}>
               Recommendation: {recommendation.code} — {recommendation.label}
             </p>
-            <p className="mt-1 text-xs text-gray-600 font-medium">
-              {recommendation.note}
-            </p>
+            <p className="mt-1 text-xs font-medium text-secondary">{recommendation.note}</p>
           </div>
 
-          <div className="text-right shrink-0">
-            <p
-              className="text-3xl font-extrabold leading-tight"
-              style={{ color: recommendation.color }}
-            >
-              {data.score.toFixed(1)}
+          <div className="shrink-0 text-right">
+            <p className="text-3xl leading-tight font-extrabold" style={{ color: recommendation.color }}>
+              {scorecard.score.toFixed(1)}
             </p>
-            <p className="text-[11px] font-medium text-gray-400">/ 100</p>
+            <p className="text-[11px] font-medium text-muted">/ 100</p>
           </div>
         </div>
 
-        {/* Radar Chart & Category Scores Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-center">
-          <ScoreRadar categories={data.categories} />
-          <CategoryScores
-            categories={data.categories}
-            definitions={SCORE_CATEGORIES}
-          />
+        {/* Scores */}
+        <div className="grid grid-cols-1 items-center gap-5 md:grid-cols-2">
+          <ScoreRadar categories={scorecard.categories} />
+          <CategoryScores categories={scorecard.categories} definitions={SCORE_CATEGORIES} />
         </div>
 
-        {/* Category Breakdown */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <ScorecardSection
-            icon={DollarSign}
-            title="Financial Profile"
-            items={data.financialProfile}
-          />
-
-          <ScorecardSection
-            icon={Briefcase}
-            title="Business Experience"
-            items={data.experience}
-          />
-
-          <ScorecardSection
-            icon={Scale}
-            title="Legal & Background"
-            items={data.legal}
-          />
-
-          <ScorecardSection
-            icon={MapPin}
-            title="Market & Location Fit"
-            items={data.market}
-          />
+        {/* Answers */}
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <ScorecardSection icon={DollarSign} title="Financial Profile" items={scorecard.financialProfile} />
+          <ScorecardSection icon={Briefcase} title="Business Experience" items={scorecard.experience} />
+          <ScorecardSection icon={Scale} title="Legal & Background" items={scorecard.legal} />
+          <ScorecardSection icon={MapPin} title="Market & Location Fit" items={scorecard.market} />
         </div>
 
-        {/* Location Map Preview */}
-        <div className="mt-1">
-          <h4 className="text-sm font-bold text-gray-900 mb-2">
-            Assigned Territory & Location Map
-          </h4>
-          <InlineLocationMap
-            applicant={applicant}
-            onOpenFullMap={() => setShowMapModal(true)}
-          />
-        </div>
+        {/* Stage update */}
+        <footer className="mt-4 border-t color-border pt-4">
+          <StageSelector value={application.stage} onChange={handleStageChange} disabled={isUpdating} />
+        </footer>
+      </section>
 
-        {/* Application Stage Selector */}
-        <div className="mt-4 pt-4 border-t border-gray-100">
-          <h4 className="text-sm font-bold text-gray-900 mb-2">
-            Update Application Stage
-          </h4>
-          <StageSelector value={stage} onChange={handleStageChange} />
-        </div>
-      </div>
-
-      {/* User Uploaded Documents Section */}
       <UploadedDocumentsSection showUploadButton={false} />
-
-      {/* Full Map Modal */}
-      {showMapModal && (
-        <LocationAssignModal
-          isOpen={showMapModal}
-          applicant={applicant}
-          onClose={() => setShowMapModal(false)}
-          onSaveLocation={handleSaveLocation}
-        />
-      )}
     </article>
   );
 };

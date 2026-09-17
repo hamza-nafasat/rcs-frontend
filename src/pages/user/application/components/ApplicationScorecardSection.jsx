@@ -1,124 +1,53 @@
-import { useState } from "react";
 import { DollarSign, Briefcase, Scale, MapPin } from "lucide-react";
 import ScoreRadar from "../../../../components/global/scorecard/ScoreRadar";
 import CategoryScores from "../../../../components/global/scorecard/CategoryScores";
 import ScorecardSection from "../../../../components/global/scorecard/ScorecardSection";
-import LocationAssignModal from "../../../../components/modals/LocationAssignModal";
-import InlineLocationMap from "../../../../components/global/scorecard/InlineLocationMap";
-import {
-  buildScorecard,
-  getRecommendation,
-} from "../utils/scorecardData";
-import { SCORE_CATEGORIES } from "../utils/scorecardData";
+import { buildScorecard, getRecommendation, SCORE_CATEGORIES } from "../../../../utils/pipelineScorecard";
 
-const ApplicationScorecardSection = ({ applicant, onSaveLocation }) => {
-  const [showMapModal, setShowMapModal] = useState(false);
+const ApplicationScorecardSection = ({ application }) => {
+  if (!application) return null;
 
-  if (!applicant) return null;
-
-  const stage = applicant.stage;
-  const data = buildScorecard(applicant);
-  const recommendation = getRecommendation(stage, data.score);
+  const scorecard = buildScorecard(application);
+  const recommendation = getRecommendation(application.stage, scorecard.score);
 
   return (
-    <section className="flex flex-col gap-5 rounded-2xl bg-white p-5 sm:p-6 shadow-xs border border-gray-200">
-      {/* Header & Overview */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-100 pb-4">
-        <div>
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-xs font-semibold text-gray-400">
-              {data.id}
-            </span>
-          </div>
-          <h2 className="mt-1 text-xl font-bold text-gray-900">
-            {data.name}
-          </h2>
-          <p className="text-xs text-gray-500">{data.company}</p>
+    <section className="flex flex-col gap-5 rounded-2xl border color-border bg-white p-5 shadow-xs sm:p-6">
+      {/* Applicant */}
+      <header className="flex flex-col justify-between gap-4 border-b color-border pb-4 sm:flex-row sm:items-center">
+        <div className="min-w-0">
+          <h2 className="heading-lg text-tertiary">{scorecard.name}</h2>
+          <p className="text-xs text-secondary">{scorecard.company}</p>
         </div>
 
-        <div className="flex items-center gap-3">
-          <div className="text-right">
-            <p
-              className="text-3xl font-extrabold leading-tight"
-              style={{ color: recommendation.color }}
-            >
-              {data.score.toFixed(1)}
-            </p>
-            <p className="text-[11px] font-medium text-gray-400">Overall Score / 100</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Recommendation Banner */}
-      <div
-        className={`flex items-start justify-between gap-3 rounded-xl border p-4 ${recommendation.bg} ${recommendation.border}`}
-      >
-        <div>
-          <p className={`text-sm font-bold ${recommendation.text}`}>
-            Recommendation: {recommendation.code} — {recommendation.label}
+        <div className="shrink-0 text-right">
+          <p className="text-3xl leading-tight font-extrabold" style={{ color: recommendation.color }}>
+            {scorecard.score.toFixed(1)}
           </p>
-          <p className="mt-1 text-xs text-gray-600 font-medium">
-            {recommendation.note}
-          </p>
+          <p className="text-[11px] font-medium text-muted">Overall Score / 100</p>
         </div>
+      </header>
+
+      {/* Recommendation */}
+      <div className={`rounded-xl border p-4 ${recommendation.bg} ${recommendation.border}`}>
+        <p className={`text-sm font-bold ${recommendation.text}`}>
+          Recommendation: {recommendation.code} — {recommendation.label}
+        </p>
+        <p className="mt-1 text-xs font-medium text-secondary">{recommendation.note}</p>
       </div>
 
-      {/* Radar Chart & Category Scores Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-center">
-        <ScoreRadar categories={data.categories} />
-        <CategoryScores
-            categories={data.categories}
-            definitions={SCORE_CATEGORIES}
-          />
+      {/* Scores */}
+      <div className="grid grid-cols-1 items-center gap-5 md:grid-cols-2">
+        <ScoreRadar categories={scorecard.categories} />
+        <CategoryScores categories={scorecard.categories} definitions={SCORE_CATEGORIES} />
       </div>
 
-      {/* Detailed Scorecard Breakdown Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <ScorecardSection
-          icon={DollarSign}
-          title="Financial Profile"
-          items={data.financialProfile}
-        />
-
-        <ScorecardSection
-          icon={Briefcase}
-          title="Business Experience"
-          items={data.experience}
-        />
-
-        <ScorecardSection
-          icon={Scale}
-          title="Legal & Background"
-          items={data.legal}
-        />
-
-        <ScorecardSection
-          icon={MapPin}
-          title="Market & Location Fit"
-          items={data.market}
-        />
+      {/* Answers */}
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <ScorecardSection icon={DollarSign} title="Financial Profile" items={scorecard.financialProfile} />
+        <ScorecardSection icon={Briefcase} title="Business Experience" items={scorecard.experience} />
+        <ScorecardSection icon={Scale} title="Legal & Background" items={scorecard.legal} />
+        <ScorecardSection icon={MapPin} title="Market & Location Fit" items={scorecard.market} />
       </div>
-
-      {/* Assigned Branch Location Map Preview */}
-      <div className="mt-1">
-        <h4 className="text-sm font-bold text-gray-900 mb-2">
-          Assigned Location & Territory Map
-        </h4>
-        <InlineLocationMap
-          applicant={applicant}
-          onOpenFullMap={() => setShowMapModal(true)}
-        />
-      </div>
-
-      {/* Full Map Modal */}
-      {showMapModal && (
-        <LocationAssignModal
-          isOpen={showMapModal}
-          applicant={applicant}
-          onClose={() => setShowMapModal(false)}
-          onSaveLocation={onSaveLocation}
-        />
-      )}
     </section>
   );
 };

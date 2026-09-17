@@ -1,9 +1,10 @@
-import { SCORE_CATEGORIES } from "../../../pages/admin/pipeline/utils/scorecardData";
+import { SCORE_CATEGORIES } from "../../../utils/pipelineScorecard";
 
 const SIZE = 180;
 const CENTER = SIZE / 2;
 const RADIUS = 62;
 const MAX = 5;
+const RINGS = [1, 2, 3, 4, 5];
 
 const point = (index, value) => {
   const angle = (Math.PI * 2 * index) / SCORE_CATEGORIES.length - Math.PI / 2;
@@ -12,30 +13,22 @@ const point = (index, value) => {
   return [CENTER + r * Math.cos(angle), CENTER + r * Math.sin(angle)];
 };
 
-const toPath = (values) =>
-  values.map((v, i) => point(i, v).join(",")).join(" ");
+const toPath = (values) => values.map((value, index) => point(index, value).join(",")).join(" ");
 
-const ScoreRadar = ({ categories }) => {
-  const values = SCORE_CATEGORIES.map((c) => categories[c.key] ?? 0);
+const ScoreRadar = ({ categories, className = "" }) => {
+  const values = SCORE_CATEGORIES.map((category) => categories[category.key] ?? 0);
 
   return (
-    <section className="rounded-xl border border-gray-200 bg-white p-4">
-      <h3 className="text-xs font-semibold tracking-wide text-gray-500 uppercase">
-        Score Radar
-      </h3>
+    <section className={`rounded-xl bg-active p-4 ${className}`}>
+      <h3 className="text-xs font-semibold tracking-wide text-secondary uppercase">Score Breakdown</h3>
 
-      <svg
-        viewBox={`0 0 ${SIZE} ${SIZE}`}
-        className="mx-auto mt-2 h-45 w-45"
-        role="img"
-        aria-label="Category score radar"
-      >
-        {[1, 2, 3, 4, 5].map((ring) => (
+      <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="mx-auto mt-2 h-45 w-45" role="img" aria-label="Category score breakdown">
+        {RINGS.map((ring) => (
           <polygon
             key={ring}
             points={toPath(SCORE_CATEGORIES.map(() => ring))}
             fill="none"
-            stroke="#e5e7eb"
+            stroke="var(--color-border)"
             strokeWidth="1"
           />
         ))}
@@ -50,7 +43,7 @@ const ScoreRadar = ({ categories }) => {
               y1={CENTER}
               x2={x}
               y2={y}
-              stroke="#e5e7eb"
+              stroke="var(--color-border)"
               strokeWidth="1"
             />
           );
@@ -58,10 +51,17 @@ const ScoreRadar = ({ categories }) => {
 
         <polygon
           points={toPath(values)}
-          fill="rgba(249, 115, 22, 0.25)"
-          stroke="#f97316"
+          fill="var(--color-bg-primary)"
+          stroke="var(--color-primary)"
           strokeWidth="2"
         />
+
+        {/* the scored point on each axis */}
+        {values.map((value, index) => {
+          const [x, y] = point(index, value);
+
+          return <circle key={SCORE_CATEGORIES[index].key} cx={x} cy={y} r="3" fill="var(--color-primary)" />;
+        })}
 
         {SCORE_CATEGORIES.map((category, index) => {
           const [x, y] = point(index, MAX + 1.1);
@@ -73,10 +73,10 @@ const ScoreRadar = ({ categories }) => {
               y={y}
               textAnchor="middle"
               dominantBaseline="middle"
-              className="fill-gray-500"
+              fill="var(--color-text-secondary)"
               fontSize="8"
             >
-              {category.label.split(" ")[0]}
+              {category.shortLabel}
             </text>
           );
         })}

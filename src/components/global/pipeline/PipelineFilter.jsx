@@ -1,27 +1,33 @@
 import { Search } from "lucide-react";
-import Input from "../../../../components/shared/Input";
-import Select from "../../../../components/shared/Select";
+import Input from "../../shared/Input";
+import Select from "../../shared/Select";
+import { PIPELINE_STAGE_OPTIONS } from "../../../utils/pipelineStage";
 
-const PipelineFilter = ({
-  filters,
-  onFilterChange,
-  stages = [],
-  territories = [],
-}) => {
+const PipelineFilter = ({ filters, setFilters, territories = [], className = "" }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
-    onFilterChange(name, value);
+    setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
   return (
-    <section className="grid grid-cols-1 gap-4 sm:grid-cols-3 lg:grid-cols-[35fr_15fr_15fr]">
+    <section className={`grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-[35fr_35fr_15fr_15fr] ${className}`}>
       {/* Applicant */}
       <Input
-        label="Application"
+        label="Applicant"
         name="applicant"
         value={filters.applicant}
         onChange={handleChange}
-        placeholder="Search by applicant or ID"
+        placeholder="Search by applicant or email"
+        icon={<Search size={16} />}
+      />
+
+      {/* Franchise */}
+      <Input
+        label="Franchise"
+        name="franchise"
+        value={filters.franchise}
+        onChange={handleChange}
+        placeholder="Search by franchise"
         icon={<Search size={16} />}
       />
 
@@ -31,7 +37,7 @@ const PipelineFilter = ({
         name="stage"
         value={filters.stage}
         onChange={handleChange}
-        options={stages}
+        options={PIPELINE_STAGE_OPTIONS}
         placeholder="All Stages"
         multiple
         searchable

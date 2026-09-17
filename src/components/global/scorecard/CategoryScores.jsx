@@ -3,10 +3,10 @@ import ProgressBar from "../../shared/ProgressBar";
 const MAX = 5;
 
 // definitions come from the calling module
-const CategoryScores = ({ categories, definitions = [] }) => {
+const CategoryScores = ({ categories, definitions = [], className = "" }) => {
   return (
-    <section className="rounded-xl border border-gray-200 bg-white p-4">
-      <h3 className="text-sm font-semibold text-gray-900">Category Scores</h3>
+    <section className={`rounded-xl border color-border bg-white p-4 ${className}`}>
+      <h3 className="text-sm font-semibold text-tertiary">Category Scores</h3>
 
       <div className="mt-3 flex flex-col gap-3">
         {definitions.map((category) => {
@@ -15,11 +15,11 @@ const CategoryScores = ({ categories, definitions = [] }) => {
           return (
             <div key={category.key} className="flex flex-col gap-1.5">
               <div className="flex items-center justify-between text-xs">
-                <span className="text-gray-600">
+                <span className="text-secondary">
                   {category.label} ({category.weight}%)
                 </span>
 
-                <span className="font-medium text-gray-900">
+                <span className="font-medium text-tertiary">
                   {value.toFixed(1)}
                 </span>
               </div>

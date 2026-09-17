@@ -1,25 +1,18 @@
-import PipelineHeading from "../../../components/global/PipelineHeading";
-import PipelineStageOverview from "./components/PipelineStageOverview";
-import PipelineTable from "./components/PipelineTable";
-import { initialApplicants } from "./utils/data";
-import PipelineFilter from "./components/PipelineFilter";
 import { useState } from "react";
-
-const initialFilters = {
-  applicant: "",
-  franchise: "",
-  stage: [],
-  territory: [],
-};
+import { useNavigate } from "react-router-dom";
+import PipelineHeading from "../../../components/global/PipelineHeading";
+import PipelineFilter from "../../../components/global/pipeline/PipelineFilter";
+import PipelineStageOverview from "../../../components/global/pipeline/PipelineStageOverview";
+import PipelineTable from "../../../components/global/pipeline/PipelineTable";
+import { filterApplications, PIPELINE_INITIAL_FILTERS, territoriesOf } from "../../../utils/pipelineFilters";
+import { useGetAllPipelinesQuery } from "../../../store/apis/shared/pipeline.apis";
 
 const AdminPipeline = () => {
-  const [filters, setFilters] = useState(initialFilters);
+  const navigate = useNavigate();
+  const { data, isLoading } = useGetAllPipelinesQuery();
+  const [filters, setFilters] = useState(PIPELINE_INITIAL_FILTERS);
 
-  // these lists come from the api
-  const stages = [...new Set(initialApplicants.map((row) => row.stage))];
-  const territories = [
-    ...new Set(initialApplicants.map((row) => row.territory)),
-  ];
+  const applications = data?.data ?? [];
 
   return (
     <article className="flex flex-col gap-4">
@@ -28,19 +21,15 @@ const AdminPipeline = () => {
         subheading="Applicant qualification scorecard — automated scoring engine"
       />
 
-      {/* Filters */}
-      <PipelineFilter
-        filters={filters}
-        setFilters={setFilters}
-        stages={stages}
-        territories={territories}
+      <PipelineFilter filters={filters} setFilters={setFilters} territories={territoriesOf(applications)} />
+
+      <PipelineStageOverview applications={applications} />
+
+      <PipelineTable
+        applications={filterApplications(applications, filters)}
+        isLoading={isLoading}
+        onRowClick={(row) => navigate(`/admin/dashboard/pipeline/${row?._id}`)}
       />
-
-      {/* Stage overview */}
-      <PipelineStageOverview />
-
-      {/* Applicants */}
-      <PipelineTable filters={filters} />
     </article>
   );
 };

@@ -173,7 +173,15 @@ const ClientTable = ({ className, clients = [], isLoading = false }) => {
   const columns = buildColumns({ handleEditClient, handleViewClient, handleResendInvite, setClientToDelete });
   return (
     <section className={className}>
-      <DataTable columns={columns} data={clients} progressPending={isLoading} pagination highlightOnHover responsive />
+      <DataTable
+        columns={columns}
+        data={clients}
+        keyField="_id"
+        progressPending={isLoading}
+        pagination
+        highlightOnHover
+        responsive
+      />
       {clientToEdit && (
         <ClientAddEditModal
           isOpen={Boolean(clientToEdit)}
