@@ -53,7 +53,7 @@ const CONFIRM_ACTIONS = {
   },
 };
 
-const buildColumns = ({ onView, onEdit, onResolve, onClose, onReopen, onDelete, onAsk }) => [
+const buildColumns = ({ onView, onEdit, onResolve, onClose, onReopen, onDelete, canDelete, onAsk }) => [
   {
     name: "Ticket ID",
     selector: (row) => row.ticketId,
@@ -169,7 +169,7 @@ const buildColumns = ({ onView, onEdit, onResolve, onClose, onReopen, onDelete, 
             </Button>
           )}
 
-          {onDelete && (
+          {onDelete && canDelete(row) && (
             <Button variant="menuItemDanger" onClick={() => onAsk(row, "delete")}>
               <Trash2 size={16} className="shrink-0" />
               Delete
@@ -193,6 +193,7 @@ const SupportTable = ({
   onClose,
   onReopen,
   onDelete,
+  canDelete = () => true,
 }) => {
   const [pendingAction, setPendingAction] = useState(null);
 
@@ -211,6 +212,7 @@ const SupportTable = ({
     onClose,
     onReopen,
     onDelete,
+    canDelete,
     onAsk: (ticket, action) => setPendingAction({ ticket, action }),
   });
 

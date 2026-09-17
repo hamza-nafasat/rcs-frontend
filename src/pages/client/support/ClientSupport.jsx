@@ -4,6 +4,7 @@ import SupportCreateTicketForm from "./components/SupportCreateTicketForm";
 import SupportEditModal from "./modals/SupportEditModal";
 import SupportTable from "../../../components/global/support/SupportTable";
 import SupportDetailsModal from "../../../components/global/support/SupportDetailsModal";
+import { isEditableTicket } from "../../../utils/supportStatus";
 import { EMPTY_TICKET } from "./utils/data";
 import { toTicketFormData } from "./utils/supportRequest";
 import {
@@ -88,6 +89,7 @@ const ClientSupport = () => {
           onView={setTicketToView}
           onEdit={setTicketToEdit}
           onDelete={handleDelete}
+          canDelete={isEditableTicket}
         />
       </section>
 
