@@ -1,32 +1,53 @@
-import { useState } from "react"
-import FranchiseeTable from "./components/FranchiseeTable"
-import FranchiseeFilter from "./components/FranchiseeFilter";
+import { useState } from "react";
 import FranchiseeHeading from "./components/FranchiseeHeading";
+import FranchiseeFilter from "./components/FranchiseeFilter";
+import FranchiseeTable from "./components/FranchiseeTable";
+import FranchiseeDetailsModal from "./modals/FranchiseeDetailsModal";
+import { useGetAllFranchiseesQuery } from "../../../store/apis/client/franchisee.apis";
+
+const initialFilters = { search: "", status: [] };
+
+const matches = (value, query) => String(value ?? "").toLowerCase().includes(query.trim().toLowerCase());
 
 const Franchisee = () => {
-    const initialFilters = {
-        restaurant: "",
-        owner: "",
-        status: [],
-    };
-    const [filters, setFilters] = useState(initialFilters);
+  const { data, isFetching } = useGetAllFranchiseesQuery();
+  const [filters, setFilters] = useState(initialFilters);
+  const [franchiseeToView, setFranchiseeToView] = useState(null);
 
-    return (
-        <article>
-            <FranchiseeHeading
-                className="fade-up"
-                heading="Franchisee Management"
-                subheading="Manage your franchisees and their information."
-            />
-            <section className="mt-6">
-                <FranchiseeFilter
-                    filters={filters}
-                    setFilters={setFilters}
-                />
-            </section>
-            <FranchiseeTable className="mt-5" filters={filters} />
-        </article>
-    )
-}
+  const franchisees = data?.data ?? [];
 
-export default Franchisee
+  const filteredFranchisees = franchisees.filter((franchisee) => {
+    const name = `${franchisee?.firstName ?? ""} ${franchisee?.lastName ?? ""}`;
+    const matchSearch = matches(name, filters.search) || matches(franchisee?.email, filters.search);
+    const matchStatus = filters.status.length === 0 || filters.status.includes(franchisee?.franchiseStatus);
+
+    return matchSearch && matchStatus;
+  });
+
+  return (
+    <article>
+      <FranchiseeHeading
+        className="fade-up"
+        heading="Franchisee Management"
+        subheading="Applicants who applied through your website."
+      />
+
+      <FranchiseeFilter className="mt-6" filters={filters} setFilters={setFilters} />
+
+      <FranchiseeTable
+        className="mt-5"
+        franchisees={filteredFranchisees}
+        isLoading={isFetching}
+        onView={setFranchiseeToView}
+      />
+
+      <FranchiseeDetailsModal
+        isOpen={Boolean(franchiseeToView)}
+        onClose={() => setFranchiseeToView(null)}
+        franchiseeId={franchiseeToView?._id}
+      />
+    </article>
+  );
+};
+
+export default Franchisee;

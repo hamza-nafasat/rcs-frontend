@@ -1,110 +1,89 @@
 import DataTable from "react-data-table-component";
+import { Eye, MapPin } from "lucide-react";
 import Avatar from "../../../../components/shared/Avatar";
-import Dropdown from "../../../../components/shared/Dropdown";
-import ProgressBar from "../../../../components/shared/ProgressBar";
-import { Eye, MessageSquare, MoreHorizontal } from "lucide-react";
-import { useState } from "react";
-import { initialData } from "../utils/data";
-import Button from "../../../../components/shared/Button";
+import Badge from "../../../../components/shared/Badge";
+import { franchiseStatusOf } from "../../../../utils/franchiseStatus";
 
-const STATUS_STYLES = {
-  Active: { pill: "bg-revenue text-[#22C55E]", dot: "bg-[#22C55E]" },
-  "At Risk": { pill: "bg-[#FEF2F2] text-[#EF4444]", dot: "bg-[#EF4444]" },
-  "On Hold": { pill: "bg-[#FFFBEB] text-[#F59E0B]", dot: "bg-[#F59E0B]" },
+const tableStyles = {
+  table: { style: { width: "100%" } },
+  responsiveWrapper: { style: { width: "100%", border: "1px solid #E5E7EB", borderRadius: "8px" } },
+  headRow: { style: { backgroundColor: "#FAFAFA" } },
+  headCells: { style: { color: "#4B5563", fontSize: "12px", fontWeight: "600" } },
 };
 
-const HEALTH_COLORS = [
-  { min: 80, color: "#22C55E" },
-  { min: 60, color: "#FBBF24" },
-  { min: 0, color: "#EF4444" },
-];
+const fullName = (row) => `${row?.firstName ?? ""} ${row?.lastName ?? ""}`.trim() || "—";
 
-const getHealthColor = (score) => HEALTH_COLORS.find(({ min }) => score >= min).color;
-
-const emptyFilters = { restaurant: "", owner: "", status: [] };
-
-const buildColumns = ({ handleViewClient, handleSendMessage }) => [
+const buildColumns = ({ onView }) => [
   {
-    name: "Restaurant",
-    selector: (row) => row.restaurantName,
+    name: "Applicant",
+    selector: (row) => fullName(row),
     sortable: true,
+    grow: 2,
     minWidth: "220px",
     cell: (row) => (
-      <div className="flex items-center gap-2">
-        <Avatar name={row.restaurantName} size={32} rounded="rounded-md" color="#F97316" />
+      <div className="flex items-center gap-3 py-1">
+        <Avatar name={fullName(row)} size={34} rounded="rounded-lg" />
         <div className="min-w-0">
-          <p className="truncate text-sm text-gray-900">{row.restaurantName}</p>
-          <p className="truncate text-xs text-gray-500">{row.restaurantCuisine}</p>
+          <p className="truncate font-medium text-tertiary">{fullName(row)}</p>
+          <p className="truncate text-xs text-muted">{row?.email}</p>
         </div>
       </div>
     ),
   },
   {
-    name: "Owner",
-    selector: (row) => row.ownerName,
-    sortable: true,
+    name: "Phone",
+    selector: (row) => row?.phone ?? "",
+    minWidth: "140px",
+    cell: (row) => <span className="text-tablecell">{row?.phone || "—"}</span>,
   },
   {
-    name: "Status",
-    selector: (row) => row.status,
+    name: "Location",
+    selector: (row) => row?.city ?? "",
     sortable: true,
+    minWidth: "160px",
     cell: (row) => {
-      const { pill, dot } = STATUS_STYLES[row.status] ?? STATUS_STYLES["On Hold"];
+      const location = [row?.city, row?.state].filter(Boolean).join(", ");
+      if (!location) return <span className="text-muted">—</span>;
 
       return (
-        <span
-          className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1 text-xs font-medium ${pill}`}
-        >
-          <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />
-          {row.status}
+        <span className="flex min-w-0 items-center gap-1.5 text-tablecell">
+          <MapPin size={14} className="shrink-0 text-muted" />
+          <span className="truncate">{location}</span>
         </span>
       );
     },
   },
   {
-    name: "Health Score",
-    selector: (row) => row.healthScore,
+    name: "Franchise Status",
+    selector: (row) => row?.franchiseStatus,
     sortable: true,
-    minWidth: "160px",
-    cell: (row) => (
-      <div className="flex w-full items-center gap-2">
-        <ProgressBar value={row.healthScore} color={getHealthColor(row.healthScore)} />
-        <span
-          className="shrink-0 whitespace-nowrap text-xs font-medium"
-          style={{ color: getHealthColor(row.healthScore) }}
-        >
-          {row.healthScore}%
-        </span>
-      </div>
-    ),
+    minWidth: "150px",
+    cell: (row) => {
+      const { label, color } = franchiseStatusOf(row?.franchiseStatus);
+      return <Badge text={label} dotColor={color} />;
+    },
   },
   {
-    name: "Franchise",
-    selector: (row) => row.franchise,
+    name: "Applied On",
+    selector: (row) => row?.createdAt,
     sortable: true,
+    minWidth: "130px",
+    cell: (row) => <span className="text-tablecell">{new Date(row?.createdAt).toLocaleDateString()}</span>,
   },
   {
-    name: "Actions",
+    name: <div className="pr-5">Actions</div>,
+    width: "90px",
+    right: true,
     cell: (row) => (
-      <div className="flex justify-end">
-        <Dropdown
-          align="right"
-          portalClassName="max-w-12"
-          trigger={
-            <Button variant="menuTrigger">
-              <MoreHorizontal size={18} />
-            </Button>
-          }
+      <div className="flex w-full items-center justify-center">
+        <button
+          type="button"
+          onClick={() => onView?.(row)}
+          aria-label={`View ${fullName(row)}`}
+          className="rounded-lg p-2 text-muted transition hover:bg-active hover:text-primary"
         >
-          <Button variant="menuItem" onClick={() => handleViewClient(row)}>
-            <Eye size={16} className="mt-0.5" />
-            View
-          </Button>
-          <Button variant="menuItem" onClick={() => handleSendMessage(row)}>
-            <MessageSquare size={14} className="mt-0.5" />
-            Send Message
-          </Button>
-        </Dropdown>
+          <Eye size={18} />
+        </button>
       </div>
     ),
     ignoreRowClick: true,
@@ -113,29 +92,23 @@ const buildColumns = ({ handleViewClient, handleSendMessage }) => [
   },
 ];
 
-const FranchiseeTable = ({ className, filters = emptyFilters }) => {
-  const [clients] = useState(initialData);
-
-  const filteredClients = clients.filter((client) => {
-    const matchRestaurant = client.restaurantName.toLowerCase().includes(filters.restaurant.trim().toLowerCase());
-
-    const matchOwner = client.ownerName.toLowerCase().includes(filters.owner.trim().toLowerCase());
-
-    const matchStatus = filters.status.length === 0 || filters.status.includes(client.status);
-
-    return matchRestaurant && matchOwner && matchStatus;
-  });
-
-  // TODO: wire the franchisee APIs
-  const handleViewClient = () => {};
-  const handleSendMessage = () => {};
-
-  const columns = buildColumns({ handleViewClient, handleSendMessage });
-  return (
-    <section className={className}>
-      <DataTable columns={columns} data={filteredClients} pagination highlightOnHover responsive />
-    </section>
-  );
-};
+const FranchiseeTable = ({ franchisees = [], isLoading = false, onView, className = "" }) => (
+  <section className={className}>
+    <DataTable
+      columns={buildColumns({ onView })}
+      data={franchisees}
+      keyField="_id"
+      progressPending={isLoading}
+      pagination
+      highlightOnHover
+      responsive
+      customStyles={tableStyles}
+      conditionalRowStyles={[
+        { when: (row) => franchisees.indexOf(row) % 2 === 1, style: { backgroundColor: "#FAFAFA" } },
+      ]}
+      noDataComponent={<p className="py-8 text-sm text-secondary">No applicants yet</p>}
+    />
+  </section>
+);
 
 export default FranchiseeTable;

@@ -87,8 +87,8 @@ const NOTIFICATION_KINDS = {
   pipeline_stage_changed: {
     icon: BadgeCheck,
     style: ICON_STYLES.document,
-    title: ({ to }) => `Application moved to ${stageOf(to).label}`,
-    description: ({ from, to }) => `Status updated from ${stageOf(from).label} to ${stageOf(to).label}.`,
+    title: ({ name }) => `${name ?? "An admin"} updated your application status`,
+    description: ({ from, to }) => `Moved from ${stageOf(from).label} to ${stageOf(to).label}.`,
   },
   pipeline_location_assigned: {
     icon: MapPin,
