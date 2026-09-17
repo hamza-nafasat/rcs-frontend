@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { DollarSign, Briefcase, Scale, MapPin } from "lucide-react";
 import ScoreRadar from "../../../components/global/scorecard/ScoreRadar";
@@ -5,14 +6,24 @@ import CategoryScores from "../../../components/global/scorecard/CategoryScores"
 import ScorecardSection from "../../../components/global/scorecard/ScorecardSection";
 import StageSelector from "../../../components/global/scorecard/StageSelector";
 import PipelineApplicantProgress from "../../../components/global/pipeline/PipelineApplicantProgress";
-import UploadedDocumentsSection from "../../../components/global/UploadedDocumentsSection";
+import PipelineRequestTable from "../../../components/global/pipeline/PipelineRequestTable";
+import PipelineRequestModal from "../../../components/global/pipeline/PipelineRequestModal";
+import MakeRequestModal from "../../../components/modals/MakeRequestModal";
 import { buildScorecard, getRecommendation, SCORE_CATEGORIES } from "../../../utils/pipelineScorecard";
 import { useGetPipelineByIdQuery, useUpdatePipelineStageMutation } from "../../../store/apis/shared/pipeline.apis";
+import { REQUEST_STATUSES } from "../../../utils/requestStatus";
+import { toFileRecords } from "../../../utils/fileRecords";
+import { initialRequests } from "./utils/data";
 
 const AdminApplicantDetailPage = () => {
   const { id } = useParams();
   const { data, isLoading } = useGetPipelineByIdQuery(id);
   const [updatePipelineStage, { isLoading: isUpdating }] = useUpdatePipelineStageMutation();
+
+  // TODO: move to requests api
+  const [requests, setRequests] = useState(initialRequests);
+  const [requestToView, setRequestToView] = useState(null);
+  const [requestToEdit, setRequestToEdit] = useState(null);
 
   const application = data?.data;
 
@@ -30,9 +41,44 @@ const AdminApplicantDetailPage = () => {
     }
   };
 
+  const handleSendRequest = ({ title, message, files }) => {
+    setRequests((prev) => [
+      {
+        _id: crypto.randomUUID(),
+        title,
+        message,
+        files: toFileRecords(files),
+        status: REQUEST_STATUSES.PENDING,
+        createdAt: new Date().toISOString(),
+      },
+      ...prev,
+    ]);
+  };
+
+  const handleEditRequest = ({ title, message, files, status }) => {
+    setRequests((prev) =>
+      prev.map((item) =>
+        item._id === requestToEdit?._id
+          ? {
+              ...item,
+              title,
+              message,
+              status,
+              files: files.length > 0 ? toFileRecords(files) : item.files,
+            }
+          : item,
+      ),
+    );
+    setRequestToEdit(null);
+  };
+
+  const handleDeleteRequest = (request) => {
+    setRequests((prev) => prev.filter((item) => item._id !== request?._id));
+  };
+
   return (
     <article className="flex flex-col gap-6">
-      <PipelineApplicantProgress currentStage={application.stage} canRequest />
+      <PipelineApplicantProgress currentStage={application.stage} canRequest onMakeRequestSubmit={handleSendRequest} />
 
       <section className="flex flex-col gap-5 rounded-2xl border color-border bg-white p-5 shadow-xs sm:p-6">
         {/* Applicant */}
@@ -78,7 +124,29 @@ const AdminApplicantDetailPage = () => {
         </footer>
       </section>
 
-      <UploadedDocumentsSection showUploadButton={false} />
+      {/* Requests sent to the applicant */}
+      <PipelineRequestTable
+        requests={requests}
+        onView={setRequestToView}
+        onEdit={setRequestToEdit}
+        onDelete={handleDeleteRequest}
+      />
+
+      <PipelineRequestModal
+        isOpen={Boolean(requestToView)}
+        onClose={() => setRequestToView(null)}
+        request={requestToView}
+      />
+
+      {/* the key reloads the edit fields */}
+      <MakeRequestModal
+        key={requestToEdit?._id}
+        isOpen={Boolean(requestToEdit)}
+        onClose={() => setRequestToEdit(null)}
+        onSubmit={handleEditRequest}
+        mode="edit"
+        initialData={requestToEdit}
+      />
     </article>
   );
 };

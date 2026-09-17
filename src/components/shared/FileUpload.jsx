@@ -1,55 +1,50 @@
 import { Upload, X } from "lucide-react";
 import { useRef, useState } from "react";
 
+const MAX_SIZE = 10 * 1024 * 1024;
+
 const FileUpload = ({
   label,
   accept = ".pdf,.png,.jpg,.jpeg,.zip",
   hint = "Supports PDF, PNG, JPG, ZIP up to 10MB",
   file,
   onFileChange,
+  multiple = false,
 }) => {
   const inputRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
 
-  const handleFile = (selectedFile) => {
-    if (!selectedFile) return;
+  // many files or one, never mixed
+  const selected = multiple ? (Array.isArray(file) ? file : []) : file;
+  const hasFiles = multiple ? selected.length > 0 : Boolean(selected);
 
-    const maxSize = 10 * 1024 * 1024;
+  const handleFiles = (list) => {
+    const accepted = [...(list ?? [])].filter((item) => item && item.size <= MAX_SIZE);
+    if (accepted.length === 0) return;
 
-    if (selectedFile.size > maxSize) {
-      return;
-    }
-
-    onFileChange(selectedFile);
+    onFileChange(multiple ? [...selected, ...accepted] : accepted[0]);
   };
 
   const handleChange = (e) => {
-    handleFile(e.target.files?.[0]);
+    handleFiles(e.target.files);
+    if (inputRef.current) inputRef.current.value = "";
   };
 
   const handleDrop = (e) => {
     e.preventDefault();
     setIsDragging(false);
-
-    const droppedFile = e.dataTransfer.files?.[0];
-    handleFile(droppedFile);
+    handleFiles(e.dataTransfer.files);
   };
 
-  const handleClear = () => {
-    onFileChange(null);
+  const handleClear = (target) => {
+    onFileChange(multiple ? selected.filter((item) => item !== target) : null);
 
-    if (inputRef.current) {
-      inputRef.current.value = "";
-    }
+    if (inputRef.current) inputRef.current.value = "";
   };
 
   return (
     <section className="w-full">
-      {label && (
-        <label className="mb-1 block text-sm font-medium text-tertiary">
-          {label}
-        </label>
-      )}
+      {label && <label className="mb-1 block text-sm font-medium text-tertiary">{label}</label>}
 
       <div
         onDragOver={(e) => {
@@ -59,40 +54,42 @@ const FileUpload = ({
         onDragLeave={() => setIsDragging(false)}
         onDrop={handleDrop}
         className={`rounded-xl border border-dashed px-4 py-5 transition ${
-          isDragging
-            ? "border-primary bg-orange-50"
-            : "border-[#E5E7EB] bg-white"
+          isDragging ? "border-primary bg-orange-50" : "color-border bg-white"
         }`}
       >
-        <input
-          ref={inputRef}
-          type="file"
-          accept={accept}
-          onChange={handleChange}
-          className="hidden"
-        />
+        <input ref={inputRef} type="file" accept={accept} multiple={multiple} onChange={handleChange} className="hidden" />
 
-        {file ? (
-          <div className="flex items-center justify-between gap-3">
-            <p className="truncate text-sm text-tertiary">
-              {file.name}
-            </p>
+        {hasFiles ? (
+          <div className="flex flex-col gap-2">
+            {(multiple ? selected : [selected]).map((item) => (
+              <div key={item.name} className="flex items-center justify-between gap-3">
+                <p className="truncate text-sm text-tertiary">{item.name}</p>
 
-            <button
-              aria-label="Remove file"
-              type="button"
-              onClick={handleClear}
-              className="rounded-full p-1 text-gray-500 hover:bg-gray-100"
-            >
-              <X size={16} />
-            </button>
+                <button
+                  aria-label={`Remove ${item.name}`}
+                  type="button"
+                  onClick={() => handleClear(item)}
+                  className="rounded-full p-1 text-muted hover:bg-active"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+            ))}
+
+            {/* more files can still join */}
+            {multiple && (
+              <button
+                type="button"
+                onClick={() => inputRef.current?.click()}
+                className="self-start text-xs font-medium text-primary underline"
+              >
+                Add another file
+              </button>
+            )}
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center gap-1 text-center">
-            <Upload
-              size={26}
-              className="mb-2 text-primary"
-            />
+            <Upload size={26} className="mb-2 text-primary" />
 
             <p className="text-sm font-medium text-tertiary">
               Drag & drop your files here, or{" "}
@@ -105,9 +102,7 @@ const FileUpload = ({
               </button>
             </p>
 
-            <p className="text-xs text-secondary">
-              {hint}
-            </p>
+            <p className="text-xs text-secondary">{hint}</p>
           </div>
         )}
       </div>
