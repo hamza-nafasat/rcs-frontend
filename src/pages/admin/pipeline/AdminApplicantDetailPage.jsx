@@ -6,11 +6,15 @@ import CategoryScores from "../../../components/global/scorecard/CategoryScores"
 import ScorecardSection from "../../../components/global/scorecard/ScorecardSection";
 import StageSelector from "../../../components/global/scorecard/StageSelector";
 import PipelineApplicantProgress from "../../../components/global/pipeline/PipelineApplicantProgress";
+import MapLocationAssign from "../../../components/global/map/MapLocationAssign";
 import PipelineRequestTable from "../../../components/global/pipeline/PipelineRequestTable";
 import PipelineRequestModal from "../../../components/global/pipeline/PipelineRequestModal";
 import MakeRequestModal from "../../../components/modals/MakeRequestModal";
 import { buildScorecard, getRecommendation, SCORE_CATEGORIES } from "../../../utils/pipelineScorecard";
 import { useGetPipelineByIdQuery, useUpdatePipelineStageMutation } from "../../../store/apis/shared/pipeline.apis";
+import { useGetAllClientsQuery, useGetClientByIdQuery } from "../../../store/apis/admin/client.apis";
+import { PIPELINE_STAGES } from "../../../utils/pipelineStage";
+import { withMapId } from "../../../utils/mapHelpers";
 import { REQUEST_STATUSES } from "../../../utils/requestStatus";
 import { toFileRecords } from "../../../utils/fileRecords";
 import { initialRequests } from "./utils/data";
@@ -27,8 +31,21 @@ const AdminApplicantDetailPage = () => {
 
   const application = data?.data;
 
+  // pipeline client is an account
+  const clientAccountId = application?.client?._id;
+  const { data: clientsData } = useGetAllClientsQuery(undefined, { skip: !clientAccountId });
+  const restaurantId = clientsData?.data?.find((client) => client?.account?._id === clientAccountId)?._id;
+  const { data: clientData } = useGetClientByIdQuery(restaurantId, { skip: !restaurantId });
+
+  // TODO: persist the assigned franchise
+  const [mapData, setMapData] = useState(null);
+
   if (isLoading) return <p className="p-6 text-center text-secondary">Loading application…</p>;
   if (!application) return <p className="p-6 text-center text-secondary">Application not found.</p>;
+
+  const isAssigningLocation = application.stage === PIPELINE_STAGES.ASSIGN_LOCATION;
+  const franchises = mapData?.franchises ?? withMapId(clientData?.data?.franchises ?? []);
+  const areas = mapData?.areas ?? withMapId(clientData?.data?.territories ?? []);
 
   const scorecard = buildScorecard(application);
   const recommendation = getRecommendation(application.stage, scorecard.score);
@@ -123,6 +140,26 @@ const AdminApplicantDetailPage = () => {
           <StageSelector value={application.stage} onChange={handleStageChange} disabled={isUpdating} />
         </footer>
       </section>
+
+      {/* Only at the assign location stage */}
+      {isAssigningLocation && (
+        <section className="flex flex-col gap-4 rounded-2xl border color-border bg-white p-5">
+          <header>
+            <h2 className="heading-lg text-tertiary">Assign Location</h2>
+            <p className="text-xs text-secondary">
+              Add a franchise location for this applicant. Existing areas cannot be redrawn.
+            </p>
+          </header>
+
+          <MapLocationAssign
+            franchises={franchises}
+            areas={areas}
+            canEdit
+            canDrawArea={false}
+            onChange={setMapData}
+          />
+        </section>
+      )}
 
       {/* Requests sent to the applicant */}
       <PipelineRequestTable

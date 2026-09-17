@@ -13,6 +13,7 @@ const MapDataModal = ({
   franchises = [],
   areas = [],
   canEdit = true,
+  canEditAreas = true,
   onEditFranchise,
   onDeleteFranchise,
   onEditArea,
@@ -153,7 +154,7 @@ const MapDataModal = ({
                       </div>
 
                       <div className="flex items-center gap-1.5" onClick={(event) => event.stopPropagation()}>
-                        {canEdit && (
+                        {canEdit && canEditAreas && (
                           <>
                             <button
                               type="button"
@@ -216,7 +217,7 @@ const MapDataModal = ({
         </div>
 
         <div className="flex items-center justify-between border-t color-border px-5 py-3.5">
-          {canEdit && (franchises.length > 0 || areas.length > 0) ? (
+          {canEdit && canEditAreas && (franchises.length > 0 || areas.length > 0) ? (
             <button
               type="button"
               onClick={onClearAll}

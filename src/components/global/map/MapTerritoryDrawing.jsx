@@ -47,6 +47,7 @@ const MapTerritoryDrawing = ({
   initialAreas = [],
   initialFranchises = [],
   canEdit = true,
+  canDrawArea = true,
 }) => {
   const containerRef = useRef(null);
   const mapCanvasRef = useRef(null);
@@ -627,19 +628,21 @@ const MapTerritoryDrawing = ({
               </button>
 
               {/* draw a territory polygon */}
-              <button
-                type="button"
-                onClick={handleToggleDrawMode}
-                title={isDrawingActive ? "Stop drawing and clear the points" : "Draw a new territory area"}
-                className={`inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-semibold cursor-pointer transition ${
-                  isDrawingActive
-                    ? "bg-red-500 text-white shadow-xs"
-                    : "border color-border bg-white text-tertiary hover:bg-gray-50"
-                }`}
-              >
-                <PenTool size={13} />
-                {isDrawingActive ? "Stop Drawing" : "Draw Area"}
-              </button>
+              {canDrawArea && (
+                <button
+                  type="button"
+                  onClick={handleToggleDrawMode}
+                  title={isDrawingActive ? "Stop drawing and clear the points" : "Draw a new territory area"}
+                  className={`inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-semibold cursor-pointer transition ${
+                    isDrawingActive
+                      ? "bg-red-500 text-white shadow-xs"
+                      : "border color-border bg-white text-tertiary hover:bg-gray-50"
+                  }`}
+                >
+                  <PenTool size={13} />
+                  {isDrawingActive ? "Stop Drawing" : "Draw Area"}
+                </button>
+              )}
 
               <button
                 type="button"
@@ -891,6 +894,7 @@ const MapTerritoryDrawing = ({
           franchises={franchises}
           areas={completedAreas}
           canEdit={canEdit}
+          canEditAreas={canDrawArea}
           onEditFranchise={handleEditFranchise}
           onDeleteFranchise={handleDeleteFranchise}
           onEditArea={handleEditAreaShape}

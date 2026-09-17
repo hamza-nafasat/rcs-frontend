@@ -3,7 +3,7 @@ import { Check, MapPin, Maximize2 } from "lucide-react";
 import MapTerritoryDrawing from "./MapTerritoryDrawing";
 import { DEFAULT_CENTER, PREVIEW_ZOOM, drawTiles, sizeCanvas } from "../../../utils/mapHelpers";
 
-const MapLocationAssign = ({ franchises = [], areas = [], canEdit = true, onChange }) => {
+const MapLocationAssign = ({ franchises = [], areas = [], canEdit = true, canDrawArea = true, onChange }) => {
   const containerRef = useRef(null);
   const mapCanvasRef = useRef(null);
   const tileCache = useRef(new Map());
@@ -33,6 +33,9 @@ const MapLocationAssign = ({ franchises = [], areas = [], canEdit = true, onChan
 
   const hasData = franchises.length > 0 || areas.length > 0;
 
+  // locked areas rename the heading
+  const headingText = canEdit ? (canDrawArea ? "Manage Franchises Details" : "Assign Franchise Location") : "Franchises & Areas";
+
   return (
     <>
       <section className="rounded-xl border color-border overflow-hidden bg-white shadow-2xs">
@@ -40,9 +43,7 @@ const MapLocationAssign = ({ franchises = [], areas = [], canEdit = true, onChan
         <div className="flex items-center justify-between gap-2 border-b color-border bg-white px-4 py-3">
           <div className="flex items-center gap-2">
             <MapPin size={16} className="text-revenue" />
-            <span className="text-xs font-semibold text-tertiary uppercase tracking-wide">
-              {canEdit ? "Manage Franchises Details" : "Franchises & Areas"}
-            </span>
+            <span className="text-xs font-semibold text-tertiary uppercase tracking-wide">{headingText}</span>
           </div>
 
           {hasData && (
@@ -74,6 +75,7 @@ const MapLocationAssign = ({ franchises = [], areas = [], canEdit = true, onChan
       {isFullscreen && (
         <MapTerritoryDrawing
           canEdit={canEdit}
+          canDrawArea={canDrawArea}
           onClose={() => setIsFullscreen(false)}
           onComplete={onChange}
           initialAreas={areas}
