@@ -3,7 +3,8 @@ import Loader from "../../../components/shared/Loader";
 import SettingsProfileSetting from "./components/SettingsProfileSetting";
 import { USER_ROLES } from "../../../configs/constants";
 import { CLIENT_FIELDS, PROFILE_FIELDS } from "./utils/data";
-import { areaPayload, franchisePayload, withMapId } from "./utils/mapPayload";
+import { withMapId } from "../../../utils/mapHelpers";
+import { areaPayload, franchisePayload } from "./utils/mapPayload";
 import {
   useChangeMyPasswordMutation,
   useGetMyProfileQuery,

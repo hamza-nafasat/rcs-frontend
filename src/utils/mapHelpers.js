@@ -47,6 +47,9 @@ export const pixelToLat = (py, zoom) => {
   return (180 / Math.PI) * Math.atan(0.5 * (Math.exp(n) - Math.exp(-n)));
 };
 
+// the map keys records by id
+export const withMapId = (records = []) => records.map((record) => ({ ...record, id: record._id }));
+
 const EARTH_RADIUS_KM = 6371;
 
 // distance in km between points

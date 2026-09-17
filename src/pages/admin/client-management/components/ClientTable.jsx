@@ -1,20 +1,20 @@
+import { Eye, MoreHorizontal, Pencil, Send, Trash2 } from "lucide-react";
+import { useState } from "react";
 import DataTable from "react-data-table-component";
 import toast from "react-hot-toast";
+import DeleteModal from "../../../../components/modals/DeleteModal";
 import Avatar from "../../../../components/shared/Avatar";
+import Button from "../../../../components/shared/Button";
 import Dropdown from "../../../../components/shared/Dropdown";
 import ProgressBar from "../../../../components/shared/ProgressBar";
-import { Eye, MessageSquare, MoreHorizontal, Pencil, Send, Trash2 } from "lucide-react";
-import { useState } from "react";
-import ClientDetailsModal from "../modals/ClientDetailsModal";
-import ClientAddEditModal from "../modals/ClientAddEditModal";
-import Button from "../../../../components/shared/Button";
-import DeleteModal from "../../../../components/modals/DeleteModal";
-import { CLIENT_STATUS, getClientStatus } from "../utils/clientStatus";
 import {
   useDeleteClientMutation,
   useResendClientInviteMutation,
   useUpdateClientMutation,
 } from "../../../../store/apis/admin/client.apis";
+import ClientAddEditModal from "../modals/ClientAddEditModal";
+import ClientDetailsModal from "../modals/ClientDetailsModal";
+import { CLIENT_STATUS, getClientStatus } from "../utils/clientStatus";
 
 const HEALTH_COLORS = [
   { min: 80, color: "#22C55E" },
@@ -115,10 +115,6 @@ const buildColumns = ({ handleEditClient, handleViewClient, handleResendInvite, 
               Resend Invite
             </Button>
           )}
-          <Button variant="menuItem" onClick={() => {}}>
-            <MessageSquare size={14} className="mt-0.5" />
-            Send Message
-          </Button>
 
           <Button variant="menuItemDanger" onClick={() => setClientToDelete(row)}>
             <Trash2 size={16} className="shrink-0" />
