@@ -3,10 +3,13 @@ import { Search, X } from "lucide-react";
 import Avatar from "../shared/Avatar";
 import Input from "../shared/Input";
 
+// one admin reads admin, not admins
+const headingFor = (group, count) => (count === 1 ? group : `${group}s`);
+
 // accounts grouped by their role
 const groupContacts = (contacts) =>
   contacts.reduce((groups, contact) => {
-    const group = contact?.role ?? "people";
+    const group = contact?.role ?? "contact";
     return { ...groups, [group]: [...(groups[group] ?? []), contact] };
   }, {});
 
@@ -59,7 +62,9 @@ const MessageNewConversationModal = ({ isOpen, onClose, contacts = [], onSelect 
           ) : (
             groups.map(([group, people]) => (
               <div key={group} className="mb-3">
-                <p className="mb-1 px-1 text-xs font-semibold uppercase tracking-wide text-secondary">{group}s</p>
+                <p className="mb-1 px-1 text-xs font-semibold uppercase tracking-wide text-secondary">
+                  {headingFor(group, people.length)}
+                </p>
 
                 {people.map((contact) => (
                   <button
