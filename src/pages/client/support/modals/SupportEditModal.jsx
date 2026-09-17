@@ -4,8 +4,9 @@ import Button from "../../../../components/shared/Button";
 import SupportCreateTicketForm from "../components/SupportCreateTicketForm";
 import { EMPTY_TICKET } from "../utils/data";
 
-const SupportEditModal = ({ isOpen, onClose, onSubmit, initialData }) => {
-  const [form, setForm] = useState(() => ({ ...EMPTY_TICKET, ...initialData }));
+const SupportEditModal = ({ isOpen, onClose, onSubmit, initialData, isSubmitting = false }) => {
+  // a new file replaces it
+  const [form, setForm] = useState(() => ({ ...EMPTY_TICKET, ...initialData, attachment: null }));
 
   if (!isOpen) return null;
 
@@ -44,6 +45,7 @@ const SupportEditModal = ({ isOpen, onClose, onSubmit, initialData }) => {
           onSubmit={handleSubmit}
           onCancel={onClose}
           submitText="Save Changes"
+          isSubmitting={isSubmitting}
         />
       </div>
     </div>

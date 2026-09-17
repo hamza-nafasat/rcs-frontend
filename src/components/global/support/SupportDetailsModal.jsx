@@ -6,11 +6,13 @@ import { SUPPORT_PRIORITY, SUPPORT_STATUS } from "../../../utils/supportStatus";
 const SupportDetailsModal = ({ isOpen, onClose, ticket }) => {
   if (!isOpen || !ticket) return null;
 
+  const asDate = (value) => (value ? new Date(value).toLocaleDateString() : "—");
+
   const facts = [
     { label: "Category", value: ticket?.category ?? "—" },
-    { label: "Received On", value: ticket?.receivedOn ?? "—" },
-    { label: "Last Updated", value: ticket?.lastUpdated ?? "—" },
-    { label: "Raised By", value: ticket?.raisedBy ?? "—" },
+    { label: "Received On", value: asDate(ticket?.createdAt) },
+    { label: "Last Updated", value: asDate(ticket?.updatedAt) },
+    { label: "Raised By", value: ticket?.client?.restaurantName ?? ticket?.raisedBy?.fullName ?? "—" },
   ];
 
   return (
@@ -65,10 +67,15 @@ const SupportDetailsModal = ({ isOpen, onClose, ticket }) => {
         {ticket?.attachment && (
           <section className="mt-4">
             <h3 className="mb-2 text-sm font-semibold text-tertiary">Attachment</h3>
-            <p className="inline-flex items-center gap-2 rounded-lg border color-border px-3 py-2 text-sm text-tertiary">
+            <a
+              href={ticket?.attachment?.url}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 rounded-lg border color-border px-3 py-2 text-sm text-tertiary transition hover:bg-gray-50"
+            >
               <Paperclip size={14} className="shrink-0 text-secondary" />
-              <span className="truncate">{ticket?.attachment?.name ?? ticket?.attachment}</span>
-            </p>
+              <span className="truncate">{ticket?.attachment?.name ?? "Attachment"}</span>
+            </a>
           </section>
         )}
       </div>

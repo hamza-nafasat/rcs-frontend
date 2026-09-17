@@ -4,6 +4,7 @@ import { authApi } from "./apis/shared/auth.apis";
 import { fddApi } from "./apis/shared/fdd.apis";
 import { messageApi } from "./apis/shared/message.apis";
 import { moderatorApi } from "./apis/shared/moderator.apis";
+import { supportApi } from "./apis/shared/support.apis";
 import notificationsReducer from "./slices/notificationsSlice";
 import { apiErrorToast, resetOnUserChange } from "./utils/store.utils";
 
@@ -15,6 +16,7 @@ export const store = configureStore({
     [fddApi.reducerPath]: fddApi.reducer,
     [messageApi.reducerPath]: messageApi.reducer,
     [moderatorApi.reducerPath]: moderatorApi.reducer,
+    [supportApi.reducerPath]: supportApi.reducer,
   },
 
   middleware: (getDefaultMiddleware) =>
@@ -24,6 +26,7 @@ export const store = configureStore({
       fddApi.middleware,
       messageApi.middleware,
       moderatorApi.middleware,
+      supportApi.middleware,
       apiErrorToast,
       resetOnUserChange,
     ),

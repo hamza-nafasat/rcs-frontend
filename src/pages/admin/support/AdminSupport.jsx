@@ -1,10 +1,15 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
 import SupportHeading from "./components/SupportHeading";
 import SupportFilter from "./components/SupportFilter";
 import SupportTable from "../../../components/global/support/SupportTable";
 import SupportDetailsModal from "../../../components/global/support/SupportDetailsModal";
-import { initialTickets } from "./utils/data";
 import { SUPPORT_PRIORITY_OPTIONS, SUPPORT_STATUS_OPTIONS, SUPPORT_STATUSES } from "../../../utils/supportStatus";
+import {
+  useDeleteSupportMutation,
+  useGetAllSupportsQuery,
+  useUpdateSupportStatusMutation,
+} from "../../../store/apis/shared/support.apis";
 
 const initialFilters = {
   priority: [],
@@ -13,19 +18,35 @@ const initialFilters = {
 };
 
 const AdminSupport = () => {
-  // TODO: wire the support API
-  const [tickets, setTickets] = useState(initialTickets);
+  const { data, isLoading } = useGetAllSupportsQuery();
+  const [updateSupportStatus] = useUpdateSupportStatusMutation();
+  const [deleteSupport] = useDeleteSupportMutation();
+
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useState(initialFilters);
   const [ticketToView, setTicketToView] = useState(null);
 
+  const tickets = data?.data ?? [];
   const categories = [...new Set(tickets.map((ticket) => ticket.category))];
 
   // only an admin moves the status
-  const handleStatusChange = (ticket, status) =>
-    setTickets((rows) => rows.map((row) => (row.id === ticket.id ? { ...row, status } : row)));
+  const handleStatusChange = async (ticket, status) => {
+    try {
+      const response = await updateSupportStatus({ id: ticket?._id, status }).unwrap();
+      toast.success(response?.message);
+    } catch (error) {
+      console.error("Update ticket status error:", error);
+    }
+  };
 
-  const handleDelete = (ticket) => setTickets((rows) => rows.filter((row) => row.id !== ticket.id));
+  const handleDelete = async (ticket) => {
+    try {
+      const response = await deleteSupport(ticket?._id).unwrap();
+      toast.success(response?.message);
+    } catch (error) {
+      console.error("Delete ticket error:", error);
+    }
+  };
 
   const filteredTickets = tickets.filter((ticket) => {
     const query = search.trim().toLowerCase();
@@ -62,9 +83,11 @@ const AdminSupport = () => {
       <section className="mt-6 min-h-0 flex-1">
         <SupportTable
           tickets={filteredTickets}
+          isLoading={isLoading}
           onView={setTicketToView}
           onResolve={(ticket) => handleStatusChange(ticket, SUPPORT_STATUSES.RESOLVED)}
           onClose={(ticket) => handleStatusChange(ticket, SUPPORT_STATUSES.CLOSED)}
+          onReopen={(ticket) => handleStatusChange(ticket, SUPPORT_STATUSES.IN_PROGRESS)}
           onDelete={handleDelete}
         />
       </section>

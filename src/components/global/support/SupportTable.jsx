@@ -1,6 +1,6 @@
 import { useState } from "react";
 import DataTable from "react-data-table-component";
-import { CheckCircle2, Eye, MoreHorizontal, Pencil, Trash2, XCircle } from "lucide-react";
+import { CheckCircle2, Eye, MoreHorizontal, Pencil, RotateCcw, Trash2, XCircle } from "lucide-react";
 import Button from "../../shared/Button";
 import Dropdown from "../../shared/Dropdown";
 import DeleteModal from "../../modals/DeleteModal";
@@ -25,13 +25,41 @@ const tableStyles = {
   pagination: { style: { marginTop: "auto", flex: "0 0 auto" } },
 };
 
-const buildColumns = ({ onView, onEdit, onResolve, onClose, setTicketToDelete }) => [
+// one confirm for every action
+const CONFIRM_ACTIONS = {
+  resolve: {
+    heading: "Resolve Ticket",
+    confirmText: "Resolve",
+    icon: <CheckCircle2 size={26} />,
+    text: (ticketId) => `Mark ${ticketId} as resolved? The client will see it as resolved.`,
+  },
+  close: {
+    heading: "Close Ticket",
+    confirmText: "Close",
+    icon: <XCircle size={26} />,
+    text: (ticketId) => `Close ${ticketId}? The client will no longer be able to edit it.`,
+  },
+  reopen: {
+    heading: "Reopen Ticket",
+    confirmText: "Reopen",
+    icon: <RotateCcw size={26} />,
+    text: (ticketId) => `Reopen ${ticketId}? It moves back to in progress and can be edited again.`,
+  },
+  delete: {
+    heading: "Delete Ticket",
+    confirmText: "Delete",
+    icon: <Trash2 size={26} />,
+    text: (ticketId) => `Are you sure you want to delete ${ticketId}? This action cannot be undone.`,
+  },
+};
+
+const buildColumns = ({ onView, onEdit, onResolve, onClose, onReopen, onDelete, onAsk }) => [
   {
     name: "Ticket ID",
     selector: (row) => row.ticketId,
     sortable: true,
     minWidth: "120px",
-    maxWidth: "120px",
+    maxWidth: "150px",
     wrap: true,
     cell: (row) => <span className="text-sm font-semibold text-primary">{row.ticketId}</span>,
   },
@@ -74,12 +102,12 @@ const buildColumns = ({ onView, onEdit, onResolve, onClose, setTicketToDelete })
   },
   {
     name: "Received On",
-    selector: (row) => row.receivedOn,
+    selector: (row) => row.createdAt,
     sortable: true,
     minWidth: "120px",
     maxWidth: "120px",
     wrap: true,
-    cell: (row) => <p className="text-tablecell">{row.receivedOn}</p>,
+    cell: (row) => <p className="text-tablecell">{new Date(row.createdAt).toLocaleDateString()}</p>,
   },
   {
     name: <div className="pr-5">Actions</div>,
@@ -115,7 +143,7 @@ const buildColumns = ({ onView, onEdit, onResolve, onClose, setTicketToDelete })
             <Button
               variant="menuItem"
               isDisabled={row.status === SUPPORT_STATUSES.RESOLVED}
-              onClick={() => onResolve(row)}
+              onClick={() => onAsk(row, "resolve")}
             >
               <CheckCircle2 size={16} className="mt-0.5" />
               Resolve
@@ -123,14 +151,26 @@ const buildColumns = ({ onView, onEdit, onResolve, onClose, setTicketToDelete })
           )}
 
           {onClose && (
-            <Button variant="menuItem" isDisabled={row.status === SUPPORT_STATUSES.CLOSED} onClick={() => onClose(row)}>
+            <Button
+              variant="menuItem"
+              isDisabled={row.status === SUPPORT_STATUSES.CLOSED}
+              onClick={() => onAsk(row, "close")}
+            >
               <XCircle size={16} className="mt-0.5" />
               Close
             </Button>
           )}
 
-          {setTicketToDelete && (
-            <Button variant="menuItemDanger" onClick={() => setTicketToDelete(row)}>
+          {/* a settled ticket can come back */}
+          {onReopen && !isEditableTicket(row) && (
+            <Button variant="menuItem" onClick={() => onAsk(row, "reopen")}>
+              <RotateCcw size={16} className="mt-0.5" />
+              Reopen
+            </Button>
+          )}
+
+          {onDelete && (
+            <Button variant="menuItemDanger" onClick={() => onAsk(row, "delete")}>
               <Trash2 size={16} className="shrink-0" />
               Delete
             </Button>
@@ -144,12 +184,24 @@ const buildColumns = ({ onView, onEdit, onResolve, onClose, setTicketToDelete })
   },
 ];
 
-const SupportTable = ({ tickets = [], isLoading = false, onView, onEdit, onResolve, onClose, onDelete }) => {
-  const [ticketToDelete, setTicketToDelete] = useState(null);
+const SupportTable = ({
+  tickets = [],
+  isLoading = false,
+  onView,
+  onEdit,
+  onResolve,
+  onClose,
+  onReopen,
+  onDelete,
+}) => {
+  const [pendingAction, setPendingAction] = useState(null);
 
-  const handleConfirmDelete = () => {
-    onDelete?.(ticketToDelete);
-    setTicketToDelete(null);
+  const confirm = CONFIRM_ACTIONS[pendingAction?.action] ?? CONFIRM_ACTIONS.delete;
+
+  const handleConfirm = () => {
+    const handlers = { resolve: onResolve, close: onClose, reopen: onReopen, delete: onDelete };
+    handlers[pendingAction?.action]?.(pendingAction?.ticket);
+    setPendingAction(null);
   };
 
   const columns = buildColumns({
@@ -157,7 +209,9 @@ const SupportTable = ({ tickets = [], isLoading = false, onView, onEdit, onResol
     onEdit,
     onResolve,
     onClose,
-    setTicketToDelete: onDelete ? setTicketToDelete : null,
+    onReopen,
+    onDelete,
+    onAsk: (ticket, action) => setPendingAction({ ticket, action }),
   });
 
   return (
@@ -165,6 +219,7 @@ const SupportTable = ({ tickets = [], isLoading = false, onView, onEdit, onResol
       <DataTable
         columns={columns}
         data={tickets}
+        keyField="_id"
         progressPending={isLoading}
         pagination
         highlightOnHover
@@ -180,12 +235,13 @@ const SupportTable = ({ tickets = [], isLoading = false, onView, onEdit, onResol
       />
 
       <DeleteModal
-        isOpen={Boolean(ticketToDelete)}
-        onClose={() => setTicketToDelete(null)}
-        onConfirm={handleConfirmDelete}
-        heading="Delete Ticket"
-        text={`Are you sure you want to delete ${ticketToDelete?.ticketId ?? "this ticket"}? This action cannot be undone.`}
-        confirmText="Delete"
+        isOpen={Boolean(pendingAction)}
+        onClose={() => setPendingAction(null)}
+        onConfirm={handleConfirm}
+        icon={confirm.icon}
+        heading={confirm.heading}
+        text={confirm.text(pendingAction?.ticket?.ticketId ?? "this ticket")}
+        confirmText={confirm.confirmText}
       />
     </section>
   );

@@ -10,6 +10,7 @@ const SupportCreateTicketForm = ({
   onSubmit,
   onCancel,
   submitText = "Submit Ticket",
+  isSubmitting = false,
 }) => {
   return (
     <form
@@ -94,6 +95,7 @@ const SupportCreateTicketForm = ({
         <Button
           type="submit"
           variant="primary"
+          isLoading={isSubmitting}
           className="px-3! py-2! sm:px-4! sm:py-2.5! text-sm rounded cursor-pointer text-white btn-primary-gradient hover:opacity-90 transition font-medium shadow-sm"
         >
           {submitText}
