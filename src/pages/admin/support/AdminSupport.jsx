@@ -1,8 +1,10 @@
 import { useState } from "react";
 import SupportHeading from "./components/SupportHeading";
 import SupportFilter from "./components/SupportFilter";
-import SupportTable from "./components/SupportTable";
+import SupportTable from "../../../components/global/support/SupportTable";
+import SupportDetailsModal from "../../../components/global/support/SupportDetailsModal";
 import { initialTickets } from "./utils/data";
+import { SUPPORT_PRIORITY_OPTIONS, SUPPORT_STATUS_OPTIONS, SUPPORT_STATUSES } from "../../../utils/supportStatus";
 
 const initialFilters = {
   priority: [],
@@ -11,42 +13,27 @@ const initialFilters = {
 };
 
 const AdminSupport = () => {
+  // TODO: wire the support API
   const [tickets, setTickets] = useState(initialTickets);
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useState(initialFilters);
+  const [ticketToView, setTicketToView] = useState(null);
 
-  // these lists come from the api
-  const priorities = [...new Set(tickets.map((ticket) => ticket.priority))];
-  const statuses = [...new Set(tickets.map((ticket) => ticket.status))];
   const categories = [...new Set(tickets.map((ticket) => ticket.category))];
 
-  const handleStatusChange = (ticket, status) => {
-    setTickets((rows) =>
-      rows.map((row) => (row.id === ticket.id ? { ...row, status } : row)),
-    );
-  };
+  // only an admin moves the status
+  const handleStatusChange = (ticket, status) =>
+    setTickets((rows) => rows.map((row) => (row.id === ticket.id ? { ...row, status } : row)));
 
-  const handleDelete = (ticket) => {
-    setTickets((rows) => rows.filter((row) => row.id !== ticket.id));
-  };
+  const handleDelete = (ticket) => setTickets((rows) => rows.filter((row) => row.id !== ticket.id));
 
   const filteredTickets = tickets.filter((ticket) => {
     const query = search.trim().toLowerCase();
-
     const matchSearch =
-      ticket.ticketId.toLowerCase().includes(query) ||
-      ticket.subject.toLowerCase().includes(query);
-
-    const matchPriority =
-      filters.priority.length === 0 ||
-      filters.priority.includes(ticket.priority);
-
-    const matchStatus =
-      filters.status.length === 0 || filters.status.includes(ticket.status);
-
-    const matchCategory =
-      filters.category.length === 0 ||
-      filters.category.includes(ticket.category);
+      ticket.ticketId.toLowerCase().includes(query) || ticket.subject.toLowerCase().includes(query);
+    const matchPriority = filters.priority.length === 0 || filters.priority.includes(ticket.priority);
+    const matchStatus = filters.status.length === 0 || filters.status.includes(ticket.status);
+    const matchCategory = filters.category.length === 0 || filters.category.includes(ticket.category);
 
     return matchSearch && matchPriority && matchStatus && matchCategory;
   });
@@ -66,8 +53,8 @@ const AdminSupport = () => {
           setSearch={setSearch}
           filters={filters}
           setFilters={setFilters}
-          priorities={priorities}
-          statuses={statuses}
+          priorities={SUPPORT_PRIORITY_OPTIONS}
+          statuses={SUPPORT_STATUS_OPTIONS}
           categories={categories}
         />
       </section>
@@ -75,10 +62,18 @@ const AdminSupport = () => {
       <section className="mt-6 min-h-0 flex-1">
         <SupportTable
           tickets={filteredTickets}
-          onStatusChange={handleStatusChange}
+          onView={setTicketToView}
+          onResolve={(ticket) => handleStatusChange(ticket, SUPPORT_STATUSES.RESOLVED)}
+          onClose={(ticket) => handleStatusChange(ticket, SUPPORT_STATUSES.CLOSED)}
           onDelete={handleDelete}
         />
       </section>
+
+      <SupportDetailsModal
+        isOpen={Boolean(ticketToView)}
+        onClose={() => setTicketToView(null)}
+        ticket={ticketToView}
+      />
     </article>
   );
 };

@@ -1,3 +1,11 @@
+export const EMPTY_TICKET = {
+  subject: "",
+  category: "",
+  priority: "",
+  description: "",
+  attachment: null,
+};
+
 export const initialTickets = [
   {
     id: 1,
@@ -6,7 +14,6 @@ export const initialTickets = [
     category: "Documents",
     priority: "Critical",
     status: "in_progress",
-    raisedBy: "The Harbor Kitchen",
     description:
       "Uploading the 2026 FDD fails at 80% with a network error. Tried Chrome and Safari, same result on a 12 MB PDF.",
     receivedOn: "12 Aug 2026",
@@ -14,15 +21,14 @@ export const initialTickets = [
   },
   {
     id: 2,
-    ticketId: "#TKT-1002",
-    subject: "Franchisee login not working",
+    ticketId: "#TKT-1007",
+    subject: "Add a second manager to our account",
     category: "Account",
-    priority: "High",
+    priority: "Medium",
     status: "in_progress",
-    raisedBy: "Downtown Grill",
-    description: "Two of our managers cannot sign in. The reset link arrives but reports an expired token.",
-    receivedOn: "10 Aug 2026",
-    lastUpdated: "15 Aug 2026",
+    description: "We hired a new general manager and would like a moderator login created for her.",
+    receivedOn: "09 Aug 2026",
+    lastUpdated: "11 Aug 2026",
   },
   {
     id: 3,
@@ -31,7 +37,6 @@ export const initialTickets = [
     category: "Billing",
     priority: "Medium",
     status: "resolved",
-    raisedBy: "Coastal Bites",
     description: "The August royalty payment went through but no receipt was generated in the billing section.",
     receivedOn: "05 Aug 2026",
     lastUpdated: "08 Aug 2026",
@@ -43,21 +48,8 @@ export const initialTickets = [
     category: "General",
     priority: "Low",
     status: "closed",
-    raisedBy: "Prairie Table",
     description: "We have rebranded and would like the dashboard to show the new trading name.",
     receivedOn: "01 Aug 2026",
     lastUpdated: "03 Aug 2026",
-  },
-  {
-    id: 5,
-    ticketId: "#TKT-1005",
-    subject: "Territory map not loading on signup",
-    category: "Technical Support",
-    priority: "High",
-    status: "closed",
-    raisedBy: "Lakeside Diner",
-    description: "The map tiles stayed blank while drawing our territory, so we could not finish the application.",
-    receivedOn: "05 Aug 2026",
-    lastUpdated: "08 Aug 2026",
   },
 ];

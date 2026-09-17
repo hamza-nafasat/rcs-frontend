@@ -2,26 +2,14 @@ import Input from "../../../../components/shared/Input";
 import Select from "../../../../components/shared/Select";
 import FileUpload from "../../../../components/shared/FileUpload";
 import Button from "../../../../components/shared/Button";
-
-const CATEGORY_OPTIONS = [
-  "Technical Support",
-  "Billing",
-  "Account",
-  "General",
-];
-
-const PRIORITY_OPTIONS = [
-  "Low",
-  "Medium",
-  "High",
-  "Critical",
-];
+import { SUPPORT_CATEGORY_OPTIONS, SUPPORT_PRIORITY_OPTIONS } from "../../../../utils/supportStatus";
 
 const SupportCreateTicketForm = ({
   form,
   onChange,
   onSubmit,
   onCancel,
+  submitText = "Submit Ticket",
 }) => {
   return (
     <form
@@ -44,7 +32,7 @@ const SupportCreateTicketForm = ({
           label="Category"
           value={form.category}
           onChange={onChange}
-          options={CATEGORY_OPTIONS}
+          options={SUPPORT_CATEGORY_OPTIONS}
           placeholder="Select category"
         />
 
@@ -53,7 +41,7 @@ const SupportCreateTicketForm = ({
           label="Priority"
           value={form.priority}
           onChange={onChange}
-          options={PRIORITY_OPTIONS}
+          options={SUPPORT_PRIORITY_OPTIONS}
           placeholder="Select priority"
         />
       </div>
@@ -108,7 +96,7 @@ const SupportCreateTicketForm = ({
           variant="primary"
           className="px-3! py-2! sm:px-4! sm:py-2.5! text-sm rounded cursor-pointer text-white btn-primary-gradient hover:opacity-90 transition font-medium shadow-sm"
         >
-          Submit Ticket
+          {submitText}
         </Button>
       </div>
     </form>
