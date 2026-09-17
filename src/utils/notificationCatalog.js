@@ -69,6 +69,20 @@ const NOTIFICATION_KINDS = {
     title: ({ title }) => `${title ?? "A request"} was filled`,
     description: ({ name }) => `${name ?? "An applicant"} sent the requested documents.`,
   },
+  pipeline_application_received: {
+    icon: FileText,
+    style: ICON_STYLES.document,
+    title: ({ name }) => `New application from ${name ?? "an applicant"}`,
+    description: ({ clientName, franchiseName }) =>
+      `Received through ${clientName ?? "a client"}'s site${franchiseName ? ` for ${franchiseName}` : ""}.`,
+  },
+  pipeline_application_new: {
+    icon: UserPlus,
+    style: ICON_STYLES.account,
+    title: ({ name }) => `New application from ${name ?? "an applicant"}`,
+    description: ({ franchiseName }) =>
+      franchiseName ? `They applied for ${franchiseName}.` : "A new applicant came through your site.",
+  },
   pipeline_location_assigned: {
     icon: MapPin,
     style: ICON_STYLES.account,
