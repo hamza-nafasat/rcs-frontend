@@ -80,9 +80,9 @@ const NOTIFICATION_KINDS = {
   pipeline_application_new: {
     icon: UserPlus,
     style: ICON_STYLES.account,
-    title: ({ name }) => `New application from ${name ?? "an applicant"}`,
+    title: ({ name }) => `New pipeline from ${name ?? "an applicant"}`,
     description: ({ franchiseName }) =>
-      franchiseName ? `They applied for ${franchiseName}.` : "A new applicant came through your site.",
+      franchiseName ? `Received for ${franchiseName}.` : "A new pipeline came through your site.",
   },
   pipeline_stage_changed: {
     icon: BadgeCheck,
