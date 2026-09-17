@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import Dropdown from "./Dropdown";
 import Button from "./Button";
+import CountBadge from "./CountBadge";
 import { readNotification } from "../../utils/notificationCatalog";
 import { formatRelativeTime } from "../../utils/formatTime";
 import { onSocketEvent } from "../../utils/socket";
@@ -59,11 +60,7 @@ const NotificationBell = ({ type = "admin" }) => {
         >
           <Bell size={20} />
 
-          {unreadCount > 0 && (
-            <span className="absolute -right-1.5 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-medium leading-none text-white">
-              {unreadLabel}
-            </span>
-          )}
+          <CountBadge count={unreadCount} className="absolute -right-1.5 -top-1.5" />
         </span>
       }
     >

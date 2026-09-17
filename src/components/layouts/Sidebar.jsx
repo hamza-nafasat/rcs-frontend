@@ -12,17 +12,22 @@ import {
   UserSquare,
   X,
 } from "lucide-react";
+import { useEffect } from "react";
 import { NavLink } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import LogoCompany from "../../assets/SVGs/LogoCompany.svg";
 import SidebarClosedLogo from "../../assets/SVGs/SidebarClosedLogo.svg";
 import Avatar from "../shared/Avatar";
-import { USER_ROLES } from "../../configs/constants";
+import CountBadge from "../shared/CountBadge";
+import { MESSAGE_EVENTS, USER_ROLES } from "../../configs/constants";
 import { useAuthUser } from "../../routes/useAuthUser";
+import { onSocketEvent } from "../../utils/socket";
+import { messageApi, useGetMyConversationsQuery } from "../../store/apis/shared/message.apis";
 
 const adminNavItems = [
   { label: "Dashboard", to: "/admin/dashboard", icon: LayoutDashboard },
   { label: "Clients", to: "/admin/dashboard/clients", icon: Users },
-  { label: "Messages", to: "/admin/dashboard/messages", icon: MessageSquare },
+  { label: "Messages", to: "/admin/dashboard/messages", icon: MessageSquare, badge: "messages" },
   { label: "Moderators", to: "/admin/dashboard/moderators", icon: Award, isOwnerOnly: true },
   { label: "FDD", to: "/admin/dashboard/fdd", icon: FileIcon },
   {
@@ -41,7 +46,7 @@ const clientNavItems = [
   { label: "Overview", to: "/client/dashboard", icon: LayoutDashboard },
   { label: "Pipeline", to: "/client/dashboard/pipeline", icon: Award },
   { label: "Reports", to: "/client/dashboard/reports", icon: FileChartColumn },
-  { label: "Messages", to: "/client/dashboard/messages", icon: MessageSquare },
+  { label: "Messages", to: "/client/dashboard/messages", icon: MessageSquare, badge: "messages" },
   { label: "Moderators", to: "/client/dashboard/moderators", icon: Award, isOwnerOnly: true },
   { label: "FDD", to: "/client/dashboard/fdd", icon: FileIcon },
   { label: "Franchisee", to: "/client/dashboard/franchisee", icon: UserSquare },
@@ -54,7 +59,7 @@ const clientProfileItems = [
 
 const userNavItems = [
   { label: "Application", to: "/user/dashboard", icon: LayoutDashboard },
-  { label: "Messages", to: "/user/dashboard/messages", icon: MessageSquare },
+  { label: "Messages", to: "/user/dashboard/messages", icon: MessageSquare, badge: "messages" },
 ];
 
 const userProfileItems = [
@@ -94,6 +99,24 @@ const Sidebar = ({
   // moderators never see owner links
   const { user: account } = useAuthUser();
   const isModerator = account?.role === USER_ROLES.MODERATOR;
+
+  const dispatch = useDispatch();
+  const { data: conversationData } = useGetMyConversationsQuery();
+
+  // any message event refreshes the count
+  useEffect(() => {
+    const unsubscribes = MESSAGE_EVENTS.map((event) =>
+      onSocketEvent(event, () => dispatch(messageApi.util.invalidateTags(["Conversations"]))),
+    );
+
+    return () => unsubscribes.forEach((unsubscribe) => unsubscribe());
+  }, [dispatch]);
+
+  const unreadMessages = (conversationData?.data ?? []).reduce(
+    (total, conversation) => total + (conversation?.unreadCount ?? 0),
+    0,
+  );
+  const badgeCounts = { messages: unreadMessages };
 
   // menu items for this role
   const navItems = isUser ? userNavItems : isClient ? clientNavItems : adminNavItems;
@@ -167,7 +190,7 @@ const Sidebar = ({
         <nav className="min-h-0 flex-1 overflow-y-auto px-3 py-4">
           <SectionTitle isCollapsed={isCollapsed}>Menu</SectionTitle>
           <div className="space-y-1">
-            {menuItems.map(({ label, to, icon: Icon }) => (
+            {menuItems.map(({ label, to, icon: Icon, badge }) => (
               <NavLink
                 key={label}
                 to={to}
@@ -176,7 +199,11 @@ const Sidebar = ({
                 className={linkClass(isCollapsed)}
                 title={isCollapsed ? label : undefined}
               >
-                <Icon size={18} className="shrink-0" />
+                <span className="relative shrink-0">
+                  <Icon size={18} />
+                  <CountBadge count={badgeCounts[badge] ?? 0} className="absolute -right-2 -top-2" />
+                </span>
+
                 <span className={hideOnCollapse}>{label}</span>
               </NavLink>
             ))}

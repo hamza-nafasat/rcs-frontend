@@ -1,7 +1,6 @@
-import { BadgeCheck, FileText, LifeBuoy, MessageSquare, Settings, UserPlus } from "lucide-react";
+import { BadgeCheck, FileText, LifeBuoy, Settings, UserPlus } from "lucide-react";
 
 const ICON_STYLES = {
-  message: "bg-purple-50 text-purple-600",
   document: "bg-blue-50 text-blue-600",
   support: "bg-amber-50 text-amber-600",
   account: "bg-green-50 text-green-600",
@@ -10,12 +9,6 @@ const ICON_STYLES = {
 
 // every sentence lives here once
 const NOTIFICATION_KINDS = {
-  message_received: {
-    icon: MessageSquare,
-    style: ICON_STYLES.message,
-    title: ({ name }) => `New message from ${name ?? "someone"}`,
-    description: () => "Open the messages page to read and reply.",
-  },
   client_onboarded: {
     icon: UserPlus,
     style: ICON_STYLES.account,
