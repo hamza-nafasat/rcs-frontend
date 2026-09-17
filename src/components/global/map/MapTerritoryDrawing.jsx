@@ -34,7 +34,7 @@ import {
   searchLocation,
   sizeCanvas,
 } from "../../../utils/mapHelpers";
-import { Check, Layers, MapPin, PenTool, RotateCcw, Search, Store, X } from "lucide-react";
+import { ArrowLeft, Check, Layers, MapPin, PenTool, RotateCcw, Search, Store, X } from "lucide-react";
 import MapFranchiseFormModal from "./MapFranchiseFormModal";
 import MapDataModal from "./MapDataModal";
 
@@ -54,6 +54,7 @@ const MapTerritoryDrawing = ({
   canEdit = true,
   canDrawArea = true,
   canEditSavedFranchises = true,
+  requireNewFranchise = false,
 }) => {
   const containerRef = useRef(null);
   const mapCanvasRef = useRef(null);
@@ -88,6 +89,10 @@ const MapTerritoryDrawing = ({
   }, [franchises, completedAreas]);
 
   const hasViolation = violationById.size > 0;
+
+  // a fresh pin has no database id
+  const hasNewFranchise = franchises.some((franchise) => !franchise._id);
+  const canSave = !hasViolation && (!requireNewFranchise || hasNewFranchise);
 
   // the franchise form modal
   const [pendingFranchise, setPendingFranchise] = useState(null);
@@ -459,7 +464,7 @@ const MapTerritoryDrawing = ({
   };
 
   const handleSaveAndExit = () => {
-    if (hasViolation) return;
+    if (!canSave) return;
     onComplete?.({ areas: completedAreas, franchises });
     onClose();
   };
@@ -582,6 +587,18 @@ const MapTerritoryDrawing = ({
         }}
       >
         <div className="flex items-center gap-2.5 shrink-0">
+          {/* leaves without saving */}
+          {canEdit && (
+            <button
+              type="button"
+              onClick={onClose}
+              className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border color-border bg-white px-3 py-1.5 text-xs font-semibold text-tertiary transition hover:bg-gray-50"
+            >
+              <ArrowLeft size={14} />
+              Back
+            </button>
+          )}
+
           <MapPin size={18} className="text-revenue" />
           <div>
             <h2 className="text-sm font-bold text-tertiary leading-tight">Manage Franchises Details</h2>
@@ -687,12 +704,18 @@ const MapTerritoryDrawing = ({
               <button
                 type="button"
                 onClick={handleSaveAndExit}
-                disabled={hasViolation}
-                title={hasViolation ? "Move the red franchise before saving" : undefined}
-                className={`inline-flex items-center gap-1.5 rounded-lg px-4 py-1.5 text-xs font-semibold text-white transition ${
+                disabled={!canSave}
+                title={
                   hasViolation
-                    ? "cursor-not-allowed bg-gray-300"
-                    : "cursor-pointer bg-(--color-primary) hover:opacity-90"
+                    ? "Move the red franchise before saving"
+                    : !canSave
+                      ? "Add a franchise location before saving"
+                      : undefined
+                }
+                className={`inline-flex items-center gap-1.5 rounded-lg px-4 py-1.5 text-xs font-semibold text-white transition ${
+                  canSave
+                    ? "cursor-pointer bg-(--color-primary) hover:opacity-90"
+                    : "cursor-not-allowed bg-gray-300"
                 }`}
               >
                 <Check size={14} />

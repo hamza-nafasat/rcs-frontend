@@ -1,10 +1,11 @@
 import { SCORE_CATEGORIES } from "../../../utils/pipelineScorecard";
 
-const SIZE = 180;
+const SIZE = 230;
 const CENTER = SIZE / 2;
 const RADIUS = 62;
 const MAX = 5;
 const RINGS = [1, 2, 3, 4, 5];
+const LABEL_GAP = 1.15;
 
 const point = (index, value) => {
   const angle = (Math.PI * 2 * index) / SCORE_CATEGORIES.length - Math.PI / 2;
@@ -22,7 +23,12 @@ const ScoreRadar = ({ categories, className = "" }) => {
     <section className={`rounded-xl bg-active p-4 ${className}`}>
       <h3 className="text-xs font-semibold tracking-wide text-secondary uppercase">Score Breakdown</h3>
 
-      <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="mx-auto mt-2 h-45 w-45" role="img" aria-label="Category score breakdown">
+      <svg
+        viewBox={`0 0 ${SIZE} ${SIZE}`}
+        className="mx-auto mt-2 h-55 w-55"
+        role="img"
+        aria-label="Category score breakdown"
+      >
         {RINGS.map((ring) => (
           <polygon
             key={ring}
@@ -64,20 +70,35 @@ const ScoreRadar = ({ categories, className = "" }) => {
         })}
 
         {SCORE_CATEGORIES.map((category, index) => {
-          const [x, y] = point(index, MAX + 1.1);
+          const [x, y] = point(index, MAX * LABEL_GAP);
+          const value = values[index];
 
           return (
-            <text
-              key={category.key}
-              x={x}
-              y={y}
-              textAnchor="middle"
-              dominantBaseline="middle"
-              fill="var(--color-text-secondary)"
-              fontSize="8"
-            >
-              {category.shortLabel}
-            </text>
+            <g key={category.key}>
+              <text
+                x={x}
+                y={y - 4}
+                textAnchor="middle"
+                dominantBaseline="middle"
+                fill="var(--color-text-secondary)"
+                fontSize="9"
+              >
+                {category.shortLabel}
+              </text>
+
+              {/* the exact score on the axis */}
+              <text
+                x={x}
+                y={y + 7}
+                textAnchor="middle"
+                dominantBaseline="middle"
+                fill="var(--color-primary)"
+                fontSize="10"
+                fontWeight="700"
+              >
+                {value.toFixed(1)}
+              </text>
+            </g>
           );
         })}
       </svg>

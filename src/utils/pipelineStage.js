@@ -5,8 +5,8 @@ const PIPELINE_STAGE = {
   under_review: { label: "Under Review", color: "#f97316", bg: "#fff7ed" },
   payment_processing: { label: "Payment Processing", color: "#a855f7", bg: "#faf5ff" },
   agreement: { label: "Agreement", color: "#22c55e", bg: "#f0fdf4" },
-  approved: { label: "Approved", color: "#047857", bg: "#0478571C" },
   assign_location: { label: "Assign Location", color: "#ac24eb", bg: "#faf1ff" },
+  approved: { label: "Approved", color: "#047857", bg: "#0478571C" },
   denied: { label: "Denied", color: "#d92e2e", bg: "#ffeded" },
 };
 
@@ -16,8 +16,8 @@ const PIPELINE_STAGES = {
   UNDER_REVIEW: "under_review",
   PAYMENT_PROCESSING: "payment_processing",
   AGREEMENT: "agreement",
-  APPROVED: "approved",
   ASSIGN_LOCATION: "assign_location",
+  APPROVED: "approved",
   DENIED: "denied",
 };
 

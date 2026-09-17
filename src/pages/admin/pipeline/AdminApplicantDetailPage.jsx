@@ -58,6 +58,17 @@ const AdminApplicantDetailPage = () => {
     }
   };
 
+  // an assigned location approves the applicant
+  const handleAssignLocation = async (records) => {
+    setMapData(records);
+
+    try {
+      await updatePipelineStage({ id, stage: PIPELINE_STAGES.APPROVED }).unwrap();
+    } catch {
+      // the toast already reported it
+    }
+  };
+
   const handleSendRequest = ({ title, message, files }) => {
     setRequests((prev) => [
       {
@@ -157,7 +168,8 @@ const AdminApplicantDetailPage = () => {
             canEdit
             canDrawArea={false}
             canEditSavedFranchises={false}
-            onChange={setMapData}
+            requireNewFranchise
+            onChange={handleAssignLocation}
           />
         </section>
       )}

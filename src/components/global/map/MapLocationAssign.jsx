@@ -9,6 +9,7 @@ const MapLocationAssign = ({
   canEdit = true,
   canDrawArea = true,
   canEditSavedFranchises = true,
+  requireNewFranchise = false,
   onChange,
 }) => {
   const containerRef = useRef(null);
@@ -84,6 +85,7 @@ const MapLocationAssign = ({
           canEdit={canEdit}
           canDrawArea={canDrawArea}
           canEditSavedFranchises={canEditSavedFranchises}
+          requireNewFranchise={requireNewFranchise}
           onClose={() => setIsFullscreen(false)}
           onComplete={onChange}
           initialAreas={areas}
