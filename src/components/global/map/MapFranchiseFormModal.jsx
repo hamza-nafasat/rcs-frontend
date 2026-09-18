@@ -36,7 +36,14 @@ const MapFranchiseFormModal = ({ form, location, isEditing = false, onChange, on
         </button>
       </div>
 
-      <form onSubmit={onSubmit} className="flex flex-col gap-4 overflow-y-auto p-5">
+      <form
+        onSubmit={(event) => {
+          // keep outer forms from submitting
+          event.stopPropagation();
+          onSubmit?.(event);
+        }}
+        className="flex flex-col gap-4 overflow-y-auto p-5"
+      >
         <Input
           label="Franchise Name *"
           name="name"
