@@ -9,6 +9,7 @@ import { activityApi } from "./apis/admin/activity.apis";
 import { dashboardApi } from "./apis/admin/dashboard.apis";
 import { clientDashboardApi } from "./apis/client/dashboard.apis";
 import { franchiseeApi } from "./apis/client/franchisee.apis";
+import { reportApi } from "./apis/client/report.apis";
 import { pipelineApi } from "./apis/shared/pipeline.apis";
 import { supportApi } from "./apis/shared/support.apis";
 import { apiErrorToast, resetOnUserChange } from "./utils/store.utils";
@@ -25,6 +26,7 @@ export const store = configureStore({
     [dashboardApi.reducerPath]: dashboardApi.reducer,
     [clientDashboardApi.reducerPath]: clientDashboardApi.reducer,
     [franchiseeApi.reducerPath]: franchiseeApi.reducer,
+    [reportApi.reducerPath]: reportApi.reducer,
     [pipelineApi.reducerPath]: pipelineApi.reducer,
     [supportApi.reducerPath]: supportApi.reducer,
   },
@@ -41,6 +43,7 @@ export const store = configureStore({
       dashboardApi.middleware,
       clientDashboardApi.middleware,
       franchiseeApi.middleware,
+      reportApi.middleware,
       pipelineApi.middleware,
       supportApi.middleware,
       apiErrorToast,

@@ -1,23 +1,13 @@
-import { useMemo } from "react";
 import DataTable from "react-data-table-component";
-import { getRecommendation } from "../utils/scorecardData";
 import Card from "../../../../components/shared/Card";
+import Badge from "../../../../components/shared/Badge";
+import { getRecommendation } from "../../../../utils/pipelineScorecard";
+import { scoreColor, stageOf } from "../../../../utils/pipelineStage";
 
-const scoreColor = (score) => {
-  if (score >= 80) return "var(--color-revenue)";
-  if (score >= 60) return "var(--color-primary)";
-  return "var(--color-text-remove)";
-};
+const categoryValue = (row, key) => (row?.scores?.[key] ?? 0).toFixed(1);
 
-const stageColor = (stage) => {
-  if (stage === "Approved" || stage === "Conditionally Approved") {
-    return "var(--color-revenue)";
-  }
-
-  return "var(--color-primary)";
-};
-
-const categoryValue = (row, key) => (row.categories?.[key] ?? 0).toFixed(1);
+const submittedOn = (row) =>
+  row?.createdAt ? new Date(row.createdAt).toLocaleDateString() : "—";
 
 const customStyles = {
   table: {
@@ -59,108 +49,90 @@ const customStyles = {
   },
 };
 
-const DetailedReport = ({ applicants = [] }) => {
-  const columns = useMemo(
-    () => [
-      {
-        name: "ID",
-        selector: (row) => row.id,
-        width: "88px",
-        cell: (row) => <span className="text-xs text-muted">{row.id}</span>,
-      },
-      {
-        name: "Applicant",
-        grow: 2,
-        selector: (row) => row.name,
-        cell: (row) => (
-          <div className="py-1">
-            <p className="font-semibold text-tertiary">{row.name}</p>
-            <p className="text-xs text-muted">{row.submitted}</p>
-          </div>
-        ),
-      },
-      {
-        name: "Territory",
-        selector: (row) => row.territory,
-        cell: (row) => <span className="text-secondary">{row.territory}</span>,
-      },
-      {
-        name: "Stage",
-        selector: (row) => row.stage,
-        width: "120px",
-        cell: (row) => (
-          <span
-            className="text-sm font-medium"
-            style={{ color: stageColor(row.stage) }}
-          >
-            {row.stage}
-          </span>
-        ),
-      },
-      {
-        name: "Financial",
-        selector: (row) => row.categories?.financial ?? 0,
-        cell: (row) => (
-          <span className="text-tertiary">
-            {categoryValue(row, "financial")}
-          </span>
-        ),
-      },
-      {
-        name: "Experience",
-        selector: (row) => row.categories?.experience ?? 0,
-        width: "120px",
-        cell: (row) => (
-          <span className="text-tertiary">
-            {categoryValue(row, "experience")}
-          </span>
-        ),
-      },
-      {
-        name: "Legal",
-        selector: (row) => row.categories?.legal ?? 0,
-        cell: (row) => (
-          <span className="text-tertiary">{categoryValue(row, "legal")}</span>
-        ),
-      },
-      {
-        name: "Market",
-        selector: (row) => row.categories?.market ?? 0,
-        cell: (row) => (
-          <span className="text-tertiary">{categoryValue(row, "market")}</span>
-        ),
-      },
-      {
-        name: "Total Score",
-        selector: (row) => row.score,
-        cell: (row) => (
-          <span
-            className="font-semibold"
-            style={{ color: scoreColor(row.score) }}
-          >
-            {row.score.toFixed(1)}
-          </span>
-        ),
-      },
-      {
-        name: "Outcome",
-        selector: (row) => getRecommendation(row.stage, row.score).pillLabel,
-        cell: (row) => {
-          const recommendation = getRecommendation(row.stage, row.score);
+// one column per score category
+const categoryColumn = (name, key) => ({
+  name,
+  selector: (row) => row?.scores?.[key] ?? 0,
+  sortable: true,
+  cell: (row) => (
+    <span className="text-tertiary">{categoryValue(row, key)}</span>
+  ),
+});
 
-          return (
-            <span
-              className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${recommendation.bg} ${recommendation.text}`}
-            >
-              {recommendation.pillLabel}
-            </span>
-          );
-        },
-      },
-    ],
-    [],
-  );
+const COLUMNS = [
+  {
+    name: "Applicant",
+    grow: 2,
+    minWidth: "200px",
+    selector: (row) => row?.applicant?.fullName ?? "",
+    sortable: true,
+    cell: (row) => (
+      <div className="min-w-0 py-1">
+        <p className="truncate font-semibold text-tertiary">
+          {row?.applicant?.fullName ?? "—"}
+        </p>
+        <p className="truncate text-xs text-muted">{submittedOn(row)}</p>
+      </div>
+    ),
+  },
+  {
+    name: "Territory",
+    minWidth: "140px",
+    selector: (row) => row?.proposedTerritory ?? "",
+    cell: (row) => (
+      <span className="truncate text-secondary">
+        {row?.proposedTerritory || "—"}
+      </span>
+    ),
+  },
+  {
+    name: "Stage",
+    width: "170px",
+    selector: (row) => row?.stage,
+    sortable: true,
+    cell: (row) => {
+      const { label, color } = stageOf(row?.stage);
+      return <Badge text={label} dotColor={color} />;
+    },
+  },
+  categoryColumn("Financial", "financial"),
+  categoryColumn("Experience", "experience"),
+  categoryColumn("Legal", "legal"),
+  categoryColumn("Market", "market"),
+  {
+    name: "Total Score",
+    selector: (row) => row?.scores?.total ?? 0,
+    sortable: true,
+    cell: (row) => {
+      const total = row?.scores?.total ?? 0;
+      return (
+        <span className="font-semibold" style={{ color: scoreColor(total) }}>
+          {total.toFixed(1)}
+        </span>
+      );
+    },
+  },
+  {
+    name: "Outcome",
+    minWidth: "170px",
+    selector: (row) => getRecommendation(row?.stage, row?.scores?.total).label,
+    cell: (row) => {
+      const { label, bg, text } = getRecommendation(
+        row?.stage,
+        row?.scores?.total,
+      );
+      return (
+        <span
+          className={`shrink-0 rounded-full px-2.5 py-0.5 text-xs font-medium ${bg} ${text}`}
+        >
+          {label}
+        </span>
+      );
+    },
+  },
+];
 
+const DetailedReport = ({ applicants = [], isLoading = false }) => {
   return (
     <Card className="overflow-hidden rounded-2xl border color-border bg-white">
       <header className="flex items-center justify-between ">
@@ -169,9 +141,15 @@ const DetailedReport = ({ applicants = [] }) => {
 
       <section className="mt-6 overflow-hidden border-t color-border">
         <DataTable
-          columns={columns}
+          columns={COLUMNS}
           data={applicants}
           customStyles={customStyles}
+          progressPending={isLoading}
+          noDataComponent={
+            <p className="py-8 text-sm text-muted">
+              No applicants in this range
+            </p>
+          }
           highlightOnHover
           responsive
         />

@@ -1,55 +1,64 @@
 import { useState } from "react";
 import ReportHeading from "./components/ReportHeading";
 import DetailedReport from "./components/DetailedReport";
-import Card from "../../../components/shared/Card";
+import DashboardStatsCard from "../../../components/global/DashboardStatsCard";
 import { useAuthUser } from "../../../routes/useAuthUser";
-import { cardData, recentApplicants } from "./utils/data";
+import { useGetReportQuery } from "../../../store/apis/client/report.apis";
+import { statCards } from "./utils/data";
 
-const toISODate = (submitted) => {
-  const [month, day, year] = submitted.split("/");
-  return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
-};
+// only send the chosen dates
+const toParams = ({ startDate, endDate }) => ({
+  ...(startDate && { startDate }),
+  ...(endDate && { endDate }),
+});
 
 const Reports = () => {
   const [dates, setDates] = useState({ startDate: "", endDate: "" });
   const { user } = useAuthUser();
-  const generatedOn = new Date().toLocaleDateString([], { day: "numeric", month: "long", year: "numeric" });
+  const { data, isFetching } = useGetReportQuery(toParams(dates), {
+    refetchOnMountOrArgChange: true,
+  });
+  const report = data?.data;
+  const generatedOn = new Date().toLocaleDateString([], {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
 
   const handleDateChange = (event) => {
     const { name, value } = event.target;
     setDates((current) => ({ ...current, [name]: value }));
   };
 
-  const applicants = recentApplicants.filter((row) => {
-    const submitted = toISODate(row.submitted);
-    if (dates.startDate && submitted < dates.startDate) return false;
-    if (dates.endDate && submitted > dates.endDate) return false;
-    return true;
-  });
+  const rangeLabel =
+    dates.startDate || dates.endDate ? "In selected dates" : "All time";
 
   return (
     <article className="flex flex-col gap-6">
       <ReportHeading
         heading="Pipeline Report"
-        subheading={[user?.fullName, `Generated ${generatedOn}`].filter(Boolean).join(" · ")}
+        subheading={[user?.fullName, `Generated ${generatedOn}`]
+          .filter(Boolean)
+          .join(" · ")}
         dates={dates}
         onDateChange={handleDateChange}
       />
 
-      <section className="sm:mt-6 gap-4 grid grid-cols-2 lg:grid-cols-4">
-        {cardData.map((card, index) => (
-          <Card key={index} className="h-full">
-            <div className="flex flex-col gap-1 text-center">
-              <h2 className="heading-lg" style={{ color: card.valueColor }}>
-                {card.value}
-              </h2>
-              <p className="text-card-subheading">{card.label}</p>
-            </div>
-          </Card>
+      <section className="grid grid-cols-1 gap-4 sm:mt-6 sm:grid-cols-2 lg:grid-cols-4">
+        {statCards.map(({ metric, ...card }) => (
+          <DashboardStatsCard
+            key={metric}
+            {...card}
+            value={report ? report.totals[metric].toLocaleString() : "—"}
+            comparison={rangeLabel}
+          />
         ))}
       </section>
 
-      <DetailedReport applicants={applicants} />
+      <DetailedReport
+        applicants={report?.applications ?? []}
+        isLoading={isFetching}
+      />
     </article>
   );
 };

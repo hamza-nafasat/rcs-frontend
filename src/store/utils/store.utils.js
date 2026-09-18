@@ -9,6 +9,7 @@ import { activityApi } from "../apis/admin/activity.apis";
 import { dashboardApi } from "../apis/admin/dashboard.apis";
 import { clientDashboardApi } from "../apis/client/dashboard.apis";
 import { franchiseeApi } from "../apis/client/franchisee.apis";
+import { reportApi } from "../apis/client/report.apis";
 import { pipelineApi } from "../apis/shared/pipeline.apis";
 import { supportApi } from "../apis/shared/support.apis";
 import toast from "react-hot-toast";
@@ -32,6 +33,7 @@ const resetOnUserChange = (storeApi) => (next) => (action) => {
     storeApi.dispatch(dashboardApi.util.resetApiState());
     storeApi.dispatch(clientDashboardApi.util.resetApiState());
     storeApi.dispatch(franchiseeApi.util.resetApiState());
+    storeApi.dispatch(reportApi.util.resetApiState());
     storeApi.dispatch(pipelineApi.util.resetApiState());
     storeApi.dispatch(supportApi.util.resetApiState());
   }
