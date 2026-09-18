@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import DataTable from "react-data-table-component";
-import { getRecommendation } from "../../dashboard/utils/scorecardData";
+import { getRecommendation } from "../utils/scorecardData";
 import Card from "../../../../components/shared/Card";
 
 const scoreColor = (score) => {

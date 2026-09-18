@@ -1,9 +1,9 @@
 import { useMemo } from "react";
 import DashboardHeading from "../../../components/global/DashboardHeading";
-import DashboardStatsCard from "./components/DashboardStatsCard";
+import DashboardStatsCard from "../../../components/global/DashboardStatsCard";
 
 import Card from "../../../components/shared/Card";
-import DashboardBarChart from "./components/DashboardBarChart";
+import DashboardBarChart from "../../../components/global/DashboardBarChart";
 import DashboardRecentSupports from "./components/DashboardRecentSupports";
 import DashboardMultiLineChart from "./components/DashboardMultiLineChart";
 import DashboardRecentActivity from "./components/DashboardRecentActivity";
@@ -14,20 +14,11 @@ import DashboardDonutChart from "../../../components/global/DashboardDonutChart"
 import { useGetAllActivitiesQuery } from "../../../store/apis/admin/activity.apis";
 import { useGetAllSupportsQuery } from "../../../store/apis/shared/support.apis";
 import { useGetDashboardStatsQuery } from "../../../store/apis/admin/dashboard.apis";
-import { PIPELINE_STAGES } from "../../../utils/pipelineStage";
-
-const OUTCOME_COLORS = ["#047857", "#DC2626", "#EAB308"];
-
-// up or down against last month
-const formatChange = (change = 0) => `${change >= 0 ? "↑" : "↓"} ${Math.abs(change)}% vs last month`;
+import { buildOutcome, formatChange } from "../../../utils/dashboardStats";
 
 // the api numbers as chart props
 const buildCharts = (stats) => {
   const series = stats?.series ?? {};
-  const stages = stats?.pipelineStages ?? {};
-  const approved = stages[PIPELINE_STAGES.APPROVED] ?? 0;
-  const denied = stages[PIPELINE_STAGES.DENIED] ?? 0;
-  const total = Object.values(stages).reduce((sum, count) => sum + count, 0);
 
   return {
     months: stats?.months ?? [],
@@ -45,11 +36,7 @@ const buildCharts = (stats) => {
         tension: 0.4,
       },
     ],
-    leadsOutcome: {
-      labels: ["Approved", "Denied", "Pending"],
-      data: [approved, denied, total - approved - denied],
-      colors: OUTCOME_COLORS,
-    },
+    leadsOutcome: buildOutcome(stats?.pipelineStages),
   };
 };
 

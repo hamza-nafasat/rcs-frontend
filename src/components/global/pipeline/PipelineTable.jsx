@@ -102,9 +102,15 @@ const buildColumns = () => [
   },
 ];
 
-const PipelineTable = ({ applications = [], isLoading = false, onRowClick, className = "" }) => (
+const PipelineTable = ({
+  applications = [],
+  isLoading = false,
+  heading = "Applicant Scorecard",
+  onRowClick,
+  className = "",
+}) => (
   <section className={`flex flex-col gap-4 ${className}`}>
-    <h2 className="heading-lg text-tertiary">Applicant Scorecard</h2>
+    <h2 className="heading-lg text-tertiary">{heading}</h2>
 
     <section className="overflow-hidden rounded-2xl border color-border bg-white">
       <DataTable

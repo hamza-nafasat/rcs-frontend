@@ -7,6 +7,7 @@ import { moderatorApi } from "../apis/shared/moderator.apis";
 import { notificationApi } from "../apis/shared/notification.apis";
 import { activityApi } from "../apis/admin/activity.apis";
 import { dashboardApi } from "../apis/admin/dashboard.apis";
+import { clientDashboardApi } from "../apis/client/dashboard.apis";
 import { franchiseeApi } from "../apis/client/franchisee.apis";
 import { pipelineApi } from "../apis/shared/pipeline.apis";
 import { supportApi } from "../apis/shared/support.apis";
@@ -29,6 +30,7 @@ const resetOnUserChange = (storeApi) => (next) => (action) => {
     storeApi.dispatch(notificationApi.util.resetApiState());
     storeApi.dispatch(activityApi.util.resetApiState());
     storeApi.dispatch(dashboardApi.util.resetApiState());
+    storeApi.dispatch(clientDashboardApi.util.resetApiState());
     storeApi.dispatch(franchiseeApi.util.resetApiState());
     storeApi.dispatch(pipelineApi.util.resetApiState());
     storeApi.dispatch(supportApi.util.resetApiState());

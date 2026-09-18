@@ -119,4 +119,4 @@ const getRecommendation = (stage, score = 0) => {
   return { ...RECOMMENDATIONS.deny, note: "Scored below the threshold or carries a disqualifying flag." };
 };
 
-export { buildScorecard, getRecommendation, SCORE_CATEGORIES };
+export { APPROVE_SCORE, buildScorecard, CONDITIONAL_SCORE, getRecommendation, SCORE_CATEGORIES };

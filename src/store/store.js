@@ -7,6 +7,7 @@ import { moderatorApi } from "./apis/shared/moderator.apis";
 import { notificationApi } from "./apis/shared/notification.apis";
 import { activityApi } from "./apis/admin/activity.apis";
 import { dashboardApi } from "./apis/admin/dashboard.apis";
+import { clientDashboardApi } from "./apis/client/dashboard.apis";
 import { franchiseeApi } from "./apis/client/franchisee.apis";
 import { pipelineApi } from "./apis/shared/pipeline.apis";
 import { supportApi } from "./apis/shared/support.apis";
@@ -22,6 +23,7 @@ export const store = configureStore({
     [notificationApi.reducerPath]: notificationApi.reducer,
     [activityApi.reducerPath]: activityApi.reducer,
     [dashboardApi.reducerPath]: dashboardApi.reducer,
+    [clientDashboardApi.reducerPath]: clientDashboardApi.reducer,
     [franchiseeApi.reducerPath]: franchiseeApi.reducer,
     [pipelineApi.reducerPath]: pipelineApi.reducer,
     [supportApi.reducerPath]: supportApi.reducer,
@@ -37,6 +39,7 @@ export const store = configureStore({
       notificationApi.middleware,
       activityApi.middleware,
       dashboardApi.middleware,
+      clientDashboardApi.middleware,
       franchiseeApi.middleware,
       pipelineApi.middleware,
       supportApi.middleware,

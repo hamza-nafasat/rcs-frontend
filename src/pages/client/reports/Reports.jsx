@@ -1,10 +1,9 @@
 import { useState } from "react";
 import ReportHeading from "./components/ReportHeading";
 import DetailedReport from "./components/DetailedReport";
-import { recentApplicants } from "../dashboard/utils/data";
 import Card from "../../../components/shared/Card";
 import { useAuthUser } from "../../../routes/useAuthUser";
-import { cardData } from "./utils/data";
+import { cardData, recentApplicants } from "./utils/data";
 
 const toISODate = (submitted) => {
   const [month, day, year] = submitted.split("/");
