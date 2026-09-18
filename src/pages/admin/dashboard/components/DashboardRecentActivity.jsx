@@ -2,9 +2,8 @@ import Button from "../../../../components/shared/Button";
 import DashboardHeading from "../../../../components/global/DashboardHeading";
 import ActivityTimeline from "../../../../components/global/activity/ActivityTimeline";
 
-const DEFAULT_LIMIT = 7;
 
-const DashboardRecentActivity = ({ activities = [], maxItems = DEFAULT_LIMIT, onAction }) => (
+const DashboardRecentActivity = ({ activities = [], onAction }) => (
   <>
     <header className="mb-5 flex items-start justify-between gap-3">
       <DashboardHeading heading="Recent Activity" subheading="What your moderators did lately" />
@@ -16,7 +15,7 @@ const DashboardRecentActivity = ({ activities = [], maxItems = DEFAULT_LIMIT, on
       )}
     </header>
 
-    <ActivityTimeline activities={activities.slice(0, maxItems)} />
+    <ActivityTimeline activities={activities} />
   </>
 );
 

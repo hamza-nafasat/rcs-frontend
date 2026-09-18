@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import DashboardHeading from "../../../components/global/DashboardHeading";
 import DashboardStatsCard from "./components/DashboardStatsCard";
 
@@ -6,25 +7,65 @@ import DashboardBarChart from "./components/DashboardBarChart";
 import DashboardRecentSupports from "./components/DashboardRecentSupports";
 import DashboardMultiLineChart from "./components/DashboardMultiLineChart";
 import DashboardRecentActivity from "./components/DashboardRecentActivity";
-import DashboardClientsNeedingAttention from "./components/DashboardClientsNeedingAttention";
-import {
-  cardData,
-  chartMonths,
-  clients,
-  clientsVsLeads,
-  fddVsSupports,
-  leadsOutcome,
-  recentSupports,
-} from "./utils/data";
+import { statCards } from "./utils/data";
 import { useNavigate } from "react-router-dom";
 import { useAuthUser } from "../../../routes/useAuthUser";
 import DashboardDonutChart from "../../../components/global/DashboardDonutChart";
 import { useGetAllActivitiesQuery } from "../../../store/apis/admin/activity.apis";
+import { useGetAllSupportsQuery } from "../../../store/apis/shared/support.apis";
+import { useGetDashboardStatsQuery } from "../../../store/apis/admin/dashboard.apis";
+import { PIPELINE_STAGES } from "../../../utils/pipelineStage";
+
+const OUTCOME_COLORS = ["#047857", "#DC2626", "#EAB308"];
+
+// up or down against last month
+const formatChange = (change = 0) => `${change >= 0 ? "↑" : "↓"} ${Math.abs(change)}% vs last month`;
+
+// the api numbers as chart props
+const buildCharts = (stats) => {
+  const series = stats?.series ?? {};
+  const stages = stats?.pipelineStages ?? {};
+  const approved = stages[PIPELINE_STAGES.APPROVED] ?? 0;
+  const denied = stages[PIPELINE_STAGES.DENIED] ?? 0;
+  const total = Object.values(stages).reduce((sum, count) => sum + count, 0);
+
+  return {
+    months: stats?.months ?? [],
+    clientsVsLeads: [
+      { label: "Clients", data: series.clients ?? [], backgroundColor: "#F97316" },
+      { label: "Leads", data: series.pipelines ?? [], backgroundColor: "#2563EB" },
+    ],
+    fddVsSupports: [
+      { label: "FDDs", data: series.fdds ?? [], borderColor: "#22C55E", backgroundColor: "transparent", tension: 0.4 },
+      {
+        label: "Supports",
+        data: series.supports ?? [],
+        borderColor: "#F97316",
+        backgroundColor: "transparent",
+        tension: 0.4,
+      },
+    ],
+    leadsOutcome: {
+      labels: ["Approved", "Denied", "Pending"],
+      data: [approved, denied, total - approved - denied],
+      colors: OUTCOME_COLORS,
+    },
+  };
+};
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
-  const { data: activityData } = useGetAllActivitiesQuery({ limit: 7 }, { refetchOnMountOrArgChange: true });
+  const { data: activityData } = useGetAllActivitiesQuery({ limit: 5 }, { refetchOnMountOrArgChange: true });
+  const { data: supportData, isFetching: isLoadingSupports } = useGetAllSupportsQuery(
+    { limit: 5 },
+    { refetchOnMountOrArgChange: true },
+  );
   const { user } = useAuthUser();
+  const { data: dashboardData } = useGetDashboardStatsQuery(undefined, { refetchOnMountOrArgChange: true });
+
+  // stable props keep charts steady
+  const stats = dashboardData?.data;
+  const charts = useMemo(() => buildCharts(stats), [stats]);
 
   return (
     <article className="flex flex-col gap-4">
@@ -38,11 +79,19 @@ const AdminDashboard = () => {
 
       {/* Stats */}
       <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {cardData.map((card, index) => (
-          <div key={index} className="fade-up h-full" style={{ "--fade-delay": `${80 + index * 70}ms` }}>
-            <DashboardStatsCard {...card} />
-          </div>
-        ))}
+        {statCards.map(({ metric, ...card }, index) => {
+          const figure = stats?.totals?.[metric];
+
+          return (
+            <div key={metric} className="fade-up h-full" style={{ "--fade-delay": `${80 + index * 70}ms` }}>
+              <DashboardStatsCard
+                {...card}
+                value={figure ? figure.total.toLocaleString() : "—"}
+                comparison={figure ? formatChange(figure.change) : ""}
+              />
+            </div>
+          );
+        })}
       </section>
 
       {/* Outcome & Comparison */}
@@ -51,13 +100,13 @@ const AdminDashboard = () => {
           className="flex flex-col lg:col-span-3"
           header={<DashboardHeading heading="Clients vs Leads" subheading="Monthly clients against leads" />}
         >
-          <DashboardBarChart labels={chartMonths} datasets={clientsVsLeads} />
+          <DashboardBarChart labels={charts.months} datasets={charts.clientsVsLeads} />
         </Card>
         <Card
           className="flex flex-col lg:col-span-2"
-          header={<DashboardHeading heading="Leads approved vs Denied" subheading="Applications by outcome" />}
+          header={<DashboardHeading heading="Leads Outcome" subheading="Applications by outcome" />}
         >
-          <DashboardDonutChart {...leadsOutcome} />
+          <DashboardDonutChart {...charts.leadsOutcome} />
         </Card>
       </section>
 
@@ -67,30 +116,26 @@ const AdminDashboard = () => {
         style={{ "--fade-delay": "360ms" }}
       >
         <Card className="flex h-full min-h-0 flex-col lg:col-span-2">
-          <DashboardRecentSupports tickets={recentSupports} onViewAll={() => navigate("/admin/dashboard/support")} />
+          <DashboardRecentSupports
+            tickets={supportData?.data ?? []}
+            isLoading={isLoadingSupports}
+            onViewAll={() => navigate("/admin/dashboard/support")}
+          />
         </Card>
         <Card className="flex h-full flex-col lg:col-span-3">
           <DashboardHeading heading="FDD vs Supports" subheading="Monthly documents against tickets" />
 
-          <DashboardMultiLineChart labels={chartMonths} datasets={fddVsSupports} />
+          <DashboardMultiLineChart labels={charts.months} datasets={charts.fddVsSupports} />
         </Card>
       </section>
 
-      {/* Activity & Attention */}
-      <section
-        className="fade-up grid grid-cols-1 items-start gap-4 lg:grid-cols-2"
-        style={{ "--fade-delay": "520ms" }}
-      >
+      {/* Recent activity */}
+      <section className="fade-up" style={{ "--fade-delay": "520ms" }}>
         <Card className="flex flex-col">
           <DashboardRecentActivity
             activities={activityData?.data ?? []}
-            maxItems={7}
             onAction={() => navigate("/admin/dashboard/view-all-activity")}
           />
-        </Card>
-
-        <Card className="flex flex-col">
-          <DashboardClientsNeedingAttention clients={clients} />
         </Card>
       </section>
     </article>
