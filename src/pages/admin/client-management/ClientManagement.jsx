@@ -1,9 +1,7 @@
-import Card from "../../../components/shared/Card";
 import ClientManagementHeading from "./components/ClientManagementHeading";
 import ClientTable from "./components/ClientTable";
 import ClientFilter from "./components/ClientFilter";
 import { useState } from "react";
-import { cardData } from "./utils/data";
 import { CLIENT_STATUS, getClientStatus } from "./utils/clientStatus";
 import { useGetAllClientsQuery } from "../../../store/apis/admin/client.apis";
 
@@ -50,23 +48,6 @@ const ClientManagement = () => {
         />
       </section>
 
-      <section className="mt-6 gap-4 grid grid-cols-2 lg:grid-cols-4">
-        {cardData.map((card, index) => (
-          <Card key={index} className="h-full">
-            <div className="flex flex-col gap-1">
-              <h2
-                className="text-lg font-semibold"
-                style={{ color: card.valueColor }}
-              >
-                {card.key === "totalClients" ? clients.length : card.value}
-              </h2>
-              <p className="text-xs sm:text-sm font-medium text-muted">
-                {card.label}
-              </p>
-            </div>
-          </Card>
-        ))}
-      </section>
       <ClientTable className="mt-5" clients={filteredClients} isLoading={isLoading} />
     </>
   );
