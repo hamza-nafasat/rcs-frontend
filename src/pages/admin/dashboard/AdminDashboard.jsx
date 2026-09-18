@@ -14,7 +14,7 @@ import DashboardDonutChart from "../../../components/global/DashboardDonutChart"
 import { useGetAllActivitiesQuery } from "../../../store/apis/admin/activity.apis";
 import { useGetAllSupportsQuery } from "../../../store/apis/shared/support.apis";
 import { useGetDashboardStatsQuery } from "../../../store/apis/admin/dashboard.apis";
-import { buildOutcome, formatChange } from "../../../utils/dashboardStats";
+import { buildOutcome, dashboardSubheading, formatChange } from "../../../utils/dashboardStats";
 
 // the api numbers as chart props
 const buildCharts = (stats) => {
@@ -61,7 +61,7 @@ const AdminDashboard = () => {
         className="fade-up"
         emoji="👋"
         heading={user?.firstName ? `Good morning, ${user.firstName}` : "Good morning"}
-        subheading="Monday, August 3, 2026 · You had 0 leads yesterday and 8 messages awaiting response."
+        subheading={dashboardSubheading(stats)}
       />
 
       {/* Stats */}

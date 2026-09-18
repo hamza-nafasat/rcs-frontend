@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Camera, Pencil } from "lucide-react";
+import toast from "react-hot-toast";
 import Avatar from "../../../../components/shared/Avatar";
 import Input from "../../../../components/shared/Input";
 import Button from "../../../../components/shared/Button";
@@ -17,6 +18,16 @@ import {
 } from "../utils/data";
 
 const EDITABLE_INPUT = "border-gray-200 focus:border-[#F97316] focus:ring-4 focus:ring-indigo-500/10 bg-white";
+// click the key to copy
+const copyApiKey = async (apiKey) => {
+  try {
+    await navigator.clipboard.writeText(apiKey);
+    toast.success("API Key Copied");
+  } catch {
+    toast.error("Could Not Copy API Key");
+  }
+};
+
 const LOCKED_INPUT = "bg-gray-50/50 text-gray-500 border-gray-100 cursor-not-allowed";
 
 // only the values the api has
@@ -155,6 +166,21 @@ const SettingsProfileSetting = ({
           <div className="min-w-0">
             <h2 className="truncate text-xl font-bold">{profile?.fullName}</h2>
             <p className="truncate text-gray-500">{profile?.email}</p>
+            {isClient && profile?.apiKey && (
+              <Button
+                variant="bare"
+                onClick={() => copyApiKey(profile.apiKey)}
+                title="Click to copy"
+                aria-label="Copy API key"
+                className="mt-2 max-w-full py-0! text-left"
+                textClassName="flex min-w-0 items-center gap-2 text-sm"
+              >
+                <span className="shrink-0 font-medium text-tertiary">API Key:</span>
+                <code className="truncate rounded-lg bg-muted px-2 py-1 font-mono text-xs text-secondary">
+                  {profile.apiKey}
+                </code>
+              </Button>
+            )}
           </div>
         </div>
       </section>

@@ -10,7 +10,7 @@ import DashboardApplicantsScored from "./components/DashboardApplicantsScored";
 import { useAuthUser } from "../../../routes/useAuthUser";
 import { useGetAllPipelinesQuery } from "../../../store/apis/shared/pipeline.apis";
 import { useGetClientDashboardStatsQuery } from "../../../store/apis/client/dashboard.apis";
-import { buildOutcome, formatChange } from "../../../utils/dashboardStats";
+import { buildOutcome, dashboardSubheading, formatChange } from "../../../utils/dashboardStats";
 import { statCards } from "./utils/data";
 
 // the api numbers as chart props
@@ -39,7 +39,7 @@ const ClientDashboard = () => {
         className="fade-up"
         emoji="👋"
         heading={user?.firstName ? `Good morning, ${user.firstName}` : "Good morning"}
-        subheading="Monday, August 27, 2026 · You had 0 leads yesterday and 8 messages awaiting response."
+        subheading={dashboardSubheading(stats)}
       />
 
       {/* Stats */}

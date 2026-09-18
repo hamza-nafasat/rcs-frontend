@@ -18,4 +18,21 @@ const buildOutcome = (stages = {}) => {
   };
 };
 
-export { buildOutcome, formatChange };
+const plural = (count, word) => `${count} ${word}${count === 1 ? "" : "s"}`;
+
+// today plus yesterday's activity
+const dashboardSubheading = (stats) => {
+  const today = new Date().toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+  if (!stats) return today;
+
+  const leads = plural(stats.leadsYesterday ?? 0, "lead");
+  const messages = plural(stats.unreadMessages ?? 0, "message");
+  return `${today} · You had ${leads} yesterday and ${messages} awaiting response.`;
+};
+
+export { buildOutcome, dashboardSubheading, formatChange };
