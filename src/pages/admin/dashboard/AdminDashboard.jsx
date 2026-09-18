@@ -8,7 +8,6 @@ import DashboardMultiLineChart from "./components/DashboardMultiLineChart";
 import DashboardRecentActivity from "./components/DashboardRecentActivity";
 import DashboardClientsNeedingAttention from "./components/DashboardClientsNeedingAttention";
 import {
-  activities,
   cardData,
   chartMonths,
   clients,
@@ -20,9 +19,11 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useAuthUser } from "../../../routes/useAuthUser";
 import DashboardDonutChart from "../../../components/global/DashboardDonutChart";
+import { useGetAllActivitiesQuery } from "../../../store/apis/admin/activity.apis";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
+  const { data: activityData } = useGetAllActivitiesQuery({ limit: 7 }, { refetchOnMountOrArgChange: true });
   const { user } = useAuthUser();
 
   return (
@@ -82,7 +83,7 @@ const AdminDashboard = () => {
       >
         <Card className="flex flex-col">
           <DashboardRecentActivity
-            activities={activities}
+            activities={activityData?.data ?? []}
             maxItems={7}
             onAction={() => navigate("/admin/dashboard/view-all-activity")}
           />

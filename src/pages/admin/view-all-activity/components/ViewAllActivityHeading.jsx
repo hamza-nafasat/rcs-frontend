@@ -3,7 +3,7 @@ const ViewAllActivityHeading = ({ heading, subheading }) => {
     <header className="flex flex-wrap items-center justify-between gap-3 sm:gap-4">
       <div>
         <h1 className="heading-lg text-tertiary">{heading}</h1>
-        <p className=" text-muted">{subheading}</p>
+        <p className="text-muted">{subheading}</p>
       </div>
     </header>
   );
