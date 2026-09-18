@@ -5,6 +5,7 @@ import DashboardStatsCard from "../../../components/global/DashboardStatsCard";
 import { useAuthUser } from "../../../routes/useAuthUser";
 import { useGetReportQuery } from "../../../store/apis/client/report.apis";
 import { statCards } from "./utils/data";
+import { exportReportCsv, exportReportPdf } from "./utils/exportReport";
 
 // only send the chosen dates
 const toParams = ({ startDate, endDate }) => ({
@@ -30,6 +31,14 @@ const Reports = () => {
     setDates((current) => ({ ...current, [name]: value }));
   };
 
+  // everything both exports need
+  const exportArgs = {
+    report,
+    dates,
+    cards: statCards,
+    clientName: user?.fullName,
+  };
+
   const rangeLabel =
     dates.startDate || dates.endDate ? "In selected dates" : "All time";
 
@@ -42,6 +51,8 @@ const Reports = () => {
           .join(" · ")}
         dates={dates}
         onDateChange={handleDateChange}
+        onExportCsv={() => exportReportCsv(exportArgs)}
+        onExportPdf={() => exportReportPdf(exportArgs)}
       />
 
       <section className="grid grid-cols-1 gap-4 sm:mt-6 sm:grid-cols-2 lg:grid-cols-4">
