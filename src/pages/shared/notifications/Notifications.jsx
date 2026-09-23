@@ -11,6 +11,13 @@ import {
   useMarkNotificationReadMutation,
 } from "../../../store/apis/shared/notification.apis";
 
+// the line each empty tab shows
+const EMPTY_TEXT = {
+  all: "No notifications yet",
+  unread: "You are all caught up",
+  read: "Nothing read yet",
+};
+
 const Notifications = () => {
   const { data, isLoading } = useGetMyNotificationsQuery();
   const [markNotificationRead] = useMarkNotificationReadMutation();
@@ -20,6 +27,8 @@ const Notifications = () => {
 
   const notifications = data?.data?.notifications ?? [];
   const unreadCount = data?.data?.unreadCount ?? 0;
+
+  const emptyText = EMPTY_TEXT[activeTab];
 
   const filteredNotifications = notifications.filter((item) => {
     if (activeTab === "unread") return !item.isRead;
@@ -74,6 +83,7 @@ const Notifications = () => {
       <div className="mt-6 min-h-0 flex-1 overflow-y-auto">
         <NotificationList
           notifications={filteredNotifications}
+          emptyText={emptyText}
           onMarkRead={handleMarkRead}
           onDelete={handleDelete}
         />

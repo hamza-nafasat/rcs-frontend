@@ -1,10 +1,10 @@
 import NotificationItem from "./NotificationItem";
 
-const NotificationList = ({ notifications, onMarkRead, onDelete }) => {
+const NotificationList = ({ notifications, emptyText = "No notifications yet", onMarkRead, onDelete }) => {
   if (notifications.length === 0) {
     return (
       <section className="rounded-2xl border color-border bg-white p-10 text-center">
-        <p className="text-sm text-gray-500">No notifications found</p>
+        <p className="text-sm text-muted">{emptyText}</p>
       </section>
     );
   }

@@ -77,7 +77,7 @@ const NotificationBell = ({ type = "admin" }) => {
           <p className="px-4 py-6 text-center text-sm text-muted">No notifications yet</p>
         ) : (
           recent.map((notification) => {
-            const { icon: Icon, style, title, description } = readNotification(notification);
+            const { icon: Icon, style, title } = readNotification(notification);
 
             return (
               <button
@@ -92,15 +92,12 @@ const NotificationBell = ({ type = "admin" }) => {
                   <Icon size={16} />
                 </span>
 
+                {/* the page carries the details */}
                 <span className="min-w-0 flex-1">
-                  <span className="flex items-center gap-2">
-                    <span className="truncate text-sm font-medium text-tertiary">{title}</span>
-                    {!notification.isRead && <span className="h-2 w-2 shrink-0 rounded-full bg-blue-500" />}
+                  <span className="flex items-start gap-2">
+                    <span className="line-clamp-2 text-xs font-medium text-tertiary">{title}</span>
+                    {!notification.isRead && <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-blue-500" />}
                   </span>
-
-                  {description && (
-                    <span className="mt-0.5 line-clamp-2 block text-xs text-secondary">{description}</span>
-                  )}
 
                   <span className="mt-1 block text-[11px] text-muted">
                     {formatRelativeTime(notification.createdAt)}
