@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Compass, FileQuestion, Sparkles } from "lucide-react";
+import { ArrowLeft, Compass, FileQuestion, Home, Sparkles } from "lucide-react";
 
 const DashboardNotFound = () => {
   const navigate = useNavigate();
@@ -57,7 +57,15 @@ const DashboardNotFound = () => {
             className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl border border-gray-300 bg-white px-5 py-3 text-sm font-semibold text-gray-700 shadow-xs hover:bg-gray-50 hover:text-gray-900 active:scale-[0.98] transition-all"
           >
             <ArrowLeft className="h-4 w-4" />
-            Go Back
+            Back
+          </button>
+          <button
+            type="button"
+            onClick={() => navigate("/")}
+            className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl border border-gray-300 bg-white px-5 py-3 text-sm font-semibold text-gray-700 shadow-xs hover:bg-gray-50 hover:text-gray-900 active:scale-[0.98] transition-all"
+          >
+            <Home className="h-4 w-4" />
+            Home
           </button>
         </div>
       </div>
