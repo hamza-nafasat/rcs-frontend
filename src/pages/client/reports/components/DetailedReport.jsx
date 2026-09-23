@@ -1,4 +1,4 @@
-import DataTable from "react-data-table-component";
+import DataTable from "../../../../components/global/DataTable";
 import Card from "../../../../components/shared/Card";
 import Badge from "../../../../components/shared/Badge";
 import { getRecommendation } from "../../../../utils/pipelineScorecard";
@@ -8,46 +8,6 @@ const categoryValue = (row, key) => (row?.scores?.[key] ?? 0).toFixed(1);
 
 const submittedOn = (row) =>
   row?.createdAt ? new Date(row.createdAt).toLocaleDateString() : "—";
-
-const customStyles = {
-  table: {
-    style: {
-      backgroundColor: "transparent",
-    },
-  },
-  headRow: {
-    style: {
-      backgroundColor: "transparent",
-      borderBottomWidth: "1px",
-      borderBottomColor: "var(--color-border)",
-      minHeight: "44px",
-    },
-  },
-  headCells: {
-    style: {
-      paddingLeft: "16px",
-      paddingRight: "16px",
-      fontSize: "11px",
-      fontWeight: 600,
-      letterSpacing: "0.04em",
-      textTransform: "uppercase",
-      color: "var(--color-text-muted)",
-    },
-  },
-  cells: {
-    style: {
-      paddingLeft: "16px",
-      paddingRight: "16px",
-      fontSize: "14px",
-    },
-  },
-  rows: {
-    style: {
-      minHeight: "64px",
-      borderBottomColor: "var(--color-border)",
-    },
-  },
-};
 
 // one column per score category
 const categoryColumn = (name, key) => ({
@@ -143,15 +103,13 @@ const DetailedReport = ({ applicants = [], isLoading = false }) => {
         <DataTable
           columns={COLUMNS}
           data={applicants}
-          customStyles={customStyles}
-          progressPending={isLoading}
+          isLoading={isLoading}
+          variant="plain"
           noDataComponent={
             <p className="py-8 text-sm text-muted">
               No applicants in this range
             </p>
           }
-          highlightOnHover
-          responsive
         />
       </section>
     </Card>

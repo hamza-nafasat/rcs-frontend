@@ -23,11 +23,13 @@ const buildCharts = (stats) => ({
 const ClientDashboard = () => {
   const navigate = useNavigate();
   const { user } = useAuthUser();
-  const { data: pipelineData, isFetching } = useGetAllPipelinesQuery(
+  const { data: pipelineData, isLoading } = useGetAllPipelinesQuery(
     { limit: 5 },
     { refetchOnMountOrArgChange: true },
   );
-  const { data: dashboardData } = useGetClientDashboardStatsQuery(undefined, { refetchOnMountOrArgChange: true });
+  const { data: dashboardData, isLoading: isLoadingStats } = useGetClientDashboardStatsQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
 
   // stable props keep charts steady
   const stats = dashboardData?.data;
@@ -51,6 +53,7 @@ const ClientDashboard = () => {
             <div key={metric} className="fade-up h-full" style={{ "--fade-delay": `${80 + index * 70}ms` }}>
               <DashboardStatsCard
                 {...card}
+                isLoading={isLoadingStats}
                 value={figure ? figure.total.toLocaleString() : "—"}
                 comparison={figure ? formatChange(figure.change) : ""}
               />
@@ -65,12 +68,12 @@ const ClientDashboard = () => {
         style={{ "--fade-delay": "440ms" }}
       >
         <Card className="h-full lg:col-span-3" header={<DashboardHeading heading="Franchisee per month" />}>
-          <DashboardBarChart labels={charts.months} datasets={charts.franchisees} />
+          <DashboardBarChart labels={charts.months} datasets={charts.franchisees} isLoading={isLoadingStats} />
         </Card>
 
         <Card className="h-full lg:col-span-2">
           <DashboardHeading heading="Pipeline by Stage" />
-          <DashboardDonutChart {...charts.outcome} />
+          <DashboardDonutChart {...charts.outcome} isLoading={isLoadingStats} />
         </Card>
       </section>
 
@@ -83,7 +86,7 @@ const ClientDashboard = () => {
         <PipelineTable
           heading="Recent Applicants"
           applications={pipelineData?.data ?? []}
-          isLoading={isFetching}
+          isLoading={isLoading}
           onRowClick={(row) => navigate(`/client/dashboard/pipeline/${row?._id}`)}
         />
       </section>

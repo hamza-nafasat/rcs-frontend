@@ -1,20 +1,11 @@
 import { useState } from "react";
-import DataTable from "react-data-table-component";
+import DataTable from "../DataTable";
 import { Eye, FileText, MoreHorizontal, Paperclip, Pencil, Trash2 } from "lucide-react";
 import Badge from "../../shared/Badge";
 import Button from "../../shared/Button";
 import Dropdown from "../../shared/Dropdown";
 import DeleteModal from "../../modals/DeleteModal";
 import { statusOf } from "../../../utils/requestStatus";
-
-const tableStyles = {
-  table: { style: { width: "100%" } },
-  responsiveWrapper: {
-    style: { width: "100%", border: "1px solid #E5E7EB", borderRadius: "8px" },
-  },
-  headRow: { style: { backgroundColor: "#FAFAFA" } },
-  headCells: { style: { color: "#4B5563", fontSize: "12px", fontWeight: "600" } },
-};
 
 const buildColumns = ({ onView, onEdit, onAsk }) => {
   // one action needs no menu
@@ -167,15 +158,10 @@ const PipelineRequestTable = ({
       <DataTable
         columns={buildColumns({ onView, onEdit, onAsk: onDelete ? setRequestToDelete : undefined })}
         data={requests}
-        keyField="_id"
-        progressPending={isLoading}
+        isLoading={isLoading}
+        variant="boxed"
         pagination
-        highlightOnHover
-        responsive
-        customStyles={tableStyles}
-        conditionalRowStyles={[
-          { when: (row) => requests.indexOf(row) % 2 === 1, style: { backgroundColor: "#FAFAFA" } },
-        ]}
+        striped
         noDataComponent={<p className="py-8 text-sm text-secondary">{emptyText}</p>}
       />
 

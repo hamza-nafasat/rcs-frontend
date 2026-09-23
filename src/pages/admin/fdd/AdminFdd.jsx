@@ -33,7 +33,7 @@ const toQueryParams = (filters) => Object.fromEntries(Object.entries(filters).fi
 
 const AdminFdd = () => {
   const [filters, setFilters] = useState(initialFilters);
-  const { data, isFetching } = useGetAllFddsQuery(toQueryParams(filters));
+  const { data, isLoading } = useGetAllFddsQuery(toQueryParams(filters));
   const { data: clientData } = useGetAllClientsQuery();
   const [createFdd, { isLoading: isCreating }] = useCreateFddMutation();
   const [updateFdd, { isLoading: isUpdating }] = useUpdateFddMutation();
@@ -117,7 +117,7 @@ const AdminFdd = () => {
       <section className="mt-6 min-h-0 flex-1">
         <FddTable
           documents={documents}
-          isLoading={isFetching}
+          isLoading={isLoading}
           canManage
           onView={setDocumentToView}
           onEdit={setDocumentToEdit}

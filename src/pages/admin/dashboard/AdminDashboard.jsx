@@ -55,7 +55,9 @@ const AdminDashboard = () => {
     { limit: 5 },
     { refetchOnMountOrArgChange: true },
   );
-  const { data: dashboardData } = useGetDashboardStatsQuery(undefined, { refetchOnMountOrArgChange: true });
+  const { data: dashboardData, isLoading: isLoadingStats } = useGetDashboardStatsQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
 
   // stable props keep charts steady
   const stats = dashboardData?.data;
@@ -80,6 +82,7 @@ const AdminDashboard = () => {
             <div key={metric} className="fade-up h-full" style={{ "--fade-delay": `${80 + index * 70}ms` }}>
               <DashboardStatsCard
                 {...card}
+                isLoading={isLoadingStats}
                 value={figure ? figure.total.toLocaleString() : "—"}
                 comparison={figure ? formatChange(figure.change) : ""}
               />
@@ -94,13 +97,13 @@ const AdminDashboard = () => {
           className="flex flex-col lg:col-span-3"
           header={<DashboardHeading heading="Clients vs Leads" subheading="Monthly clients against leads" />}
         >
-          <DashboardBarChart labels={charts.months} datasets={charts.clientsVsLeads} />
+          <DashboardBarChart labels={charts.months} datasets={charts.clientsVsLeads} isLoading={isLoadingStats} />
         </Card>
         <Card
           className="flex flex-col lg:col-span-2"
           header={<DashboardHeading heading="Leads Outcome" subheading="Applications by outcome" />}
         >
-          <DashboardDonutChart {...charts.leadsOutcome} />
+          <DashboardDonutChart {...charts.leadsOutcome} isLoading={isLoadingStats} />
         </Card>
       </section>
 
@@ -119,7 +122,7 @@ const AdminDashboard = () => {
         <Card className="flex h-full flex-col lg:col-span-3">
           <DashboardHeading heading="FDD vs Supports" subheading="Monthly documents against tickets" />
 
-          <DashboardMultiLineChart labels={charts.months} datasets={charts.fddVsSupports} />
+          <DashboardMultiLineChart labels={charts.months} datasets={charts.fddVsSupports} isLoading={isLoadingStats} />
         </Card>
       </section>
 

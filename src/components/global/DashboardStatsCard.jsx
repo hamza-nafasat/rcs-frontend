@@ -1,8 +1,9 @@
 import { ArrowUpRight } from "lucide-react";
+import Skeleton from "../shared/Skeleton";
 
 const DEFAULT_TILE = { color: "var(--color-text-secondary)", bg: "var(--color-bg-muted)" };
 
-const DashboardStatsCard = ({ icon: Icon, iconTile = DEFAULT_TILE, value, label, comparison }) => {
+const DashboardStatsCard = ({ icon: Icon, iconTile = DEFAULT_TILE, value, label, comparison, isLoading = false }) => {
   // an svg path or component
   const isImage = typeof Icon === "string";
 
@@ -22,12 +23,16 @@ const DashboardStatsCard = ({ icon: Icon, iconTile = DEFAULT_TILE, value, label,
 
       {/* Figure */}
       <div className="mt-5">
-        <h3 className="text-xl font-semibold text-tertiary">{value}</h3>
+        {isLoading ? <Skeleton className="h-7 w-20" /> : <h3 className="text-xl font-semibold text-tertiary">{value}</h3>}
         <p className="mt-1 text-xs text-secondary sm:text-sm">{label}</p>
       </div>
 
       {/* Comparison */}
-      {comparison && <p className="mt-4 text-xs text-secondary">{comparison}</p>}
+      {isLoading ? (
+        <Skeleton className="mt-4 h-3 w-32" />
+      ) : (
+        comparison && <p className="mt-4 text-xs text-secondary">{comparison}</p>
+      )}
     </article>
   );
 };

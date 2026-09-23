@@ -1,13 +1,15 @@
 import { useEffect, useRef } from "react";
 import { Chart, DoughnutController, ArcElement, Tooltip } from "chart.js";
+import Skeleton from "../shared/Skeleton";
 
 Chart.register(DoughnutController, ArcElement, Tooltip);
 
-const DashboardDonutChart = ({ labels, data, colors }) => {
+const DashboardDonutChart = ({ labels, data, colors , isLoading = false }) => {
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
 
   useEffect(() => {
+    if (!chartRef.current) return;
     const ctx = chartRef.current.getContext("2d");
 
     chartInstance.current = new Chart(ctx, {
@@ -39,7 +41,20 @@ const DashboardDonutChart = ({ labels, data, colors }) => {
     return () => {
       chartInstance.current?.destroy();
     };
-  }, [labels, data, colors]);
+  }, [labels, data, colors, isLoading]);
+
+  if (isLoading)
+    return (
+      <section role="status" aria-label="Loading chart" className="flex flex-col items-center py-4">
+        <Skeleton className="aspect-square w-full max-w-60 rounded-full" />
+
+        <div className="mt-5 flex justify-center gap-4">
+          {[0, 1, 2].map((item) => (
+            <Skeleton key={item} className="h-3 w-16" />
+          ))}
+        </div>
+      </section>
+    );
 
   return (
     <div className="flex flex-col items-center justify-center py-4">

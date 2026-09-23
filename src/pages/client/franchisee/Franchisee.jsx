@@ -10,7 +10,7 @@ const initialFilters = { search: "", status: [] };
 const matches = (value, query) => String(value ?? "").toLowerCase().includes(query.trim().toLowerCase());
 
 const Franchisee = () => {
-  const { data, isFetching } = useGetAllFranchiseesQuery();
+  const { data, isLoading } = useGetAllFranchiseesQuery();
   const [filters, setFilters] = useState(initialFilters);
   const [franchiseeToView, setFranchiseeToView] = useState(null);
 
@@ -37,7 +37,7 @@ const Franchisee = () => {
       <FranchiseeTable
         className="mt-5"
         franchisees={filteredFranchisees}
-        isLoading={isFetching}
+        isLoading={isLoading}
         onView={setFranchiseeToView}
       />
 

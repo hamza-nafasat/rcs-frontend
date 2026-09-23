@@ -1,29 +1,11 @@
 import { useState } from "react";
-import DataTable from "react-data-table-component";
+import DataTable from "../DataTable";
 import { CheckCircle2, Eye, MoreHorizontal, Pencil, RotateCcw, Trash2, XCircle } from "lucide-react";
 import Button from "../../shared/Button";
 import Dropdown from "../../shared/Dropdown";
 import DeleteModal from "../../modals/DeleteModal";
 import SupportPill from "./SupportPill";
 import { isEditableTicket, SUPPORT_PRIORITY, SUPPORT_STATUS, SUPPORT_STATUSES } from "../../../utils/supportStatus";
-
-const tableStyles = {
-  table: { style: { width: "100%" } },
-  tableWrapper: { style: { width: "100%", height: "100%" } },
-  responsiveWrapper: {
-    style: {
-      width: "100%",
-      flex: "1 1 auto",
-      minHeight: 0,
-      overflowY: "auto",
-      border: "1px solid #E5E7EB",
-      borderRadius: "8px",
-    },
-  },
-  headRow: { style: { backgroundColor: "#FAFAFA" } },
-  headCells: { style: { color: "#4B5563", fontSize: "12px", fontWeight: "600" } },
-  pagination: { style: { marginTop: "auto", flex: "0 0 auto" } },
-};
 
 // one confirm for every action
 const CONFIRM_ACTIONS = {
@@ -221,17 +203,13 @@ const SupportTable = ({
       <DataTable
         columns={columns}
         data={tickets}
-        keyField="_id"
-        progressPending={isLoading}
+        isLoading={isLoading}
+        variant="boxed"
+        fillHeight
         pagination
-        highlightOnHover
-        responsive
         fixedHeader
         fixedHeaderScrollHeight="100%"
-        customStyles={tableStyles}
-        conditionalRowStyles={[
-          { when: (row) => tickets.indexOf(row) % 2 === 1, style: { backgroundColor: "#FAFAFA" } },
-        ]}
+        striped
         className="flex min-h-0 flex-1 flex-col"
         noDataComponent={<p className="py-8 text-sm text-secondary">No tickets found</p>}
       />

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import DataTable from "react-data-table-component";
+import DataTable from "../DataTable";
 import toast from "react-hot-toast";
 import { ChevronDown, Eye, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import Avatar from "../../shared/Avatar";
@@ -10,21 +10,6 @@ import ModeratorAddEditModal from "../../modals/ModeratorAddEditModal";
 import ModeratorDetailsModal from "../../modals/ModeratorDetailsModal";
 import { MODERATOR_STATUS } from "../../../utils/moderatorStatus";
 import { useDeleteModeratorMutation, useUpdateModeratorMutation } from "../../../store/apis/shared/moderator.apis";
-
-const tableStyles = {
-  table: { style: { width: "100%" } },
-  tableWrapper: { style: { width: "100%", height: "100%" } },
-  responsiveWrapper: {
-    style: { width: "100%", flex: "1 1 auto", minHeight: 0, overflowY: "auto" },
-  },
-  pagination: {
-    style: {
-      marginTop: "auto",
-      flex: "0 0 auto",
-      borderTop: "1px solid #E5E7EB",
-    },
-  },
-};
 
 const buildColumns = ({ setMemberToEdit, setViewMember, setMemberToRemove }) => [
   {
@@ -143,14 +128,12 @@ const ModeratorTable = ({ moderators = [], isLoading = false }) => {
       <DataTable
         columns={columns}
         data={moderators}
-        progressPending={isLoading}
+        isLoading={isLoading}
+        fillHeight
         pagination
-        highlightOnHover
-        responsive
         fixedHeader
         fixedHeaderScrollHeight="100%"
         sortIcon={<ChevronDown size={14} />}
-        customStyles={tableStyles}
         className="flex min-h-0 flex-1 flex-col"
       />
 

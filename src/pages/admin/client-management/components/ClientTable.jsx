@@ -1,6 +1,6 @@
 import { Eye, MoreHorizontal, Pencil, Send, Trash2 } from "lucide-react";
 import { useState } from "react";
-import DataTable from "react-data-table-component";
+import DataTable from "../../../../components/global/DataTable";
 import toast from "react-hot-toast";
 import DeleteModal from "../../../../components/modals/DeleteModal";
 import Avatar from "../../../../components/shared/Avatar";
@@ -176,11 +176,8 @@ const ClientTable = ({ className, clients = [], isLoading = false }) => {
       <DataTable
         columns={columns}
         data={clients}
-        keyField="_id"
-        progressPending={isLoading}
+        isLoading={isLoading}
         pagination
-        highlightOnHover
-        responsive
       />
       {clientToEdit && (
         <ClientAddEditModal

@@ -1,23 +1,8 @@
-import DataTable from "react-data-table-component";
+import DataTable from "./DataTable";
 import { ChevronDown, Download, Eye, FileSignature, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import Button from "../shared/Button";
 import Dropdown from "../shared/Dropdown";
 import { FDD_STATUS } from "../../utils/fddStatus";
-
-const tableStyles = {
-  table: { style: { width: "100%" } },
-  tableWrapper: { style: { width: "100%", height: "100%" } },
-  responsiveWrapper: {
-    style: { width: "100%", flex: "1 1 auto", minHeight: 0, overflowY: "auto" },
-  },
-  pagination: {
-    style: {
-      marginTop: "auto",
-      flex: "0 0 auto",
-      borderTop: "1px solid #E5E7EB",
-    },
-  },
-};
 
 const buildColumns = ({ canManage, onView, onEdit, onFill, onDownload, onDelete }) => [
   {
@@ -141,15 +126,12 @@ const FddTable = ({
       <DataTable
         columns={columns}
         data={documents}
-        keyField="_id"
-        progressPending={isLoading}
+        isLoading={isLoading}
+        fillHeight
         pagination
-        highlightOnHover
-        responsive
         fixedHeader
         fixedHeaderScrollHeight="100%"
         sortIcon={<ChevronDown size={14} />}
-        customStyles={tableStyles}
         className="flex min-h-0 flex-1 flex-col"
         noDataComponent={<p className="py-8 text-sm text-gray-500">No documents found</p>}
       />

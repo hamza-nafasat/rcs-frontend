@@ -1,27 +1,9 @@
-import DataTable from "react-data-table-component";
+import DataTable from "../DataTable";
 import { MapPin } from "lucide-react";
 import Avatar from "../../shared/Avatar";
 import Badge from "../../shared/Badge";
 import ProgressBar from "../../shared/ProgressBar";
 import { scoreColor, stageOf } from "../../../utils/pipelineStage";
-
-const customStyles = {
-  table: { style: { backgroundColor: "transparent" } },
-  headRow: { style: { borderBottomWidth: "1px", borderBottomColor: "var(--color-border)", minHeight: "44px" } },
-  headCells: {
-    style: {
-      paddingLeft: "20px",
-      paddingRight: "20px",
-      fontSize: "11px",
-      fontWeight: 600,
-      letterSpacing: "0.04em",
-      textTransform: "uppercase",
-      color: "var(--color-text-muted)",
-    },
-  },
-  cells: { style: { paddingLeft: "20px", paddingRight: "20px", fontSize: "14px" } },
-  rows: { style: { minHeight: "64px", borderBottomColor: "var(--color-border)" } },
-};
 
 const money = (value) => (value == null ? "—" : `$${Number(value).toLocaleString()}`);
 
@@ -116,11 +98,9 @@ const PipelineTable = ({
       <DataTable
         columns={buildColumns()}
         data={applications}
-        keyField="_id"
-        progressPending={isLoading}
-        customStyles={customStyles}
+        isLoading={isLoading}
+        variant="plain"
         pagination
-        highlightOnHover
         pointerOnHover
         onRowClicked={(row) => onRowClick?.(row)}
         noDataComponent={<p className="py-8 text-sm text-secondary">No applications yet</p>}

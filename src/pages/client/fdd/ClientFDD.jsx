@@ -23,7 +23,7 @@ const toQueryParams = (filters) => Object.fromEntries(Object.entries(filters).fi
 
 const ClientFdd = () => {
   const [filters, setFilters] = useState(initialFilters);
-  const { data, isFetching } = useGetAllFddsQuery(toQueryParams(filters));
+  const { data, isLoading } = useGetAllFddsQuery(toQueryParams(filters));
   const [fillFdd] = useFillFddMutation();
   const [documentToView, setDocumentToView] = useState(null);
   const [documentToFill, setDocumentToFill] = useState(null);
@@ -63,7 +63,7 @@ const ClientFdd = () => {
       <section className="mt-6 min-h-0 flex-1">
         <FddTable
           documents={documents}
-          isLoading={isFetching}
+          isLoading={isLoading}
           onView={setDocumentToView}
           onFill={setDocumentToFill}
           onDownload={handleDownload}

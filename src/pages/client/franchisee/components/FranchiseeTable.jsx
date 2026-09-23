@@ -1,15 +1,8 @@
-import DataTable from "react-data-table-component";
+import DataTable from "../../../../components/global/DataTable";
 import { Eye, MapPin } from "lucide-react";
 import Avatar from "../../../../components/shared/Avatar";
 import Badge from "../../../../components/shared/Badge";
 import { franchiseStatusOf } from "../../../../utils/franchiseStatus";
-
-const tableStyles = {
-  table: { style: { width: "100%" } },
-  responsiveWrapper: { style: { width: "100%", border: "1px solid #E5E7EB", borderRadius: "8px" } },
-  headRow: { style: { backgroundColor: "#FAFAFA" } },
-  headCells: { style: { color: "#4B5563", fontSize: "12px", fontWeight: "600" } },
-};
 
 const fullName = (row) => `${row?.firstName ?? ""} ${row?.lastName ?? ""}`.trim() || "—";
 
@@ -97,15 +90,10 @@ const FranchiseeTable = ({ franchisees = [], isLoading = false, onView, classNam
     <DataTable
       columns={buildColumns({ onView })}
       data={franchisees}
-      keyField="_id"
-      progressPending={isLoading}
+      isLoading={isLoading}
+      variant="boxed"
       pagination
-      highlightOnHover
-      responsive
-      customStyles={tableStyles}
-      conditionalRowStyles={[
-        { when: (row) => franchisees.indexOf(row) % 2 === 1, style: { backgroundColor: "#FAFAFA" } },
-      ]}
+        striped
       noDataComponent={<p className="py-8 text-sm text-secondary">No applicants yet</p>}
     />
   </section>

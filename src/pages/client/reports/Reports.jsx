@@ -16,7 +16,7 @@ const toParams = ({ startDate, endDate }) => ({
 const Reports = () => {
   const [dates, setDates] = useState({ startDate: "", endDate: "" });
   const { user } = useAuthUser();
-  const { data, isFetching } = useGetReportQuery(toParams(dates), {
+  const { data, isLoading } = useGetReportQuery(toParams(dates), {
     refetchOnMountOrArgChange: true,
   });
   const report = data?.data;
@@ -60,6 +60,7 @@ const Reports = () => {
           <DashboardStatsCard
             key={metric}
             {...card}
+            isLoading={isLoading}
             value={report ? report.totals[metric].toLocaleString() : "—"}
             comparison={rangeLabel}
           />
@@ -68,7 +69,7 @@ const Reports = () => {
 
       <DetailedReport
         applicants={report?.applications ?? []}
-        isLoading={isFetching}
+        isLoading={isLoading}
       />
     </article>
   );

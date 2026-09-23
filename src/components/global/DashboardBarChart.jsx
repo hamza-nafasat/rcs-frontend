@@ -1,13 +1,15 @@
 import { useEffect, useRef } from "react";
+import ChartSkeleton from "./ChartSkeleton";
 import { Chart, BarController, BarElement, CategoryScale, LinearScale, Legend, Tooltip } from "chart.js";
 
 Chart.register(BarController, BarElement, CategoryScale, LinearScale, Legend, Tooltip);
 
-const DashboardBarChart = ({ labels = [], datasets = [] }) => {
+const DashboardBarChart = ({ labels = [], datasets = [], isLoading = false }) => {
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
 
   useEffect(() => {
+    if (!chartRef.current) return;
     const ctx = chartRef.current.getContext("2d");
 
     chartInstance.current = new Chart(ctx, {
@@ -26,7 +28,9 @@ const DashboardBarChart = ({ labels = [], datasets = [] }) => {
     return () => {
       chartInstance.current?.destroy();
     };
-  }, [labels, datasets]);
+  }, [labels, datasets, isLoading]);
+
+  if (isLoading) return <ChartSkeleton />;
 
   return (
     <div className="min-h-56 w-full flex-1 sm:min-h-64 lg:min-h-72">
