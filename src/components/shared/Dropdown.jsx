@@ -4,6 +4,7 @@ import {
   useEffect,
   useLayoutEffect,
   useCallback,
+  cloneElement,
 } from "react";
 import { createPortal } from "react-dom";
 
@@ -73,17 +74,16 @@ const Dropdown = ({
     };
   }, [open, updatePosition]);
 
+  // the trigger opens it, never a wrapper
+  const toggle = (event) => {
+    trigger?.props?.onClick?.(event);
+    setPosition(null);
+    setOpen((prev) => !prev);
+  };
+
   return (
     <div ref={triggerRef} className={`relative ${className}`}>
-      <button
-        type="button"
-        onClick={() => {
-          setPosition(null);
-          setOpen((prev) => !prev);
-        }}
-      >
-        {trigger}
-      </button>
+      {cloneElement(trigger, { onClick: toggle, "aria-haspopup": "menu", "aria-expanded": open })}
 
       {open &&
         createPortal(

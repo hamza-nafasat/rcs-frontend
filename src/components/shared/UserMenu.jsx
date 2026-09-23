@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import Dropdown from "./Dropdown";
+import Button from "./Button";
 import Avatar from "./Avatar";
 import { ChevronDown, LogOut, UserRound } from "lucide-react";
 import { useLogoutMutation } from "../../store/apis/shared/auth.apis";
@@ -40,15 +41,18 @@ const UserMenu = ({ type = "admin" }) => {
   return (
     <Dropdown
       trigger={
-        <div className="flex items-center gap-2 border border-[#E8E8E8] rounded-xl px-2 py-1 hover:bg-gray-50 cursor-pointer">
+        <Button
+          variant="bare"
+          className="border color-border px-2! py-1! hover:bg-gray-50"
+          textClassName="flex items-center gap-2"
+          aria-label="Account menu"
+        >
           <Avatar src={user?.image?.url} name={user?.fullName} size={32} />
 
-          <div className="hidden text-left sm:block">
-            <p className="text-sm font-medium text-tertiary">{user?.fullName}</p>
-          </div>
+          <span className="hidden text-left text-sm font-medium text-tertiary sm:block">{user?.fullName}</span>
 
-          <ChevronDown size={16} className="cursor-pointer" />
-        </div>
+          <ChevronDown size={16} />
+        </Button>
       }
     >
       {options.map((option, index) => (

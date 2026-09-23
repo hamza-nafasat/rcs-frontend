@@ -53,15 +53,16 @@ const NotificationBell = ({ type = "admin" }) => {
     <Dropdown
       portalClassName="w-80 max-w-[calc(100vw-1rem)] p-0! overflow-hidden"
       trigger={
-        <span
-          className="relative flex items-center justify-center rounded-xl border border-[#E8E8E8] p-2 text-secondary hover:bg-gray-50"
+        <Button
+          variant="bare"
+          className="relative border color-border p-2! text-secondary hover:bg-gray-50"
           aria-label="Notifications"
           title="Notifications"
         >
           <Bell size={20} />
 
           <CountBadge count={unreadCount} className="absolute -right-1.5 -top-1.5" />
-        </span>
+        </Button>
       }
     >
       <div className="flex items-center justify-between border-b color-border px-4 py-3">
