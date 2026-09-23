@@ -10,6 +10,7 @@ import DashboardRecentActivity from "./components/DashboardRecentActivity";
 import { statCards } from "./utils/data";
 import { useNavigate } from "react-router-dom";
 import { useAuthUser } from "../../../routes/useAuthUser";
+import { USER_ROLES } from "../../../configs/constants";
 import DashboardDonutChart from "../../../components/global/DashboardDonutChart";
 import { useGetAllActivitiesQuery } from "../../../store/apis/admin/activity.apis";
 import { useGetAllSupportsQuery } from "../../../store/apis/shared/support.apis";
@@ -42,12 +43,18 @@ const buildCharts = (stats) => {
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
-  const { data: activityData } = useGetAllActivitiesQuery({ limit: 5 }, { refetchOnMountOrArgChange: true });
+  const { user } = useAuthUser();
+
+  // the log is the owner's only
+  const isModerator = user?.role === USER_ROLES.MODERATOR;
+  const { data: activityData } = useGetAllActivitiesQuery(
+    { limit: 5 },
+    { refetchOnMountOrArgChange: true, skip: isModerator },
+  );
   const { data: supportData, isFetching: isLoadingSupports } = useGetAllSupportsQuery(
     { limit: 5 },
     { refetchOnMountOrArgChange: true },
   );
-  const { user } = useAuthUser();
   const { data: dashboardData } = useGetDashboardStatsQuery(undefined, { refetchOnMountOrArgChange: true });
 
   // stable props keep charts steady
@@ -117,14 +124,16 @@ const AdminDashboard = () => {
       </section>
 
       {/* Recent activity */}
-      <section className="fade-up" style={{ "--fade-delay": "520ms" }}>
-        <Card className="flex flex-col">
-          <DashboardRecentActivity
-            activities={activityData?.data ?? []}
-            onAction={() => navigate("/admin/dashboard/view-all-activity")}
-          />
-        </Card>
-      </section>
+      {!isModerator && (
+        <section className="fade-up" style={{ "--fade-delay": "520ms" }}>
+          <Card className="flex flex-col">
+            <DashboardRecentActivity
+              activities={activityData?.data ?? []}
+              onAction={() => navigate("/admin/dashboard/view-all-activity")}
+            />
+          </Card>
+        </section>
+      )}
     </article>
   );
 };
