@@ -31,7 +31,7 @@ const MessageBubble = ({ message, isOwnMessage, onDelete }) => {
 
         {attachmentType === "voice" && (
           <div className="mt-1 flex items-center gap-2">
-            <audio controls src={attachment?.url} className="h-9 w-48 max-w-full" />
+            <audio controls src={attachment?.url} className="h-9 w-48 min-w-0 max-w-full" />
             <span className="shrink-0 text-[10px] tabular-nums">{formatDuration(duration ?? 0)}</span>
           </div>
         )}

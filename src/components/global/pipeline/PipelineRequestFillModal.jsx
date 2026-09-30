@@ -73,13 +73,13 @@ const PipelineRequestFillModal = ({ isOpen, onClose, onSubmit, request }) => {
             hint="Supports PDF, PNG, JPG, ZIP up to 10MB each"
           />
 
-          <div className="mt-2 flex gap-3 pt-2">
+          <div className="mt-2 flex flex-col-reverse gap-3 pt-2 sm:flex-row">
             <Button
               type="button"
               variant="bare"
               isDisabled={isSaving}
               onClick={onClose}
-              className="w-1/2 border border-cancel bg-white px-3! py-2.5! text-cancel transition hover:bg-muted"
+              className="w-full sm:w-1/2 border border-cancel bg-white px-3! py-2.5! text-cancel transition hover:bg-muted"
             >
               Cancel
             </Button>
@@ -89,7 +89,7 @@ const PipelineRequestFillModal = ({ isOpen, onClose, onSubmit, request }) => {
               icon={<Send size={15} />}
               isLoading={isSaving}
               isDisabled={isSaving}
-              className="w-1/2 px-3! py-2.5! text-white"
+              className="w-full sm:w-1/2 px-3! py-2.5! text-white"
             >
               {isSaving ? "Saving…" : "Save"}
             </Button>

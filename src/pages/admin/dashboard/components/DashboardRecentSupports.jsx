@@ -23,34 +23,36 @@ const DashboardRecentSupports = ({ tickets = [], isLoading = false, onViewAll })
           {isLoading ? "Loading tickets…" : "No tickets yet"}
         </p>
       ) : (
-        <table className="w-full">
-          <thead>
-            <tr className="border-b color-border text-left text-xs text-secondary">
-              <th className="pb-2 font-medium">Ticket</th>
-              <th className="pb-2 font-medium">Raised By</th>
-              <th className="pb-2 font-medium">Status</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {tickets.map((ticket) => (
-              <tr key={ticket._id} className="border-b color-border last:border-0">
-                <td className="py-3 pr-3">
-                  <p className="truncate text-sm font-medium text-tertiary">{ticket?.subject}</p>
-                  <p className="truncate text-xs text-muted">{ticket?.ticketId}</p>
-                </td>
-
-                <td className="py-3 pr-3 text-sm text-tablecell">
-                  {ticket?.restaurant?.restaurantName ?? ticket?.raisedBy?.fullName ?? "—"}
-                </td>
-
-                <td className="py-3">
-                  <SupportPill {...(SUPPORT_STATUS[ticket?.status] ?? SUPPORT_STATUS.in_progress)} />
-                </td>
+        <div className="overflow-x-auto">
+          <table className="w-full whitespace-nowrap">
+            <thead>
+              <tr className="border-b color-border text-left text-xs text-secondary">
+                <th className="pb-2 pr-3 font-medium">Ticket</th>
+                <th className="pb-2 pr-3 font-medium">Raised By</th>
+                <th className="pb-2 font-medium">Status</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+
+            <tbody>
+              {tickets.map((ticket) => (
+                <tr key={ticket._id} className="border-b color-border last:border-0">
+                  <td className="py-3 pr-3">
+                    <p className="truncate text-sm font-medium text-tertiary">{ticket?.subject}</p>
+                    <p className="truncate text-xs text-muted">{ticket?.ticketId}</p>
+                  </td>
+
+                  <td className="py-3 pr-3 text-sm text-tablecell">
+                    {ticket?.restaurant?.restaurantName ?? ticket?.raisedBy?.fullName ?? "—"}
+                  </td>
+
+                  <td className="py-3">
+                    <SupportPill {...(SUPPORT_STATUS[ticket?.status] ?? SUPPORT_STATUS.in_progress)} />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </>
   );

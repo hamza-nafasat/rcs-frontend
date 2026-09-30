@@ -40,7 +40,7 @@ const MapDataModal = ({
     >
       <div
         className="flex flex-col overflow-hidden rounded-2xl bg-white shadow-2xl"
-        style={{ width: 560, maxHeight: "85vh" }}
+        style={{ width: 560, maxWidth: "100%", maxHeight: "85vh" }}
       >
         <div className="flex items-center justify-between border-b color-border px-5 py-4">
           <div className="flex items-center gap-2.5">
@@ -91,11 +91,11 @@ const MapDataModal = ({
               franchises.map((franchise) => (
                 <div
                   key={franchise.id}
-                  className="flex items-center justify-between rounded-xl border color-border bg-white p-3.5 shadow-2xs"
+                  className="flex items-center justify-between gap-3 rounded-xl border color-border bg-white p-3.5 shadow-2xs"
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex min-w-0 items-center gap-3">
                     <Building2 size={16} className="shrink-0 text-slate-700" />
-                    <div>
+                    <div className="min-w-0">
                       <p className="text-sm font-bold text-tertiary">{franchise.name}</p>
                       <p className="text-[11px] text-secondary">
                         {[franchise.city, franchise.state].filter(Boolean).join(", ")} ·{" "}
@@ -105,7 +105,7 @@ const MapDataModal = ({
                   </div>
 
                   {canEdit && (canEditSavedFranchises || !franchise._id) && (
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex shrink-0 items-center gap-1.5">
                       <button
                         type="button"
                         onClick={() => onEditFranchise(franchise)}
@@ -141,10 +141,10 @@ const MapDataModal = ({
                 return (
                   <div key={area.id} className="overflow-hidden rounded-xl border color-border bg-white shadow-2xs">
                     <div
-                      className="flex cursor-pointer items-center justify-between p-3.5 transition hover:bg-gray-50/80"
+                      className="flex cursor-pointer items-center justify-between gap-3 p-3.5 transition hover:bg-gray-50/80"
                       onClick={() => setExpandedAreaId(isExpanded ? null : area.id)}
                     >
-                      <div className="flex items-center gap-3">
+                      <div className="flex min-w-0 items-center gap-3">
                         <span className="h-3.5 w-3.5 shrink-0 rounded-full" style={{ backgroundColor: color.stroke }} />
                         <div>
                           <span className="text-sm font-bold text-tertiary">{area.name}</span>
@@ -154,7 +154,7 @@ const MapDataModal = ({
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-1.5" onClick={(event) => event.stopPropagation()}>
+                      <div className="flex shrink-0 items-center gap-1.5" onClick={(event) => event.stopPropagation()}>
                         {canEdit && canEditAreas && (
                           <>
                             <button
@@ -191,7 +191,7 @@ const MapDataModal = ({
                         <p className="text-[11px] font-semibold uppercase tracking-wide text-secondary">
                           All Coordinates (Lat, Lng)
                         </p>
-                        <div className="grid max-h-48 grid-cols-2 gap-1.5 overflow-y-auto p-1">
+                        <div className="grid max-h-48 grid-cols-1 gap-1.5 sm:grid-cols-2 overflow-y-auto p-1">
                           {area.geoPoints.map((point, pointIndex) => (
                             <div
                               key={pointIndex}

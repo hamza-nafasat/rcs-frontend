@@ -62,12 +62,12 @@ const ModeratorDetailsModal = ({ isOpen, onClose, member, onEdit, onRemove }) =>
           ))}
         </section>
 
-        <footer className="mt-6 flex gap-3">
+        <footer className="mt-6 flex flex-col-reverse gap-3 sm:flex-row">
           <Button
             type="button"
             variant="bare"
             onClick={() => onRemove?.(member)}
-            className="w-1/2 rounded-xl border border-cancel bg-white text-remove px-3! py-2! hover:bg-red-50"
+            className="w-full sm:w-1/2 rounded-xl border border-cancel bg-white text-remove px-3! py-2! hover:bg-red-50"
           >
             Remove
           </Button>
@@ -75,7 +75,7 @@ const ModeratorDetailsModal = ({ isOpen, onClose, member, onEdit, onRemove }) =>
           <Button
             type="button"
             onClick={() => onEdit?.(member)}
-            className="w-1/2 px-3! py-2!"
+            className="w-full sm:w-1/2 px-3! py-2!"
           >
             Edit
           </Button>

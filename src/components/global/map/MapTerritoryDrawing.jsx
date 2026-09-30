@@ -579,19 +579,8 @@ const MapTerritoryDrawing = ({
       }}
     >
       {/* ── Top Navigation Header ── */}
-      <header
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "10px 18px",
-          borderBottom: "1px solid var(--color-border)",
-          background: "#ffffff",
-          zIndex: 20,
-          gap: 14,
-        }}
-      >
-        <div className="flex items-center gap-2.5 shrink-0">
+      <header className="relative z-20 flex flex-wrap items-center justify-between gap-2.5 border-b color-border bg-white px-3 py-2.5 sm:px-4.5 lg:flex-nowrap lg:gap-3.5">
+        <div className="flex min-w-0 items-center gap-2.5">
           {/* leaves without saving */}
           {canEdit && (
             <button
@@ -604,9 +593,9 @@ const MapTerritoryDrawing = ({
             </button>
           )}
 
-          <MapPin size={18} className="text-revenue" />
-          <div>
-            <h2 className="text-sm font-bold text-tertiary leading-tight">Manage Franchises Details</h2>
+          <MapPin size={18} className="shrink-0 text-revenue" />
+          <div className="min-w-0">
+            <h2 className="truncate text-sm font-bold text-tertiary leading-tight">Manage Franchises Details</h2>
             <p className="text-[11px] text-secondary">
               {franchises.length} franchise{franchises.length !== 1 ? "s" : ""} · {completedAreas.length} area
               {completedAreas.length !== 1 ? "s" : ""}
@@ -615,7 +604,7 @@ const MapTerritoryDrawing = ({
         </div>
 
         {/* Location Search Bar */}
-        <div className="relative flex-1 max-w-md">
+        <div className="relative order-last w-full lg:order-none lg:max-w-md lg:flex-1">
           <div className="relative">
             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
             <input
@@ -649,7 +638,7 @@ const MapTerritoryDrawing = ({
         </div>
 
         {/* Actions Toolbar */}
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex flex-wrap items-center gap-2 lg:shrink-0 lg:flex-nowrap">
           {activeGeoPoints.length > 0 && (
             <button
               type="button"
@@ -766,7 +755,7 @@ const MapTerritoryDrawing = ({
         {/* why this pin blocks saving */}
         {hoverViolation && (
           <div
-            className="pointer-events-none absolute z-20 max-w-xs rounded-lg bg-red-600 px-3 py-2 text-xs font-medium text-white shadow-lg"
+            className="pointer-events-none absolute z-20 max-w-[calc(100vw-2rem)] sm:max-w-xs rounded-lg bg-red-600 px-3 py-2 text-xs font-medium text-white shadow-lg"
             style={{ left: hoverViolation.point.x + 16, top: hoverViolation.point.y + 16 }}
           >
             You cannot add a franchise under this area. {hoverViolation.breach.area.name} needs at least{" "}
@@ -941,21 +930,21 @@ const MapTerritoryDrawing = ({
               </div>
 
               {/* Action Buttons */}
-              <div className="flex items-center gap-3 pt-2">
+              <div className="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:items-center">
                 <button
                   type="button"
                   onClick={() => {
                     setShowSaveModal(false);
                     setPendingGeoPoints(null);
                   }}
-                  className="flex-1 h-10 rounded-xl border color-border bg-white text-xs font-semibold text-cancel hover:bg-gray-50 transition cursor-pointer"
+                  className="h-10 shrink-0 sm:flex-1 rounded-xl border color-border bg-white text-xs font-semibold text-cancel hover:bg-gray-50 transition cursor-pointer"
                 >
                   Discard
                 </button>
                 <button
                   type="button"
                   onClick={handleConfirmSaveArea}
-                  className="flex-1 h-10 rounded-xl bg-(--color-primary) text-white text-xs font-bold hover:opacity-90 transition cursor-pointer"
+                  className="h-10 shrink-0 sm:flex-1 rounded-xl bg-(--color-primary) text-white text-xs font-bold hover:opacity-90 transition cursor-pointer"
                 >
                   Save Area Details
                 </button>

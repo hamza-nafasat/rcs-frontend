@@ -194,12 +194,12 @@ const FddAddEditModal = ({
           </section>
 
           {/* Actions */}
-          <section className="flex gap-3 pt-4">
+          <section className="flex flex-col-reverse gap-3 pt-4 sm:flex-row">
             <Button
               type="button"
               variant="secondary"
               onClick={onClose}
-              className="w-1/2 text-gray-700! bg-gray-100! px-3! py-2! sm:px-4! sm:py-2.5!"
+              className="w-full sm:w-1/2 text-gray-700! bg-gray-100! px-3! py-2! sm:px-4! sm:py-2.5!"
             >
               Cancel
             </Button>
@@ -208,7 +208,7 @@ const FddAddEditModal = ({
               type="submit"
               isLoading={isSubmitting}
               isDisabled={!isComplete}
-              className="w-1/2 px-3! py-2! sm:px-4! sm:py-2.5!"
+              className="w-full sm:w-1/2 px-3! py-2! sm:px-4! sm:py-2.5!"
             >
               {isAdd ? "Upload FDD" : "Save Changes"}
             </Button>

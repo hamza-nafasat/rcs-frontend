@@ -57,7 +57,7 @@ const MessageWrite = ({ onSend, isSending = false }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="border-t border-gray-200 px-4 py-3 sm:px-5 sm:py-4">
+    <form onSubmit={handleSubmit} className="relative border-t border-gray-200 px-4 py-3 sm:px-5 sm:py-4">
       {/* Attachment, emoji and voice note options */}
       <div className="mb-2 flex items-center gap-3">
         <MessageAttachment onFileSelect={handleFileSelect} />

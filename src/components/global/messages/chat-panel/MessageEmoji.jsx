@@ -11,7 +11,7 @@ const MessageEmoji = ({ onEmojiSelect }) => {
   };
 
   return (
-    <div className="relative shrink-0">
+    <div className="shrink-0">
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
@@ -22,7 +22,7 @@ const MessageEmoji = ({ onEmojiSelect }) => {
       </button>
 
       {isOpen && (
-        <div className="absolute bottom-10 left-0 z-10">
+        <div className="absolute bottom-full left-4 z-10 sm:left-5">
           <EmojiPicker onEmojiClick={handleEmojiClick} height={320} width={280} />
         </div>
       )}

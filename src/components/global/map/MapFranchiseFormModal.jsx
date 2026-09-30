@@ -62,18 +62,18 @@ const MapFranchiseFormModal = ({ form, location, isEditing = false, onChange, on
           </p>
         </div>
 
-        <div className="flex items-center gap-3 pt-1">
+        <div className="flex flex-col-reverse gap-3 pt-1 sm:flex-row sm:items-center">
           <button
             type="button"
             onClick={onClose}
-            className="h-10 flex-1 cursor-pointer rounded-xl border color-border bg-white text-xs font-semibold text-cancel transition hover:bg-gray-50"
+            className="h-10 shrink-0 sm:flex-1 cursor-pointer rounded-xl border color-border bg-white text-xs font-semibold text-cancel transition hover:bg-gray-50"
           >
             Discard
           </button>
           <button
             type="submit"
             disabled={!isComplete(form)}
-            className={`h-10 flex-1 rounded-xl bg-(--color-primary) text-xs font-bold text-white transition ${
+            className={`h-10 shrink-0 sm:flex-1 rounded-xl bg-(--color-primary) text-xs font-bold text-white transition ${
               isComplete(form) ? "cursor-pointer hover:opacity-90" : "pointer-events-none opacity-60"
             }`}
           >
