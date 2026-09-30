@@ -74,7 +74,7 @@ const ClientAddEditModal = ({
           />
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Input
-              label="Owner First Name *"
+              label="First Name *"
               name="firstName"
               value={formData.firstName}
               onChange={handleChange}
@@ -82,7 +82,7 @@ const ClientAddEditModal = ({
               required
             />
             <Input
-              label="Owner Last Name *"
+              label="Last Name *"
               name="lastName"
               value={formData.lastName}
               onChange={handleChange}
