@@ -1,0 +1,42 @@
+name: Deploy Frontend to VPS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🚀 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔐 Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: 🧪 Test SSH Connection
+        run: |
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ secrets.USER }}@${{ secrets.HOST }} "echo ✅ SSH Connected"
+
+      - name: ⚙️ Build and Deploy on VPS
+        run: |
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ secrets.USER }}@${{ secrets.HOST }} << 'EOF'
+            set -e
+            cd /root/pro-rcs/frontend
+            git fetch --all
+            git reset --hard origin/main
+            npm install --legacy-peer-deps
+            npm run build
+            mkdir -p /var/www/html/rcs
+            cp -r dist/* /var/www/html/rcs/
+            sudo systemctl reload nginx
+            echo "✅ Frontend deployment successful!"
+          EOF
