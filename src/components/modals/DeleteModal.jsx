@@ -46,11 +46,11 @@ const DeleteModal = ({
         </div>
 
         {/* Actions */}
-        <div className="mt-6 flex gap-3 sm:flex-row ">
+        <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row">
           <Button
             type="button"
             onClick={onClose}
-            className="w-1/2 bg-white! text-[#344054]! hover:bg-gray-50! border border-cancel px-3! py-2! sm:px-4! sm:py-2.5!"
+            className="w-full sm:w-1/2 bg-white! text-[#344054]! hover:bg-gray-50! border border-cancel px-3! py-2! sm:px-4! sm:py-2.5!"
           >
             {cancelText}
           </Button>
@@ -59,7 +59,7 @@ const DeleteModal = ({
             type="button"
             onClick={onConfirm}
             isLoading={isLoading}
-            className="w-1/2 px-3! py-2! sm:px-4! sm:py-2.5!"
+            className="w-full sm:w-1/2 px-3! py-2! sm:px-4! sm:py-2.5!"
           >
             {confirmText}
           </Button>

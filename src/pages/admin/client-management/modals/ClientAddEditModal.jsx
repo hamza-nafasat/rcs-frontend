@@ -92,17 +92,17 @@ const ClientAddEditModal = ({
           </div>
 
           {/* Buttons */}
-          <div className="flex gap-3 pt-4 text-sm">
+          <div className="flex flex-col-reverse gap-3 pt-4 text-sm sm:flex-row">
             <Button
               type="button"
               variant="secondary"
               onClick={onClose}
-              className="w-1/2 text-gray-700! bg-gray-100!"
+              className="w-full sm:w-1/2 text-gray-700! bg-gray-100!"
             >
               Cancel
             </Button>
 
-            <Button type="submit" isLoading={isSubmitting} className="w-1/2">
+            <Button type="submit" isLoading={isSubmitting} className="w-full sm:w-1/2">
               {mode === "edit" ? "Update" : "Send Invite"}
             </Button>
           </div>

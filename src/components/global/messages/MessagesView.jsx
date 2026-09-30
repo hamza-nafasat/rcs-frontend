@@ -36,7 +36,7 @@ const MessagesView = ({
         </section>
 
         {/* Chat Area */}
-        <section className={`flex-1 md:block ${selectedConversation ? "block" : "hidden"}`}>
+        <section className={`min-w-0 flex-1 md:block ${selectedConversation ? "block" : "hidden"}`}>
           <ChatPanel
             conversation={selectedConversation}
             messages={messages}

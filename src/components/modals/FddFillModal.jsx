@@ -191,7 +191,7 @@ const FddFillModal = ({ isOpen, onClose, document, onSave }) => {
           </section>
         </div>
 
-        <footer className="flex justify-end gap-3 border-t color-border p-4">
+        <footer className="flex flex-col-reverse gap-3 border-t sm:flex-row sm:justify-end color-border p-4">
           <Button
             variant="bare"
             onClick={onClose}

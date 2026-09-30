@@ -23,7 +23,7 @@ import ClientDashboard from "../pages/client/dashboard/ClientDashboard";
 import ClientPipeline from "../pages/client/pipeline/ClientPipeline";
 import ClientApplicantDetailPage from "../pages/client/pipeline/ClientApplicantDetailPage";
 import Reports from "../pages/client/reports/Reports";
-import ClientFdd from "../pages/client/fdd/ClientFdd";
+import ClientFdd from "../pages/client/fdd/ClientFDD";
 import ClientModerators from "../pages/client/moderators/ClientModerators";
 import ClientSupport from "../pages/client/support/ClientSupport";
 import Application from "../pages/user/application/Application";
