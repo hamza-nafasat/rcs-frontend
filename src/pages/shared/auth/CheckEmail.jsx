@@ -5,8 +5,25 @@ import { Link, useLocation } from "react-router-dom";
 import BackLink from "../../../components/shared/BackLink";
 import CheckEmailIcon from "../../../assets/SVGs/CheckEmailIcon.svg";
 
+const INBOX_URLS = {
+  "gmail.com": "https://mail.google.com",
+  "outlook.com": "https://outlook.live.com/mail",
+  "hotmail.com": "https://outlook.live.com/mail",
+  "live.com": "https://outlook.live.com/mail",
+  "yahoo.com": "https://mail.yahoo.com",
+  "icloud.com": "https://www.icloud.com/mail",
+};
+
 const CheckEmail = () => {
   const { state } = useLocation();
+
+  // webmail inbox, else mail app
+  const handleOpenEmail = () => {
+    const domain = state?.email?.split("@")[1]?.toLowerCase();
+    const inboxUrl = INBOX_URLS[domain];
+    if (inboxUrl) window.open(inboxUrl, "_blank", "noopener,noreferrer");
+    else window.location.href = "mailto:";
+  };
 
   return (
     <AuthLayout>
@@ -27,7 +44,7 @@ const CheckEmail = () => {
             />
           </section>
 
-          <Button iconPosition="right" className=" h-10 w-full rounded-xl text-sm font-medium">
+          <Button type="button" onClick={handleOpenEmail} iconPosition="right" className="h-10 w-full rounded-xl text-sm font-medium">
             Open email app
           </Button>
 
