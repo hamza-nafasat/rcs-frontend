@@ -1,7 +1,6 @@
 import DataTable from "../DataTable";
 import { MapPin } from "lucide-react";
 import Avatar from "../../shared/Avatar";
-import Badge from "../../shared/Badge";
 import ProgressBar from "../../shared/ProgressBar";
 import { scoreColor, stageOf } from "../../../utils/pipelineStage";
 
@@ -45,10 +44,18 @@ const buildColumns = () => [
     name: "Stage",
     selector: (row) => row?.stage,
     sortable: true,
-    width: "160px",
+    width: "200px",
     cell: (row) => {
-      const { label, color } = stageOf(row?.stage);
-      return <Badge text={label} dotColor={color} />;
+      const { label, color, bg } = stageOf(row?.stage);
+      return (
+        <span
+          className="inline-flex w-44 items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium whitespace-nowrap"
+          style={{ color, borderColor: color, backgroundColor: bg }}
+        >
+          <span className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ backgroundColor: color }} />
+          {label}
+        </span>
+      );
     },
   },
   {
