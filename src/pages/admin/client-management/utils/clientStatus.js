@@ -8,6 +8,13 @@ export const CLIENT_STATUS = {
   pending: { label: "Pending", pill: "bg-gray-100 text-gray-600", dot: "bg-gray-400" },
 };
 
+export const ACCOUNT_STATUS_OPTIONS = [
+  { value: "active", label: "Activated" },
+  { value: "deactivated", label: "Deactivated" },
+];
+
+export const isDeactivatedClient = (client) => client?.account?.status === USER_STATUSES.INACTIVE;
+
 // invited, else the chosen status
 export const getClientStatus = (client) =>
   client?.account?.status === USER_STATUSES.INVITED ? "invited" : (client?.status ?? "pending");

@@ -31,11 +31,6 @@ export const clientApi = createApi({
       query: ({ id, ...body }) => ({ url: `/${encodeURIComponent(id)}`, method: "PATCH", body }),
       invalidatesTags: (_result, _error, { id }) => ["Clients", { type: "singleClient", id }],
     }),
-    /////
-    deleteClient: builder.mutation({
-      query: (id) => ({ url: `/${encodeURIComponent(id)}`, method: "DELETE" }),
-      invalidatesTags: (_result, _error, id) => ["Clients", { type: "singleClient", id }],
-    }),
   }),
 });
 
@@ -45,5 +40,4 @@ export const {
   useInviteClientMutation,
   useResendClientInviteMutation,
   useUpdateClientMutation,
-  useDeleteClientMutation,
 } = clientApi;

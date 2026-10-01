@@ -1,5 +1,6 @@
-import { Eye, MoreHorizontal, Pencil, Send, Trash2 } from "lucide-react";
+import { Eye, MoreHorizontal, Pencil, Power, Send } from "lucide-react";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import DataTable from "../../../../components/global/DataTable";
 import toast from "react-hot-toast";
 import DeleteModal from "../../../../components/modals/DeleteModal";
@@ -8,13 +9,15 @@ import Button from "../../../../components/shared/Button";
 import Dropdown from "../../../../components/shared/Dropdown";
 import ProgressBar from "../../../../components/shared/ProgressBar";
 import {
-  useDeleteClientMutation,
+  clientApi,
   useResendClientInviteMutation,
   useUpdateClientMutation,
 } from "../../../../store/apis/admin/client.apis";
+import { useUpdateAccountStatusMutation } from "../../../../store/apis/shared/auth.apis";
+import { USER_STATUSES } from "../../../../configs/constants";
 import ClientAddEditModal from "../modals/ClientAddEditModal";
 import ClientDetailsModal from "../modals/ClientDetailsModal";
-import { CLIENT_STATUS, getClientStatus } from "../utils/clientStatus";
+import { CLIENT_STATUS, getClientStatus, isDeactivatedClient } from "../utils/clientStatus";
 
 const HEALTH_COLORS = [
   { min: 80, color: "#22C55E" },
@@ -24,7 +27,12 @@ const HEALTH_COLORS = [
 
 const getHealthColor = (score) => HEALTH_COLORS.find(({ min }) => score >= min).color;
 
-const buildColumns = ({ handleEditClient, handleViewClient, handleResendInvite, setClientToDelete }) => [
+// deactivated rows read as greyed out
+const CONDITIONAL_ROW_STYLES = [
+  { when: isDeactivatedClient, style: { backgroundColor: "#f3f4f6", opacity: 0.55, filter: "grayscale(1)" } },
+];
+
+const buildColumns = ({ handleEditClient, handleViewClient, handleResendInvite, setClientToToggle }) => [
   {
     name: "Restaurant",
     selector: (row) => row.restaurantName,
@@ -116,10 +124,15 @@ const buildColumns = ({ handleEditClient, handleViewClient, handleResendInvite, 
             </Button>
           )}
 
-          <Button variant="menuItemDanger" onClick={() => setClientToDelete(row)}>
-            <Trash2 size={16} className="shrink-0" />
-            Delete
-          </Button>
+          {getClientStatus(row) !== "invited" && (
+            <Button
+              variant={isDeactivatedClient(row) ? "menuItem" : "menuItemDanger"}
+              onClick={() => setClientToToggle(row)}
+            >
+              <Power size={16} className="shrink-0" />
+              {isDeactivatedClient(row) ? "Activate" : "Deactivate"}
+            </Button>
+          )}
         </Dropdown>
       </div>
     ),
@@ -131,11 +144,13 @@ const buildColumns = ({ handleEditClient, handleViewClient, handleResendInvite, 
 
 const ClientTable = ({ className, clients = [], isLoading = false }) => {
   const [updateClient, { isLoading: isUpdating }] = useUpdateClientMutation();
-  const [deleteClient, { isLoading: isDeleting }] = useDeleteClientMutation();
+  const dispatch = useDispatch();
+  const [updateAccountStatus, { isLoading: isTogglingStatus }] = useUpdateAccountStatusMutation();
   const [resendClientInvite] = useResendClientInviteMutation();
   const [clientToEdit, setClientToEdit] = useState(null);
   const [viewClientId, setViewClientId] = useState(null);
-  const [clientToDelete, setClientToDelete] = useState(null);
+  const [clientToToggle, setClientToToggle] = useState(null);
+  const isActivating = isDeactivatedClient(clientToToggle);
 
   const handleViewClient = (client) => setViewClientId(client?._id);
 
@@ -151,13 +166,15 @@ const ClientTable = ({ className, clients = [], isLoading = false }) => {
     }
   };
 
-  const handleDeleteClient = async () => {
+  const handleToggleStatus = async () => {
     try {
-      const response = await deleteClient(clientToDelete?._id).unwrap();
-      toast.success(response?.message);
-      setClientToDelete(null);
+      const status = isActivating ? USER_STATUSES.ACTIVE : USER_STATUSES.INACTIVE;
+      await updateAccountStatus({ id: clientToToggle?.account?._id, status }).unwrap();
+      dispatch(clientApi.util.invalidateTags(["Clients", { type: "singleClient", id: clientToToggle?._id }]));
+      toast.success(isActivating ? "Client Activated Successfully" : "Client Deactivated Successfully");
+      setClientToToggle(null);
     } catch (error) {
-      console.error("Delete client error:", error);
+      console.error("Update client status error:", error);
     }
   };
 
@@ -170,13 +187,14 @@ const ClientTable = ({ className, clients = [], isLoading = false }) => {
     }
   };
 
-  const columns = buildColumns({ handleEditClient, handleViewClient, handleResendInvite, setClientToDelete });
+  const columns = buildColumns({ handleEditClient, handleViewClient, handleResendInvite, setClientToToggle });
   return (
     <section className={className}>
       <DataTable
         columns={columns}
         data={clients}
         isLoading={isLoading}
+        conditionalRowStyles={CONDITIONAL_ROW_STYLES}
         pagination
       />
       {clientToEdit && (
@@ -196,13 +214,18 @@ const ClientTable = ({ className, clients = [], isLoading = false }) => {
       )}
 
       <DeleteModal
-        isOpen={Boolean(clientToDelete)}
-        onClose={() => setClientToDelete(null)}
-        onConfirm={handleDeleteClient}
-        heading="Delete Client"
-        text={`Are you sure you want to delete ${clientToDelete?.restaurantName ?? "this client"}? This action cannot be undone.`}
-        confirmText="Delete"
-        isLoading={isDeleting}
+        isOpen={Boolean(clientToToggle)}
+        onClose={() => setClientToToggle(null)}
+        onConfirm={handleToggleStatus}
+        icon={<Power size={26} />}
+        heading={isActivating ? "Activate Client" : "Deactivate Client"}
+        text={
+          isActivating
+            ? `Activate ${clientToToggle?.restaurantName ?? "this client"}? They and their moderators can sign in again.`
+            : `Deactivate ${clientToToggle?.restaurantName ?? "this client"}? They and their moderators will not be able to sign in until activated again.`
+        }
+        confirmText={isActivating ? "Activate" : "Deactivate"}
+        isLoading={isTogglingStatus}
       />
 
       <ClientDetailsModal

@@ -1,6 +1,7 @@
 import { Search } from "lucide-react";
 import Input from "../../../../components/shared/Input";
 import Select from "../../../../components/shared/Select";
+import { ACCOUNT_STATUS_OPTIONS } from "../utils/clientStatus";
 
 const ClientFilter = ({ filters, setFilters, statuses = [] }) => {
   const handleChange = (e) => {
@@ -13,7 +14,7 @@ const ClientFilter = ({ filters, setFilters, statuses = [] }) => {
   };
 
   return (
-    <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-[35fr_35fr_30fr]">
+    <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {/* Restaurant */}
       <Input
         label="Restaurant"
@@ -44,6 +45,17 @@ const ClientFilter = ({ filters, setFilters, statuses = [] }) => {
         placeholder="All Statuses"
         multiple
         searchable
+        clearable
+      />
+
+      {/* Account */}
+      <Select
+        label="Account"
+        name="accountStatus"
+        value={filters.accountStatus}
+        onChange={handleChange}
+        options={ACCOUNT_STATUS_OPTIONS}
+        placeholder="All Accounts"
         clearable
       />
     </section>

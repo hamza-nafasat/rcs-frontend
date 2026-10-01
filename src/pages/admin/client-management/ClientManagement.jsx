@@ -2,13 +2,14 @@ import ClientManagementHeading from "./components/ClientManagementHeading";
 import ClientTable from "./components/ClientTable";
 import ClientFilter from "./components/ClientFilter";
 import { useState } from "react";
-import { CLIENT_STATUS, getClientStatus } from "./utils/clientStatus";
+import { CLIENT_STATUS, getClientStatus, isDeactivatedClient } from "./utils/clientStatus";
 import { useGetAllClientsQuery } from "../../../store/apis/admin/client.apis";
 
 const initialFilters = {
   restaurant: "",
   owner: "",
   status: [],
+  accountStatus: "",
 };
 
 const includesText = (text, query) => String(text ?? "").toLowerCase().includes(query.trim().toLowerCase());
@@ -27,8 +28,10 @@ const ClientManagement = () => {
     const matchRestaurant = includesText(client?.restaurantName, filters.restaurant);
     const matchOwner = includesText(client?.account?.fullName, filters.owner);
     const matchStatus = filters.status.length === 0 || filters.status.includes(getClientStatus(client));
+    const accountStatus = isDeactivatedClient(client) ? "deactivated" : "active";
+    const matchAccount = !filters.accountStatus || filters.accountStatus === accountStatus;
 
-    return matchRestaurant && matchOwner && matchStatus;
+    return matchRestaurant && matchOwner && matchStatus && matchAccount;
   });
 
   return (
