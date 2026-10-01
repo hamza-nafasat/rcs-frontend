@@ -1,4 +1,4 @@
-import { Eye, MoreHorizontal, Pencil, Power, Send } from "lucide-react";
+import { Eye, MoreHorizontal, Pencil, Power, Send, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import DataTable from "../../../../components/global/DataTable";
@@ -10,6 +10,7 @@ import Dropdown from "../../../../components/shared/Dropdown";
 import ProgressBar from "../../../../components/shared/ProgressBar";
 import {
   clientApi,
+  useDeleteClientMutation,
   useResendClientInviteMutation,
   useUpdateClientMutation,
 } from "../../../../store/apis/admin/client.apis";
@@ -32,7 +33,13 @@ const CONDITIONAL_ROW_STYLES = [
   { when: isDeactivatedClient, style: { backgroundColor: "#f3f4f6", opacity: 0.55, filter: "grayscale(1)" } },
 ];
 
-const buildColumns = ({ handleEditClient, handleViewClient, handleResendInvite, setClientToToggle }) => [
+const buildColumns = ({
+  handleEditClient,
+  handleViewClient,
+  handleResendInvite,
+  setClientToToggle,
+  setClientToDelete,
+}) => [
   {
     name: "Restaurant",
     selector: (row) => row.restaurantName,
@@ -124,6 +131,13 @@ const buildColumns = ({ handleEditClient, handleViewClient, handleResendInvite, 
             </Button>
           )}
 
+          {getClientStatus(row) === "invited" && (
+            <Button variant="menuItemDanger" onClick={() => setClientToDelete(row)}>
+              <Trash2 size={16} className="shrink-0" />
+              Delete
+            </Button>
+          )}
+
           {getClientStatus(row) !== "invited" && (
             <Button
               variant={isDeactivatedClient(row) ? "menuItem" : "menuItemDanger"}
@@ -150,6 +164,8 @@ const ClientTable = ({ className, clients = [], isLoading = false }) => {
   const [clientToEdit, setClientToEdit] = useState(null);
   const [viewClientId, setViewClientId] = useState(null);
   const [clientToToggle, setClientToToggle] = useState(null);
+  const [clientToDelete, setClientToDelete] = useState(null);
+  const [deleteClient, { isLoading: isDeleting }] = useDeleteClientMutation();
   const isActivating = isDeactivatedClient(clientToToggle);
 
   const handleViewClient = (client) => setViewClientId(client?._id);
@@ -163,6 +179,16 @@ const ClientTable = ({ className, clients = [], isLoading = false }) => {
       setClientToEdit(null);
     } catch (error) {
       console.error("Update client error:", error);
+    }
+  };
+
+  const handleDeleteClient = async () => {
+    try {
+      const response = await deleteClient(clientToDelete?._id).unwrap();
+      toast.success(response?.message);
+      setClientToDelete(null);
+    } catch (error) {
+      console.error("Delete client error:", error);
     }
   };
 
@@ -187,7 +213,13 @@ const ClientTable = ({ className, clients = [], isLoading = false }) => {
     }
   };
 
-  const columns = buildColumns({ handleEditClient, handleViewClient, handleResendInvite, setClientToToggle });
+  const columns = buildColumns({
+    handleEditClient,
+    handleViewClient,
+    handleResendInvite,
+    setClientToToggle,
+    setClientToDelete,
+  });
   return (
     <section className={className}>
       <DataTable
@@ -226,6 +258,17 @@ const ClientTable = ({ className, clients = [], isLoading = false }) => {
         }
         confirmText={isActivating ? "Activate" : "Deactivate"}
         isLoading={isTogglingStatus}
+      />
+
+      <DeleteModal
+        isOpen={Boolean(clientToDelete)}
+        onClose={() => setClientToDelete(null)}
+        onConfirm={handleDeleteClient}
+        icon={<Trash2 size={26} />}
+        heading="Delete Client"
+        text={`Are you sure you want to delete ${clientToDelete?.restaurantName ?? "this client"}? Their invite link will stop working. This action cannot be undone.`}
+        confirmText="Delete"
+        isLoading={isDeleting}
       />
 
       <ClientDetailsModal
