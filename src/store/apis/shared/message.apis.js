@@ -47,6 +47,11 @@ export const messageApi = createApi({
       invalidatesTags: (_result, _error, conversationId) => [{ type: "Messages", id: conversationId }, "Conversations"],
     }),
     /////
+    deleteConversation: builder.mutation({
+      query: (conversationId) => ({ url: `/conversations/${encodeURIComponent(conversationId)}`, method: "DELETE" }),
+      invalidatesTags: ["Conversations"],
+    }),
+    /////
     deleteMessage: builder.mutation({
       query: ({ conversationId, messageId }) => ({
         url: `/conversations/${encodeURIComponent(conversationId)}/messages/${encodeURIComponent(messageId)}`,
@@ -67,5 +72,6 @@ export const {
   useGetMessagesQuery,
   useSendMessageMutation,
   useMarkConversationReadMutation,
+  useDeleteConversationMutation,
   useDeleteMessageMutation,
 } = messageApi;

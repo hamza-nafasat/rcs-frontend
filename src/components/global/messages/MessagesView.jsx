@@ -12,6 +12,7 @@ const MessagesView = ({
   isSending = false,
   onSelectConversation,
   onStartConversation,
+  onDeleteConversation,
   onSend,
   onDeleteMessage,
   onBack,
@@ -32,6 +33,7 @@ const MessagesView = ({
             selectedConversationId={selectedConversation?._id}
             onSelectConversation={onSelectConversation}
             onStartConversation={onStartConversation}
+            onDeleteConversation={onDeleteConversation}
           />
         </section>
 

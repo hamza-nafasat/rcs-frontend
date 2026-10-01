@@ -13,6 +13,7 @@ const ConversationSidebar = ({
   selectedConversationId,
   onSelectConversation,
   onStartConversation,
+  onDeleteConversation,
 }) => {
   const [search, setSearch] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -72,6 +73,7 @@ const ConversationSidebar = ({
               conversation={conversation}
               isSelected={conversation._id === selectedConversationId}
               onSelect={onSelectConversation}
+              onDelete={onDeleteConversation}
             />
           ))
         )}
