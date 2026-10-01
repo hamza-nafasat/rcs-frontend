@@ -36,8 +36,8 @@ const buildColumns = ({ onView, showClient }) => [
   {
     name: "Phone",
     selector: (row) => row?.phone ?? "",
-    minWidth: "140px",
-    cell: (row) => <span className="text-tablecell">{formatPhone(row?.phone) || "—"}</span>,
+    minWidth: "170px",
+    cell: (row) => <span className="whitespace-nowrap text-tablecell">{formatPhone(row?.phone) || "—"}</span>,
   },
   {
     name: "Location",
