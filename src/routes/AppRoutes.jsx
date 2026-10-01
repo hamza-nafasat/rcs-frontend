@@ -56,6 +56,7 @@ const AppRoutes = () => {
         </Route>
 
         <Route path="/dashboard/*" element={<LegacyAdminRedirect />} />
+        <Route path="/sign-in" element={<Navigate to="/signin" replace />} />
         {/* admin only */}
         <Route element={<ProtectedRoute role={USER_ROLES.ADMIN} />}>
           <Route path="/admin/dashboard" element={<Dashboard type="admin" />}>
