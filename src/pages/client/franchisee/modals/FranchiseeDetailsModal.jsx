@@ -9,6 +9,7 @@ import { buildScorecard, SCORE_CATEGORIES } from "../../../../utils/pipelineScor
 import { franchiseStatusOf } from "../../../../utils/franchiseStatus";
 import { stageOf } from "../../../../utils/pipelineStage";
 import { useGetFranchiseeByIdQuery } from "../../../../store/apis/client/franchisee.apis";
+import { formatPhone } from "../../../../utils/formatPhone";
 
 const longDate = (value) =>
   value ? new Date(value).toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" }) : "—";
@@ -26,7 +27,7 @@ const FranchiseeDetailsModal = ({ isOpen, onClose, franchiseeId }) => {
 
   const details = [
     { icon: Mail, label: "Email", value: franchisee?.email },
-    { icon: Phone, label: "Phone", value: franchisee?.phone || "—" },
+    { icon: Phone, label: "Phone", value: formatPhone(franchisee?.phone) || "—" },
     { icon: MapPin, label: "Location", value: location },
     { icon: CalendarDays, label: "Applied On", value: longDate(franchisee?.createdAt) },
   ];

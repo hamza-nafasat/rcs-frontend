@@ -101,7 +101,7 @@ const LocationFields = ({
         creatable
       />
       <Select
-        label={toLabel("City")}
+        label="City"
         name="city"
         value={values?.city ?? ""}
         onChange={onChange}
@@ -110,7 +110,6 @@ const LocationFields = ({
         placeholder="Select city"
         labelClassName={labelClassName}
         disabled={disabled}
-        required={required}
         searchable
         creatable
       />

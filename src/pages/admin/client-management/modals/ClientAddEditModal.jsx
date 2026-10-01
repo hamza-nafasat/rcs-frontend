@@ -55,23 +55,6 @@ const ClientAddEditModal = ({
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
-          <Input
-            label="Restaurant Name *"
-            name="restaurantName"
-            value={formData.restaurantName}
-            onChange={handleChange}
-            placeholder="Enter restaurant name"
-            required
-          />
-          <Input
-            label="Client Email *"
-            name="clientEmail"
-            type="email"
-            value={formData.clientEmail}
-            onChange={handleChange}
-            placeholder="Enter client email"
-            required
-          />
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Input
               label="First Name *"
@@ -90,6 +73,23 @@ const ClientAddEditModal = ({
               required
             />
           </div>
+          <Input
+            label="Client Email *"
+            name="clientEmail"
+            type="email"
+            value={formData.clientEmail}
+            onChange={handleChange}
+            placeholder="Enter client email"
+            required
+          />
+          <Input
+            label="Restaurant Name *"
+            name="restaurantName"
+            value={formData.restaurantName}
+            onChange={handleChange}
+            placeholder="Enter restaurant name"
+            required
+          />
 
           {/* Buttons */}
           <div className="flex flex-col-reverse gap-3 pt-4 text-sm sm:flex-row">

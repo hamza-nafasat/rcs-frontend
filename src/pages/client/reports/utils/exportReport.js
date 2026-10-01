@@ -3,6 +3,7 @@ import autoTable from "jspdf-autotable";
 import logoUrl from "../../../../assets/SVGs/LogoCompany.svg";
 import { getRecommendation } from "../../../../utils/pipelineScorecard";
 import { stageOf } from "../../../../utils/pipelineStage";
+import { formatPhone } from "../../../../utils/formatPhone";
 
 const BRAND = "RCS";
 const PRIMARY = [249, 115, 22];
@@ -92,7 +93,7 @@ const isoDate = (date) =>
 const CSV_COLUMNS = [
   ["Applicant", (row) => row?.applicant?.fullName],
   ["Email", (row) => row?.applicant?.email],
-  ["Phone", (row) => row?.applicant?.phone],
+  ["Phone", (row) => formatPhone(row?.applicant?.phone)],
   ["City", (row) => row?.applicant?.city],
   ["State", (row) => row?.applicant?.state],
   ["Country", (row) => row?.applicant?.country],

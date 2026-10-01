@@ -4,6 +4,7 @@ import Input from "../../../../components/shared/Input";
 import SegmentedControl from "../../../../components/shared/SegmentedControl";
 import FormSection from "../../../../components/shared/FormSection";
 import LocationFields from "../../../../components/global/LocationFields";
+import PhoneInput from "../../../../components/shared/PhoneInput";
 import { CLIENT_STATUS_OPTIONS, DENSITY_OPTIONS, YES_NO_OPTIONS } from "../utils/applicationScore";
 import { PASSWORD_MIN_LENGTH } from "../utils/accountRules";
 
@@ -79,12 +80,9 @@ const AuthApplicationFields = ({
                 hint="Taken from your invitation"
               />
 
-              <Input
-                name="phone"
-                type="tel"
+              <PhoneInput
                 label="Phone *"
                 labelClassName={fieldLabel}
-                placeholder="e.g. (312) 555-0134"
                 value={account.phone}
                 onChange={onAccountChange}
                 required

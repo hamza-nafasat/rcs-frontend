@@ -7,6 +7,7 @@ import { useGetClientByIdQuery } from "../../../../store/apis/admin/client.apis"
 import { withMapId } from "../../../../utils/mapHelpers";
 import ClientDetailSummary from "../components/ClientDetailSummary";
 import { CLIENT_STATUS, getClientStatus } from "../utils/clientStatus";
+import { formatPhone } from "../../../../utils/formatPhone";
 
 const ClientDetailsModal = ({ isOpen, onClose, clientId }) => {
   const { data, isFetching } = useGetClientByIdQuery(clientId, { skip: !clientId });
@@ -22,7 +23,7 @@ const ClientDetailsModal = ({ isOpen, onClose, clientId }) => {
   const contactInfo = [
     { icon: Star, label: "Owner", value: account?.fullName },
     { icon: Mail, label: "Email", value: account?.email },
-    { icon: Phone, label: "Phone", value: account?.phone ?? "—" },
+    { icon: Phone, label: "Phone", value: formatPhone(account?.phone) || "—" },
     { icon: MapPin, label: "Location", value: location },
   ];
 

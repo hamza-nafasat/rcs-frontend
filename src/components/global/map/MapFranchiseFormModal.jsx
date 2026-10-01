@@ -2,8 +2,8 @@ import { Store, X } from "lucide-react";
 import Input from "../../shared/Input";
 import LocationFields from "../LocationFields";
 
-// needs a name and place
-const isComplete = (form) => Boolean(form?.name?.trim() && form?.state && form?.city);
+// needs a name and state
+const isComplete = (form) => Boolean(form?.name?.trim() && form?.state);
 
 const MapFranchiseFormModal = ({ form, location, isEditing = false, onChange, onSubmit, onClose }) => (
   <div

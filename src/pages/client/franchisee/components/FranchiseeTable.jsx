@@ -3,6 +3,7 @@ import { Eye, MapPin } from "lucide-react";
 import Avatar from "../../../../components/shared/Avatar";
 import Badge from "../../../../components/shared/Badge";
 import { franchiseStatusOf } from "../../../../utils/franchiseStatus";
+import { formatPhone } from "../../../../utils/formatPhone";
 
 const fullName = (row) => `${row?.firstName ?? ""} ${row?.lastName ?? ""}`.trim() || "—";
 
@@ -27,7 +28,7 @@ const buildColumns = ({ onView }) => [
     name: "Phone",
     selector: (row) => row?.phone ?? "",
     minWidth: "140px",
-    cell: (row) => <span className="text-tablecell">{row?.phone || "—"}</span>,
+    cell: (row) => <span className="text-tablecell">{formatPhone(row?.phone) || "—"}</span>,
   },
   {
     name: "Location",

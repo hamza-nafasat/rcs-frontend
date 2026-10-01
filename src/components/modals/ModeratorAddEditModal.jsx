@@ -4,6 +4,7 @@ import Input from "../shared/Input";
 import Button from "../shared/Button";
 import Select from "../shared/Select";
 import LocationFields from "../global/LocationFields";
+import PhoneInput from "../shared/PhoneInput";
 import { MODERATOR_STATUS_OPTIONS } from "../../utils/moderatorStatus";
 
 // an error message, or empty
@@ -117,15 +118,7 @@ const ModeratorAddEditModal = ({
             placeholder="Enter email"
             required
           />
-          <Input
-            label="Phone *"
-            name="phone"
-            type="tel"
-            value={formData.phone}
-            onChange={handleChange}
-            placeholder="Enter phone number"
-            required
-          />
+          <PhoneInput label="Phone *" value={formData.phone} onChange={handleChange} required />
 
           {isAdd && (
             <div className="sm:col-span-2">

@@ -2,6 +2,7 @@ import { Mail, Phone, MapPin, Shield, CalendarDays, X } from "lucide-react";
 import Avatar from "../shared/Avatar";
 import Button from "../shared/Button";
 import { MODERATOR_STATUS } from "../../utils/moderatorStatus";
+import { formatPhone } from "../../utils/formatPhone";
 
 const ModeratorDetailsModal = ({ isOpen, onClose, member, onEdit, onRemove }) => {
   if (!isOpen || !member) return null;
@@ -10,7 +11,7 @@ const ModeratorDetailsModal = ({ isOpen, onClose, member, onEdit, onRemove }) =>
 
   const details = [
     { icon: Mail, label: "Email", value: member.email },
-    { icon: Phone, label: "Phone", value: member.phone || undefined },
+    { icon: Phone, label: "Phone", value: formatPhone(member.phone) || undefined },
     { icon: MapPin, label: "Location", value: [member.city, member.state].filter(Boolean).join(", ") || undefined },
     { icon: Shield, label: "Role", value: "Moderator" },
     { icon: CalendarDays, label: "Joined", value: new Date(member.createdAt).toLocaleDateString() },
