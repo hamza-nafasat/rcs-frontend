@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Building2, ChevronDown, ChevronUp, Layers, MapPin, Pencil, Trash2, X } from "lucide-react";
+import DeleteModal from "../../modals/DeleteModal";
 import { AREA_COLORS } from "../../../utils/mapHelpers";
 
 const TAB_FRANCHISES = "franchises";
@@ -22,6 +23,7 @@ const MapDataModal = ({
   onClearAll,
   onClose,
 }) => {
+  const [isClearConfirmOpen, setIsClearConfirmOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(TAB_FRANCHISES);
   const [expandedAreaId, setExpandedAreaId] = useState(null);
 
@@ -221,7 +223,7 @@ const MapDataModal = ({
           {canEdit && canEditAreas && (franchises.length > 0 || areas.length > 0) ? (
             <button
               type="button"
-              onClick={onClearAll}
+              onClick={() => setIsClearConfirmOpen(true)}
               className="cursor-pointer text-xs font-semibold text-red-600 hover:underline"
             >
               Clear All Data
@@ -241,6 +243,19 @@ const MapDataModal = ({
           </button>
         </div>
       </div>
+
+      <DeleteModal
+        isOpen={isClearConfirmOpen}
+        onClose={() => setIsClearConfirmOpen(false)}
+        onConfirm={() => {
+          onClearAll();
+          setIsClearConfirmOpen(false);
+        }}
+        heading="Clear All Data"
+        text="Are you sure you want to clear every franchise and area from the map? This action cannot be undone."
+        confirmText="Clear"
+        className="z-10001"
+      />
     </div>
   );
 };

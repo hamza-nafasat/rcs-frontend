@@ -45,6 +45,11 @@ const BREACH_RING_RADIUS = FRANCHISE_PIN_RADIUS + 10;
 const MODE_IDLE = "idle";
 const MODE_AREA = "area";
 const MODE_LOCATION = "location";
+const MIN_AREA_DISTANCE_KM = 0.1;
+
+// no minus or exponent
+const BLOCKED_NUMBER_KEYS = ["-", "+", "e", "E"];
+
 const EMPTY_FRANCHISE = { name: "", country: "United States", state: "", city: "" };
 
 const MapTerritoryDrawing = ({
@@ -114,6 +119,7 @@ const MapTerritoryDrawing = ({
   const [editingAreaDbId, setEditingAreaDbId] = useState(null);
   const [formAreaName, setFormAreaName] = useState("");
   const [formAreaDistance, setFormAreaDistance] = useState("5");
+  const isDistanceValid = parseFloat(formAreaDistance) >= MIN_AREA_DISTANCE_KM;
 
   // the manage data modal
   const [showDataModal, setShowDataModal] = useState(false);
@@ -480,6 +486,7 @@ const MapTerritoryDrawing = ({
       e.stopPropagation();
     }
     if (!pendingGeoPoints || pendingGeoPoints.length === 0) return;
+    if (!isDistanceValid) return;
 
     const areaNumber = completedAreas.length + 1;
     const finalName = formAreaName.trim() || `Area #${areaNumber}`;
@@ -895,6 +902,7 @@ const MapTerritoryDrawing = ({
                     step="0.1"
                     value={formAreaDistance}
                     onChange={(e) => setFormAreaDistance(e.target.value)}
+                    onKeyDown={(e) => BLOCKED_NUMBER_KEYS.includes(e.key) && e.preventDefault()}
                     placeholder="e.g. 5"
                     className="w-full h-10 rounded-xl border color-border bg-white pl-3.5 pr-14 text-sm font-semibold text-tertiary outline-none focus:border-(--color-primary) transition"
                   />
@@ -902,9 +910,13 @@ const MapTerritoryDrawing = ({
                     km
                   </span>
                 </div>
-                <p className="mt-1 text-[11px] text-muted">
-                  Each number represents distance in kilometers (e.g. 5 = 5 km radius)
-                </p>
+                {isDistanceValid ? (
+                  <p className="mt-1 text-[11px] text-muted">
+                    Each number represents distance in kilometers (e.g. 5 = 5 km radius)
+                  </p>
+                ) : (
+                  <p className="mt-1 text-[11px] text-red-500">Distance must be at least {MIN_AREA_DISTANCE_KM} km</p>
+                )}
               </div>
 
               {/* Summary Metrics Card */}
@@ -944,7 +956,8 @@ const MapTerritoryDrawing = ({
                 <button
                   type="button"
                   onClick={handleConfirmSaveArea}
-                  className="h-10 shrink-0 sm:flex-1 rounded-xl bg-(--color-primary) text-white text-xs font-bold hover:opacity-90 transition cursor-pointer"
+                  disabled={!isDistanceValid}
+                  className="h-10 shrink-0 sm:flex-1 rounded-xl bg-(--color-primary) text-white text-xs font-bold hover:opacity-90 transition cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   Save Area Details
                 </button>
