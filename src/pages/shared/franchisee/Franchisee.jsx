@@ -38,7 +38,7 @@ const Franchisee = () => {
     .map((client) => {
       return {
         value: client?.account?._id,
-        label: client?.restaurantName,
+        label: client?.account?.fullName,
         description: client?.account?.email,
         status: ACCOUNT_STATUS[client?.account?.status] ?? ACCOUNT_STATUS[USER_STATUSES.INACTIVE],
       };

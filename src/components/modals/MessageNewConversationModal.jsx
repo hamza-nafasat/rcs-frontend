@@ -78,7 +78,7 @@ const MessageNewConversationModal = ({ isOpen, onClose, contacts = [], onSelect 
     .filter((client) => client?.account?.status !== USER_STATUSES.INVITED)
     .map((client) => ({
       value: client?.account?._id,
-      label: client?.restaurantName,
+      label: client?.account?.fullName,
       description: client?.account?.email,
       status: ACCOUNT_STATUS[client?.account?.status] ?? ACCOUNT_STATUS[USER_STATUSES.INACTIVE],
     }));
