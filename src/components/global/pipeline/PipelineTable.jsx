@@ -49,7 +49,7 @@ const buildColumns = () => [
       const { label, color, bg } = stageOf(row?.stage);
       return (
         <span
-          className="inline-flex w-44 items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium whitespace-nowrap"
+          className="inline-flex w-44 items-center justify-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium whitespace-nowrap"
           style={{ color, borderColor: color, backgroundColor: bg }}
         >
           <span className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ backgroundColor: color }} />
