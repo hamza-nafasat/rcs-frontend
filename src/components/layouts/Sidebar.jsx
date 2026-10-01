@@ -30,6 +30,7 @@ const adminNavItems = [
   { label: "Messages", to: "/admin/dashboard/messages", icon: MessageSquare, badge: "messages" },
   { label: "Moderators", to: "/admin/dashboard/moderators", icon: Award, isOwnerOnly: true },
   { label: "FDD", to: "/admin/dashboard/fdd", icon: FileIcon },
+  { label: "Franchisee", to: "/admin/dashboard/franchisee", icon: UserSquare },
   {
     label: "Pipeline",
     to: "/admin/dashboard/pipeline",

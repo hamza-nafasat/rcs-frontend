@@ -2,7 +2,7 @@ import { activityApi } from "../apis/admin/activity.apis";
 import { clientApi } from "../apis/admin/client.apis";
 import { dashboardApi } from "../apis/admin/dashboard.apis";
 import { clientDashboardApi } from "../apis/client/dashboard.apis";
-import { franchiseeApi } from "../apis/client/franchisee.apis";
+import { franchiseeApi } from "../apis/shared/franchisee.apis";
 import { reportApi } from "../apis/client/report.apis";
 import { authApi } from "../apis/shared/auth.apis";
 import { fddApi } from "../apis/shared/fdd.apis";

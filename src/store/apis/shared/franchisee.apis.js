@@ -5,7 +5,7 @@ export const franchiseeApi = createApi({
   reducerPath: "franchiseeApi",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: `${getEnv("VITE_SERVER_URL")}/api/client/franchisees`,
+    baseUrl: `${getEnv("VITE_SERVER_URL")}/api/franchisees`,
     credentials: "include",
   }),
   tagTypes: ["Franchisees", "singleFranchisee"],

@@ -1,4 +1,4 @@
-import { Briefcase, CalendarDays, DollarSign, Mail, MapPin, Phone, Scale, X } from "lucide-react";
+import { Briefcase, CalendarDays, DollarSign, Mail, MapPin, Phone, Scale, Store, X } from "lucide-react";
 import Avatar from "../../../../components/shared/Avatar";
 import Badge from "../../../../components/shared/Badge";
 import Loader from "../../../../components/shared/Loader";
@@ -8,13 +8,13 @@ import ScorecardSection from "../../../../components/global/scorecard/ScorecardS
 import { buildScorecard, SCORE_CATEGORIES } from "../../../../utils/pipelineScorecard";
 import { franchiseStatusOf } from "../../../../utils/franchiseStatus";
 import { stageOf } from "../../../../utils/pipelineStage";
-import { useGetFranchiseeByIdQuery } from "../../../../store/apis/client/franchisee.apis";
+import { useGetFranchiseeByIdQuery } from "../../../../store/apis/shared/franchisee.apis";
 import { formatPhone } from "../../../../utils/formatPhone";
 
 const longDate = (value) =>
   value ? new Date(value).toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" }) : "—";
 
-const FranchiseeDetailsModal = ({ isOpen, onClose, franchiseeId }) => {
+const FranchiseeDetailsModal = ({ isOpen, onClose, franchiseeId, showClient = false }) => {
   const { data, isFetching } = useGetFranchiseeByIdQuery(franchiseeId, { skip: !franchiseeId });
 
   if (!isOpen) return null;
@@ -30,6 +30,7 @@ const FranchiseeDetailsModal = ({ isOpen, onClose, franchiseeId }) => {
     { icon: Phone, label: "Phone", value: formatPhone(franchisee?.phone) || "—" },
     { icon: MapPin, label: "Location", value: location },
     { icon: CalendarDays, label: "Applied On", value: longDate(franchisee?.createdAt) },
+    ...(showClient ? [{ icon: Store, label: "Client", value: franchisee?.clientName ?? "—" }] : []),
   ];
 
   return (
@@ -102,10 +103,30 @@ const FranchiseeDetailsModal = ({ isOpen, onClose, franchiseeId }) => {
                 </div>
 
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-6">
-                  <ScorecardSection icon={DollarSign} title="Financial Profile" items={scorecard.financialProfile} className="md:col-span-3" />
-                  <ScorecardSection icon={Briefcase} title="Business Experience" items={scorecard.experience} className="md:col-span-3" />
-                  <ScorecardSection icon={Scale} title="Legal & Background" items={scorecard.legal} className="md:col-span-4" />
-                  <ScorecardSection icon={MapPin} title="Market & Location Fit" items={scorecard.market} className="md:col-span-2" />
+                  <ScorecardSection
+                    icon={DollarSign}
+                    title="Financial Profile"
+                    items={scorecard.financialProfile}
+                    className="md:col-span-3"
+                  />
+                  <ScorecardSection
+                    icon={Briefcase}
+                    title="Business Experience"
+                    items={scorecard.experience}
+                    className="md:col-span-3"
+                  />
+                  <ScorecardSection
+                    icon={Scale}
+                    title="Legal & Background"
+                    items={scorecard.legal}
+                    className="md:col-span-4"
+                  />
+                  <ScorecardSection
+                    icon={MapPin}
+                    title="Market & Location Fit"
+                    items={scorecard.market}
+                    className="md:col-span-2"
+                  />
                 </div>
               </section>
             );

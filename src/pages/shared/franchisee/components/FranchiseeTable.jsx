@@ -7,7 +7,15 @@ import { formatPhone } from "../../../../utils/formatPhone";
 
 const fullName = (row) => `${row?.firstName ?? ""} ${row?.lastName ?? ""}`.trim() || "—";
 
-const buildColumns = ({ onView }) => [
+const CLIENT_COLUMN = {
+  name: "Client",
+  selector: (row) => row?.clientName ?? "",
+  sortable: true,
+  minWidth: "160px",
+  cell: (row) => <span className="truncate text-tablecell">{row?.clientName ?? "—"}</span>,
+};
+
+const buildColumns = ({ onView, showClient }) => [
   {
     name: "Applicant",
     selector: (row) => fullName(row),
@@ -24,6 +32,7 @@ const buildColumns = ({ onView }) => [
       </div>
     ),
   },
+  ...(showClient ? [CLIENT_COLUMN] : []),
   {
     name: "Phone",
     selector: (row) => row?.phone ?? "",
@@ -86,15 +95,15 @@ const buildColumns = ({ onView }) => [
   },
 ];
 
-const FranchiseeTable = ({ franchisees = [], isLoading = false, onView, className = "" }) => (
+const FranchiseeTable = ({ franchisees = [], isLoading = false, showClient = false, onView, className = "" }) => (
   <section className={className}>
     <DataTable
-      columns={buildColumns({ onView })}
+      columns={buildColumns({ onView, showClient })}
       data={franchisees}
       isLoading={isLoading}
       variant="boxed"
       pagination
-        striped
+      striped
       noDataComponent={<p className="py-8 text-sm text-secondary">No applicants yet</p>}
     />
   </section>
