@@ -1,5 +1,7 @@
 import { BadgeCheck, FileText, LifeBuoy, MapPin, Settings, UserPlus } from "lucide-react";
+import { FDD_STATUS } from "./fddStatus";
 import { stageOf } from "./pipelineStage";
+import { statusOf as requestStatusOf } from "./requestStatus";
 import { SUPPORT_STATUS } from "./supportStatus";
 
 const ICON_STYLES = {
@@ -13,6 +15,8 @@ const ICON_STYLES = {
 const join = (parts, separator = " · ") => parts.filter(Boolean).join(separator);
 
 const statusLabel = (status) => SUPPORT_STATUS[status]?.label ?? status;
+
+const fddStatusLabel = (status) => FDD_STATUS[status]?.label ?? status;
 
 const place = ({ city, state }) => join([city, state], ", ");
 
@@ -55,6 +59,13 @@ const NOTIFICATION_KINDS = {
     title: ({ fddName }) => (fddName ? `${fddName} approved` : "Your document was approved"),
     description: ({ name }) => `${name ?? "An admin"} approved your filled document.`,
   },
+  fdd_status_changed: {
+    icon: FileText,
+    style: ICON_STYLES.document,
+    title: ({ fddName, to }) => join([fddName ?? "Your document", to && `is now ${fddStatusLabel(to)}`], " "),
+    description: ({ name, from }) =>
+      join([`${name ?? "An admin"} updated the document status`, from && `from ${fddStatusLabel(from)}`], " ") + ".",
+  },
   account_created: {
     icon: UserPlus,
     style: ICON_STYLES.account,
@@ -79,6 +90,15 @@ const NOTIFICATION_KINDS = {
     style: ICON_STYLES.document,
     title: ({ title }) => (title ? `Request answered: ${title}` : "A document request was answered"),
     description: ({ name }) => `${name ?? "An applicant"} sent the documents you asked for.`,
+  },
+  pipeline_request_status_changed: {
+    icon: FileText,
+    style: ICON_STYLES.document,
+    title: ({ title, to }) =>
+      join([title ? `Request “${title}”` : "Your document request", to && `is now ${requestStatusOf(to).label}`], " "),
+    description: ({ name, from }) =>
+      join([`${name ?? "An admin"} updated the request status`, from && `from ${requestStatusOf(from).label}`], " ") +
+      ".",
   },
   pipeline_application_received: {
     icon: FileText,
