@@ -19,7 +19,11 @@ const DashboardBarChart = ({ labels = [], datasets = [], isLoading = false }) =>
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: { display: datasets.length > 1, position: "bottom", labels: { usePointStyle: true, boxWidth: 8 } },
+          legend: {
+            display: datasets.length > 1,
+            position: "bottom",
+            labels: { usePointStyle: true, boxWidth: 14, padding: 18 },
+          },
         },
         scales: { y: { beginAtZero: true } },
       },
