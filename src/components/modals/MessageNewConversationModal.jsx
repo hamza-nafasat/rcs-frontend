@@ -7,8 +7,12 @@ import SegmentedControl from "../shared/SegmentedControl";
 import { useGetAllClientsQuery } from "../../store/apis/admin/client.apis";
 import { USER_ROLES, USER_STATUSES } from "../../configs/constants";
 
-const TAB_CLIENTS = USER_ROLES.CLIENT;
-const TAB_USERS = USER_ROLES.USER;
+// tab order and wording
+const TABS = [
+  { role: USER_ROLES.ADMIN, label: "Admins" },
+  { role: USER_ROLES.CLIENT, label: "Clients" },
+  { role: USER_ROLES.USER, label: "Users" },
+];
 
 const ACTIVE_TAB = "bg-orange-50 text-primary";
 
@@ -29,7 +33,12 @@ const groupContacts = (contacts) =>
   }, {});
 
 const matchesSearch = (contact, query) =>
-  !query || [contact?.fullName, contact?.email].some((value) => String(value ?? "").toLowerCase().includes(query));
+  !query ||
+  [contact?.fullName, contact?.email].some((value) =>
+    String(value ?? "")
+      .toLowerCase()
+      .includes(query),
+  );
 
 const ContactRow = ({ contact, onSelect }) => (
   <button
@@ -48,14 +57,16 @@ const ContactRow = ({ contact, onSelect }) => (
 
 const MessageNewConversationModal = ({ isOpen, onClose, contacts = [], onSelect }) => {
   const [search, setSearch] = useState("");
-  const [tab, setTab] = useState(TAB_CLIENTS);
+  const [tab, setTab] = useState("");
   const [clientId, setClientId] = useState("");
 
-  const clients = contacts.filter((contact) => contact?.role === TAB_CLIENTS);
-  const users = contacts.filter((contact) => contact?.role === TAB_USERS);
+  const countOf = (role) => contacts.filter((contact) => contact?.role === role).length;
+  const tabs = TABS.filter(({ role }) => countOf(role) > 0);
 
-  // only admins reach both
-  const isAdminView = clients.length > 0 && users.length > 0;
+  // admins and clients reach users
+  const hasTabs = countOf(USER_ROLES.USER) > 0 && tabs.length > 1;
+  const activeTab = tab || tabs[0]?.role;
+  const isAdminView = hasTabs && countOf(USER_ROLES.CLIENT) > 0;
   const { data: clientData } = useGetAllClientsQuery(undefined, { skip: !isOpen || !isAdminView });
 
   if (!isOpen) return null;
@@ -72,8 +83,12 @@ const MessageNewConversationModal = ({ isOpen, onClose, contacts = [], onSelect 
       status: ACCOUNT_STATUS[client?.account?.status] ?? ACCOUNT_STATUS[USER_STATUSES.INACTIVE],
     }));
 
-  const visibleUsers = users.filter((user) => (!clientId || user?.franchiser === clientId) && matchesSearch(user, query));
-  const tabContacts = tab === TAB_CLIENTS ? clients.filter((client) => matchesSearch(client, query)) : visibleUsers;
+  const tabContacts = contacts.filter(
+    (contact) =>
+      contact?.role === activeTab &&
+      matchesSearch(contact, query) &&
+      (activeTab !== USER_ROLES.USER || !clientId || contact?.franchiser === clientId),
+  );
   const groups = Object.entries(groupContacts(contacts.filter((contact) => matchesSearch(contact, query))));
 
   return (
@@ -96,16 +111,17 @@ const MessageNewConversationModal = ({ isOpen, onClose, contacts = [], onSelect 
           </button>
         </header>
 
-        {/* Admin tabs */}
-        {isAdminView && (
+        {/* Role tabs */}
+        {hasTabs && (
           <SegmentedControl
             className="mb-3"
-            value={tab}
+            value={activeTab}
             onChange={setTab}
-            options={[
-              { value: TAB_CLIENTS, label: `Clients (${clients.length})`, activeClassName: ACTIVE_TAB },
-              { value: TAB_USERS, label: `Users (${users.length})`, activeClassName: ACTIVE_TAB },
-            ]}
+            options={tabs.map(({ role, label }) => ({
+              value: role,
+              label: `${label} (${countOf(role)})`,
+              activeClassName: ACTIVE_TAB,
+            }))}
           />
         )}
 
@@ -113,12 +129,16 @@ const MessageNewConversationModal = ({ isOpen, onClose, contacts = [], onSelect 
           name="contactSearch"
           value={search}
           onChange={(event) => setSearch(event.target.value)}
-          placeholder={isAdminView && tab === TAB_CLIENTS ? "Search clients" : "Search by name or email"}
+          placeholder={
+            hasTabs
+              ? `Search ${TABS.find(({ role }) => role === activeTab)?.label.toLowerCase()}`
+              : "Search by name or email"
+          }
           icon={<Search size={16} />}
         />
 
         {/* Users of one client */}
-        {isAdminView && tab === TAB_USERS && (
+        {isAdminView && activeTab === USER_ROLES.USER && (
           <Select
             className="mt-3"
             name="clientId"
@@ -133,7 +153,7 @@ const MessageNewConversationModal = ({ isOpen, onClose, contacts = [], onSelect 
 
         {/* People */}
         <section className="mt-4 min-h-0 flex-1 overflow-y-auto">
-          {isAdminView ? (
+          {hasTabs ? (
             tabContacts.length === 0 ? (
               <p className="py-8 text-center text-sm text-muted">No one found</p>
             ) : (
