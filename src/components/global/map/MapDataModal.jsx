@@ -2,13 +2,11 @@ import { useState } from "react";
 import { Building2, ChevronDown, ChevronUp, Layers, MapPin, Pencil, Trash2, X } from "lucide-react";
 import DeleteModal from "../../modals/DeleteModal";
 import { AREA_COLORS } from "../../../utils/mapHelpers";
+import { formatAreaSize, formatMiles } from "../../../utils/distance";
 
 const TAB_FRANCHISES = "franchises";
 const TAB_AREAS = "areas";
 
-// area size in m² or km²
-const formatArea = (areaKm2 = 0) =>
-  areaKm2 < 1 ? `${(areaKm2 * 1000).toFixed(0)} m²` : `${areaKm2.toFixed(2)} km²`;
 
 const MapDataModal = ({
   franchises = [],
@@ -151,7 +149,7 @@ const MapDataModal = ({
                         <div>
                           <span className="text-sm font-bold text-tertiary">{area.name}</span>
                           <span className="ml-2 text-xs text-secondary">
-                            ({area.geoPoints.length} vertices · {formatArea(area.areaKm2)})
+                            ({area.geoPoints.length} vertices · {formatAreaSize(area.areaKm2)} · {formatMiles(area.distanceKm)} apart)
                           </span>
                         </div>
                       </div>

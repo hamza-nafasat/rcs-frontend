@@ -38,6 +38,7 @@ import {
 import { ArrowLeft, Check, Layers, MapPin, PenTool, RotateCcw, Search, Store, X } from "lucide-react";
 import MapFranchiseFormModal from "./MapFranchiseFormModal";
 import MapDataModal from "./MapDataModal";
+import { formatAreaSize, formatMiles, kmToMiles, milesToKm } from "../../../utils/distance";
 
 const FRANCHISE_PIN_RADIUS = 14;
 const BREACH_RING_RADIUS = FRANCHISE_PIN_RADIUS + 10;
@@ -45,7 +46,7 @@ const BREACH_RING_RADIUS = FRANCHISE_PIN_RADIUS + 10;
 const MODE_IDLE = "idle";
 const MODE_AREA = "area";
 const MODE_LOCATION = "location";
-const MIN_AREA_DISTANCE_KM = 0.1;
+const MIN_AREA_DISTANCE_MILES = 0.1;
 
 // no minus or exponent
 const BLOCKED_NUMBER_KEYS = ["-", "+", "e", "E"];
@@ -119,7 +120,7 @@ const MapTerritoryDrawing = ({
   const [editingAreaDbId, setEditingAreaDbId] = useState(null);
   const [formAreaName, setFormAreaName] = useState("");
   const [formAreaDistance, setFormAreaDistance] = useState("5");
-  const isDistanceValid = parseFloat(formAreaDistance) >= MIN_AREA_DISTANCE_KM;
+  const isDistanceValid = parseFloat(formAreaDistance) >= MIN_AREA_DISTANCE_MILES;
 
   // the manage data modal
   const [showDataModal, setShowDataModal] = useState(false);
@@ -221,7 +222,7 @@ const MapTerritoryDrawing = ({
       // Area label at centroid
       const centroidGeo = calcCentroid(area.geoPoints);
       const centroidPx = latLngToCanvas(centroidGeo.lat, centroidGeo.lng);
-      const displayLabel = area.distanceKm > 0 ? `${area.name} (${area.distanceKm} km)` : area.name;
+      const displayLabel = area.distanceKm > 0 ? `${area.name} (${formatMiles(area.distanceKm)})` : area.name;
       drawAreaLabel(ctx, centroidPx, displayLabel, color.stroke);
     });
 
@@ -490,7 +491,7 @@ const MapTerritoryDrawing = ({
 
     const areaNumber = completedAreas.length + 1;
     const finalName = formAreaName.trim() || `Area #${areaNumber}`;
-    const finalDistance = parseFloat(formAreaDistance) || 0;
+    const finalDistance = milesToKm(parseFloat(formAreaDistance));
 
     const updatedArea = {
       ...(editingAreaDbId && { _id: editingAreaDbId }),
@@ -525,7 +526,7 @@ const MapTerritoryDrawing = ({
     setCompletedAreas((prev) => prev.filter((a) => a.id !== area.id));
     setActiveGeoPoints(area.geoPoints);
     setFormAreaName(area.name);
-    setFormAreaDistance(area.distanceKm ? String(area.distanceKm) : "5");
+    setFormAreaDistance(area.distanceKm ? String(Number(kmToMiles(area.distanceKm).toFixed(2))) : "5");
     setMode(MODE_AREA);
     setShowDataModal(false);
   };
@@ -766,8 +767,8 @@ const MapTerritoryDrawing = ({
             style={{ left: hoverViolation.point.x + 16, top: hoverViolation.point.y + 16 }}
           >
             You cannot add a franchise under this area. {hoverViolation.breach.area.name} needs at least{" "}
-            {hoverViolation.breach.requiredKm} km between franchises, but the nearest is{" "}
-            {hoverViolation.breach.distanceKm.toFixed(1)} km away.
+            {formatMiles(hoverViolation.breach.requiredKm)} between franchises, but the nearest is{" "}
+            {formatMiles(hoverViolation.breach.distanceKm)} away.
           </div>
         )}
 
@@ -889,7 +890,7 @@ const MapTerritoryDrawing = ({
                 />
               </div>
 
-              {/* Field 2: Distance Field (Type Number with km suffix) */}
+              {/* Field 2: Distance Field (Type Number with mi suffix) */}
               <div>
                 <label className="block text-xs font-semibold text-tertiary uppercase tracking-wide mb-1.5">
                   Distance Allowed between branches *
@@ -907,15 +908,15 @@ const MapTerritoryDrawing = ({
                     className="w-full h-10 rounded-xl border color-border bg-white pl-3.5 pr-14 text-sm font-semibold text-tertiary outline-none focus:border-(--color-primary) transition"
                   />
                   <span className="absolute right-3 text-xs font-bold text-secondary bg-gray-100 px-2.5 py-1 rounded-md">
-                    km
+                    mi
                   </span>
                 </div>
                 {isDistanceValid ? (
                   <p className="mt-1 text-[11px] text-muted">
-                    Each number represents distance in kilometers (e.g. 5 = 5 km radius)
+                    Each number represents distance in miles (e.g. 5 = 5 mile radius)
                   </p>
                 ) : (
-                  <p className="mt-1 text-[11px] text-red-500">Distance must be at least {MIN_AREA_DISTANCE_KM} km</p>
+                  <p className="mt-1 text-[11px] text-red-500">Distance must be at least {MIN_AREA_DISTANCE_MILES} mi</p>
                 )}
               </div>
 
@@ -928,9 +929,7 @@ const MapTerritoryDrawing = ({
                 <div>
                   <p className="text-[10px] font-semibold text-secondary uppercase">Surface Area</p>
                   <p className="text-sm font-bold text-primary mt-0.5">
-                    {calcPolygonAreaKm2(pendingGeoPoints) < 1
-                      ? `${(calcPolygonAreaKm2(pendingGeoPoints) * 1000).toFixed(0)} m²`
-                      : `${calcPolygonAreaKm2(pendingGeoPoints).toFixed(1)} km²`}
+                    {formatAreaSize(calcPolygonAreaKm2(pendingGeoPoints))}
                   </p>
                 </div>
                 <div>
