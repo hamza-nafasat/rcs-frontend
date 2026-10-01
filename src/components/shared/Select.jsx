@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Check, ChevronDown, Plus, Search, X } from "lucide-react";
+import Avatar from "./Avatar";
 
 const MAX_RENDERED_OPTIONS = 100;
 
 const normalizeOption = (option) =>
   typeof option === "string" || typeof option === "number"
     ? { value: option, label: String(option) }
-    : { value: option.value, label: option.label ?? String(option.value) };
+    : { ...option, label: option.label ?? String(option.value) };
 
 const Select = ({
   label,
@@ -52,7 +53,11 @@ const Select = ({
 
   const visibleOptions = searchable
     ? normalizedOptions.filter((option) =>
-        option.label.toLowerCase().includes(query.trim().toLowerCase()),
+        [option.label, option.description].some((text) =>
+          String(text ?? "")
+            .toLowerCase()
+            .includes(query.trim().toLowerCase()),
+        ),
       )
     : normalizedOptions;
 
@@ -64,7 +69,9 @@ const Select = ({
   const canCreate =
     creatable &&
     trimmedQuery !== "" &&
-    !normalizedOptions.some((option) => option.label.toLowerCase() === trimmedQuery.toLowerCase());
+    !normalizedOptions.some(
+      (option) => option.label.toLowerCase() === trimmedQuery.toLowerCase(),
+    );
 
   const closeMenu = () => {
     setOpen(false);
@@ -125,6 +132,11 @@ const Select = ({
 
   const hasSelection = selectedValues.length > 0;
 
+  // options with a person card
+  const hasDetails = normalizedOptions.some(
+    (option) => option.description || option.status,
+  );
+
   const triggerText = !hasSelection
     ? placeholder
     : multiple && selectedValues.length > 0
@@ -154,9 +166,7 @@ const Select = ({
           className={`flex h-10 w-full cursor-pointer items-center gap-2 rounded-xl border border-[#E5E7EB] bg-white px-4 text-left text-sm outline-none focus:border-primary disabled:cursor-not-allowed disabled:bg-gray-50 ${className}`}
         >
           <span
-            className={`min-w-0 flex-1 truncate ${
-              hasSelection ? "text-tertiary" : "text-muted"
-            }`}
+            className={`min-w-0 flex-1 truncate ${hasSelection ? "text-tertiary" : "text-muted"}`}
           >
             {triggerText}
           </span>
@@ -175,9 +185,7 @@ const Select = ({
 
           <ChevronDown
             size={16}
-            className={`shrink-0 text-secondary transition ${
-              open ? "rotate-180" : ""
-            }`}
+            className={`shrink-0 text-secondary transition ${open ? "rotate-180" : ""}`}
           />
         </button>
 
@@ -204,7 +212,11 @@ const Select = ({
               </div>
             )}
 
-            <div className="max-h-60 overflow-y-auto">
+            <div
+              className={`max-h-60 overflow-y-auto ${
+                hasDetails ? "flex flex-col gap-1 p-1" : ""
+              }`}
+            >
               {canCreate && (
                 <button
                   type="button"
@@ -214,12 +226,16 @@ const Select = ({
                   className="flex w-full cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-tertiary transition hover:bg-gray-50"
                 >
                   <Plus size={14} className="shrink-0 text-(--color-primary)" />
-                  <span className="min-w-0 flex-1 truncate">Use "{trimmedQuery}"</span>
+                  <span className="min-w-0 flex-1 truncate">
+                    Use "{trimmedQuery}"
+                  </span>
                 </button>
               )}
 
               {isLoading ? (
-                <p className="px-3 py-4 text-center text-sm text-muted">Loading...</p>
+                <p className="px-3 py-4 text-center text-sm text-muted">
+                  Loading...
+                </p>
               ) : visibleOptions.length === 0 ? (
                 !canCreate && (
                   <p className="px-3 py-4 text-center text-sm text-muted">
@@ -237,9 +253,11 @@ const Select = ({
                       role="option"
                       aria-selected={isSelected}
                       onClick={() => handleSelect(option.value)}
-                      className={`flex w-full cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-left text-sm transition hover:bg-gray-50 ${
-                        isSelected ? "text-tertiary" : "text-secondary"
-                      }`}
+                      className={`flex w-full cursor-pointer items-center px-3 text-left text-sm transition ${
+                        hasDetails
+                          ? `gap-3 rounded-xl border py-2.5 ${isSelected ? "border-orange-200 bg-orange-50/60" : "border-transparent hover:bg-gray-50"}`
+                          : "gap-2 rounded-lg py-2 hover:bg-gray-50"
+                      } ${isSelected ? "text-tertiary" : "text-secondary"}`}
                     >
                       {multiple && (
                         <span
@@ -253,9 +271,44 @@ const Select = ({
                         </span>
                       )}
 
-                      <span className="min-w-0 flex-1 truncate">
-                        {option.label}
+                      {hasDetails && (
+                        <Avatar
+                          name={option.label}
+                          size={32}
+                          rounded="rounded-lg"
+                        />
+                      )}
+
+                      <span className="min-w-0 flex-1">
+                        <span
+                          className={`block truncate ${hasDetails ? "font-medium text-tertiary" : ""}`}
+                        >
+                          {option.label}
+                        </span>
+
+                        {option.description && (
+                          <span className="block truncate text-xs text-muted">
+                            {option.description}
+                          </span>
+                        )}
                       </span>
+
+                      {/* optional status pill */}
+                      {option.status && (
+                        <span
+                          className="inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-medium"
+                          style={{
+                            color: option.status.color,
+                            backgroundColor: option.status.bg,
+                          }}
+                        >
+                          <span
+                            className="h-1.5 w-1.5 rounded-full"
+                            style={{ backgroundColor: option.status.color }}
+                          />
+                          {option.status.label}
+                        </span>
+                      )}
 
                       {!multiple && isSelected && (
                         <Check
@@ -270,7 +323,8 @@ const Select = ({
 
               {visibleOptions.length > renderedOptions.length && (
                 <p className="px-3 py-2 text-center text-xs text-muted">
-                  Showing {renderedOptions.length} of {visibleOptions.length}, type to narrow down
+                  Showing {renderedOptions.length} of {visibleOptions.length},
+                  type to narrow down
                 </p>
               )}
             </div>
