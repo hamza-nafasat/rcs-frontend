@@ -44,7 +44,7 @@ const PipelineApplicantProgress = ({ currentStage, canRequest = false, onMakeReq
               <div
                 key={stage}
                 style={{ backgroundColor: bg, borderColor: color }}
-                className="flex min-h-23 w-full flex-col items-center justify-between rounded-xl border-2 p-3 text-center shadow-sm"
+                className="flex min-h-23 w-full flex-col items-center justify-center gap-2 rounded-xl border-2 p-3 text-center shadow-sm"
               >
                 <span
                   className="rounded-full bg-white px-2 py-0.5 text-[10px] font-bold tracking-wider uppercase shadow-2xs"
@@ -52,7 +52,7 @@ const PipelineApplicantProgress = ({ currentStage, canRequest = false, onMakeReq
                 >
                   Active
                 </span>
-                <p className="flex-1 py-1 text-xs leading-tight font-bold" style={{ color }}>
+                <p className="text-xs leading-tight font-bold" style={{ color }}>
                   {label}
                 </p>
               </div>
@@ -63,10 +63,10 @@ const PipelineApplicantProgress = ({ currentStage, canRequest = false, onMakeReq
             return (
               <div
                 key={stage}
-                className="flex min-h-23 w-full flex-col items-center justify-between rounded-xl border border-emerald-200 bg-emerald-50/70 p-3 text-center"
+                className="flex min-h-23 w-full flex-col items-center justify-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50/70 p-3 text-center"
               >
                 <CheckCircle2 size={18} className="text-emerald-600" />
-                <p className="flex-1 py-1 text-xs leading-tight font-semibold text-emerald-900">{label}</p>
+                <p className="text-xs leading-tight font-semibold text-emerald-900">{label}</p>
               </div>
             );
           }
@@ -74,10 +74,10 @@ const PipelineApplicantProgress = ({ currentStage, canRequest = false, onMakeReq
           return (
             <div
               key={stage}
-              className="flex min-h-23 w-full flex-col items-center justify-between rounded-xl border color-border bg-muted p-3 text-center opacity-70"
+              className="flex min-h-23 w-full flex-col items-center justify-center gap-2 rounded-xl border color-border bg-muted p-3 text-center opacity-70"
             >
               <Circle size={15} className="text-muted" />
-              <p className="flex-1 py-1 text-xs leading-tight font-medium text-muted">{label}</p>
+              <p className="text-xs leading-tight font-medium text-muted">{label}</p>
             </div>
           );
         })}
