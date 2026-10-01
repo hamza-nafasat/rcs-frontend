@@ -9,7 +9,8 @@ export const dashboardApi = createApi({
   endpoints: (builder) => ({
     /////
     getDashboardStats: builder.query({
-      query: () => "",
+      // charts group by my months
+      query: () => ({ url: "", params: { tz: Intl.DateTimeFormat().resolvedOptions().timeZone } }),
       providesTags: ["Dashboard"],
     }),
   }),
