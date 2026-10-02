@@ -11,8 +11,8 @@ const buildColumns = ({ canManage, onView, onEdit, onFill, onDownload, onDelete 
     sortable: true,
     cell: (row) => (
       <div className="min-w-0">
-        <p className="truncate text-sm text-gray-900">{row.title}</p>
-        <p className="truncate text-xs text-gray-500">Version {row.version}</p>
+        <p className="break-words text-sm text-gray-900">{row.title}</p>
+        <p className="break-words text-xs text-gray-500">Version {row.version}</p>
       </div>
     ),
   },
@@ -21,7 +21,7 @@ const buildColumns = ({ canManage, onView, onEdit, onFill, onDownload, onDelete 
     // the api populates the linked client
     selector: (row) => row.restaurant?.restaurantName ?? "",
     sortable: true,
-    cell: (row) => <p className="truncate text-sm text-gray-900">{row.restaurant?.restaurantName ?? "—"}</p>,
+    cell: (row) => <p className="break-words text-sm text-gray-900">{row.restaurant?.restaurantName ?? "—"}</p>,
   },
   {
     name: "Country",
@@ -29,8 +29,8 @@ const buildColumns = ({ canManage, onView, onEdit, onFill, onDownload, onDelete 
     sortable: true,
     cell: (row) => (
       <div className="min-w-0">
-        <p className="truncate text-sm text-gray-900">{row.country}</p>
-        <p className="truncate text-xs text-gray-500">{row.state}</p>
+        <p className="break-words text-sm text-gray-900">{row.country}</p>
+        <p className="break-words text-xs text-gray-500">{row.state}</p>
       </div>
     ),
   },

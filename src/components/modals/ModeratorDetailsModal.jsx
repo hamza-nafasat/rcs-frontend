@@ -25,7 +25,7 @@ const ModeratorDetailsModal = ({ isOpen, onClose, member, onEdit, onRemove }) =>
             <Avatar name={member.fullName} src={member.image?.url} size={48} rounded="rounded-xl" />
 
             <div className="min-w-0">
-              <h2 className="truncate text-xl font-semibold text-tertiary">
+              <h2 className="break-words text-xl font-semibold text-tertiary">
                 {member.fullName}
               </h2>
 
@@ -57,7 +57,7 @@ const ModeratorDetailsModal = ({ isOpen, onClose, member, onEdit, onRemove }) =>
 
               <div className="min-w-0">
                 <p className="text-xs text-muted">{detailLabel}</p>
-                <p className="truncate text-sm text-tertiary">{value ?? "—"}</p>
+                <p className="break-words text-sm text-tertiary">{value ?? "—"}</p>
               </div>
             </div>
           ))}

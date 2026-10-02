@@ -22,8 +22,8 @@ const buildColumns = ({ setMemberToEdit, setViewMember, setMemberToRemove }) => 
       <div className="flex min-w-0 items-center gap-2">
         <Avatar name={row.fullName} src={row.image?.url} size={32} rounded="rounded-lg" color="#F97316" />
         <div className="min-w-0">
-          <p className="truncate text-sm text-gray-900">{row.fullName}</p>
-          <p className="truncate text-xs text-gray-500">{row.email}</p>
+          <p className="break-words text-sm text-gray-900">{row.fullName}</p>
+          <p className="break-words text-xs text-gray-500">{row.email}</p>
         </div>
       </div>
     ),

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { Paperclip, Send, X } from "lucide-react";
 import MessageAttachment from "./MessageAttachment";
 import MessageEmoji from "./MessageEmoji";
@@ -7,11 +7,23 @@ import Button from "../../../shared/Button";
 import { formatDuration } from "../../../../utils/formatDuration";
 import { formatFileSize } from "../../../../utils/formatFileSize";
 
+// it grows this far, then scrolls
+const MAX_INPUT_HEIGHT = 160;
+
 const MessageWrite = ({ onSend, isSending = false }) => {
+  const inputRef = useRef(null);
   const [message, setMessage] = useState("");
   const [file, setFile] = useState(null);
   const [filePreview, setFilePreview] = useState("");
   const [voiceNote, setVoiceNote] = useState(null);
+
+  // the box follows the text
+  useLayoutEffect(() => {
+    const input = inputRef.current;
+    if (!input) return;
+    input.style.height = "auto";
+    input.style.height = `${Math.min(input.scrollHeight, MAX_INPUT_HEIGHT)}px`;
+  }, [message]);
 
   const handleEmojiSelect = (emoji) => {
     setMessage(message + emoji);
@@ -44,7 +56,7 @@ const MessageWrite = ({ onSend, isSending = false }) => {
     event.preventDefault();
 
     const trimmedMessage = message.trim();
-    if (!trimmedMessage && !file && !voiceNote) return;
+    if (isSending || (!trimmedMessage && !file && !voiceNote)) return;
 
     try {
       await onSend?.(trimmedMessage, file, voiceNote);
@@ -54,6 +66,12 @@ const MessageWrite = ({ onSend, isSending = false }) => {
     } catch (error) {
       console.error("Send message error:", error);
     }
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key !== "Enter" || event.shiftKey) return;
+    event.preventDefault();
+    handleSubmit(event);
   };
 
   return (
@@ -109,13 +127,15 @@ const MessageWrite = ({ onSend, isSending = false }) => {
         </div>
       )}
 
-      <div className="flex items-center gap-3 rounded-xl border border-gray-200 px-3 py-2">
-        <input
-          type="text"
+      <div className="flex items-end gap-3 rounded-xl border border-gray-200 px-3 py-2">
+        <textarea
+          ref={inputRef}
+          rows={1}
           value={message}
           onChange={(event) => setMessage(event.target.value)}
-          placeholder="Type a message... (Enter to send)"
-          className="min-w-0 flex-1 bg-transparent text-sm text-gray-900 outline-none placeholder:text-gray-400"
+          onKeyDown={handleKeyDown}
+          placeholder="Type a message... (Enter to send, Shift + Enter for a new line)"
+          className="min-w-0 flex-1 resize-none overflow-y-auto bg-transparent py-1.5 text-sm leading-5 text-gray-900 outline-none placeholder:text-gray-400"
         />
 
         <Button

@@ -49,8 +49,8 @@ const buildColumns = ({
       <div className="flex items-center gap-2">
         <Avatar name={row.restaurantName} size={32} rounded="rounded-md" color="#F97316" />
         <div className="min-w-0">
-          <p className="truncate text-sm text-gray-900">{row.restaurantName}</p>
-          <p className="truncate text-xs text-gray-500">{row.restaurantCuisine}</p>
+          <p className="break-words text-sm text-gray-900">{row.restaurantName}</p>
+          <p className="break-words text-xs text-gray-500">{row.restaurantCuisine}</p>
         </div>
       </div>
     ),

@@ -22,7 +22,7 @@ const SupportDetailsModal = ({ isOpen, onClose, ticket }) => {
         <header className="mb-5 flex items-start justify-between gap-4">
           <div className="min-w-0">
             <p className="text-sm font-semibold text-primary">{ticket?.ticketId}</p>
-            <h2 className="mt-0.5 text-lg font-semibold text-tertiary">{ticket?.subject}</h2>
+            <h2 className="mt-0.5 break-words text-lg font-semibold text-tertiary">{ticket?.subject}</h2>
 
             <div className="mt-2 flex flex-wrap items-center gap-2">
               <SupportPill {...(SUPPORT_STATUS[ticket?.status] ?? SUPPORT_STATUS.in_progress)} />
@@ -50,8 +50,8 @@ const SupportDetailsModal = ({ isOpen, onClose, ticket }) => {
               key={label}
               className="flex items-center justify-between gap-3 rounded-lg border color-border bg-white px-3 py-2"
             >
-              <dt className="min-w-0 truncate text-xs text-secondary">{label}</dt>
-              <dd className="shrink-0 text-sm font-medium text-tertiary">{value}</dd>
+              <dt className="shrink-0 text-xs text-secondary">{label}</dt>
+              <dd className="min-w-0 break-words text-right text-sm font-medium text-tertiary">{value}</dd>
             </div>
           ))}
         </dl>
@@ -59,7 +59,7 @@ const SupportDetailsModal = ({ isOpen, onClose, ticket }) => {
         {/* Description */}
         <section className="mt-4">
           <h3 className="mb-2 text-sm font-semibold text-tertiary">Description</h3>
-          <p className="whitespace-pre-line rounded-xl border color-border bg-gray-50 p-4 text-sm text-secondary">
+          <p className="whitespace-pre-line break-words rounded-xl border color-border bg-gray-50 p-4 text-sm text-secondary">
             {ticket?.description || "No description was provided."}
           </p>
         </section>
@@ -74,7 +74,7 @@ const SupportDetailsModal = ({ isOpen, onClose, ticket }) => {
               className="inline-flex items-center gap-2 rounded-lg border color-border px-3 py-2 text-sm text-tertiary transition hover:bg-gray-50"
             >
               <Paperclip size={14} className="shrink-0 text-secondary" />
-              <span className="truncate">{ticket?.attachment?.name ?? "Attachment"}</span>
+              <span className="min-w-0 break-all">{ticket?.attachment?.name ?? "Attachment"}</span>
             </a>
           </section>
         )}

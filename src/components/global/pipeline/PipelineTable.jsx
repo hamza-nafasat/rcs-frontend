@@ -17,8 +17,8 @@ const buildColumns = () => [
       <div className="flex items-center gap-3 py-1">
         <Avatar name={applicantName(row)} size={36} rounded="rounded-lg" />
         <div className="min-w-0">
-          <p className="truncate font-medium text-tertiary">{applicantName(row)}</p>
-          <p className="truncate text-xs text-muted">{row?.applicant?.email ?? "—"}</p>
+          <p className="break-words font-medium text-tertiary">{applicantName(row)}</p>
+          <p className="break-words text-xs text-muted">{row?.applicant?.email ?? "—"}</p>
         </div>
       </div>
     ),
@@ -27,7 +27,7 @@ const buildColumns = () => [
     name: "Franchise",
     selector: (row) => row?.franchiseName ?? "",
     sortable: true,
-    cell: (row) => <span className="truncate text-secondary">{row?.franchiseName ?? "—"}</span>,
+    cell: (row) => <span className="min-w-0 break-words text-secondary">{row?.franchiseName ?? "—"}</span>,
   },
   {
     name: "Territory",
@@ -36,7 +36,7 @@ const buildColumns = () => [
     cell: (row) => (
       <div className="flex items-center gap-1.5 text-secondary">
         <MapPin size={14} className="shrink-0 text-muted" />
-        <span className="truncate">{row?.proposedTerritory ?? "—"}</span>
+        <span className="min-w-0 break-words">{row?.proposedTerritory ?? "—"}</span>
       </div>
     ),
   },

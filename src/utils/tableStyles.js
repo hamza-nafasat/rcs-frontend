@@ -5,6 +5,17 @@ const PADDING = "20px";
 const BASE = {
   table: { style: { width: "100%" } },
   rows: { stripedStyle: { backgroundColor: "var(--color-bg-muted)" } },
+  // long values wrap instead of spilling
+  cells: {
+    style: {
+      minWidth: 0,
+      paddingTop: "10px",
+      paddingBottom: "10px",
+      whiteSpace: "normal",
+      overflowWrap: "anywhere",
+      wordBreak: "break-word",
+    },
+  },
 };
 
 // the look a table wears

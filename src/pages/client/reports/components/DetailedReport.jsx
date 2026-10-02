@@ -28,10 +28,10 @@ const COLUMNS = [
     sortable: true,
     cell: (row) => (
       <div className="min-w-0 py-1">
-        <p className="truncate font-semibold text-tertiary">
+        <p className="break-words font-semibold text-tertiary">
           {row?.applicant?.fullName ?? "—"}
         </p>
-        <p className="truncate text-xs text-muted">{submittedOn(row)}</p>
+        <p className="break-words text-xs text-muted">{submittedOn(row)}</p>
       </div>
     ),
   },
@@ -40,7 +40,7 @@ const COLUMNS = [
     minWidth: "140px",
     selector: (row) => row?.proposedTerritory ?? "",
     cell: (row) => (
-      <span className="truncate text-secondary">
+      <span className="min-w-0 break-words text-secondary">
         {row?.proposedTerritory || "—"}
       </span>
     ),

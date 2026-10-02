@@ -43,7 +43,7 @@ const FranchiseeDetailsModal = ({ isOpen, onClose, franchiseeId, showClient = fa
 
             <div className="min-w-0">
               <h2 className="heading-lg text-tertiary">{name}</h2>
-              <p className="mt-0.5 truncate text-sm text-secondary">{franchisee?.email}</p>
+              <p className="mt-0.5 break-words text-sm text-secondary">{franchisee?.email}</p>
               <span className="mt-2 inline-block">
                 <Badge text={status.label} dotColor={status.color} />
               </span>
@@ -67,7 +67,7 @@ const FranchiseeDetailsModal = ({ isOpen, onClose, franchiseeId, showClient = fa
               <Icon size={16} className="shrink-0 text-muted" />
               <div className="min-w-0">
                 <p className="text-[11px] tracking-wide text-secondary uppercase">{label}</p>
-                <p className="truncate text-sm text-tertiary">{value}</p>
+                <p className="break-words text-sm text-tertiary">{value}</p>
               </div>
             </div>
           ))}

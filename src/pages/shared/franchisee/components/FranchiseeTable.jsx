@@ -12,7 +12,7 @@ const CLIENT_COLUMN = {
   selector: (row) => row?.clientName ?? "",
   sortable: true,
   minWidth: "160px",
-  cell: (row) => <span className="truncate text-tablecell">{row?.clientName ?? "—"}</span>,
+  cell: (row) => <span className="min-w-0 break-words text-tablecell">{row?.clientName ?? "—"}</span>,
 };
 
 const buildColumns = ({ onView, showClient }) => [
@@ -26,8 +26,8 @@ const buildColumns = ({ onView, showClient }) => [
       <div className="flex items-center gap-3 py-1">
         <Avatar name={fullName(row)} size={34} rounded="rounded-lg" />
         <div className="min-w-0">
-          <p className="truncate font-medium text-tertiary">{fullName(row)}</p>
-          <p className="truncate text-xs text-muted">{row?.email}</p>
+          <p className="break-words font-medium text-tertiary">{fullName(row)}</p>
+          <p className="break-words text-xs text-muted">{row?.email}</p>
         </div>
       </div>
     ),
@@ -51,7 +51,7 @@ const buildColumns = ({ onView, showClient }) => [
       return (
         <span className="flex min-w-0 items-center gap-1.5 text-tablecell">
           <MapPin size={14} className="shrink-0 text-muted" />
-          <span className="truncate">{location}</span>
+          <span className="min-w-0 break-words">{location}</span>
         </span>
       );
     },

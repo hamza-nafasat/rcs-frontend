@@ -91,7 +91,7 @@ const ClientDetailsModal = ({ isOpen, onClose, clientId }) => {
 
                   <div className="min-w-0">
                     <p className="text-xs text-secondary">{field}</p>
-                    <p className="truncate text-sm text-tertiary">{value}</p>
+                    <p className="break-words text-sm text-tertiary">{value}</p>
                   </div>
                 </div>
               ))}

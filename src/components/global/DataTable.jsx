@@ -2,6 +2,9 @@ import ReactDataTable from "react-data-table-component";
 import TableSkeleton from "./TableSkeleton";
 import { tableStyles } from "../../utils/tableStyles";
 
+// the library keeps cells on one line
+const wrapColumns = (columns) => columns.map((column) => ({ wrap: true, ...column }));
+
 // one loading, empty and look for every table
 const DataTable = ({
   columns = [],
@@ -12,7 +15,7 @@ const DataTable = ({
   ...rest
 }) => (
   <ReactDataTable
-    columns={columns}
+    columns={wrapColumns(columns)}
     keyField="_id"
     highlightOnHover
     responsive
