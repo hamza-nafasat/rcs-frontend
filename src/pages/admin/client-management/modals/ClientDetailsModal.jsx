@@ -35,9 +35,9 @@ const ClientDetailsModal = ({ isOpen, onClose, clientId }) => {
           <section className="flex items-center gap-3">
             <Avatar name={client.restaurantName} />
 
-            <div>
-              <h2 className="text-xl font-semibold text-tertiary">{client.restaurantName}</h2>
-              <p className="mt-0.5 text-sm text-secondary">
+            <div className="min-w-0">
+              <h2 className="wrap-break-word text-xl font-semibold text-tertiary">{client.restaurantName}</h2>
+              <p className="mt-0.5 wrap-break-word text-sm text-secondary">
                 {client.restaurantCuisine ?? "—"} · {location}
               </p>
               <span
@@ -91,7 +91,7 @@ const ClientDetailsModal = ({ isOpen, onClose, clientId }) => {
 
                   <div className="min-w-0">
                     <p className="text-xs text-secondary">{field}</p>
-                    <p className="break-words text-sm text-tertiary">{value}</p>
+                    <p className="wrap-break-word text-sm text-tertiary">{value}</p>
                   </div>
                 </div>
               ))}

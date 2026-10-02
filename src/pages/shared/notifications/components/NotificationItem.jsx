@@ -20,11 +20,11 @@ const NotificationItem = ({ notification, onMarkRead, onDelete }) => {
       {/* Content */}
       <div className="min-w-0 flex-1">
         <div className="flex items-start gap-2">
-          <p className="text-sm font-semibold text-tertiary">{title}</p>
+          <p className="wrap-break-word text-sm font-semibold text-tertiary">{title}</p>
           {!isRead && <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-blue-500" />}
         </div>
 
-        {description && <p className="mt-1 text-sm leading-relaxed text-secondary">{description}</p>}
+        {description && <p className="mt-1 wrap-break-word text-sm leading-relaxed text-secondary">{description}</p>}
 
         <p className="mt-2 text-xs text-muted">{formatRelativeTime(createdAt)}</p>
       </div>

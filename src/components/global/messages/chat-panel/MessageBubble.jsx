@@ -23,7 +23,7 @@ const MessageBubble = ({ message, isOwnMessage, onDelete }) => {
           isOwnMessage ? "rounded-br-md bg-orange-500 text-white" : "rounded-bl-md bg-gray-100 text-gray-900"
         }`}
       >
-        {text && <p className="whitespace-pre-wrap break-words text-sm leading-5">{text}</p>}
+        {text && <p className="whitespace-pre-wrap wrap-break-word text-sm leading-5">{text}</p>}
 
         {attachmentType === "image" && (
           <img src={attachment?.url} alt={attachment?.name} className="mt-1 max-h-60 rounded-lg" />

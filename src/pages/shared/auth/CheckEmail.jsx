@@ -37,14 +37,19 @@ const CheckEmail = () => {
               subheading={
                 <>
                   We've sent a password reset link to{" "}
-                  <span className="font-medium text-tertiary">{state?.email ?? "your email"}</span>. Click the link in
-                  the email to reset your password.
+                  <span className="wrap-break-word font-medium text-tertiary">{state?.email ?? "your email"}</span>.
+                  Click the link in the email to reset your password.
                 </>
               }
             />
           </section>
 
-          <Button type="button" onClick={handleOpenEmail} iconPosition="right" className="h-10 w-full rounded-xl text-sm font-medium">
+          <Button
+            type="button"
+            onClick={handleOpenEmail}
+            iconPosition="right"
+            className="h-10 w-full rounded-xl text-sm font-medium"
+          >
             Open email app
           </Button>
 

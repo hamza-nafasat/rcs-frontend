@@ -25,9 +25,7 @@ const ModeratorDetailsModal = ({ isOpen, onClose, member, onEdit, onRemove }) =>
             <Avatar name={member.fullName} src={member.image?.url} size={48} rounded="rounded-xl" />
 
             <div className="min-w-0">
-              <h2 className="break-words text-xl font-semibold text-tertiary">
-                {member.fullName}
-              </h2>
+              <h2 className="wrap-break-word text-xl font-semibold text-tertiary">{member.fullName}</h2>
 
               <span
                 className={`mt-1.5 inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium ${pill}`}
@@ -57,7 +55,7 @@ const ModeratorDetailsModal = ({ isOpen, onClose, member, onEdit, onRemove }) =>
 
               <div className="min-w-0">
                 <p className="text-xs text-muted">{detailLabel}</p>
-                <p className="break-words text-sm text-tertiary">{value ?? "—"}</p>
+                <p className="wrap-break-word text-sm text-tertiary">{value ?? "—"}</p>
               </div>
             </div>
           ))}
@@ -73,11 +71,7 @@ const ModeratorDetailsModal = ({ isOpen, onClose, member, onEdit, onRemove }) =>
             Remove
           </Button>
 
-          <Button
-            type="button"
-            onClick={() => onEdit?.(member)}
-            className="w-full sm:w-1/2 px-3! py-2!"
-          >
+          <Button type="button" onClick={() => onEdit?.(member)} className="w-full sm:w-1/2 px-3! py-2!">
             Edit
           </Button>
         </footer>

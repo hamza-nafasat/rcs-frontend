@@ -3,9 +3,7 @@ import SupportPill from "../../../../components/global/support/SupportPill";
 import DashboardHeading from "../../../../components/global/DashboardHeading";
 import { SUPPORT_PRIORITY, SUPPORT_STATUS } from "../../../../utils/supportStatus";
 
-
 const DashboardRecentSupports = ({ tickets = [], isLoading = false, onViewAll }) => {
-
   return (
     <>
       <header className="mb-5 flex items-start justify-between gap-3">
@@ -19,9 +17,7 @@ const DashboardRecentSupports = ({ tickets = [], isLoading = false, onViewAll })
       </header>
 
       {tickets.length === 0 ? (
-        <p className="py-8 text-center text-sm text-secondary">
-          {isLoading ? "Loading tickets…" : "No tickets yet"}
-        </p>
+        <p className="py-8 text-center text-sm text-secondary">{isLoading ? "Loading tickets…" : "No tickets yet"}</p>
       ) : (
         <div className="overflow-x-auto">
           {/* a minimum width keeps the pills whole */}
@@ -39,11 +35,11 @@ const DashboardRecentSupports = ({ tickets = [], isLoading = false, onViewAll })
             <tbody>
               {tickets.map((ticket) => (
                 <tr key={ticket._id} className="border-b color-border last:border-0">
-                  <td className="break-words py-3 pr-3 text-sm font-medium text-tertiary">
+                  <td className="wrap-break-word py-3 pr-3 text-sm font-medium text-tertiary">
                     {ticket?.ticketId ?? "—"}
                   </td>
 
-                  <td className="break-words py-3 pr-3 text-sm text-tablecell">{ticket?.category ?? "—"}</td>
+                  <td className="wrap-break-word py-3 pr-3 text-sm text-tablecell">{ticket?.category ?? "—"}</td>
 
                   <td className="whitespace-nowrap py-3 pr-3">
                     <SupportPill
@@ -56,7 +52,7 @@ const DashboardRecentSupports = ({ tickets = [], isLoading = false, onViewAll })
                     <SupportPill {...(SUPPORT_STATUS[ticket?.status] ?? SUPPORT_STATUS.in_progress)} />
                   </td>
 
-                  <td className="break-words py-3 text-sm text-tablecell">
+                  <td className="wrap-break-word py-3 text-sm text-tablecell">
                     {ticket?.restaurant?.restaurantName ?? ticket?.raisedBy?.fullName ?? "—"}
                   </td>
                 </tr>

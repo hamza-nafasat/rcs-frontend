@@ -19,7 +19,7 @@ const buildColumns = ({ onView, onEdit, onAsk }) => {
       minWidth: "150px",
       maxWidth: "250px",
       wrap: true,
-      cell: (row) => <p className="break-words font-semibold text-subject">{row.title}</p>,
+      cell: (row) => <p className="wrap-break-word font-semibold text-subject">{row.title}</p>,
     },
     {
       name: "Message",
@@ -27,7 +27,7 @@ const buildColumns = ({ onView, onEdit, onAsk }) => {
       minWidth: "220px",
       maxWidth: "250px",
       wrap: true,
-      cell: (row) => <p className="break-words text-tablecell">{row.message}</p>,
+      cell: (row) => <p className="wrap-break-word text-tablecell">{row.message}</p>,
     },
     {
       name: "Attachments",
@@ -43,7 +43,7 @@ const buildColumns = ({ onView, onEdit, onAsk }) => {
         return (
           <span className="flex min-w-0 items-center gap-1.5 text-tablecell">
             <Paperclip size={14} className="shrink-0 text-muted" />
-            <span className="min-w-0 break-words">{attachments[0].name}</span>
+            <span className="min-w-0 wrap-break-word">{attachments[0].name}</span>
             {attachments.length > 1 && <span className="shrink-0 text-muted">+{attachments.length - 1}</span>}
           </span>
         );

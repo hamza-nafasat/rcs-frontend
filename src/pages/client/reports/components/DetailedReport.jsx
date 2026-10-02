@@ -6,17 +6,14 @@ import { scoreColor, stageOf } from "../../../../utils/pipelineStage";
 
 const categoryValue = (row, key) => (row?.scores?.[key] ?? 0).toFixed(1);
 
-const submittedOn = (row) =>
-  row?.createdAt ? new Date(row.createdAt).toLocaleDateString() : "—";
+const submittedOn = (row) => (row?.createdAt ? new Date(row.createdAt).toLocaleDateString() : "—");
 
 // one column per score category
 const categoryColumn = (name, key) => ({
   name,
   selector: (row) => row?.scores?.[key] ?? 0,
   sortable: true,
-  cell: (row) => (
-    <span className="text-tertiary">{categoryValue(row, key)}</span>
-  ),
+  cell: (row) => <span className="text-tertiary">{categoryValue(row, key)}</span>,
 });
 
 const COLUMNS = [
@@ -28,10 +25,8 @@ const COLUMNS = [
     sortable: true,
     cell: (row) => (
       <div className="min-w-0 py-1">
-        <p className="break-words font-semibold text-tertiary">
-          {row?.applicant?.fullName ?? "—"}
-        </p>
-        <p className="break-words text-xs text-muted">{submittedOn(row)}</p>
+        <p className="wrap-break-word font-semibold text-tertiary">{row?.applicant?.fullName ?? "—"}</p>
+        <p className="wrap-break-word text-xs text-muted">{submittedOn(row)}</p>
       </div>
     ),
   },
@@ -39,11 +34,7 @@ const COLUMNS = [
     name: "Territory",
     minWidth: "140px",
     selector: (row) => row?.proposedTerritory ?? "",
-    cell: (row) => (
-      <span className="min-w-0 break-words text-secondary">
-        {row?.proposedTerritory || "—"}
-      </span>
-    ),
+    cell: (row) => <span className="min-w-0 wrap-break-word text-secondary">{row?.proposedTerritory || "—"}</span>,
   },
   {
     name: "Stage",
@@ -77,17 +68,8 @@ const COLUMNS = [
     minWidth: "170px",
     selector: (row) => getRecommendation(row?.stage, row?.scores?.total).label,
     cell: (row) => {
-      const { label, bg, text } = getRecommendation(
-        row?.stage,
-        row?.scores?.total,
-      );
-      return (
-        <span
-          className={`shrink-0 rounded-full px-2.5 py-0.5 text-xs font-medium ${bg} ${text}`}
-        >
-          {label}
-        </span>
-      );
+      const { label, bg, text } = getRecommendation(row?.stage, row?.scores?.total);
+      return <span className={`shrink-0 rounded-full px-2.5 py-0.5 text-xs font-medium ${bg} ${text}`}>{label}</span>;
     },
   },
 ];
@@ -105,11 +87,7 @@ const DetailedReport = ({ applicants = [], isLoading = false }) => {
           data={applicants}
           isLoading={isLoading}
           variant="plain"
-          noDataComponent={
-            <p className="py-8 text-sm text-muted">
-              No applicants in this range
-            </p>
-          }
+          noDataComponent={<p className="py-8 text-sm text-muted">No applicants in this range</p>}
         />
       </section>
     </Card>

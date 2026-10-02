@@ -53,7 +53,7 @@ const buildColumns = ({ onView, onEdit, onResolve, onClose, onReopen, onDelete, 
     minWidth: "210px",
     maxWidth: "3000px",
     wrap: true,
-    cell: (row) => <p className="break-words text-subject">{row.subject}</p>,
+    cell: (row) => <p className="wrap-break-word text-subject">{row.subject}</p>,
   },
   {
     name: "Category",

@@ -108,7 +108,7 @@ const FddFillModal = ({ isOpen, onClose, document, onSave }) => {
         {/* Header */}
         <header className="flex items-start justify-between gap-4 border-b color-border p-6">
           <div className="min-w-0">
-            <h2 className="break-words text-xl font-semibold text-tertiary">Fill {document.title}</h2>
+            <h2 className="wrap-break-word text-xl font-semibold text-tertiary">Fill {document.title}</h2>
             <p className="mt-1 text-sm text-muted">
               {activeValue
                 ? "Click a page to place it, drag it to move it, and use as many pages as you need."

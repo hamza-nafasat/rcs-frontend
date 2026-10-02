@@ -18,8 +18,7 @@ import {
   PROFILE_FIELDS,
 } from "../utils/data";
 
-const EDITABLE_INPUT =
-  "border-gray-200 focus:border-[#F97316] focus:ring-4 focus:ring-indigo-500/10 bg-white";
+const EDITABLE_INPUT = "border-gray-200 focus:border-[#F97316] focus:ring-4 focus:ring-indigo-500/10 bg-white";
 // click the key to copy
 const copyApiKey = async (apiKey) => {
   try {
@@ -30,16 +29,11 @@ const copyApiKey = async (apiKey) => {
   }
 };
 
-const LOCKED_INPUT =
-  "bg-gray-50/50 text-gray-500 border-gray-100 cursor-not-allowed";
+const LOCKED_INPUT = "bg-gray-50/50 text-gray-500 border-gray-100 cursor-not-allowed";
 
 // only the values the api has
 const pickFilled = (source, fields) =>
-  Object.fromEntries(
-    fields
-      .filter((field) => source?.[field] != null)
-      .map((field) => [field, source[field]]),
-  );
+  Object.fromEntries(fields.filter((field) => source?.[field] != null).map((field) => [field, source[field]]));
 
 const toForm = (profile) => ({
   ...EMPTY_PROFILE,
@@ -74,8 +68,7 @@ const SettingsProfileSetting = ({
     }));
   };
 
-  const handleSelect = (name, value) =>
-    setForm((prev) => ({ ...prev, [name]: value }));
+  const handleSelect = (name, value) => setForm((prev) => ({ ...prev, [name]: value }));
 
   // swap image, free old preview
   const replaceImage = (file) => {
@@ -114,8 +107,7 @@ const SettingsProfileSetting = ({
     setPasswordError("");
   };
 
-  const togglePasswordVisibility = (name) =>
-    setVisiblePasswords((prev) => ({ ...prev, [name]: !prev[name] }));
+  const togglePasswordVisibility = (name) => setVisiblePasswords((prev) => ({ ...prev, [name]: !prev[name] }));
 
   // unsaved edits beat saved data
   const map = mapDraft ?? { franchises, areas };
@@ -123,9 +115,7 @@ const SettingsProfileSetting = ({
   const handlePasswordSubmit = async (event) => {
     event.preventDefault();
     if (passwords.newPassword.length < PASSWORD_MIN_LENGTH)
-      return setPasswordError(
-        `Your new password must be at least ${PASSWORD_MIN_LENGTH} characters.`,
-      );
+      return setPasswordError(`Your new password must be at least ${PASSWORD_MIN_LENGTH} characters.`);
     if (passwords.newPassword !== passwords.confirmPassword)
       return setPasswordError("New password and confirmation do not match.");
 
@@ -141,9 +131,7 @@ const SettingsProfileSetting = ({
     <article className="rounded-xl bg-white relative h-full flex flex-col">
       <section className="shrink-0 p-4">
         <div className="flex items-center justify-between mb-4">
-          <h1 className="text-2xl font-bold">
-            {isEditing ? "Edit Profile" : "My Profile"}
-          </h1>
+          <h1 className="text-2xl font-bold">{isEditing ? "Edit Profile" : "My Profile"}</h1>
 
           {!isEditing && (
             <button
@@ -161,11 +149,7 @@ const SettingsProfileSetting = ({
         {/* Profile */}
         <div className="flex flex-col sm:flex-row items-center gap-6 mb-8 text-center sm:text-left">
           <div className="relative">
-            <Avatar
-              src={imagePreview || profile?.image?.url}
-              name={profile?.fullName}
-              size={100}
-            />
+            <Avatar src={imagePreview || profile?.image?.url} name={profile?.fullName} size={100} />
             {isEditing && (
               <label
                 title="Change Image"
@@ -184,8 +168,8 @@ const SettingsProfileSetting = ({
           </div>
 
           <div className="min-w-0">
-            <h2 className="truncate text-xl font-bold">{profile?.fullName}</h2>
-            <p className="truncate text-gray-500">{profile?.email}</p>
+            <h2 className="wrap-break-word text-xl font-bold">{profile?.fullName}</h2>
+            <p className="wrap-break-word text-gray-500">{profile?.email}</p>
             {isClient && profile?.apiKey && (
               <Button
                 variant="bare"
@@ -195,9 +179,7 @@ const SettingsProfileSetting = ({
                 className="mt-2 max-w-full py-0! text-left"
                 textClassName="flex min-w-0 items-center gap-2 text-sm"
               >
-                <span className="shrink-0 font-medium text-tertiary">
-                  API Key:
-                </span>
+                <span className="shrink-0 font-medium text-tertiary">API Key:</span>
                 <code className="truncate rounded-lg bg-muted px-2 py-1 font-mono text-xs text-secondary">
                   {profile.apiKey}
                 </code>
@@ -211,51 +193,34 @@ const SettingsProfileSetting = ({
         onSubmit={handleSubmit}
         className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border-gray-100 flex-1 overflow-y-auto"
       >
-        {PERSONAL_INPUTS.map(
-          ({
-            label,
-            name,
-            type = "text",
-            isLocked = false,
-            isWide = false,
-            isRequired = false,
-          }) => (
-            <div key={name} className={isWide ? "md:col-span-2" : ""}>
-              {type === "tel" ? (
-                <PhoneInput
-                  label={label}
-                  name={name}
-                  value={form[name] ?? ""}
-                  onChange={handleChange}
-                  disabled={!isEditing}
-                  className={`h-auto py-3 shadow-sm transition-all ${isEditing ? EDITABLE_INPUT : LOCKED_INPUT}`}
-                />
-              ) : (
-                <Input
-                  label={isRequired ? `${label} *` : label}
-                  name={name}
-                  type={type}
-                  placeholder={`Enter ${label.toLowerCase()}`}
-                  value={form[name] ?? ""}
-                  onChange={handleChange}
-                  disabled={isLocked || !isEditing}
-                  required={isRequired}
-                  hint={
-                    isLocked && isEditing
-                      ? "Email cannot be changed"
-                      : undefined
-                  }
-                  className={`px-4 py-3 shadow-sm transition-all ${isEditing && !isLocked ? EDITABLE_INPUT : LOCKED_INPUT}`}
-                />
-              )}
-            </div>
-          ),
-        )}
-        <LocationFields
-          values={form}
-          onChange={handleChange}
-          disabled={!isEditing}
-        />
+        {PERSONAL_INPUTS.map(({ label, name, type = "text", isLocked = false, isWide = false, isRequired = false }) => (
+          <div key={name} className={isWide ? "md:col-span-2" : ""}>
+            {type === "tel" ? (
+              <PhoneInput
+                label={label}
+                name={name}
+                value={form[name] ?? ""}
+                onChange={handleChange}
+                disabled={!isEditing}
+                className={`h-auto py-3 shadow-sm transition-all ${isEditing ? EDITABLE_INPUT : LOCKED_INPUT}`}
+              />
+            ) : (
+              <Input
+                label={isRequired ? `${label} *` : label}
+                name={name}
+                type={type}
+                placeholder={`Enter ${label.toLowerCase()}`}
+                value={form[name] ?? ""}
+                onChange={handleChange}
+                disabled={isLocked || !isEditing}
+                required={isRequired}
+                hint={isLocked && isEditing ? "Email cannot be changed" : undefined}
+                className={`px-4 py-3 shadow-sm transition-all ${isEditing && !isLocked ? EDITABLE_INPUT : LOCKED_INPUT}`}
+              />
+            )}
+          </div>
+        ))}
+        <LocationFields values={form} onChange={handleChange} disabled={!isEditing} />
 
         <label className="md:col-span-2 flex items-center gap-2 text-sm text-tertiary">
           <input
@@ -312,9 +277,7 @@ const SettingsProfileSetting = ({
       <section className="mt-6 p-4">
         <div className="mb-4">
           <h2 className="text-lg font-bold">Password Update</h2>
-          <p className="mt-1 text-sm text-gray-500">
-            Change your account password securely.
-          </p>
+          <p className="mt-1 text-sm text-gray-500">Change your account password securely.</p>
         </div>
 
         <form onSubmit={handlePasswordSubmit} className="space-y-4">
@@ -332,19 +295,13 @@ const SettingsProfileSetting = ({
             />
           ))}
 
-          {passwordError && (
-            <p className="text-sm text-red-500">{passwordError}</p>
-          )}
+          {passwordError && <p className="text-sm text-red-500">{passwordError}</p>}
 
           <div className="flex justify-end border-t border-gray-100 pt-4">
             <Button
               type="submit"
               isLoading={isChangingPassword}
-              isDisabled={
-                !passwords.currentPassword ||
-                !passwords.newPassword ||
-                !passwords.confirmPassword
-              }
+              isDisabled={!passwords.currentPassword || !passwords.newPassword || !passwords.confirmPassword}
               className="px-3! py-2! sm:px-4! sm:py-2.5! text-sm font-medium text-white transition hover:opacity-90"
             >
               Update Password

@@ -50,7 +50,7 @@ const PipelineRequestModal = ({ isOpen, onClose, request, canFill = false, onFil
             </span>
 
             <div className="min-w-0">
-              <h2 className="heading-lg text-tertiary">{request.title}</h2>
+              <h2 className="wrap-break-word heading-lg text-tertiary">{request.title}</h2>
               <p className="mt-0.5 flex items-center gap-1.5 text-xs text-secondary">
                 <CalendarDays size={13} className="shrink-0 text-muted" />
                 Sent on {longDate(request.createdAt)}
@@ -80,7 +80,7 @@ const PipelineRequestModal = ({ isOpen, onClose, request, canFill = false, onFil
           {/* Message */}
           <section>
             <h3 className="text-xs font-semibold tracking-wide text-secondary uppercase">Message</h3>
-            <p className="mt-2 rounded-xl bg-active p-4 text-sm leading-relaxed whitespace-pre-line text-tertiary">
+            <p className="mt-2 rounded-xl bg-active p-4 text-sm leading-relaxed wrap-break-word whitespace-pre-line text-tertiary">
               {request.message}
             </p>
           </section>
@@ -108,7 +108,7 @@ const PipelineRequestModal = ({ isOpen, onClose, request, canFill = false, onFil
                 Submitted on {longDate(response.submittedAt)}
               </p>
 
-              <p className="mt-2 rounded-xl bg-white p-4 text-sm leading-relaxed whitespace-pre-line text-tertiary">
+              <p className="mt-2 rounded-xl bg-white p-4 text-sm leading-relaxed wrap-break-word whitespace-pre-line text-tertiary">
                 {response.message}
               </p>
 

@@ -34,7 +34,7 @@ const ActivityTimeline = ({
 
             <div className="min-w-0 flex-1 pb-6">
               <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
-                <p className="min-w-0 text-sm leading-5 text-tertiary">
+                <p className="min-w-0 wrap-break-word text-sm leading-5 text-tertiary">
                   <span className="font-semibold">{activity?.actorName ?? "Someone"}</span>{" "}
                   <span className="font-medium" style={{ color }}>
                     {label.toLowerCase()}

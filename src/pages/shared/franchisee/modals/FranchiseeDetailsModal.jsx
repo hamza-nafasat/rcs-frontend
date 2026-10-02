@@ -43,7 +43,7 @@ const FranchiseeDetailsModal = ({ isOpen, onClose, franchiseeId, showClient = fa
 
             <div className="min-w-0">
               <h2 className="heading-lg text-tertiary">{name}</h2>
-              <p className="mt-0.5 break-words text-sm text-secondary">{franchisee?.email}</p>
+              <p className="mt-0.5 wrap-break-word text-sm text-secondary">{franchisee?.email}</p>
               <span className="mt-2 inline-block">
                 <Badge text={status.label} dotColor={status.color} />
               </span>
@@ -67,7 +67,7 @@ const FranchiseeDetailsModal = ({ isOpen, onClose, franchiseeId, showClient = fa
               <Icon size={16} className="shrink-0 text-muted" />
               <div className="min-w-0">
                 <p className="text-[11px] tracking-wide text-secondary uppercase">{label}</p>
-                <p className="break-words text-sm text-tertiary">{value}</p>
+                <p className="wrap-break-word text-sm text-tertiary">{value}</p>
               </div>
             </div>
           ))}
@@ -85,8 +85,10 @@ const FranchiseeDetailsModal = ({ isOpen, onClose, franchiseeId, showClient = fa
               <section key={application._id} className="mt-6 flex flex-col gap-5 rounded-2xl border color-border p-5">
                 <header className="flex flex-wrap items-center justify-between gap-3">
                   <div className="min-w-0">
-                    <h3 className="text-base font-semibold text-tertiary">{application?.franchiseName}</h3>
-                    <p className="text-xs text-secondary">
+                    <h3 className="wrap-break-word text-base font-semibold text-tertiary">
+                      {application?.franchiseName}
+                    </h3>
+                    <p className="wrap-break-word text-xs text-secondary">
                       {application?.proposedTerritory || "No proposed territory"}
                     </p>
                   </div>

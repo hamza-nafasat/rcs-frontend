@@ -49,7 +49,7 @@ const UserMenu = ({ type = "admin" }) => {
         >
           <Avatar src={user?.image?.url} name={user?.fullName} size={32} />
 
-          <span className="hidden text-left text-sm font-medium text-tertiary sm:block">{user?.fullName}</span>
+          <span className="hidden max-w-40 truncate text-left text-sm font-medium text-tertiary sm:block">{user?.fullName}</span>
 
           <ChevronDown size={16} />
         </Button>
