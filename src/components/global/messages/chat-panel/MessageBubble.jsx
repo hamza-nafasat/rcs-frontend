@@ -1,5 +1,5 @@
 import { Paperclip, Trash2 } from "lucide-react";
-import { formatChatTime } from "../../../../utils/formatTime";
+import { formatChatDateTime } from "../../../../utils/formatTime";
 import { formatDuration } from "../../../../utils/formatDuration";
 
 const MessageBubble = ({ message, isOwnMessage, onDelete }) => {
@@ -49,7 +49,7 @@ const MessageBubble = ({ message, isOwnMessage, onDelete }) => {
         )}
 
         <p className={`mt-1 text-[10px] ${isOwnMessage ? "text-orange-100" : "text-gray-400"}`}>
-          {formatChatTime(createdAt)}
+          {formatChatDateTime(createdAt)}
         </p>
       </div>
     </div>

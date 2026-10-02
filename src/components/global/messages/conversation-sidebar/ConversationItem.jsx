@@ -2,7 +2,6 @@ import { MoreVertical, Trash2 } from "lucide-react";
 import Avatar from "../../../shared/Avatar";
 import Button from "../../../shared/Button";
 import Dropdown from "../../../shared/Dropdown";
-import { formatChatTime } from "../../../../utils/formatTime";
 
 // preview when there are no words
 const ATTACHMENT_PREVIEW = {
@@ -12,7 +11,7 @@ const ATTACHMENT_PREVIEW = {
 };
 
 const ConversationItem = ({ conversation, isSelected, onSelect, onDelete }) => {
-  const { _id, contact, lastMessage, lastMessageAt, unreadCount } = conversation;
+  const { _id, contact, lastMessage, unreadCount } = conversation;
   const preview = lastMessage?.text || ATTACHMENT_PREVIEW[lastMessage?.attachmentType] || "";
 
   return (
@@ -26,11 +25,7 @@ const ConversationItem = ({ conversation, isSelected, onSelect, onDelete }) => {
 
         {/* Conversation Content */}
         <div className="min-w-0 flex-1">
-          <div className="flex items-center justify-between gap-2">
-            <p className="truncate text-sm font-semibold text-gray-900">{contact?.fullName}</p>
-            <span className="shrink-0 text-xs text-gray-400">{formatChatTime(lastMessageAt)}</span>
-          </div>
-
+          <p className="truncate text-sm font-semibold text-gray-900">{contact?.fullName}</p>
           <p className="truncate text-xs text-gray-500">{contact?.email}</p>
           <p className="mt-0.5 truncate text-xs text-gray-400">{preview}</p>
         </div>

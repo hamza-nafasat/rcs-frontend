@@ -1,13 +1,12 @@
-// time today, date when older
-const formatChatTime = (value) => {
+// date and time, always 12 hour
+const formatChatDateTime = (value) => {
   if (!value) return "";
 
   const date = new Date(value);
-  const isToday = date.toDateString() === new Date().toDateString();
+  const day = date.toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" });
+  const time = date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true });
 
-  return isToday
-    ? date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-    : date.toLocaleDateString([], { day: "numeric", month: "short" });
+  return `${day}, ${time}`;
 };
 
 const RELATIVE_UNITS = [
@@ -32,4 +31,4 @@ const formatRelativeTime = (value) => {
   return `${amount} ${match[0]}${amount > 1 ? "s" : ""} ago`;
 };
 
-export { formatChatTime, formatRelativeTime };
+export { formatChatDateTime, formatRelativeTime };
