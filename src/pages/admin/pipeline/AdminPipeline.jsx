@@ -18,7 +18,7 @@ const AdminPipeline = () => {
     <article className="flex flex-col gap-4">
       <PipelineHeading
         heading="Franchise Pipeline"
-        subheading="Applicant qualification scorecard — automated scoring engine"
+        subheading="Every applicant scored automatically against your criteria"
       />
 
       <PipelineFilter filters={filters} setFilters={setFilters} territories={territoriesOf(applications)} />

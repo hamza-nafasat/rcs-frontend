@@ -858,7 +858,7 @@ const MapTerritoryDrawing = ({
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-tertiary">Save Area Details</h3>
-                  <p className="text-xs text-secondary">Territory shape completed — enter area information</p>
+                  <p className="text-xs text-secondary">Territory shape completed. Now enter the area information.</p>
                 </div>
               </div>
               <button

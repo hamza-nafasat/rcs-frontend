@@ -65,7 +65,7 @@ const AuthApplicationFields = ({
           />
         </div>
 
-        {/* only the signup form passes an account — Settings shows the application on its own */}
+        {/* only the signup form passes an account */}
         {account && (
           <>
             <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">

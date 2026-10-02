@@ -725,7 +725,7 @@ const LocationAssignModal = ({ isOpen, applicant, onClose, onSaveLocation }) => 
           <span className="font-semibold text-gray-800">Saved Branches</span>
           {overlappingBranchIds.size > 0 && (
             <span className="ml-2 text-red-600 font-bold animate-pulse">
-              — ⚠️ {overlappingBranchIds.size} Branches have surpassing/overlapping radii!
+              ⚠️ {overlappingBranchIds.size} Branches have surpassing/overlapping radii!
             </span>
           )}
         </div>

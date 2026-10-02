@@ -123,7 +123,7 @@ const AdminApplicantDetailPage = () => {
         <div className={`flex items-start justify-between gap-3 rounded-xl border p-4 ${recommendation.bg} ${recommendation.border}`}>
           <div className="min-w-0">
             <p className={`text-sm font-bold ${recommendation.text}`}>
-              Recommendation: {recommendation.code} — {recommendation.label}
+              Recommendation: {recommendation.label}
             </p>
             <p className="mt-1 text-xs font-medium text-secondary">{recommendation.note}</p>
           </div>

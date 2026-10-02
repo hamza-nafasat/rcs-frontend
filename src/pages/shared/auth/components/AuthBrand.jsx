@@ -18,7 +18,7 @@ const authContent = {
     ),
 
     description:
-      "Every franchise applicant scored the moment they apply. Clients see their pipeline live — no more waiting for a monthly report.",
+      "Every franchise applicant scored the moment they apply. Clients see their pipeline live, so nobody waits for a monthly report.",
 
     icons: [
       <OrangeCircleIcon />,
@@ -28,10 +28,10 @@ const authContent = {
     ],
 
     features: [
-      "Live client dashboard — real-time pipeline visibility",
-      "Automated scoring engine — Financial, Experience, Legal, Market",
-      "On-demand report export — no more month-end scrambles",
-      "One RCS admin panel — every client's pipeline in one place",
+      "Live client dashboard with real time pipeline visibility",
+      "Automated scoring across financial, experience, legal and market",
+      "Export a report whenever you need one, not just at month end",
+      "One RCS admin panel holding every client's pipeline",
     ],
 
     stats: [

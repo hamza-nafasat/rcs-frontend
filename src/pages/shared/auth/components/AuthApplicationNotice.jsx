@@ -8,7 +8,7 @@ const AuthApplicationNotice = ({ onDismiss }) => {
       <p className="min-w-0 flex-1 text-sm">
         <span className="font-semibold text-tertiary">New Client Application</span>{" "}
         <span className="text-secondary">
-          Complete all sections — scores calculate automatically
+          Complete all sections. Scores calculate automatically.
         </span>
       </p>
 
