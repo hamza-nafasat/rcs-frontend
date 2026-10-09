@@ -248,6 +248,7 @@ const ClientTable = ({ className, clients = [], isLoading = false }) => {
             clientEmail: clientToEdit?.account?.email,
             firstName: clientToEdit?.account?.firstName,
             lastName: clientToEdit?.account?.lastName,
+            restaurantStates: clientToEdit?.restaurantStates,
           }}
           mode="edit"
         />

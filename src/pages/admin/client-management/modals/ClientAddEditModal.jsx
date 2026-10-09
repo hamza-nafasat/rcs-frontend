@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { X } from "lucide-react";
 import Input from "../../../../components/shared/Input";
+import Select from "../../../../components/shared/Select";
 import Button from "../../../../components/shared/Button";
+import { US_STATES } from "../../../../utils/fddStateHelper";
+
+const STATE_OPTIONS = US_STATES.map((state) => state.name);
 
 const ClientAddEditModal = ({
   isOpen,
@@ -11,11 +15,14 @@ const ClientAddEditModal = ({
   mode = "add",
   isSubmitting = false,
 }) => {
+  const isEdit = mode === "edit";
+
   const [formData, setFormData] = useState(() => ({
     restaurantName: initialData?.restaurantName || "",
     clientEmail: initialData?.clientEmail || "",
     firstName: initialData?.firstName || "",
     lastName: initialData?.lastName || "",
+    restaurantStates: initialData?.restaurantStates || [],
   }));
 
   const handleChange = (e) => {
@@ -29,7 +36,9 @@ const ClientAddEditModal = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
+    // an invite carries no states yet
+    const { restaurantStates, ...account } = formData;
+    onSubmit(isEdit ? { ...account, restaurantStates } : account);
   };
 
   if (!isOpen) return null;
@@ -40,7 +49,7 @@ const ClientAddEditModal = ({
         {/* Header */}
         <section className="mb-6 flex items-center justify-between">
           <h2 className="text-xl font-semibold text-gray-900">
-            {mode === "edit" ? "Edit Client" : "Add New Client"}
+            {isEdit ? "Edit Client" : "Add New Client"}
           </h2>
 
           <button
@@ -91,6 +100,28 @@ const ClientAddEditModal = ({
             required
           />
 
+          {/* Where this brand operates */}
+          {isEdit && (
+            <div className="flex flex-col gap-1">
+              <Select
+                label="Operating States"
+                name="restaurantStates"
+                value={formData.restaurantStates}
+                onChange={handleChange}
+                options={STATE_OPTIONS}
+                placeholder="Select states"
+                multiple
+                searchable
+                clearable
+              />
+
+              <p className="text-xs text-muted">
+                Each state needs its FDD before this client counts as covered. States with a franchise cannot be
+                removed.
+              </p>
+            </div>
+          )}
+
           {/* Buttons */}
           <div className="flex flex-col-reverse gap-3 pt-4 text-sm sm:flex-row">
             <Button
@@ -103,7 +134,7 @@ const ClientAddEditModal = ({
             </Button>
 
             <Button type="submit" isLoading={isSubmitting} className="w-full sm:w-1/2">
-              {mode === "edit" ? "Update" : "Send Invite"}
+              {isEdit ? "Update" : "Send Invite"}
             </Button>
           </div>
         </form>
