@@ -132,6 +132,9 @@ const Select = ({
 
   const hasSelection = selectedValues.length > 0;
 
+  // a starred option keeps its mark
+  const selectedOption = !multiple && normalizedOptions.find((option) => option.value === selectedValues[0]);
+
   // options with a person card
   const hasDetails = normalizedOptions.some(
     (option) => option.description || option.status,
@@ -169,6 +172,9 @@ const Select = ({
             className={`min-w-0 flex-1 truncate ${hasSelection ? "text-tertiary" : "text-muted"}`}
           >
             {triggerText}
+            {selectedOption?.isRequired && (
+              <span className={selectedOption.isFulfilled ? "text-muted" : "text-remove"}> *</span>
+            )}
           </span>
 
           {clearable && hasSelection && !disabled && (
@@ -284,6 +290,9 @@ const Select = ({
                           className={`block truncate ${hasDetails ? "font-medium text-tertiary" : ""}`}
                         >
                           {option.label}
+                          {option.isRequired && (
+                            <span className={option.isFulfilled ? "text-muted" : "text-remove"}> *</span>
+                          )}
                         </span>
 
                         {option.description && (

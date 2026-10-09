@@ -4,7 +4,8 @@ import Input from "../../../../components/shared/Input";
 import Select from "../../../../components/shared/Select";
 import FileUpload from "../../../../components/shared/FileUpload";
 import Button from "../../../../components/shared/Button";
-import { FDD_STATE_OPTIONS, GENERAL_FDD_STATE } from "../../../../utils/fddStateHelper";
+import { useGetAllFddsQuery } from "../../../../store/apis/shared/fdd.apis";
+import { FDD_STATE_OPTIONS, GENERAL_FDD_STATE, requiredFddStates } from "../../../../utils/fddStateHelper";
 import { FDD_STATUS_OPTIONS } from "../../../../utils/fddStatus";
 
 const INITIAL_FORM = {
@@ -50,6 +51,22 @@ const FddAddEditModal = ({
 
     setFormData((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
   };
+
+  // what this brand already has on file
+  const { data: brandFdds } = useGetAllFddsQuery(
+    { restaurant: formData.restaurant },
+    { skip: !formData.restaurant },
+  );
+  const uploadedStates = new Set((brandFdds?.data ?? []).map((document) => document?.state));
+
+  // the documents this brand's locations need
+  const selectedClient = clients.find((client) => client.value === formData.restaurant);
+  const requiredStates = new Set(requiredFddStates(selectedClient?.restaurantStates));
+  const stateOptions = FDD_STATE_OPTIONS.map((state) =>
+    requiredStates.has(state)
+      ? { value: state, label: state, isRequired: true, isFulfilled: uploadedStates.has(state) }
+      : state,
+  );
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -132,16 +149,24 @@ const FddAddEditModal = ({
 
           {/* Where it applies and where it stands */}
           <section className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <Select
-              label="FDD State *"
-              name="state"
-              value={formData.state}
-              onChange={handleChange}
-              placeholder="Select state"
-              options={FDD_STATE_OPTIONS}
-              searchable
-              required
-            />
+            <div className="flex flex-col gap-1">
+              <Select
+                label="FDD State *"
+                name="state"
+                value={formData.state}
+                onChange={handleChange}
+                placeholder="Select state"
+                options={stateOptions}
+                searchable
+                required
+              />
+
+              {requiredStates.size > 0 && (
+                <p className="text-xs text-muted">
+                  <span className="text-remove">*</span> still missing for this brand&apos;s locations
+                </p>
+              )}
+            </div>
 
             <div className="flex flex-col gap-1">
               <Select

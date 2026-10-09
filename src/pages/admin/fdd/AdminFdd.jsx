@@ -53,6 +53,8 @@ const AdminFdd = () => {
   const clients = (clientData?.data ?? []).map((client) => ({
     value: client?._id,
     label: client?.restaurantName,
+    // the modal stars the states it needs
+    restaurantStates: client?.restaurantStates ?? [],
   }));
 
   // the fdd coverage badge follows
