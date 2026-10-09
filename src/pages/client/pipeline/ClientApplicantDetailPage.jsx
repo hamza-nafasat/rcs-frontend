@@ -4,6 +4,7 @@ import ScoreRadar from "../../../components/global/scorecard/ScoreRadar";
 import CategoryScores from "../../../components/global/scorecard/CategoryScores";
 import ScorecardSection from "../../../components/global/scorecard/ScorecardSection";
 import PipelineApplicantProgress from "../../../components/global/pipeline/PipelineApplicantProgress";
+import PipelineApplicantContact from "../../../components/global/pipeline/PipelineApplicantContact";
 import { buildScorecard, getRecommendation, SCORE_CATEGORIES } from "../../../utils/pipelineScorecard";
 import { useGetPipelineByIdQuery } from "../../../store/apis/shared/pipeline.apis";
 
@@ -38,6 +39,8 @@ const ClientApplicantDetailPage = () => {
             <p className="text-[11px] font-medium text-muted">Overall Score / 100</p>
           </div>
         </header>
+
+        <PipelineApplicantContact applicant={application.applicant} />
 
         {/* Scores */}
         <div className="grid grid-cols-1 items-center gap-5 md:grid-cols-2">

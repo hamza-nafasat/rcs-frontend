@@ -1,4 +1,5 @@
 import { BadgeCheck, FileText, LifeBuoy, MapPin, Settings, UserPlus } from "lucide-react";
+import { fddStateFor } from "./fddStateHelper";
 import { FDD_STATUS } from "./fddStatus";
 import { stageOf } from "./pipelineStage";
 import { statusOf as requestStatusOf } from "./requestStatus";
@@ -76,8 +77,7 @@ const NOTIFICATION_KINDS = {
     icon: Settings,
     style: ICON_STYLES.system,
     title: () => "Profile updated",
-    description: ({ name }) =>
-      name ? `${name} saved changes to your profile.` : "Your profile changes were saved successfully.",
+    description: ({ name }) => `${name ?? "A moderator"} saved changes to your profile.`,
   },
   pipeline_request_sent: {
     icon: FileText,
@@ -122,6 +122,33 @@ const NOTIFICATION_KINDS = {
     title: ({ to }) => (to ? `Application moved to ${stageOf(to).label}` : "Your application status changed"),
     description: ({ name, from }) =>
       join([`${name ?? "An admin"} updated your application`, from && `from ${stageOf(from).label}`], " ") + ".",
+  },
+  client_state_added: {
+    icon: MapPin,
+    style: ICON_STYLES.document,
+    title: ({ clientName, state }) =>
+      join([clientName ?? "A client", state ? `now operates in ${state}` : "reached a new state"], " "),
+    description: ({ franchiseName, state }) =>
+      join(
+        [
+          franchiseName ? `${franchiseName} was assigned there` : "A new location was assigned",
+          state && `this state needs the ${fddStateFor(state)} FDD`,
+        ],
+        " \u2014 ",
+      ) + ".",
+  },
+  pipeline_new_state_application: {
+    icon: MapPin,
+    style: ICON_STYLES.support,
+    title: ({ name, state }) => `${name ?? "An applicant"} applied in ${state ?? "a new state"}`,
+    description: ({ clientName, state }) =>
+      join(
+        [
+          `${clientName ?? "The client"} has no franchise in ${state ?? "that state"} yet`,
+          state && `assigning a location there will need the ${fddStateFor(state)} FDD`,
+        ],
+        " \u2014 ",
+      ) + ".",
   },
   pipeline_location_assigned: {
     icon: MapPin,

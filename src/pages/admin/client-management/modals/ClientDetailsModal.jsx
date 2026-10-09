@@ -6,6 +6,7 @@ import Loader from "../../../../components/shared/Loader";
 import { useGetClientByIdQuery } from "../../../../store/apis/admin/client.apis";
 import { withMapId } from "../../../../utils/mapHelpers";
 import ClientDetailSummary from "../components/ClientDetailSummary";
+import ClientFddCoverage from "../components/ClientFddCoverage";
 import { CLIENT_STATUS, getClientStatus } from "../utils/clientStatus";
 import { formatPhone } from "../../../../utils/formatPhone";
 
@@ -99,6 +100,8 @@ const ClientDetailsModal = ({ isOpen, onClose, clientId }) => {
           </section>
 
           <ClientDetailSummary client={client} />
+
+          <ClientFddCoverage client={client} />
 
           {/* Franchises and areas */}
           <section>

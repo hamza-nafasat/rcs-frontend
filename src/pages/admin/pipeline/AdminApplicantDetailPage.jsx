@@ -6,6 +6,7 @@ import CategoryScores from "../../../components/global/scorecard/CategoryScores"
 import ScorecardSection from "../../../components/global/scorecard/ScorecardSection";
 import StageSelector from "../../../components/global/scorecard/StageSelector";
 import PipelineApplicantProgress from "../../../components/global/pipeline/PipelineApplicantProgress";
+import PipelineApplicantContact from "../../../components/global/pipeline/PipelineApplicantContact";
 import MapLocationAssign from "../../../components/global/map/MapLocationAssign";
 import PipelineRequestTable from "../../../components/global/pipeline/PipelineRequestTable";
 import PipelineRequestModal from "../../../components/global/pipeline/PipelineRequestModal";
@@ -118,6 +119,8 @@ const AdminApplicantDetailPage = () => {
           <h1 className="heading-xl text-tertiary">{scorecard.name}</h1>
           <p className="text-xs text-secondary">{scorecard.company}</p>
         </header>
+
+        <PipelineApplicantContact applicant={application.applicant} />
 
         {/* Recommendation */}
         <div className={`flex items-start justify-between gap-3 rounded-xl border p-4 ${recommendation.bg} ${recommendation.border}`}>

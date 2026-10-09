@@ -18,7 +18,13 @@ import { useUpdateAccountStatusMutation } from "../../../../store/apis/shared/au
 import { USER_STATUSES } from "../../../../configs/constants";
 import ClientAddEditModal from "../modals/ClientAddEditModal";
 import ClientDetailsModal from "../modals/ClientDetailsModal";
-import { CLIENT_STATUS, getClientStatus, isDeactivatedClient } from "../utils/clientStatus";
+import {
+  CLIENT_STATUS,
+  FDD_COVERAGE_STATUS,
+  getClientStatus,
+  getFddCoverage,
+  isDeactivatedClient,
+} from "../utils/clientStatus";
 
 const HEALTH_COLORS = [
   { min: 80, color: "#22C55E" },
@@ -27,6 +33,13 @@ const HEALTH_COLORS = [
 ];
 
 const getHealthColor = (score) => HEALTH_COLORS.find(({ min }) => score >= min).color;
+
+const StatusPill = ({ label, pill, dot }) => (
+  <span className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1 text-xs font-medium ${pill}`}>
+    <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />
+    {label}
+  </span>
+);
 
 // deactivated rows read as greyed out
 const CONDITIONAL_ROW_STYLES = [
@@ -69,18 +82,13 @@ const buildColumns = ({
     name: "Status",
     selector: (row) => CLIENT_STATUS[getClientStatus(row)]?.label,
     sortable: true,
-    cell: (row) => {
-      const { label, pill, dot } = CLIENT_STATUS[getClientStatus(row)] ?? CLIENT_STATUS.pending;
-
-      return (
-        <span
-          className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1 text-xs font-medium ${pill}`}
-        >
-          <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />
-          {label}
-        </span>
-      );
-    },
+    cell: (row) => <StatusPill {...(CLIENT_STATUS[getClientStatus(row)] ?? CLIENT_STATUS.pending)} />,
+  },
+  {
+    name: "FDD",
+    selector: (row) => FDD_COVERAGE_STATUS[getFddCoverage(row)]?.label,
+    sortable: true,
+    cell: (row) => <StatusPill {...(FDD_COVERAGE_STATUS[getFddCoverage(row)] ?? FDD_COVERAGE_STATUS.incomplete)} />,
   },
   {
     name: "Health Score",

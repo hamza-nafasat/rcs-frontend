@@ -8,6 +8,17 @@ export const CLIENT_STATUS = {
   pending: { label: "Pending", pill: "bg-gray-100 text-gray-600", dot: "bg-gray-400" },
 };
 
+// every operating state has its fdd
+export const FDD_COVERAGE_STATUS = {
+  incomplete: { label: "Incomplete", pill: "bg-[#FFFBEB] text-[#F59E0B]", dot: "bg-[#F59E0B]" },
+  completed: { label: "Completed", pill: "bg-revenue text-[#22C55E]", dot: "bg-[#22C55E]" },
+};
+
+export const FDD_COVERAGE_OPTIONS = Object.entries(FDD_COVERAGE_STATUS).map(([value, { label }]) => ({
+  value,
+  label,
+}));
+
 export const ACCOUNT_STATUS_OPTIONS = [
   { value: "active", label: "Activated" },
   { value: "deactivated", label: "Deactivated" },
@@ -18,3 +29,6 @@ export const isDeactivatedClient = (client) => client?.account?.status === USER_
 // invited, else the chosen status
 export const getClientStatus = (client) =>
   client?.account?.status === USER_STATUSES.INVITED ? "invited" : (client?.status ?? "pending");
+
+// incomplete until every state is covered
+export const getFddCoverage = (client) => client?.fddStatus ?? "incomplete";

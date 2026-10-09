@@ -1,4 +1,5 @@
 import { lazy, Suspense, useState } from "react";
+import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import DeleteModal from "../../../components/modals/DeleteModal";
 import Loader from "../../../components/shared/Loader";
@@ -8,7 +9,7 @@ import FddHeading from "./components/FddHeading";
 import FddAddEditModal from "./modals/FddAddEditModal";
 import { downloadFile } from "../../../utils/downloadFile";
 import { toFddFormData, toFilledFormData, toFddFileName, toFddFileUrl } from "../../../utils/fddRequest";
-import { useGetAllClientsQuery } from "../../../store/apis/admin/client.apis";
+import { clientApi, useGetAllClientsQuery } from "../../../store/apis/admin/client.apis";
 import {
   useCreateFddMutation,
   useDeleteFddMutation,
@@ -32,6 +33,7 @@ const initialFilters = {
 const toQueryParams = (filters) => Object.fromEntries(Object.entries(filters).filter(([, value]) => value !== ""));
 
 const AdminFdd = () => {
+  const dispatch = useDispatch();
   const [filters, setFilters] = useState(initialFilters);
   const { data, isLoading } = useGetAllFddsQuery(toQueryParams(filters));
   const { data: clientData } = useGetAllClientsQuery();
@@ -53,9 +55,13 @@ const AdminFdd = () => {
     label: client?.restaurantName,
   }));
 
+  // the fdd coverage badge follows
+  const refreshClients = () => dispatch(clientApi.util.invalidateTags(["Clients", "singleClient"]));
+
   const handleAddFdd = async (form) => {
     const response = await createFdd(toFddFormData(form)).unwrap();
     toast.success(response?.message);
+    refreshClients();
   };
 
   const handleUpdateFdd = async (form) => {
@@ -65,6 +71,7 @@ const AdminFdd = () => {
         body: toFddFormData(form, { withStatus: true }),
       }).unwrap();
       toast.success(response?.message);
+      refreshClients();
       setDocumentToEdit(null);
     } catch (error) {
       console.error("Update FDD error:", error);
@@ -75,6 +82,7 @@ const AdminFdd = () => {
     try {
       const response = await deleteFdd(documentToDelete?._id).unwrap();
       toast.success(response?.message);
+      refreshClients();
       setDocumentToDelete(null);
     } catch (error) {
       console.error("Delete FDD error:", error);

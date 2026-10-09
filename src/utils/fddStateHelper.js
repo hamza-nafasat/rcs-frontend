@@ -59,3 +59,10 @@ export const FDD_STATE_OPTIONS = [
   GENERAL_FDD_STATE,
   ...US_STATES.filter((state) => state.isRegistrationState).map((state) => state.name),
 ];
+
+// a plain state uses the general fdd
+export const fddStateFor = (state) =>
+  US_STATES.find(({ name }) => name === state)?.isRegistrationState ? state : GENERAL_FDD_STATE;
+
+// the documents these states need
+export const requiredFddStates = (states = []) => [...new Set(states.filter(Boolean).map(fddStateFor))];
