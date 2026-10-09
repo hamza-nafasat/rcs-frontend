@@ -36,6 +36,8 @@ const KIND_CACHES = {
   fdd_filled: ["fdds"],
   fdd_received: ["fdds"],
   fdd_wait_completed: ["fdds", "franchisees"],
+  fdd_reviewed: ["fdds", "franchisees"],
+  fdd_refill_requested: ["fdds", "franchisees"],
   account_created: ["clients", "moderators"],
   profile_updated: ["profile", "clients"],
   pipeline_request_sent: ["pipelines"],

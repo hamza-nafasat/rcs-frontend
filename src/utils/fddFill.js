@@ -11,10 +11,30 @@ const canFillAgain = (myFill) => !myFill || Boolean(myFill?.isEditable);
 
 const dayWord = (days) => `${days} day${days === 1 ? "" : "s"}`;
 
-// what the waiting period reads as
-const waitLabelOf = (wait) => {
-  if (!wait) return "Not filled";
-  return wait?.isWaitOver ? "Ready to proceed" : `${dayWord(wait?.daysRemaining)} left`;
+// where an applicant stands on his document
+const FDD_SIGN_STATUS = {
+  not_signed: { label: "Not signed", color: "#dc2626" },
+  signed: { label: "Signed", color: "#f97316" },
+  pending: { label: "Pending", color: "#3b82f6" },
+  approved: { label: "Approved", color: "#22c55e" },
+  rejected: { label: "Rejected", color: "#dc2626" },
 };
 
-export { canFillAgain, dayWord, fillStatusOf, MY_FILL_STATUS, waitLabelOf };
+const signStatusOf = (wait) => FDD_SIGN_STATUS[wait?.status] ?? FDD_SIGN_STATUS.not_signed;
+
+// an admin judges it only once the wait is over
+const canReviewFill = (wait) => Boolean(wait?.isWaitOver);
+
+// shown only while the clock runs
+const waitLabelOf = (wait) => (wait && !wait?.isWaitOver ? `${dayWord(wait?.daysRemaining)} left` : "");
+
+export {
+  canFillAgain,
+  canReviewFill,
+  dayWord,
+  FDD_SIGN_STATUS,
+  fillStatusOf,
+  MY_FILL_STATUS,
+  signStatusOf,
+  waitLabelOf,
+};

@@ -33,6 +33,25 @@ export const fddApi = createApi({
       invalidatesTags: (_result, _error, { id }) => ["Fdds", { type: "singleFdd", id }],
     }),
     /////
+    reviewFddFill: builder.mutation({
+      query: ({ fillId, reviewStatus }) => ({
+        url: `/fills/${encodeURIComponent(fillId)}`,
+        method: "PATCH",
+        body: { reviewStatus },
+      }),
+      invalidatesTags: ["Fdds"],
+    }),
+    /////
+    resetFddFill: builder.mutation({
+      query: (fillId) => ({ url: `/fills/${encodeURIComponent(fillId)}`, method: "DELETE" }),
+      invalidatesTags: ["Fdds"],
+    }),
+    /////
+    skipFddFillWait: builder.mutation({
+      query: (fillId) => ({ url: `/fills/${encodeURIComponent(fillId)}/skip-wait`, method: "POST" }),
+      invalidatesTags: ["Fdds"],
+    }),
+    /////
     deleteFdd: builder.mutation({
       query: (id) => ({ url: `/${encodeURIComponent(id)}`, method: "DELETE" }),
       invalidatesTags: (_result, _error, id) => ["Fdds", { type: "singleFdd", id }],
@@ -46,5 +65,8 @@ export const {
   useCreateFddMutation,
   useUpdateFddMutation,
   useFillFddMutation,
+  useReviewFddFillMutation,
+  useResetFddFillMutation,
+  useSkipFddFillWaitMutation,
   useDeleteFddMutation,
 } = fddApi;

@@ -54,6 +54,21 @@ const NOTIFICATION_KINDS = {
       join([fddName ?? "The document", state && `for ${state}`, "is past its waiting period"], " ") +
       ". This application can move forward.",
   },
+  fdd_reviewed: {
+    icon: BadgeCheck,
+    style: ICON_STYLES.document,
+    title: ({ status }) => (status === "approved" ? "Your signed FDD was approved" : "Your signed FDD was rejected"),
+    description: ({ name, fddName, state }) =>
+      join([`${name ?? "An admin"} reviewed`, fddName ?? "your document", state && `for ${state}`], " ") + ".",
+  },
+  fdd_refill_requested: {
+    icon: FileText,
+    style: ICON_STYLES.support,
+    title: ({ fddName }) => `Please sign ${fddName ?? "your FDD"} again`,
+    description: ({ name, state }) =>
+      join([`${name ?? "An admin"} asked for a new signed copy`, state && `for ${state}`], " ") +
+      ". The 14 day wait starts again once you sign.",
+  },
   fdd_received: {
     icon: FileText,
     style: ICON_STYLES.document,

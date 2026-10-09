@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { Navigate } from "react-router-dom";
 import PipelineApplicantProgress from "../../../components/global/pipeline/PipelineApplicantProgress";
 import PipelineRequestTable from "../../../components/global/pipeline/PipelineRequestTable";
 import PipelineRequestModal from "../../../components/global/pipeline/PipelineRequestModal";
 import PipelineRequestFillModal from "../../../components/global/pipeline/PipelineRequestFillModal";
 import ApplicationScorecardSection from "./components/ApplicationScorecardSection";
 import { toResponseFormData } from "../../../utils/pipelineRequest";
+import { useGetAllFddsQuery } from "../../../store/apis/shared/fdd.apis";
 import {
   useGetAllPipelinesQuery,
   useGetPipelineRequestsQuery,
@@ -13,6 +15,10 @@ import {
 
 const Application = () => {
   const { data, isLoading } = useGetAllPipelinesQuery();
+
+  // nothing here until the fdd wait is done
+  const { data: fddData, isLoading: isLoadingFdds } = useGetAllFddsQuery();
+  const hasSignedFdd = (fddData?.data ?? []).some((document) => document?.myFill?.isWaitOver);
 
   // an applicant owns one application
   const application = data?.data?.[0];
@@ -25,7 +31,9 @@ const Application = () => {
   const [viewId, setViewId] = useState(null);
   const [fillId, setFillId] = useState(null);
 
-  if (isLoading) return <p className="p-6 text-center text-secondary">Loading your application…</p>;
+  if (isLoading || isLoadingFdds)
+    return <p className="p-6 text-center text-secondary">Loading your application…</p>;
+  if (!hasSignedFdd) return <Navigate to="/user/dashboard/fdd" replace />;
   if (!application) return <p className="p-6 text-center text-secondary">No application submitted yet.</p>;
 
   const requests = requestsData?.data ?? [];

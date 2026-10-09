@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import toast from "react-hot-toast";
 import { useAuthUser } from "../../../routes/useAuthUser";
 import { getDashboardRole } from "../../../utils/roleHelper";
 import { USER_ROLES, USER_STATUSES } from "../../../configs/constants";
@@ -6,7 +8,10 @@ import FranchiseeHeading from "./components/FranchiseeHeading";
 import FranchiseeFilter from "./components/FranchiseeFilter";
 import FranchiseeTable from "./components/FranchiseeTable";
 import FranchiseeDetailsModal from "./modals/FranchiseeDetailsModal";
-import { useGetAllFranchiseesQuery } from "../../../store/apis/shared/franchisee.apis";
+import FranchiseeFddModal from "./modals/FranchiseeFddModal";
+import { franchiseeApi, useGetAllFranchiseesQuery } from "../../../store/apis/shared/franchisee.apis";
+import { useResetFddFillMutation, useReviewFddFillMutation } from "../../../store/apis/shared/fdd.apis";
+import { downloadFile } from "../../../utils/downloadFile";
 import { useGetAllClientsQuery } from "../../../store/apis/admin/client.apis";
 
 // how an account status reads
@@ -28,8 +33,45 @@ const Franchisee = () => {
   const { data, isLoading } = useGetAllFranchiseesQuery();
   const [filters, setFilters] = useState(initialFilters);
   const [franchiseeToView, setFranchiseeToView] = useState(null);
+  const [fddToReview, setFddToReview] = useState(null);
+  const dispatch = useDispatch();
+  const [reviewFddFill, { isLoading: isReviewing }] = useReviewFddFillMutation();
+  const [resetFddFill, { isLoading: isResetting }] = useResetFddFillMutation();
 
   const franchisees = data?.data ?? [];
+
+  // the list carries the signed copy, so refetch it
+  const refreshFranchisees = () => dispatch(franchiseeApi.util.invalidateTags(["Franchisees", "singleFranchisee"]));
+
+  const handleReview = async (reviewStatus) => {
+    try {
+      const response = await reviewFddFill({ fillId: fddToReview?.fddWait?._id, reviewStatus }).unwrap();
+      toast.success(response?.message);
+      refreshFranchisees();
+      setFddToReview(null);
+    } catch (error) {
+      console.error("Review signed FDD error:", error);
+    }
+  };
+
+  const handleAskRefill = async () => {
+    try {
+      const response = await resetFddFill(fddToReview?.fddWait?._id).unwrap();
+      toast.success(response?.message);
+      refreshFranchisees();
+      setFddToReview(null);
+    } catch (error) {
+      console.error("Ask refill error:", error);
+    }
+  };
+
+  const handleDownloadSigned = async (wait) => {
+    try {
+      await downloadFile(wait?.file?.url, wait?.file?.name ?? "signed-fdd.pdf");
+    } catch (error) {
+      console.error("Download signed FDD error:", error);
+    }
+  };
   const { data: clientData } = useGetAllClientsQuery(undefined, { skip: !isAdmin });
 
   // signed up clients only
@@ -74,6 +116,17 @@ const Franchisee = () => {
         isLoading={isLoading}
         showClient={isAdmin}
         onView={setFranchiseeToView}
+        onViewFdd={setFddToReview}
+      />
+
+      <FranchiseeFddModal
+        isOpen={Boolean(fddToReview)}
+        onClose={() => setFddToReview(null)}
+        franchisee={fddToReview}
+        isSaving={isReviewing || isResetting}
+        onReview={handleReview}
+        onAskRefill={handleAskRefill}
+        onDownload={handleDownloadSigned}
       />
 
       <FranchiseeDetailsModal

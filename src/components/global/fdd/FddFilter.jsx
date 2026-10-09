@@ -5,6 +5,7 @@ import { FDD_STATE_OPTIONS } from "../../../utils/fddStateHelper";
 
 // clients are passed on admin only
 const FddFilter = ({ filters, setFilters, clients = [] }) => {
+  const hasRestaurantFilter = clients.length > 0;
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -12,7 +13,8 @@ const FddFilter = ({ filters, setFilters, clients = [] }) => {
   };
 
   return (
-    <section className={`grid grid-cols-1 gap-4 sm:grid-cols-2 ${clients.length > 0 ? "lg:grid-cols-4" : "lg:grid-cols-3"}`}>
+    // three fields share the row, two split it
+    <section className={`grid grid-cols-1 gap-4 sm:grid-cols-2 ${hasRestaurantFilter ? "lg:grid-cols-3" : ""}`}>
       {/* Document */}
       <Input
         label="Document"
@@ -23,7 +25,7 @@ const FddFilter = ({ filters, setFilters, clients = [] }) => {
         icon={<Search size={16} />}
       />
 
-      {clients.length > 0 && (
+      {hasRestaurantFilter && (
         <Select
           label="Restaurant"
           name="restaurant"

@@ -23,6 +23,7 @@ import { MESSAGE_EVENTS, USER_ROLES } from "../../configs/constants";
 import { useAuthUser } from "../../routes/useAuthUser";
 import { onSocketEvent } from "../../utils/socket";
 import { messageApi, useGetMyConversationsQuery } from "../../store/apis/shared/message.apis";
+import { useGetAllFddsQuery } from "../../store/apis/shared/fdd.apis";
 
 const adminNavItems = [
   { label: "Dashboard", to: "/admin/dashboard", icon: LayoutDashboard },
@@ -59,7 +60,7 @@ const clientProfileItems = [
 ];
 
 const userNavItems = [
-  { label: "Application", to: "/user/dashboard", icon: LayoutDashboard },
+  { label: "Application", to: "/user/dashboard", icon: LayoutDashboard, needsSignedFdd: true },
   { label: "FDD", to: "/user/dashboard/fdd", icon: FileIcon },
   { label: "Messages", to: "/user/dashboard/messages", icon: MessageSquare, badge: "messages" },
 ];
@@ -105,6 +106,10 @@ const Sidebar = ({
   const dispatch = useDispatch();
   const { data: conversationData } = useGetMyConversationsQuery();
 
+  // the application opens once the 14 days are done
+  const { data: fddData } = useGetAllFddsQuery(undefined, { skip: !isUser });
+  const hasSignedFdd = (fddData?.data ?? []).some((document) => document?.myFill?.isWaitOver);
+
   // any message event refreshes the count
   useEffect(() => {
     const unsubscribes = MESSAGE_EVENTS.map((event) =>
@@ -122,9 +127,19 @@ const Sidebar = ({
 
   // menu items for this role
   const navItems = isUser ? userNavItems : isClient ? clientNavItems : adminNavItems;
-  const menuItems = navItems.filter((item) => !(isModerator && item.isOwnerOnly));
+  const menuItems = navItems.filter((item) => {
+    if (isModerator && item.isOwnerOnly) return false;
+    if (item.needsSignedFdd && !hasSignedFdd) return false;
+    return true;
+  });
   const profileLinks = isUser ? userProfileItems : isClient ? clientProfileItems : adminProfileItems;
-  const homePath = isUser ? "/user/dashboard" : isClient ? "/client/dashboard" : "/admin/dashboard";
+  const homePath = isUser
+    ? hasSignedFdd
+      ? "/user/dashboard"
+      : "/user/dashboard/fdd"
+    : isClient
+      ? "/client/dashboard"
+      : "/admin/dashboard";
   const settingsPath = isUser
     ? "/user/dashboard/settings"
     : isClient

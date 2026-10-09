@@ -11,13 +11,11 @@ import { toFilledFormData, toFddFileName, toFddFileUrl } from "../../../utils/fd
 import { useFillFddMutation, useGetAllFddsQuery } from "../../../store/apis/shared/fdd.apis";
 import { useAuthUser } from "../../../routes/useAuthUser";
 import { dayWord } from "../../../utils/fddFill";
+import { titleCase } from "../../../utils/titleCase";
 
 // pdf code loads when opened
 const FddViewModal = lazy(() => import("../../../components/modals/FddViewModal"));
 const FddFillModal = lazy(() => import("../../../components/modals/FddFillModal"));
-
-// the intake stores whatever was typed
-const titleCase = (value) => String(value ?? "").replace(/\b\w/g, (letter) => letter.toUpperCase());
 
 // what the applicant asks the admin for
 const askAdminDraft = (state) =>

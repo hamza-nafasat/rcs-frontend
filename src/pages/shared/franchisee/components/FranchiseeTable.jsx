@@ -1,9 +1,12 @@
 import DataTable from "../../../../components/global/DataTable";
-import { Eye, MapPin } from "lucide-react";
+import { Eye, FileText, MapPin, MoreHorizontal } from "lucide-react";
 import Avatar from "../../../../components/shared/Avatar";
 import Badge from "../../../../components/shared/Badge";
+import Button from "../../../../components/shared/Button";
+import Dropdown from "../../../../components/shared/Dropdown";
 import { franchiseStatusOf } from "../../../../utils/franchiseStatus";
-import { waitLabelOf } from "../../../../utils/fddFill";
+import { canReviewFill, signStatusOf } from "../../../../utils/fddFill";
+import { titleCase } from "../../../../utils/titleCase";
 
 const fullName = (row) => `${row?.firstName ?? ""} ${row?.lastName ?? ""}`.trim() || "—";
 
@@ -15,7 +18,7 @@ const CLIENT_COLUMN = {
   cell: (row) => <span className="min-w-0 wrap-break-word text-tablecell">{row?.clientName ?? "—"}</span>,
 };
 
-const buildColumns = ({ onView, showClient }) => [
+const buildColumns = ({ onView, onViewFdd, showClient }) => [
   {
     name: "Applicant",
     selector: (row) => fullName(row),
@@ -39,7 +42,7 @@ const buildColumns = ({ onView, showClient }) => [
     sortable: true,
     minWidth: "160px",
     cell: (row) => {
-      const location = [row?.city, row?.state].filter(Boolean).join(", ");
+      const location = [row?.city, titleCase(row?.state)].filter(Boolean).join(", ");
       if (!location) return <span className="text-muted">—</span>;
 
       return (
@@ -51,24 +54,13 @@ const buildColumns = ({ onView, showClient }) => [
     },
   },
   {
-    name: "FDD Wait",
-    selector: (row) => row?.fddWait?.daysRemaining ?? -1,
+    name: "FDD Status",
+    selector: (row) => row?.fddWait?.status ?? "not_signed",
     sortable: true,
-    minWidth: "170px",
+    minWidth: "160px",
     cell: (row) => {
-      const wait = row?.fddWait;
-      if (!wait) return <span className="text-muted">Not signed</span>;
-
-      return (
-        <div className="min-w-0 py-1">
-          <p className={`text-tablecell ${wait?.isWaitOver ? "text-revenue" : "text-tertiary"}`}>
-            {waitLabelOf(wait)}
-          </p>
-          <p className="wrap-break-word text-xs text-muted">
-            Signed {new Date(wait?.filledAt).toLocaleDateString()}
-          </p>
-        </div>
-      );
+      const { label, color } = signStatusOf(row?.fddWait);
+      return <Badge text={label} dotColor={color} />;
     },
   },
   {
@@ -94,14 +86,28 @@ const buildColumns = ({ onView, showClient }) => [
     right: true,
     cell: (row) => (
       <div className="flex w-full items-center justify-center">
-        <button
-          type="button"
-          onClick={() => onView?.(row)}
-          aria-label={`View ${fullName(row)}`}
-          className="rounded-lg p-2 text-muted transition hover:bg-active hover:text-primary"
+        <Dropdown
+          align="right"
+          portalClassName="max-w-12"
+          trigger={
+            <Button variant="menuTrigger" aria-label={`Actions for ${fullName(row)}`}>
+              <MoreHorizontal size={18} />
+            </Button>
+          }
         >
-          <Eye size={18} />
-        </button>
+          <Button variant="menuItem" onClick={() => onView?.(row)}>
+            <Eye size={16} className="mt-0.5" />
+            View Franchisee
+          </Button>
+
+          {/* the signed copy is judged after the wait */}
+          {canReviewFill(row?.fddWait) && (
+            <Button variant="menuItem" onClick={() => onViewFdd?.(row)}>
+              <FileText size={16} className="mt-0.5" />
+              View FDD
+            </Button>
+          )}
+        </Dropdown>
       </div>
     ),
     ignoreRowClick: true,
@@ -110,10 +116,17 @@ const buildColumns = ({ onView, showClient }) => [
   },
 ];
 
-const FranchiseeTable = ({ franchisees = [], isLoading = false, showClient = false, onView, className = "" }) => (
+const FranchiseeTable = ({
+  franchisees = [],
+  isLoading = false,
+  showClient = false,
+  onView,
+  onViewFdd,
+  className = "",
+}) => (
   <section className={className}>
     <DataTable
-      columns={buildColumns({ onView, showClient })}
+      columns={buildColumns({ onView, onViewFdd, showClient })}
       data={franchisees}
       isLoading={isLoading}
       variant="boxed"
