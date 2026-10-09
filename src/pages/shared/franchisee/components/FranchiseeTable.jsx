@@ -3,7 +3,7 @@ import { Eye, MapPin } from "lucide-react";
 import Avatar from "../../../../components/shared/Avatar";
 import Badge from "../../../../components/shared/Badge";
 import { franchiseStatusOf } from "../../../../utils/franchiseStatus";
-import { formatPhone } from "../../../../utils/formatPhone";
+import { waitLabelOf } from "../../../../utils/fddFill";
 
 const fullName = (row) => `${row?.firstName ?? ""} ${row?.lastName ?? ""}`.trim() || "—";
 
@@ -34,12 +34,6 @@ const buildColumns = ({ onView, showClient }) => [
   },
   ...(showClient ? [CLIENT_COLUMN] : []),
   {
-    name: "Phone",
-    selector: (row) => row?.phone ?? "",
-    minWidth: "170px",
-    cell: (row) => <span className="whitespace-nowrap text-tablecell">{formatPhone(row?.phone) || "—"}</span>,
-  },
-  {
     name: "Location",
     selector: (row) => row?.city ?? "",
     sortable: true,
@@ -53,6 +47,27 @@ const buildColumns = ({ onView, showClient }) => [
           <MapPin size={14} className="shrink-0 text-muted" />
           <span className="min-w-0 wrap-break-word">{location}</span>
         </span>
+      );
+    },
+  },
+  {
+    name: "FDD Wait",
+    selector: (row) => row?.fddWait?.daysRemaining ?? -1,
+    sortable: true,
+    minWidth: "170px",
+    cell: (row) => {
+      const wait = row?.fddWait;
+      if (!wait) return <span className="text-muted">Not signed</span>;
+
+      return (
+        <div className="min-w-0 py-1">
+          <p className={`text-tablecell ${wait?.isWaitOver ? "text-revenue" : "text-tertiary"}`}>
+            {waitLabelOf(wait)}
+          </p>
+          <p className="wrap-break-word text-xs text-muted">
+            Signed {new Date(wait?.filledAt).toLocaleDateString()}
+          </p>
+        </div>
       );
     },
   },

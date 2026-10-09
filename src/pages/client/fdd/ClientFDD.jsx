@@ -1,21 +1,18 @@
 import { lazy, Suspense, useState } from "react";
-import toast from "react-hot-toast";
 import Loader from "../../../components/shared/Loader";
 import FddTable from "../../../components/global/FddTable";
 import FddFilter from "../../../components/global/fdd/FddFilter";
 import FddHeading from "./components/FddHeading";
 import { downloadFile } from "../../../utils/downloadFile";
-import { toFilledFormData, toFddFileName, toFddFileUrl } from "../../../utils/fddRequest";
-import { useFillFddMutation, useGetAllFddsQuery } from "../../../store/apis/shared/fdd.apis";
+import { toFddFileName, toFddFileUrl } from "../../../utils/fddRequest";
+import { useGetAllFddsQuery } from "../../../store/apis/shared/fdd.apis";
 
 // pdf code loads when opened
 const FddViewModal = lazy(() => import("../../../components/modals/FddViewModal"));
-const FddFillModal = lazy(() => import("../../../components/modals/FddFillModal"));
 
 const initialFilters = {
   search: "",
   state: "",
-  status: "",
 };
 
 // only the filters that are set
@@ -24,20 +21,9 @@ const toQueryParams = (filters) => Object.fromEntries(Object.entries(filters).fi
 const ClientFdd = () => {
   const [filters, setFilters] = useState(initialFilters);
   const { data, isLoading } = useGetAllFddsQuery(toQueryParams(filters));
-  const [fillFdd] = useFillFddMutation();
   const [documentToView, setDocumentToView] = useState(null);
-  const [documentToFill, setDocumentToFill] = useState(null);
 
   const documents = data?.data ?? [];
-
-  const handleSaveFilled = async (filledFile) => {
-    const response = await fillFdd({
-      id: documentToFill?._id,
-      body: toFilledFormData(filledFile, documentToFill),
-    }).unwrap();
-    toast.success(response?.message);
-    setDocumentToFill(null);
-  };
 
   const handleDownload = async (doc) => {
     try {
@@ -52,7 +38,7 @@ const ClientFdd = () => {
       <section className="border-b color-border py-4">
         <FddHeading
           heading="FDD Document"
-          subheading="Review and sign your Franchise Disclosure Documents."
+          subheading="Read and download your Franchise Disclosure Documents."
         />
       </section>
 
@@ -65,7 +51,6 @@ const ClientFdd = () => {
           documents={documents}
           isLoading={isLoading}
           onView={setDocumentToView}
-          onFill={setDocumentToFill}
           onDownload={handleDownload}
         />
       </section>
@@ -77,15 +62,6 @@ const ClientFdd = () => {
             onClose={() => setDocumentToView(null)}
             document={documentToView}
             onDownload={handleDownload}
-          />
-        )}
-
-        {documentToFill && (
-          <FddFillModal
-            isOpen={Boolean(documentToFill)}
-            onClose={() => setDocumentToFill(null)}
-            document={documentToFill}
-            onSave={handleSaveFilled}
           />
         )}
       </Suspense>

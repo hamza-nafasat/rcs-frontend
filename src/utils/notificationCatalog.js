@@ -1,6 +1,5 @@
 import { BadgeCheck, FileText, LifeBuoy, MapPin, Settings, UserPlus } from "lucide-react";
 import { fddStateFor } from "./fddStateHelper";
-import { FDD_STATUS } from "./fddStatus";
 import { stageOf } from "./pipelineStage";
 import { statusOf as requestStatusOf } from "./requestStatus";
 import { SUPPORT_STATUS } from "./supportStatus";
@@ -16,8 +15,6 @@ const ICON_STYLES = {
 const join = (parts, separator = " · ") => parts.filter(Boolean).join(separator);
 
 const statusLabel = (status) => SUPPORT_STATUS[status]?.label ?? status;
-
-const fddStatusLabel = (status) => FDD_STATUS[status]?.label ?? status;
 
 const place = ({ city, state }) => join([city, state], ", ");
 
@@ -45,27 +42,23 @@ const NOTIFICATION_KINDS = {
   fdd_filled: {
     icon: FileText,
     style: ICON_STYLES.document,
-    title: ({ fddName, name }) => `${fddName ?? "A document"} was filled by ${name ?? "a client"}`,
-    description: () => "The completed document is ready for your review.",
+    title: ({ fddName, name }) => `${name ?? "An applicant"} signed ${fddName ?? "a document"}`,
+    description: ({ state }) =>
+      join([state && `Signed for ${state}`, "the 14 day waiting period has started"], " \u00b7 ") + ".",
+  },
+  fdd_wait_completed: {
+    icon: BadgeCheck,
+    style: ICON_STYLES.account,
+    title: ({ name }) => `${name ?? "An applicant"} has cleared the 14 day wait`,
+    description: ({ fddName, state }) =>
+      join([fddName ?? "The document", state && `for ${state}`, "is past its waiting period"], " ") +
+      ". This application can move forward.",
   },
   fdd_received: {
     icon: FileText,
     style: ICON_STYLES.document,
     title: ({ fddName }) => `New document: ${fddName ?? "an FDD"}`,
     description: ({ name }) => `${name ?? "An admin"} shared it with you to review and fill.`,
-  },
-  fdd_approved: {
-    icon: BadgeCheck,
-    style: ICON_STYLES.account,
-    title: ({ fddName }) => (fddName ? `${fddName} approved` : "Your document was approved"),
-    description: ({ name }) => `${name ?? "An admin"} approved your filled document.`,
-  },
-  fdd_status_changed: {
-    icon: FileText,
-    style: ICON_STYLES.document,
-    title: ({ fddName, to }) => join([fddName ?? "Your document", to && `is now ${fddStatusLabel(to)}`], " "),
-    description: ({ name, from }) =>
-      join([`${name ?? "An admin"} updated the document status`, from && `from ${fddStatusLabel(from)}`], " ") + ".",
   },
   account_created: {
     icon: UserPlus,

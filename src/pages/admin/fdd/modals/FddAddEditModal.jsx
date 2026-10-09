@@ -6,7 +6,6 @@ import FileUpload from "../../../../components/shared/FileUpload";
 import Button from "../../../../components/shared/Button";
 import { useGetAllFddsQuery } from "../../../../store/apis/shared/fdd.apis";
 import { FDD_STATE_OPTIONS, GENERAL_FDD_STATE, requiredFddStates } from "../../../../utils/fddStateHelper";
-import { FDD_STATUS_OPTIONS } from "../../../../utils/fddStatus";
 
 const INITIAL_FORM = {
   title: "",
@@ -14,7 +13,6 @@ const INITIAL_FORM = {
   restaurant: "",
   country: "United States",
   state: GENERAL_FDD_STATE,
-  status: FDD_STATUS_OPTIONS[0].value,
   isFillRequired: true,
 };
 
@@ -28,7 +26,6 @@ const toForm = (document) =>
         restaurant: document.restaurant?._id ?? document.restaurant ?? "",
         country: document.country ?? INITIAL_FORM.country,
         state: document.state ?? INITIAL_FORM.state,
-        status: document.status ?? INITIAL_FORM.status,
         isFillRequired: document.isFillRequired ?? INITIAL_FORM.isFillRequired,
       }
     : INITIAL_FORM;
@@ -91,7 +88,7 @@ const FddAddEditModal = ({
 
             <p className="mt-1 text-sm text-secondary">
               {isAdd
-                ? "Add a new version of the franchise disclosure document. It stays pending until you approve it."
+                ? "Add a new version of the franchise disclosure document for this brand and state."
                 : "Update the details of this franchise disclosure document, or replace the PDF."}
             </p>
           </div>
@@ -168,19 +165,6 @@ const FddAddEditModal = ({
               )}
             </div>
 
-            <div className="flex flex-col gap-1">
-              <Select
-                label="Status"
-                name="status"
-                value={formData.status}
-                onChange={handleChange}
-                options={FDD_STATUS_OPTIONS}
-                placeholder="Select status"
-                disabled={isAdd}
-              />
-
-              {isAdd && <p className="text-xs text-muted">New documents start as pending.</p>}
-            </div>
           </section>
 
           {/* PDF File Upload */}

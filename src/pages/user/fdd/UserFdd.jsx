@@ -1,6 +1,6 @@
 import { lazy, Suspense, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FileClock, MessageSquare } from "lucide-react";
+import { CircleCheck, FileClock, MessageSquare } from "lucide-react";
 import toast from "react-hot-toast";
 import DashboardHeading from "../../../components/global/DashboardHeading";
 import FddTable from "../../../components/global/FddTable";
@@ -10,6 +10,7 @@ import { downloadFile } from "../../../utils/downloadFile";
 import { toFilledFormData, toFddFileName, toFddFileUrl } from "../../../utils/fddRequest";
 import { useFillFddMutation, useGetAllFddsQuery } from "../../../store/apis/shared/fdd.apis";
 import { useAuthUser } from "../../../routes/useAuthUser";
+import { dayWord } from "../../../utils/fddFill";
 
 // pdf code loads when opened
 const FddViewModal = lazy(() => import("../../../components/modals/FddViewModal"));
@@ -35,6 +36,9 @@ const UserFdd = () => {
 
   const documents = data?.data ?? [];
   const hasNoDocument = !isLoading && documents.length === 0;
+
+  // the countdown runs from the first signing
+  const wait = documents.find((document) => document?.myFill)?.myFill;
   const state = titleCase(user?.state) || "your state";
 
   // opens the admin chat with the message ready
@@ -91,15 +95,54 @@ const UserFdd = () => {
           </div>
         </section>
       ) : (
-        <section className="mt-6 min-h-0 flex-1">
-          <FddTable
-            documents={documents}
-            isLoading={isLoading}
-            onView={setDocumentToView}
-            onFill={setDocumentToFill}
-            onDownload={handleDownload}
-          />
-        </section>
+        <>
+          {wait && (
+            <section className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-xl border color-border bg-white p-5">
+              <div className="min-w-0">
+                <h2 className="flex items-center gap-2 text-sm font-semibold text-tertiary">
+                  {wait.isWaitOver ? (
+                    <CircleCheck size={16} className="shrink-0 text-revenue" />
+                  ) : (
+                    <FileClock size={16} className="shrink-0 text-muted" />
+                  )}
+                  {wait.isWaitOver ? "Your waiting period is over" : "Waiting period in progress"}
+                </h2>
+
+                <p className="mt-1 text-sm text-secondary">
+                  You signed on {new Date(wait.filledAt).toLocaleDateString()}.{" "}
+                  {wait.isWaitOver
+                    ? "Your application can move forward now."
+                    : "We have to wait 14 days from signing before the next step."}
+                </p>
+
+                {wait.isEditable && (
+                  <p className="mt-1 text-xs text-muted">
+                    You can still replace your signed copy until{" "}
+                    {new Date(wait.editableUntil).toLocaleString()}.
+                  </p>
+                )}
+              </div>
+
+              {!wait.isWaitOver && (
+                <div className="shrink-0 text-right">
+                  <p className="text-2xl font-bold text-primary">{dayWord(wait.daysRemaining)}</p>
+                  <p className="text-xs text-muted">remaining</p>
+                </div>
+              )}
+            </section>
+          )}
+
+          <section className="mt-6 min-h-0 flex-1">
+            <FddTable
+              documents={documents}
+              isLoading={isLoading}
+              canFill
+              onView={setDocumentToView}
+              onFill={setDocumentToFill}
+              onDownload={handleDownload}
+            />
+          </section>
+        </>
       )}
 
       <Suspense fallback={<Loader className="fixed inset-0 z-50 bg-black/40" />}>

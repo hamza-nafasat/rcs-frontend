@@ -1,13 +1,13 @@
+// 9 Oct 2026
+const formatDate = (value) =>
+  value ? new Date(value).toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" }) : "";
+
+// 11:16 AM
+const formatClockTime = (value) =>
+  value ? new Date(value).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true }) : "";
+
 // date and time, always 12 hour
-const formatChatDateTime = (value) => {
-  if (!value) return "";
-
-  const date = new Date(value);
-  const day = date.toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" });
-  const time = date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true });
-
-  return `${day}, ${time}`;
-};
+const formatChatDateTime = (value) => (value ? `${formatDate(value)}, ${formatClockTime(value)}` : "");
 
 const RELATIVE_UNITS = [
   ["year", 31536000],
@@ -31,4 +31,4 @@ const formatRelativeTime = (value) => {
   return `${amount} ${match[0]}${amount > 1 ? "s" : ""} ago`;
 };
 
-export { formatChatDateTime, formatRelativeTime };
+export { formatChatDateTime, formatClockTime, formatDate, formatRelativeTime };

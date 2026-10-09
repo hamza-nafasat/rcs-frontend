@@ -26,7 +26,6 @@ const initialFilters = {
   search: "",
   restaurant: "",
   state: "",
-  status: "",
 };
 
 // only the filters that are set
@@ -70,7 +69,7 @@ const AdminFdd = () => {
     try {
       const response = await updateFdd({
         id: documentToEdit?._id,
-        body: toFddFormData(form, { withStatus: true }),
+        body: toFddFormData(form),
       }).unwrap();
       toast.success(response?.message);
       refreshClients();

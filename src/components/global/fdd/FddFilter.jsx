@@ -2,7 +2,6 @@ import { Search } from "lucide-react";
 import Input from "../../shared/Input";
 import Select from "../../shared/Select";
 import { FDD_STATE_OPTIONS } from "../../../utils/fddStateHelper";
-import { FDD_STATUS_OPTIONS } from "../../../utils/fddStatus";
 
 // clients are passed on admin only
 const FddFilter = ({ filters, setFilters, clients = [] }) => {
@@ -46,17 +45,6 @@ const FddFilter = ({ filters, setFilters, clients = [] }) => {
         options={FDD_STATE_OPTIONS}
         placeholder="All States"
         searchable
-        clearable
-      />
-
-      {/* Status */}
-      <Select
-        label="Status"
-        name="status"
-        value={filters.status}
-        onChange={handleChange}
-        options={FDD_STATUS_OPTIONS}
-        placeholder="All Statuses"
         clearable
       />
     </section>

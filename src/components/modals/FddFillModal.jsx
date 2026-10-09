@@ -69,7 +69,7 @@ const FddFillModal = ({ isOpen, onClose, document, onSave }) => {
   if (!isOpen || !document) return null;
 
   // signed copy, else the original
-  const fileUrl = document.currentFile?.url ?? document.file?.url;
+  const fileUrl = document.myFill?.file?.url ?? document.file?.url;
 
   const activeValue = activeTool === "signature" ? signature : text.trim();
 

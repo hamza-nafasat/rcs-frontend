@@ -1,19 +1,17 @@
 import { Download, X } from "lucide-react";
 import Button from "../shared/Button";
 import PdfDocumentView from "../global/fdd/PdfDocumentView";
-import { FDD_STATUS } from "../../utils/fddStatus";
 
 const FddViewModal = ({ isOpen, onClose, document, onDownload }) => {
   if (!isOpen || !document) return null;
 
   // signed copy, else the original
-  const fileUrl = document.currentFile?.url ?? document.file?.url;
+  const fileUrl = document.myFill?.file?.url ?? document.file?.url;
 
   const details = [
     ["Version", document.version],
     ["Restaurant", document.restaurant?.restaurantName],
     ["Location", [document.state, document.country].filter(Boolean).join(", ")],
-    ["Status", FDD_STATUS[document.status]?.label ?? document.status],
   ];
 
   return (

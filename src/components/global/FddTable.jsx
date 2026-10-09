@@ -2,9 +2,10 @@ import DataTable from "./DataTable";
 import { ChevronDown, Download, Eye, FileSignature, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import Button from "../shared/Button";
 import Dropdown from "../shared/Dropdown";
-import { FDD_STATUS } from "../../utils/fddStatus";
+import { canFillAgain, fillStatusOf } from "../../utils/fddFill";
+import { formatClockTime, formatDate } from "../../utils/formatTime";
 
-const buildColumns = ({ canManage, onView, onEdit, onFill, onDownload, onDelete }) => [
+const buildColumns = ({ canManage, canFill, onView, onEdit, onFill, onDownload, onDelete }) => [
   {
     name: "Document",
     selector: (row) => row.title,
@@ -35,11 +36,12 @@ const buildColumns = ({ canManage, onView, onEdit, onFill, onDownload, onDelete 
     ),
   },
   {
-    name: "Status",
-    selector: (row) => row.status,
+    name: "Your Copy",
+    selector: (row) => (row.myFill ? "Filled" : "Not filled"),
     sortable: true,
+    omit: !canFill,
     cell: (row) => {
-      const { label, pill, dot } = FDD_STATUS[row.status] ?? FDD_STATUS.pending;
+      const { label, pill, dot } = fillStatusOf(row.myFill);
 
       return (
         <span
@@ -50,6 +52,18 @@ const buildColumns = ({ canManage, onView, onEdit, onFill, onDownload, onDelete 
         </span>
       );
     },
+  },
+  {
+    name: "Created At",
+    selector: (row) => row.createdAt,
+    sortable: true,
+    minWidth: "140px",
+    cell: (row) => (
+      <div className="min-w-0 py-1">
+        <p className="whitespace-nowrap text-sm text-gray-900">{formatDate(row.createdAt)}</p>
+        <p className="whitespace-nowrap text-xs text-gray-500">{formatClockTime(row.createdAt)}</p>
+      </div>
+    ),
   },
   {
     name: <div className="pr-5">Actions</div>,
@@ -81,11 +95,11 @@ const buildColumns = ({ canManage, onView, onEdit, onFill, onDownload, onDelete 
             </Button>
           )}
 
-          {/* a client only fills the documents that ask for it */}
-          {(canManage || row.isFillRequired) && (
+          {/* the window closes a day after the first fill */}
+          {canFill && row.isFillRequired && canFillAgain(row.myFill) && (
             <Button variant="menuItem" onClick={() => onFill?.(row)}>
               <FileSignature size={16} className="mt-0.5" />
-              Fill FDD
+              {row.myFill ? "Edit Filled FDD" : "Fill FDD"}
             </Button>
           )}
 
@@ -109,18 +123,19 @@ const buildColumns = ({ canManage, onView, onEdit, onFill, onDownload, onDelete 
   },
 ];
 
-// canManage adds edit and delete
+// canManage adds edit and delete, canFill signs
 const FddTable = ({
   documents = [],
   isLoading = false,
   canManage = false,
+  canFill = false,
   onView,
   onEdit,
   onFill,
   onDownload,
   onDelete,
 }) => {
-  const columns = buildColumns({ canManage, onView, onEdit, onFill, onDownload, onDelete });
+  const columns = buildColumns({ canManage, canFill, onView, onEdit, onFill, onDownload, onDelete });
   return (
     <section className="flex h-full w-full min-h-0 flex-col">
       <DataTable
