@@ -10,6 +10,7 @@ const MessagesView = ({
   isLoadingConversations = false,
   isLoadingMessages = false,
   isSending = false,
+  draft = "",
   onSelectConversation,
   onStartConversation,
   onDeleteConversation,
@@ -45,6 +46,7 @@ const MessagesView = ({
             currentUserId={currentUserId}
             isLoading={isLoadingMessages}
             isSending={isSending}
+            draft={draft}
             onSend={onSend}
             onDeleteMessage={onDeleteMessage}
             onBack={onBack}

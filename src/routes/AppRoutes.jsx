@@ -27,6 +27,7 @@ import ClientFdd from "../pages/client/fdd/ClientFDD";
 import ClientModerators from "../pages/client/moderators/ClientModerators";
 import ClientSupport from "../pages/client/support/ClientSupport";
 import Application from "../pages/user/application/Application";
+import UserFdd from "../pages/user/fdd/UserFdd";
 import Franchisee from "../pages/shared/franchisee/Franchisee";
 
 import ProtectedRoute from "./ProtectedRoute";
@@ -102,6 +103,7 @@ const AppRoutes = () => {
         <Route element={<ProtectedRoute role={USER_ROLES.USER} />}>
           <Route path="/user/dashboard" element={<Dashboard type="user" />}>
             <Route index element={<Application />} />
+            <Route path="fdd" element={<UserFdd />} />
             <Route path="messages" element={<Messages />} />
             <Route path="notifications" element={<Notifications />} />
             <Route path="settings" element={<Settings />} />

@@ -60,6 +60,7 @@ const clientProfileItems = [
 
 const userNavItems = [
   { label: "Application", to: "/user/dashboard", icon: LayoutDashboard },
+  { label: "FDD", to: "/user/dashboard/fdd", icon: FileIcon },
   { label: "Messages", to: "/user/dashboard/messages", icon: MessageSquare, badge: "messages" },
 ];
 

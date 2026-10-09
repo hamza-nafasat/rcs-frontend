@@ -10,9 +10,9 @@ import { formatFileSize } from "../../../../utils/formatFileSize";
 // it grows this far, then scrolls
 const MAX_INPUT_HEIGHT = 160;
 
-const MessageWrite = ({ onSend, isSending = false }) => {
+const MessageWrite = ({ onSend, isSending = false, draft = "" }) => {
   const inputRef = useRef(null);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState(draft);
   const [file, setFile] = useState(null);
   const [filePreview, setFilePreview] = useState("");
   const [voiceNote, setVoiceNote] = useState(null);

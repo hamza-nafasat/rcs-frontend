@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import DeleteModal from "../../../components/modals/DeleteModal";
 import MessagesView from "../../../components/global/messages/MessagesView";
 import { useAuthUser } from "../../../routes/useAuthUser";
 import { getActingAccountId } from "../../../utils/roleHelper";
 import { onSocketEvent } from "../../../utils/socket";
-import { MESSAGE_EVENTS } from "../../../configs/constants";
+import { MESSAGE_EVENTS, USER_ROLES } from "../../../configs/constants";
 import {
   messageApi,
   useDeleteConversationMutation,
@@ -32,9 +33,12 @@ const toMessageFormData = (text, file, voiceNote) => {
 
 const Messages = () => {
   const dispatch = useDispatch();
+  const location = useLocation();
+  const navigate = useNavigate();
   const { user } = useAuthUser();
   const [selectedConversationId, setSelectedConversationId] = useState(null);
   const [conversationToDelete, setConversationToDelete] = useState(null);
+  const [draft, setDraft] = useState("");
 
   const { data: conversationData, isLoading: isLoadingConversations } = useGetMyConversationsQuery();
   const { data: contactData } = useGetContactsQuery();
@@ -63,6 +67,22 @@ const Messages = () => {
 
     return () => unsubscribes.forEach((unsubscribe) => unsubscribe());
   }, [dispatch]);
+
+  // another page can open the admin chat prefilled
+  useEffect(() => {
+    const askAdmin = location.state?.askAdmin;
+    const admin = contactData?.data?.find((contact) => contact?.role === USER_ROLES.ADMIN);
+    if (!askAdmin || !admin?._id) return;
+
+    startConversation(admin?._id)
+      .unwrap()
+      .then((response) => {
+        setDraft(askAdmin?.draft ?? "");
+        setSelectedConversationId(response?.data?._id);
+        navigate(".", { replace: true, state: null });
+      })
+      .catch((error) => console.error("Start conversation error:", error));
+  }, [location.state, contactData, startConversation, navigate]);
 
   // an open chat keeps nothing unread
   useEffect(() => {
@@ -118,6 +138,7 @@ const Messages = () => {
         isLoadingConversations={isLoadingConversations}
         isLoadingMessages={isLoadingMessages && messages.length === 0}
         isSending={isSending}
+        draft={draft}
         onSelectConversation={setSelectedConversationId}
         onStartConversation={handleStartConversation}
         onDeleteConversation={setConversationToDelete}

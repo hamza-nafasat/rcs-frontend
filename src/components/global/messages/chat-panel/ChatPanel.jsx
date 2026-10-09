@@ -8,6 +8,7 @@ const ChatPanel = ({
   currentUserId,
   isLoading = false,
   isSending = false,
+  draft = "",
   onSend,
   onDeleteMessage,
   onBack,
@@ -39,7 +40,7 @@ const ChatPanel = ({
 
       {/* Composer */}
       <footer className="shrink-0">
-        <MessageWrite onSend={onSend} isSending={isSending} />
+        <MessageWrite key={conversation?._id} onSend={onSend} isSending={isSending} draft={draft} />
       </footer>
     </section>
   );
