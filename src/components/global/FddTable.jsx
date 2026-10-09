@@ -99,7 +99,7 @@ const buildColumns = ({ canManage, canFill, onView, onEdit, onFill, onDownload, 
           {canFill && row.isFillRequired && canFillAgain(row.myFill) && (
             <Button variant="menuItem" onClick={() => onFill?.(row)}>
               <FileSignature size={16} className="mt-0.5" />
-              {row.myFill ? "Replace Signed Copy" : "Fill FDD"}
+              {row.myFill ? "Edit Sign" : "Fill FDD"}
             </Button>
           )}
 

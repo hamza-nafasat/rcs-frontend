@@ -65,6 +65,9 @@ const FddAddEditModal = ({
       : state,
   );
 
+  // the ones this brand has still to upload
+  const missingStates = [...requiredStates].filter((state) => !uploadedStates.has(state));
+
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit({ ...formData, file });
@@ -130,8 +133,8 @@ const FddAddEditModal = ({
             </div>
           </section>
 
-          {/* Which restaurant it belongs to */}
-          <section>
+          {/* Which brand, and where it applies */}
+          <section className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Select
               label="Restaurant Brand *"
               name="restaurant"
@@ -142,10 +145,7 @@ const FddAddEditModal = ({
               searchable
               required
             />
-          </section>
 
-          {/* Where it applies and where it stands */}
-          <section className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="flex flex-col gap-1">
               <Select
                 label="FDD State *"
@@ -158,13 +158,13 @@ const FddAddEditModal = ({
                 required
               />
 
-              {requiredStates.size > 0 && (
+              {/* only while something is outstanding */}
+              {missingStates.length > 0 && (
                 <p className="text-xs text-muted">
                   <span className="text-remove">*</span> still missing for this brand&apos;s locations
                 </p>
               )}
             </div>
-
           </section>
 
           {/* PDF File Upload */}
