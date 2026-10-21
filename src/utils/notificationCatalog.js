@@ -137,26 +137,16 @@ const NOTIFICATION_KINDS = {
     title: ({ clientName, state }) =>
       join([clientName ?? "A client", state ? `now operates in ${state}` : "reached a new state"], " "),
     description: ({ franchiseName, state }) =>
-      join(
-        [
-          franchiseName ? `${franchiseName} was assigned there` : "A new location was assigned",
-          state && `this state needs the ${fddStateFor(state)} FDD`,
-        ],
-        " \u2014 ",
-      ) + ".",
+      `${franchiseName ?? "A new location"} was assigned there. ` +
+      `This state needs the ${state ? fddStateFor(state) : "General"} FDD.`,
   },
   pipeline_new_state_application: {
     icon: MapPin,
     style: ICON_STYLES.support,
-    title: ({ name, state }) => `${name ?? "An applicant"} applied in ${state ?? "a new state"}`,
-    description: ({ clientName, state }) =>
-      join(
-        [
-          `${clientName ?? "The client"} has no franchise in ${state ?? "that state"} yet`,
-          state && `assigning a location there will need the ${fddStateFor(state)} FDD`,
-        ],
-        " \u2014 ",
-      ) + ".",
+    title: ({ state }) => `Application declined for ${state ?? "an unserved state"}`,
+    description: ({ name, clientName, state }) =>
+      `${name ?? "Someone"} applied to ${clientName ?? "a client"} from ${state ?? "a state"}. ` +
+      "That state is not in their operating states, so no account was created and the applicant has been emailed.",
   },
   pipeline_location_assigned: {
     icon: MapPin,
