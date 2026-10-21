@@ -17,8 +17,8 @@ const scoreAgainstMinimum = (raw, minimum, fullAt) => {
 const formatScore = (score) => score.toFixed(1);
 
 export const YES_NO_OPTIONS = [
-  { value: "Y", label: "Y", activeClassName: "bg-(--color-revenue) text-white" },
-  { value: "N", label: "N", activeClassName: "bg-(--color-text-remove) text-white" },
+  { value: "Y", label: "Yes", activeClassName: "bg-(--color-revenue) text-white" },
+  { value: "N", label: "No", activeClassName: "bg-(--color-text-remove) text-white" },
 ];
 
 export const DENSITY_OPTIONS = [

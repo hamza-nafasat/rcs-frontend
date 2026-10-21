@@ -1,13 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Crosshair } from "lucide-react";
 import Button from "../../../../components/shared/Button";
 import AuthHeading from "./AuthHeading";
-import AuthApplicationNotice from "./AuthApplicationNotice";
 import AuthApplicationFields from "./AuthApplicationFields";
 import MapLocationAssign from "../../../../components/global/map/MapLocationAssign";
 import { EMPTY_ACCOUNT, validateAccount } from "../utils/accountRules";
-import { EMPTY_APPLICATION, scoreApplication } from "../utils/applicationScore";
+import { EMPTY_APPLICATION } from "../utils/applicationScore";
 import { useAcceptInviteMutation } from "../../../../store/apis/shared/auth.apis";
 import { ROLE_HOME } from "../../../../configs/constants";
 
@@ -23,9 +21,7 @@ const AuthCreateAccountForm = ({ inviteToken, invite }) => {
     restaurantName: invite?.restaurantName ?? "",
   });
   const [accountErrors, setAccountErrors] = useState({});
-  const [showNotice, setShowNotice] = useState(true);
   const [map, setMap] = useState({ franchises: [], areas: [] });
-  const scores = scoreApplication(form);
 
   const handleAccountChange = (event) => {
     const { name, value } = event.target;
@@ -64,21 +60,15 @@ const AuthCreateAccountForm = ({ inviteToken, invite }) => {
 
   return (
     <article className="w-full rounded-2xl bg-white px-5 py-6 shadow-xs sm:px-6">
-      <header>
-        <AuthHeading
-          heading="Create Your Account"
-          subheading="Sign Up to create your RCS dashboard"
-          className="mb-3"
-        />
-        {showNotice && (
-          <AuthApplicationNotice onDismiss={() => setShowNotice(false)} />
-        )}
-      </header>
+      <AuthHeading
+        heading={invite?.restaurantName ? `Welcome, ${invite.restaurantName}` : "Welcome to RCS"}
+        subheading="Set up your account and tell us about your restaurant. It takes about five minutes."
+        className="mb-0"
+      />
 
       <form className="mt-5 flex flex-col gap-4" onSubmit={handleSubmit}>
         <AuthApplicationFields
           form={form}
-          scores={scores}
           onChange={handleChange}
           onSelect={handleSelect}
           account={account}
@@ -89,26 +79,26 @@ const AuthCreateAccountForm = ({ inviteToken, invite }) => {
         {/* Franchises and territory areas */}
         <MapLocationAssign franchises={map.franchises} areas={map.areas} onChange={setMap} />
 
-        <footer className="flex flex-wrap items-center justify-between gap-3 border-t color-border pt-4">
-          <Button
-            variant="bare"
-            onClick={() => navigate("/signin")}
-            className="h-10 rounded-xl border color-border bg-white px-4 text-sm font-medium text-cancel"
-          >
-            Back to Login
-          </Button>
+        <footer className="flex flex-col gap-3 border-t color-border pt-4">
+          <p className="text-xs leading-relaxed text-secondary">
+            By creating your account you confirm the details above are true to the best of your knowledge.
+          </p>
 
-          <div className="flex items-center gap-3">
-            <p className="flex items-center gap-1.5 text-sm font-semibold text-remove">
-              <Crosshair size={16} />
-              Score: {scores.formatted.total}
-            </p>
+          <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <Button
+              variant="bare"
+              onClick={() => navigate("/signin")}
+              className="h-10 w-full rounded-xl border color-border bg-white px-4 text-sm font-medium text-cancel sm:w-auto"
+            >
+              Back to Login
+            </Button>
+
             <Button
               type="submit"
               isLoading={isLoading}
-              className="h-10 rounded-xl px-5 text-sm font-medium"
+              className="h-10 w-full rounded-xl px-5 text-sm font-medium sm:w-auto"
             >
-              Create Account
+              Create My Account
             </Button>
           </div>
         </footer>

@@ -10,24 +10,113 @@ import { PASSWORD_MIN_LENGTH } from "../utils/accountRules";
 
 const fieldLabel = "uppercase text-xs font-semibold tracking-wide text-tertiary";
 
-const AuthApplicationFields = ({
-  form,
-  scores,
-  onChange,
-  onSelect,
-  disabled = false,
-  account = null,
-  accountErrors = {},
-  onAccountChange,
-}) => {
+// the plain answers behind each info icon
+const SECTION_INFO = {
+  restaurant: {
+    summary:
+      "This is the brand you are bringing to RCS. The name you type here shows on your dashboard and on every document we prepare for you.",
+    points: [
+      { label: "Restaurant name", text: "The name your customers know. Not your company registration name." },
+      { label: "Main cuisine", text: "The food you are best known for. One or two words is enough." },
+      {
+        label: "Health score",
+        text: "Your most recent food hygiene rating out of 100. You will find it on your last inspection report.",
+      },
+      {
+        label: "How the business is doing",
+        text: "Your own honest view. Saying business is slow will not count against you. It just tells us where to help first.",
+      },
+    ],
+  },
+
+  finances: {
+    summary:
+      "A franchise costs money before it earns any. These numbers tell us the plan is affordable for you. We do not want anyone signing up for something that puts them under.",
+    points: [
+      {
+        label: "Cash available",
+        text: "Money you could put in today without selling anything or borrowing. Savings and current accounts count.",
+      },
+      {
+        label: "Net worth",
+        text: "Add up everything you own, such as property, vehicles, savings and investments. Then take away everything you owe.",
+      },
+      {
+        label: "Credit score",
+        text: "The number on your credit report. Lenders use it to set your interest rate. Most banks let you check it for free.",
+      },
+    ],
+    footnote: "Only our review team sees these numbers. We never show them to other clients or applicants.",
+  },
+
+  experience: {
+    summary:
+      "This is about what you have run before. You do not need any experience. Plenty of people start with none. It just helps us plan how much training and support to give you.",
+    points: [
+      {
+        label: "Years managing a business",
+        text: "Any kind of business counts, not just restaurants. Round to the nearest year.",
+      },
+      { label: "Worked in food before", text: "Any job in a restaurant, cafe, bar or catering counts. Any level is fine." },
+      {
+        label: "Run more than one site",
+        text: "This asks if you have managed two or more places at the same time. Running several places is a different job from running one.",
+      },
+    ],
+  },
+
+  legal: {
+    summary:
+      "The law says we have to ask everyone these four questions. Please answer honestly. Saying yes rarely stops an application on its own. Something we find out later usually does.",
+    points: [
+      {
+        label: "Bankruptcy in the last 7 years",
+        text: "This can be personal or business. We have to tell the lenders who fund franchise deals.",
+      },
+      { label: "Open court case", text: "Any legal dispute that is still going on, business or personal." },
+      {
+        label: "Criminal convictions",
+        text: "Only convictions that are still on your record. You do not need to declare spent ones.",
+      },
+      {
+        label: "Tied to a competitor",
+        text: "A clause in an old job or franchise contract that might stop you running this one.",
+      },
+    ],
+    footnote:
+      "If you are not sure about any of these, answer yes and tell us the details later. We would rather talk it through with you.",
+  },
+
+  market: {
+    summary:
+      "This is about how busy your area already is. Your answers shape which territory we can protect for you and how far apart your branches need to be.",
+    points: [
+      {
+        label: "Is the territory still free",
+        text: "As far as you know, has another franchise already taken the area you want? A rough guess is fine. We check properly before anything is agreed.",
+      },
+      {
+        label: "How many rivals are nearby",
+        text: "Low means there are few restaurants like yours close by. High means a crowded market. Think about restaurants like yours, not every food business.",
+      },
+    ],
+  },
+};
+
+const AuthApplicationFields = ({ form, onChange, onSelect, disabled = false, account = null, accountErrors = {}, onAccountChange }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const inputClassName = disabled ? "bg-gray-50/50 text-gray-500 cursor-not-allowed" : "";
 
   return (
     <div className="grid grid-cols-1 items-stretch gap-4">
-      {/* Applicant Information */}
-      <FormSection icon={User} iconClassName="text-secondary" title="Applicant Information">
+      {/* Who you are */}
+      <FormSection
+        icon={User}
+        iconClassName="text-secondary"
+        title="About You"
+        description="Who we will be dealing with day to day."
+      >
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <Input
             name="firstName"
@@ -52,17 +141,10 @@ const AuthApplicationFields = ({
             className={inputClassName}
             required
           />
-
         </div>
 
         <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
-          <LocationFields
-            values={form}
-            onChange={onChange}
-            disabled={disabled}
-            labelClassName={fieldLabel}
-            required
-          />
+          <LocationFields values={form} onChange={onChange} disabled={disabled} labelClassName={fieldLabel} required />
         </div>
 
         {/* only the signup form passes an account */}
@@ -73,11 +155,10 @@ const AuthApplicationFields = ({
                 name="email"
                 label="Email"
                 labelClassName={fieldLabel}
-                placeholder="you@example.com"
                 value={account.email}
                 disabled
                 className="bg-gray-50/50 text-gray-500 cursor-not-allowed"
-                hint="Taken from your invitation"
+                hint="You will sign in with this"
               />
 
               <PhoneInput
@@ -117,8 +198,8 @@ const AuthApplicationFields = ({
                 isEyeButton
                 showConfirm={showConfirmPassword}
                 setShowConfirm={setShowConfirmPassword}
-                hint={accountErrors.confirmPassword}
-                hintClassName="text-remove"
+                hint={accountErrors.confirmPassword ?? "Type it once more"}
+                hintClassName={accountErrors.confirmPassword ? "text-remove" : ""}
                 required
               />
             </div>
@@ -126,8 +207,14 @@ const AuthApplicationFields = ({
         )}
       </FormSection>
 
-      {/* // resturent details  */}
-      <FormSection icon={Utensils} iconClassName="text-info" title="Restaurant Details">
+      {/* The restaurant itself */}
+      <FormSection
+        icon={Utensils}
+        iconClassName="text-info"
+        title="Your Restaurant"
+        description="The brand you are bringing to RCS."
+        info={SECTION_INFO.restaurant}
+      >
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <Input
             name="restaurantName"
@@ -138,6 +225,7 @@ const AuthApplicationFields = ({
             onChange={onChange}
             disabled={disabled}
             className={inputClassName}
+            hint="The name customers know"
             required
           />
 
@@ -150,6 +238,7 @@ const AuthApplicationFields = ({
             onChange={onChange}
             disabled={disabled}
             className={inputClassName}
+            hint="What you are known for"
             required
           />
 
@@ -165,35 +254,44 @@ const AuthApplicationFields = ({
             onChange={onChange}
             disabled={disabled}
             className={inputClassName}
+            hint="Your latest hygiene rating"
             required
           />
         </div>
 
         <SegmentedControl
-          label="Status"
+          label="How is the business doing?"
+          labelClassName="normal-case"
           value={form.status}
           onChange={(value) => onSelect("status", value)}
           options={CLIENT_STATUS_OPTIONS}
+          hint="Your own honest view"
           disabled={disabled}
           className="mt-3"
         />
       </FormSection>
 
-      {/* Financial Strength */}
-      <FormSection icon={DollarSign} iconClassName="text-primary" title="Financial Strength (35%)">
+      {/* Money behind the business */}
+      <FormSection
+        icon={DollarSign}
+        iconClassName="text-primary"
+        title="Your Finances"
+        description="Whether the plan is affordable for you."
+        info={SECTION_INFO.finances}
+      >
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <Input
             name="liquidCapital"
             type="number"
             min="0"
-            label="Liquid Capital ($) *"
+            label="Cash Available ($) *"
             labelClassName={fieldLabel}
             placeholder="e.g. 150000"
             value={form.liquidCapital}
             onChange={onChange}
             disabled={disabled}
             className={inputClassName}
-            hint={`Min. $75,000 - Score: ${scores.formatted.liquid}/5`}
+            hint="Money you could use today"
             required
           />
 
@@ -208,7 +306,7 @@ const AuthApplicationFields = ({
             onChange={onChange}
             disabled={disabled}
             className={inputClassName}
-            hint={`Min. $250,000 - Score: ${scores.formatted.netWorth}/5`}
+            hint="What you own, minus what you owe"
             required
           />
 
@@ -223,66 +321,78 @@ const AuthApplicationFields = ({
             onChange={onChange}
             disabled={disabled}
             className={inputClassName}
-            hint={`Min. 680 - Score: ${scores.formatted.credit}/5`}
+            hint="From your credit report"
             required
           />
         </div>
       </FormSection>
 
-      {/* Business Experience */}
-      <FormSection icon={Briefcase} iconClassName="text-info" title="Business Experience (20%)">
+      {/* What they have run before */}
+      <FormSection
+        icon={Briefcase}
+        iconClassName="text-info"
+        title="Your Experience"
+        description="What you have run before. None is fine."
+        info={SECTION_INFO.experience}
+      >
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <Input
             name="yearsMgmt"
             type="number"
             min="0"
-            label="Years Mgmt Experience *"
+            label="Years Managing *"
             labelClassName={fieldLabel}
             placeholder="e.g. 8"
             value={form.yearsMgmt}
             onChange={onChange}
             disabled={disabled}
             className={inputClassName}
-            hint={`Score: ${scores.formatted.years}/5`}
+            hint="Any business, not only food"
             required
           />
 
           <SegmentedControl
-            label="Food/Restaurant Exp."
+            label="Worked in food before?"
+            labelClassName="normal-case"
             value={form.foodExp}
             onChange={(value) => onSelect("foodExp", value)}
             options={YES_NO_OPTIONS}
-            hint="Industry background (5.0 if Y)"
+            hint="Any role counts"
             disabled={disabled}
           />
 
           <SegmentedControl
-            label="Multi-Unit Operator"
+            label="Run more than one site?"
+            labelClassName="normal-case"
             value={form.multiUnit}
             onChange={(value) => onSelect("multiUnit", value)}
             options={YES_NO_OPTIONS}
-            hint="Multi-unit exp. (5.0 if Y, 2.0 if N)"
+            hint="Two or more at once"
             disabled={disabled}
           />
         </div>
       </FormSection>
 
-      {/* Legal & Background */}
-      <FormSection icon={Shield} iconClassName="text-secondary" title="Legal & Background (20%)">
+      {/* Things that could block the deal */}
+      <FormSection
+        icon={Shield}
+        iconClassName="text-secondary"
+        title="Legal Background"
+        description="Four questions the law requires us to ask."
+        info={SECTION_INFO.legal}
+      >
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <SegmentedControl
-            label="Bankruptcy (Past 7 Yrs)"
+            label="Bankruptcy in the last 7 years?"
             labelClassName="normal-case"
             value={form.bankruptcy}
             onChange={(value) => onSelect("bankruptcy", value)}
             options={YES_NO_OPTIONS}
-            hint="Disqualifying if Yes"
-            hintClassName="text-remove"
             disabled={disabled}
           />
 
           <SegmentedControl
-            label="Pending Litigation"
+            label="Any court case open against you?"
             labelClassName="normal-case"
             value={form.litigation}
             onChange={(value) => onSelect("litigation", value)}
@@ -291,18 +401,16 @@ const AuthApplicationFields = ({
           />
 
           <SegmentedControl
-            label="Criminal Background"
+            label="Any criminal convictions?"
             labelClassName="normal-case"
             value={form.criminal}
             onChange={(value) => onSelect("criminal", value)}
             options={YES_NO_OPTIONS}
-            hint="Disqualifying if Yes"
-            hintClassName="text-remove"
             disabled={disabled}
           />
 
           <SegmentedControl
-            label="Non-Compete Conflict"
+            label="Tied to a competitor by contract?"
             labelClassName="normal-case"
             value={form.nonCompete}
             onChange={(value) => onSelect("nonCompete", value)}
@@ -312,23 +420,32 @@ const AuthApplicationFields = ({
         </div>
       </FormSection>
 
-      {/* Market & Location Fit */}
-      <FormSection icon={MapPin} iconClassName="text-revenue" title="Market & Location Fit (25%)">
+      {/* Where they want to trade */}
+      <FormSection
+        icon={MapPin}
+        iconClassName="text-revenue"
+        title="Your Market"
+        description="How crowded your area already is."
+        info={SECTION_INFO.market}
+      >
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <SegmentedControl
-            label="Territory Available?"
+            label="Is the territory you want still free?"
+            labelClassName="normal-case"
             value={form.territoryAvailable}
             onChange={(value) => onSelect("territoryAvailable", value)}
             options={YES_NO_OPTIONS}
+            hint="An honest guess is fine"
             disabled={disabled}
           />
 
           <SegmentedControl
-            label="Competitive Density"
+            label="How many rivals are nearby?"
+            labelClassName="normal-case"
             value={form.density}
             onChange={(value) => onSelect("density", value)}
             options={DENSITY_OPTIONS}
-            hint="Low=5.0 · Medium=3.0 · High=1.0"
+            hint="Restaurants like yours"
             disabled={disabled}
           />
         </div>

@@ -18,11 +18,17 @@ const MapLocationAssign = ({
 
   const [isFullscreen, setIsFullscreen] = useState(false);
 
+  // the column can resize without the window
   useEffect(() => {
-    const doResize = () => sizeCanvas(containerRef.current, mapCanvasRef.current);
+    const container = containerRef.current;
+    if (!container) return;
+
+    const doResize = () => sizeCanvas(container, mapCanvasRef.current);
     doResize();
-    window.addEventListener("resize", doResize);
-    return () => window.removeEventListener("resize", doResize);
+
+    const observer = new ResizeObserver(doResize);
+    observer.observe(container);
+    return () => observer.disconnect();
   }, []);
 
   const paintPreview = useCallback(() => {

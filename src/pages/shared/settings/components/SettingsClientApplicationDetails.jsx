@@ -1,5 +1,4 @@
 import AuthApplicationFields from "../../auth/components/AuthApplicationFields";
-import { scoreApplication } from "../../auth/utils/applicationScore";
 
 const SettingsClientApplicationDetails = ({
   form,
@@ -7,13 +6,11 @@ const SettingsClientApplicationDetails = ({
   onSelect,
   disabled = false,
 }) => {
-  const scores = scoreApplication(form);
 
   return (
     <section>
       <AuthApplicationFields
         form={form}
-        scores={scores}
         onChange={onChange}
         onSelect={onSelect}
         disabled={disabled}
