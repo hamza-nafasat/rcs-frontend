@@ -13,6 +13,7 @@ import {
   DEFAULT_CENTER,
   circleAreaKm2,
   circleRing,
+  zoomForRadius,
   DRAG_THRESHOLD,
   FULLSCREEN_ZOOM,
   LAYER_SATELLITE,
@@ -48,6 +49,8 @@ const MIN_AREA_RADIUS_MILES = 0.1;
 
 // close enough to read a city and its neighbours
 const AREA_ZOOM = 9;
+
+const DEFAULT_AREA_RADIUS_MILES = "25";
 
 // no minus or exponent
 const BLOCKED_NUMBER_KEYS = ["-", "+", "e", "E"];
@@ -120,7 +123,7 @@ const MapTerritoryDrawing = ({
   const [editingAreaDbId, setEditingAreaDbId] = useState(null);
   const [formAreaName, setFormAreaName] = useState("");
   const [formAreaDistance, setFormAreaDistance] = useState("5");
-  const [formAreaRadius, setFormAreaRadius] = useState("25");
+  const [formAreaRadius, setFormAreaRadius] = useState(DEFAULT_AREA_RADIUS_MILES);
   const isDistanceValid = parseFloat(formAreaDistance) >= MIN_AREA_DISTANCE_MILES;
   const isRadiusValid = parseFloat(formAreaRadius) >= MIN_AREA_RADIUS_MILES;
 
@@ -405,6 +408,14 @@ const MapTerritoryDrawing = ({
 
   // ── Search Handlers ───────────────────────────────────────────────────────
 
+  // frame a circle with a little room around it
+  const fitToRadius = (place, radiusKm) => {
+    setCenter(place);
+
+    const box = containerRef.current?.getBoundingClientRect();
+    setZoom(box ? zoomForRadius(radiusKm, place?.lat, box.width, box.height) : AREA_ZOOM);
+  };
+
   const handleSearchInput = (e) => {
     const val = e.target.value;
     setSearchQuery(val);
@@ -423,19 +434,23 @@ const MapTerritoryDrawing = ({
 
   const handleSelectResult = (result) => {
     const place = { lat: result.lat, lng: result.lng };
-    setCenter(place);
-    setZoom(AREA_ZOOM);
     setSearchQuery(result.name.split(",")[0]);
     setShowResults(false);
-    if (!isPickingArea) return;
+
+    if (!isPickingArea) {
+      setCenter(place);
+      setZoom(AREA_ZOOM);
+      return;
+    }
 
     // the picked place opens the area form
     setPendingCenter(place);
     setFormAreaName(result.name.split(",")[0] || `Area #${completedAreas.length + 1}`);
     setFormAreaDistance("5");
-    setFormAreaRadius("25");
+    setFormAreaRadius(DEFAULT_AREA_RADIUS_MILES);
     setShowSaveModal(true);
     setMode(MODE_IDLE);
+    fitToRadius(place, milesToKm(parseFloat(DEFAULT_AREA_RADIUS_MILES)));
   };
 
   // ── Actions ───────────────────────────────────────────────────────────────
@@ -513,6 +528,15 @@ const MapTerritoryDrawing = ({
     handleCloseAreaForm();
   };
 
+  // the view follows the radius as it is typed
+  const handleRadiusChange = (event) => {
+    const miles = event.target.value;
+    setFormAreaRadius(miles);
+
+    const radiusKm = milesToKm(parseFloat(miles));
+    if (pendingCenter && radiusKm > 0) fitToRadius(pendingCenter, radiusKm);
+  };
+
   const handleEditAreaShape = (area) => {
     setEditingAreaId(area.id);
     setEditingAreaDbId(area._id ?? null);
@@ -520,9 +544,8 @@ const MapTerritoryDrawing = ({
     setPendingCenter({ lat: area.lat, lng: area.lng });
     setFormAreaName(area.name);
     setFormAreaDistance(area.distanceKm ? String(Number(kmToMiles(area.distanceKm).toFixed(2))) : "5");
-    setFormAreaRadius(area.radiusKm ? String(Number(kmToMiles(area.radiusKm).toFixed(2))) : "25");
-    setCenter({ lat: area.lat, lng: area.lng });
-    setZoom(AREA_ZOOM);
+    setFormAreaRadius(area.radiusKm ? String(Number(kmToMiles(area.radiusKm).toFixed(2))) : DEFAULT_AREA_RADIUS_MILES);
+    fitToRadius({ lat: area.lat, lng: area.lng }, area.radiusKm);
     setShowSaveModal(true);
     setShowDataModal(false);
   };
@@ -890,7 +913,7 @@ const MapTerritoryDrawing = ({
                     min="0.1"
                     step="0.1"
                     value={formAreaRadius}
-                    onChange={(e) => setFormAreaRadius(e.target.value)}
+                    onChange={handleRadiusChange}
                     onKeyDown={(e) => BLOCKED_NUMBER_KEYS.includes(e.key) && e.preventDefault()}
                     placeholder="e.g. 25"
                     className="w-full h-10 rounded-xl border color-border bg-white pl-3.5 pr-14 text-sm font-semibold text-tertiary outline-none focus:border-(--color-primary) transition"
