@@ -113,6 +113,25 @@ export const isPointInArea = (point, area) => {
 // the ground a circle covers
 export const circleAreaKm2 = (radiusKm = 0) => Math.PI * radiusKm * radiusKm;
 
+// metres per pixel at the equator, zoom 0
+const EQUATOR_METERS_PER_PIXEL = 156543.03392;
+
+// how much room to leave around the circle
+const RADIUS_VIEW_PADDING = 1.5;
+
+// the zoom that frames a circle of this size
+export const zoomForRadius = (radiusKm, lat, width, height) => {
+  const pixels = Math.min(width, height);
+  if (!(radiusKm > 0) || !pixels) return FULLSCREEN_ZOOM;
+
+  // the view spans the circle plus its padding
+  const spanMeters = radiusKm * 1000 * 2 * RADIUS_VIEW_PADDING;
+  const metersPerPixel = spanMeters / pixels;
+  const zoom = Math.log2((EQUATOR_METERS_PER_PIXEL * Math.cos((lat * Math.PI) / 180)) / metersPerPixel);
+
+  return Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, zoom));
+};
+
 // the area rule this pin breaks
 export const findSpacingViolation = (franchise, franchises = [], areas = []) => {
   if (!franchise || franchise.lat == null || franchise.lng == null) return null;
