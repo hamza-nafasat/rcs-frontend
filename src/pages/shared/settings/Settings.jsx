@@ -18,7 +18,9 @@ const toProfileFormData = (form, image, isClient, map) => {
   // a blank field cannot be cleared
   if (isClient)
     RESTAURANT_FIELDS.forEach((field) => {
-      if (form?.[field] !== "" && form?.[field] != null) body.append(field, form[field]);
+      const value = form?.[field];
+      if (value === "" || value == null) return;
+      body.append(field, Array.isArray(value) ? JSON.stringify(value) : value);
     });
 
   // the map travels as json text

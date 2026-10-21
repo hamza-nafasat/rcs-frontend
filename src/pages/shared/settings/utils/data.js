@@ -14,6 +14,7 @@ export const PROFILE_FIELDS = [
 
 // what only a client edits
 export const RESTAURANT_FIELDS = [
+  "restaurantStates",
   "restaurantName",
   "restaurantCuisine",
   "status",
