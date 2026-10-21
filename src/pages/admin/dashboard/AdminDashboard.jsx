@@ -23,15 +23,15 @@ const buildCharts = (stats) => {
 
   return {
     months: stats?.months ?? [],
-    clientsVsLeads: [
+    clientsVsApplications: [
       { label: "Clients", data: series.clients ?? [], backgroundColor: "#F97316" },
-      { label: "Leads", data: series.pipelines ?? [], backgroundColor: "#2563EB" },
+      { label: "Applications", data: series.pipelines ?? [], backgroundColor: "#2563EB" },
     ],
-    fddVsSupports: [
+    fddVsFranchises: [
       { label: "FDDs", data: series.fdds ?? [], borderColor: "#22C55E", backgroundColor: "transparent", tension: 0.4 },
       {
-        label: "Supports",
-        data: series.supports ?? [],
+        label: "Franchises",
+        data: series.franchises ?? [],
         borderColor: "#F97316",
         backgroundColor: "transparent",
         tension: 0.4,
@@ -95,9 +95,11 @@ const AdminDashboard = () => {
       <section className="fade-up grid grid-cols-1 gap-4 lg:grid-cols-5" style={{ "--fade-delay": "440ms" }}>
         <Card
           className="flex flex-col lg:col-span-3"
-          header={<DashboardHeading heading="Clients vs Leads" subheading="Monthly clients against leads" />}
+          header={
+            <DashboardHeading heading="Clients vs Applications" subheading="Monthly clients against applications" />
+          }
         >
-          <DashboardBarChart labels={charts.months} datasets={charts.clientsVsLeads} isLoading={isLoadingStats} />
+          <DashboardBarChart labels={charts.months} datasets={charts.clientsVsApplications} isLoading={isLoadingStats} />
         </Card>
         <Card
           className="flex flex-col lg:col-span-2"
@@ -120,9 +122,9 @@ const AdminDashboard = () => {
           />
         </Card>
         <Card className="flex h-full flex-col lg:col-span-3">
-          <DashboardHeading heading="FDD vs Supports" subheading="Monthly documents against tickets" />
+          <DashboardHeading heading="FDD vs Franchises" subheading="Monthly documents against new franchises" />
 
-          <DashboardMultiLineChart labels={charts.months} datasets={charts.fddVsSupports} isLoading={isLoadingStats} />
+          <DashboardMultiLineChart labels={charts.months} datasets={charts.fddVsFranchises} isLoading={isLoadingStats} />
         </Card>
       </section>
 
