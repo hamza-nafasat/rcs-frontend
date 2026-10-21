@@ -3,6 +3,7 @@ import { Building2, ChevronDown, ChevronUp, Layers, MapPin, Pencil, Trash2, X } 
 import DeleteModal from "../../modals/DeleteModal";
 import { AREA_COLORS } from "../../../utils/mapHelpers";
 import { formatAreaSize, formatMiles } from "../../../utils/distance";
+import { circleAreaKm2 } from "../../../utils/mapHelpers";
 
 const TAB_FRANCHISES = "franchises";
 const TAB_AREAS = "areas";
@@ -149,7 +150,8 @@ const MapDataModal = ({
                         <div>
                           <span className="text-sm font-bold text-tertiary">{area.name}</span>
                           <span className="ml-2 text-xs text-secondary">
-                            ({area.geoPoints.length} vertices · {formatAreaSize(area.areaKm2)} · {formatMiles(area.distanceKm)} apart)
+                            ({formatMiles(area.radiusKm)} radius · {formatAreaSize(circleAreaKm2(area.radiusKm))} ·{" "}
+                            {formatMiles(area.distanceKm)} apart)
                           </span>
                         </div>
                       </div>
@@ -189,25 +191,16 @@ const MapDataModal = ({
                     {isExpanded && (
                       <div className="flex flex-col gap-2 border-t color-border bg-gray-50/50 p-3">
                         <p className="text-[11px] font-semibold uppercase tracking-wide text-secondary">
-                          All Coordinates (Lat, Lng)
+                          Center (Lat, Lng)
                         </p>
-                        <div className="grid max-h-48 grid-cols-1 gap-1.5 sm:grid-cols-2 overflow-y-auto p-1">
-                          {area.geoPoints.map((point, pointIndex) => (
-                            <div
-                              key={pointIndex}
-                              className="flex items-center gap-2 rounded-md border color-border bg-white px-2.5 py-1 text-xs"
-                            >
-                              <span
-                                className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-white"
-                                style={{ backgroundColor: color.stroke }}
-                              >
-                                {pointIndex + 1}
-                              </span>
-                              <span className="font-mono text-tertiary">
-                                {point.lat.toFixed(5)}°, {point.lng.toFixed(5)}°
-                              </span>
-                            </div>
-                          ))}
+                        <div className="flex items-center gap-2 rounded-md border color-border bg-white px-2.5 py-1 text-xs">
+                          <span
+                            className="h-3 w-3 shrink-0 rounded-full"
+                            style={{ backgroundColor: color.stroke }}
+                          />
+                          <span className="font-mono text-tertiary">
+                            {area.lat?.toFixed(5)}°, {area.lng?.toFixed(5)}°
+                          </span>
                         </div>
                       </div>
                     )}

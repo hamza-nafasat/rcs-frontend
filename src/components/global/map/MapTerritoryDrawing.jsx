@@ -1,21 +1,18 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import {
-  calcBoundingBox,
-  calcCentroid,
-  calcPolygonAreaKm2,
   clearCanvas,
   drawAreaLabel,
   drawDot,
   fillPolygon,
   getCanvasPoint,
-  isNearPoint,
-  redrawPolygon,
   strokePolygon,
 } from "../../../utils/canvasDrawing";
 import {
   AREA_COLORS,
   DEFAULT_CENTER,
+  circleAreaKm2,
+  circleRing,
   DRAG_THRESHOLD,
   FULLSCREEN_ZOOM,
   LAYER_SATELLITE,
@@ -35,7 +32,7 @@ import {
   serializeMapData,
   sizeCanvas,
 } from "../../../utils/mapHelpers";
-import { ArrowLeft, Check, Layers, MapPin, PenTool, RotateCcw, Search, Store, X } from "lucide-react";
+import { ArrowLeft, Check, Layers, MapPin, PenTool, Search, Store, X } from "lucide-react";
 import MapFranchiseFormModal from "./MapFranchiseFormModal";
 import MapDataModal from "./MapDataModal";
 import { formatAreaSize, formatMiles, kmToMiles, milesToKm } from "../../../utils/distance";
@@ -47,6 +44,10 @@ const MODE_IDLE = "idle";
 const MODE_AREA = "area";
 const MODE_LOCATION = "location";
 const MIN_AREA_DISTANCE_MILES = 0.1;
+const MIN_AREA_RADIUS_MILES = 0.1;
+
+// close enough to read a city and its neighbours
+const AREA_ZOOM = 9;
 
 // no minus or exponent
 const BLOCKED_NUMBER_KEYS = ["-", "+", "e", "E"];
@@ -75,12 +76,12 @@ const MapTerritoryDrawing = ({
   // saved areas, franchises, active drawing
   const [completedAreas, setCompletedAreas] = useState(initialAreas);
   const [franchises, setFranchises] = useState(initialFranchises);
-  const [activeGeoPoints, setActiveGeoPoints] = useState([]);
+  const [pendingCenter, setPendingCenter] = useState(null);
   const [mode, setMode] = useState(MODE_IDLE);
   const [cursor, setCursor] = useState(null);
   const [hoverViolation, setHoverViolation] = useState(null);
 
-  const isDrawingActive = mode === MODE_AREA;
+  const isPickingArea = mode === MODE_AREA;
   const isPlacingFranchise = mode === MODE_LOCATION;
 
   // pins too close inside an area
@@ -114,18 +115,26 @@ const MapTerritoryDrawing = ({
 
   // Save Area Form Modal State
   const [showSaveModal, setShowSaveModal] = useState(false);
-  const [pendingGeoPoints, setPendingGeoPoints] = useState(null);
   const [editingAreaId, setEditingAreaId] = useState(null);
   // keeps the saved area id
   const [editingAreaDbId, setEditingAreaDbId] = useState(null);
   const [formAreaName, setFormAreaName] = useState("");
   const [formAreaDistance, setFormAreaDistance] = useState("5");
+  const [formAreaRadius, setFormAreaRadius] = useState("25");
   const isDistanceValid = parseFloat(formAreaDistance) >= MIN_AREA_DISTANCE_MILES;
+  const isRadiusValid = parseFloat(formAreaRadius) >= MIN_AREA_RADIUS_MILES;
+
+  // the circle the modal is previewing
+  const previewArea = useMemo(
+    () => (pendingCenter && isRadiusValid ? { ...pendingCenter, radiusKm: milesToKm(parseFloat(formAreaRadius)) } : null),
+    [pendingCenter, isRadiusValid, formAreaRadius],
+  );
 
   // the manage data modal
   const [showDataModal, setShowDataModal] = useState(false);
 
   // the place search state
+  const searchInputRef = useRef(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [showResults, setShowResults] = useState(false);
@@ -213,15 +222,14 @@ const MapTerritoryDrawing = ({
     // 1. Draw all completed areas
     completedAreas.forEach((area, index) => {
       const color = AREA_COLORS[index % AREA_COLORS.length];
-      const pxPoints = area.geoPoints.map((g) => latLngToCanvas(g.lat, g.lng));
+      const pxPoints = circleRing(area).map((g) => latLngToCanvas(g.lat, g.lng));
 
       fillPolygon(ctx, pxPoints, { color: color.fill });
       strokePolygon(ctx, pxPoints, { color: color.stroke, width: 2.5 });
-      pxPoints.forEach((p) => drawDot(ctx, p, { fill: color.stroke, stroke: "#ffffff", radius: 4 }));
 
-      // Area label at centroid
-      const centroidGeo = calcCentroid(area.geoPoints);
-      const centroidPx = latLngToCanvas(centroidGeo.lat, centroidGeo.lng);
+      // the label sits on the searched place
+      const centroidPx = latLngToCanvas(area.lat, area.lng);
+      drawDot(ctx, centroidPx, { fill: color.stroke, stroke: "#ffffff", radius: 5 });
       const displayLabel = area.distanceKm > 0 ? `${area.name} (${formatMiles(area.distanceKm)})` : area.name;
       drawAreaLabel(ctx, centroidPx, displayLabel, color.stroke);
     });
@@ -240,14 +248,17 @@ const MapTerritoryDrawing = ({
       drawFranchisePin(ctx, cursor, "Click to drop", { color: "#ea580c", radius: 16 });
     }
 
-    // 2. Draw currently active drawing area
-    if (activeGeoPoints.length > 0) {
-      const activePx = activeGeoPoints.map((g) => latLngToCanvas(g.lat, g.lng));
-      const currentColor = AREA_COLORS[completedAreas.length % AREA_COLORS.length].stroke;
-      const currentFill = AREA_COLORS[completedAreas.length % AREA_COLORS.length].fill;
-      redrawPolygon(ctx, width, height, activePx, false, cursor, currentColor, currentFill);
+    // 2. the circle the modal is previewing
+    if (previewArea) {
+      const color = AREA_COLORS[completedAreas.length % AREA_COLORS.length];
+      const previewPx = circleRing(previewArea).map((g) => latLngToCanvas(g.lat, g.lng));
+      const centerPx = latLngToCanvas(previewArea.lat, previewArea.lng);
+
+      fillPolygon(ctx, previewPx, { color: color.fill });
+      strokePolygon(ctx, previewPx, { color: color.stroke, width: 2.5 });
+      drawDot(ctx, centerPx, { fill: color.stroke, stroke: "#ffffff", radius: 5 });
     }
-  }, [completedAreas, franchises, isPlacingFranchise, activeGeoPoints, cursor, latLngToCanvas, violationById]);
+  }, [completedAreas, franchises, isPlacingFranchise, previewArea, cursor, latLngToCanvas, violationById]);
 
 // scroll zoom and trackpad handlers
 
@@ -339,7 +350,7 @@ const MapTerritoryDrawing = ({
       return;
     }
 
-    if (isDrawingActive || isPlacingFranchise) {
+    if (isPickingArea || isPlacingFranchise) {
       setCursor(getCanvasPoint(dc, e));
       setHoverViolation(null);
       return;
@@ -380,28 +391,6 @@ const MapTerritoryDrawing = ({
       return;
     }
 
-    if (!isDrawingActive) return;
-
-    // geo points to pixels for snapping
-    const pxPoints = activeGeoPoints.map((g) => latLngToCanvas(g.lat, g.lng));
-
-    // snap to close the area
-    if (pxPoints.length >= 3 && isNearPoint(pt, pxPoints[0])) {
-      const defaultNum = completedAreas.length + 1;
-      setPendingGeoPoints(activeGeoPoints);
-      setFormAreaName(`Area #${defaultNum}`);
-      setFormAreaDistance("5");
-      setShowSaveModal(true);
-
-      setActiveGeoPoints([]);
-      setCursor(null);
-      setMode(MODE_IDLE);
-      return;
-    }
-
-    // Add point to active drawing
-    const geo = canvasToLatLng(pt.x, pt.y);
-    setActiveGeoPoints((prev) => [...prev, geo]);
   };
 
   const handleDoubleClick = (e) => {
@@ -433,29 +422,40 @@ const MapTerritoryDrawing = ({
   };
 
   const handleSelectResult = (result) => {
-    setCenter({ lat: result.lat, lng: result.lng });
-    setZoom(12);
+    const place = { lat: result.lat, lng: result.lng };
+    setCenter(place);
+    setZoom(AREA_ZOOM);
     setSearchQuery(result.name.split(",")[0]);
     setShowResults(false);
+    if (!isPickingArea) return;
+
+    // the picked place opens the area form
+    setPendingCenter(place);
+    setFormAreaName(result.name.split(",")[0] || `Area #${completedAreas.length + 1}`);
+    setFormAreaDistance("5");
+    setFormAreaRadius("25");
+    setShowSaveModal(true);
+    setMode(MODE_IDLE);
   };
 
   // ── Actions ───────────────────────────────────────────────────────────────
 
-  const handleUndoPoint = () => {
-    if (activeGeoPoints.length > 0) {
-      setActiveGeoPoints((prev) => prev.slice(0, -1));
-    }
+  const handleCloseAreaForm = () => {
+    setShowSaveModal(false);
+    setPendingCenter(null);
+    setEditingAreaId(null);
+    setEditingAreaDbId(null);
   };
 
-  const handleClearActive = () => {
-    setActiveGeoPoints([]);
-    setMode(MODE_IDLE);
-    setCursor(null);
-  };
-
+  // an area starts from a searched place
   const handleToggleDrawMode = () => {
-    if (isDrawingActive) handleClearActive();
-    else setMode(MODE_AREA);
+    if (isPickingArea) {
+      setMode(MODE_IDLE);
+      return;
+    }
+    setMode(MODE_AREA);
+    setShowResults(searchResults.length > 0);
+    searchInputRef.current?.focus();
   };
 
   const handleTogglePlaceMode = () => {
@@ -470,7 +470,7 @@ const MapTerritoryDrawing = ({
   const handleClearAll = () => {
     setCompletedAreas([]);
     setFranchises([]);
-    setActiveGeoPoints([]);
+    setPendingCenter(null);
     setMode(MODE_IDLE);
     setCursor(null);
   };
@@ -486,22 +486,18 @@ const MapTerritoryDrawing = ({
       e.preventDefault();
       e.stopPropagation();
     }
-    if (!pendingGeoPoints || pendingGeoPoints.length === 0) return;
-    if (!isDistanceValid) return;
+    if (!pendingCenter || !isDistanceValid || !isRadiusValid) return;
 
     const areaNumber = completedAreas.length + 1;
-    const finalName = formAreaName.trim() || `Area #${areaNumber}`;
-    const finalDistance = milesToKm(parseFloat(formAreaDistance));
 
     const updatedArea = {
       ...(editingAreaDbId && { _id: editingAreaDbId }),
       id: editingAreaId || `area-${Date.now()}`,
-      name: finalName,
-      distanceKm: finalDistance,
-      geoPoints: pendingGeoPoints,
-      areaKm2: calcPolygonAreaKm2(pendingGeoPoints),
-      centroid: calcCentroid(pendingGeoPoints),
-      bbox: calcBoundingBox(pendingGeoPoints),
+      name: formAreaName.trim() || `Area #${areaNumber}`,
+      distanceKm: milesToKm(parseFloat(formAreaDistance)),
+      radiusKm: milesToKm(parseFloat(formAreaRadius)),
+      lat: pendingCenter.lat,
+      lng: pendingCenter.lng,
     };
 
     setCompletedAreas((prev) => {
@@ -514,20 +510,20 @@ const MapTerritoryDrawing = ({
       return [...prev, updatedArea];
     });
 
-    setEditingAreaId(null);
-    setEditingAreaDbId(null);
-    setPendingGeoPoints(null);
-    setShowSaveModal(false);
+    handleCloseAreaForm();
   };
 
   const handleEditAreaShape = (area) => {
     setEditingAreaId(area.id);
     setEditingAreaDbId(area._id ?? null);
     setCompletedAreas((prev) => prev.filter((a) => a.id !== area.id));
-    setActiveGeoPoints(area.geoPoints);
+    setPendingCenter({ lat: area.lat, lng: area.lng });
     setFormAreaName(area.name);
     setFormAreaDistance(area.distanceKm ? String(Number(kmToMiles(area.distanceKm).toFixed(2))) : "5");
-    setMode(MODE_AREA);
+    setFormAreaRadius(area.radiusKm ? String(Number(kmToMiles(area.radiusKm).toFixed(2))) : "25");
+    setCenter({ lat: area.lat, lng: area.lng });
+    setZoom(AREA_ZOOM);
+    setShowSaveModal(true);
     setShowDataModal(false);
   };
 
@@ -616,12 +612,17 @@ const MapTerritoryDrawing = ({
           <div className="relative">
             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
             <input
+              ref={searchInputRef}
               type="text"
               value={searchQuery}
               onChange={handleSearchInput}
               onFocus={() => searchResults.length > 0 && setShowResults(true)}
-              placeholder="Search city, state, address (e.g. Austin, TX)..."
-              className="w-full h-8.5 rounded-lg border color-border bg-white pl-9 pr-3 text-xs outline-none focus:border-(--color-primary) transition"
+              placeholder={
+                isPickingArea ? "Search the place this area centres on..." : "Search city, state, address (e.g. Austin, TX)..."
+              }
+              className={`w-full h-8.5 rounded-lg border bg-white pl-9 pr-3 text-xs outline-none transition focus:border-(--color-primary) ${
+                isPickingArea ? "border-(--color-primary)" : "color-border"
+              }`}
             />
           </div>
 
@@ -647,16 +648,6 @@ const MapTerritoryDrawing = ({
 
         {/* Actions Toolbar */}
         <div className="flex flex-wrap items-center gap-2 lg:shrink-0 lg:flex-nowrap">
-          {activeGeoPoints.length > 0 && (
-            <button
-              type="button"
-              onClick={handleUndoPoint}
-              className="inline-flex items-center gap-1.5 rounded-lg border color-border bg-white px-3 py-1.5 text-xs font-medium text-secondary cursor-pointer hover:bg-gray-50 transition"
-            >
-              <RotateCcw size={13} />
-              Undo Point
-            </button>
-          )}
 
           {(franchises.length > 0 || completedAreas.length > 0) && (
             <button
@@ -691,15 +682,15 @@ const MapTerritoryDrawing = ({
                 <button
                   type="button"
                   onClick={handleToggleDrawMode}
-                  title={isDrawingActive ? "Stop drawing and clear the points" : "Draw a new territory area"}
+                  title={isPickingArea ? "Cancel picking a place" : "Add an area around a place"}
                   className={`inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-semibold cursor-pointer transition ${
-                    isDrawingActive
+                    isPickingArea
                       ? "bg-red-500 text-white shadow-xs"
                       : "border color-border bg-white text-tertiary hover:bg-gray-50"
                   }`}
                 >
                   <PenTool size={13} />
-                  {isDrawingActive ? "Stop Drawing" : "Draw Area"}
+                  {isPickingArea ? "Cancel" : "Add Area"}
                 </button>
               )}
 
@@ -745,7 +736,7 @@ const MapTerritoryDrawing = ({
         style={{
           flex: 1,
           position: "relative",
-          cursor: isDrawingActive || isPlacingFranchise ? "pointer" : "grab",
+          cursor: isPlacingFranchise ? "pointer" : "grab",
           touchAction: "none",
         }}
         onContextMenu={(e) => e.preventDefault()}
@@ -774,10 +765,10 @@ const MapTerritoryDrawing = ({
 
         {/* Top-left floating status */}
         <div className="absolute top-3 left-3 flex flex-col gap-1.5 pointer-events-none">
-          {isDrawingActive && (
+          {isPickingArea && (
             <span className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 text-white px-3.5 py-1.5 text-xs font-semibold shadow-md">
               <PenTool size={13} />
-              Drawing Mode Active
+              Pick a place for this area
             </span>
           )}
 
@@ -788,10 +779,10 @@ const MapTerritoryDrawing = ({
             </span>
           )}
 
-          {activeGeoPoints.length > 0 && (
-            <span className="rounded-lg bg-white/95 backdrop-blur-xs border color-border px-3 py-1.5 text-[11px] font-medium text-tertiary shadow-sm">
-              {activeGeoPoints.length} point{activeGeoPoints.length !== 1 ? "s" : ""} placed
-              {activeGeoPoints.length >= 3 ? ", click near Point 1 to close" : ""}
+          {isPickingArea && (
+            <span className="inline-flex items-center gap-2 rounded-lg bg-(--color-primary) px-3.5 py-1.5 text-xs font-semibold text-white shadow-md">
+              <Search size={13} />
+              Search a place to centre this area on
             </span>
           )}
         </div>
@@ -842,7 +833,7 @@ const MapTerritoryDrawing = ({
       </div>
 
       {/* ── SAVE AREA DETAILS FORM MODAL ── */}
-      {showSaveModal && pendingGeoPoints && (
+      {showSaveModal && pendingCenter && (
         <div
           className="fixed inset-0 flex items-center justify-center p-4"
           style={{ zIndex: 10000, background: "rgba(0,0,0,0.5)" }}
@@ -857,17 +848,14 @@ const MapTerritoryDrawing = ({
                   <MapPin size={16} className="text-primary" />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-tertiary">Save Area Details</h3>
-                  <p className="text-xs text-secondary">Territory shape completed. Now enter the area information.</p>
+                  <h3 className="text-base font-bold text-tertiary">Area Details</h3>
+                  <p className="text-xs text-secondary">Name the area and set how far it reaches.</p>
                 </div>
               </div>
               <button
                 aria-label="Close"
                 type="button"
-                onClick={() => {
-                  setShowSaveModal(false);
-                  setPendingGeoPoints(null);
-                }}
+                onClick={handleCloseAreaForm}
                 className="p-1.5 rounded-full hover:bg-gray-100 cursor-pointer text-secondary transition"
               >
                 <X size={16} />
@@ -875,7 +863,7 @@ const MapTerritoryDrawing = ({
             </div>
 
             <div className="p-5 flex flex-col gap-4">
-              {/* Field 1: Area Name */}
+              {/* Area name */}
               <div>
                 <label className="block text-xs font-semibold text-tertiary uppercase tracking-wide mb-1.5">
                   Area Name *
@@ -890,7 +878,35 @@ const MapTerritoryDrawing = ({
                 />
               </div>
 
-              {/* Field 2: Distance Field (Type Number with mi suffix) */}
+              {/* How far the circle reaches */}
+              <div>
+                <label className="block text-xs font-semibold text-tertiary uppercase tracking-wide mb-1.5">
+                  Radius *
+                </label>
+                <div className="relative flex items-center">
+                  <input
+                    type="number"
+                    required
+                    min="0.1"
+                    step="0.1"
+                    value={formAreaRadius}
+                    onChange={(e) => setFormAreaRadius(e.target.value)}
+                    onKeyDown={(e) => BLOCKED_NUMBER_KEYS.includes(e.key) && e.preventDefault()}
+                    placeholder="e.g. 25"
+                    className="w-full h-10 rounded-xl border color-border bg-white pl-3.5 pr-14 text-sm font-semibold text-tertiary outline-none focus:border-(--color-primary) transition"
+                  />
+                  <span className="absolute right-3 text-xs font-bold text-secondary bg-gray-100 px-2.5 py-1 rounded-md">
+                    mi
+                  </span>
+                </div>
+                {isRadiusValid ? (
+                  <p className="mt-1 text-[11px] text-muted">The circle this area covers around the place you picked</p>
+                ) : (
+                  <p className="mt-1 text-[11px] text-red-500">Radius must be at least {MIN_AREA_RADIUS_MILES} mi</p>
+                )}
+              </div>
+
+              {/* Gap between branches inside it */}
               <div>
                 <label className="block text-xs font-semibold text-tertiary uppercase tracking-wide mb-1.5">
                   Distance Allowed between branches *
@@ -912,30 +928,24 @@ const MapTerritoryDrawing = ({
                   </span>
                 </div>
                 {isDistanceValid ? (
-                  <p className="mt-1 text-[11px] text-muted">
-                    Each number represents distance in miles (e.g. 5 = 5 mile radius)
-                  </p>
+                  <p className="mt-1 text-[11px] text-muted">Two branches inside this area must be at least this far apart</p>
                 ) : (
                   <p className="mt-1 text-[11px] text-red-500">Distance must be at least {MIN_AREA_DISTANCE_MILES} mi</p>
                 )}
               </div>
 
-              {/* Summary Metrics Card */}
-              <div className="rounded-xl border color-border bg-gray-50/70 p-3.5 grid grid-cols-3 gap-2 text-center">
-                <div>
-                  <p className="text-[10px] font-semibold text-secondary uppercase">Vertices</p>
-                  <p className="text-sm font-bold text-tertiary mt-0.5">{pendingGeoPoints.length}</p>
-                </div>
+              {/* What the circle works out to */}
+              <div className="rounded-xl border color-border bg-gray-50/70 p-3.5 grid grid-cols-2 gap-2 text-center">
                 <div>
                   <p className="text-[10px] font-semibold text-secondary uppercase">Surface Area</p>
                   <p className="text-sm font-bold text-primary mt-0.5">
-                    {formatAreaSize(calcPolygonAreaKm2(pendingGeoPoints))}
+                    {isRadiusValid ? formatAreaSize(circleAreaKm2(milesToKm(parseFloat(formAreaRadius)))) : "—"}
                   </p>
                 </div>
                 <div>
                   <p className="text-[10px] font-semibold text-secondary uppercase">Center</p>
                   <p className="text-[11px] font-semibold text-tertiary mt-0.5 leading-tight">
-                    {calcCentroid(pendingGeoPoints).lat.toFixed(3)}°, {calcCentroid(pendingGeoPoints).lng.toFixed(3)}°
+                    {pendingCenter.lat.toFixed(3)}°, {pendingCenter.lng.toFixed(3)}°
                   </p>
                 </div>
               </div>
@@ -944,10 +954,7 @@ const MapTerritoryDrawing = ({
               <div className="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:items-center">
                 <button
                   type="button"
-                  onClick={() => {
-                    setShowSaveModal(false);
-                    setPendingGeoPoints(null);
-                  }}
+                  onClick={handleCloseAreaForm}
                   className="h-10 shrink-0 sm:flex-1 rounded-xl border color-border bg-white text-xs font-semibold text-cancel hover:bg-gray-50 transition cursor-pointer"
                 >
                   Discard
@@ -955,7 +962,7 @@ const MapTerritoryDrawing = ({
                 <button
                   type="button"
                   onClick={handleConfirmSaveArea}
-                  disabled={!isDistanceValid}
+                  disabled={!isDistanceValid || !isRadiusValid}
                   className="h-10 shrink-0 sm:flex-1 rounded-xl bg-(--color-primary) text-white text-xs font-bold hover:opacity-90 transition cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   Save Area Details

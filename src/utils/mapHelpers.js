@@ -63,7 +63,9 @@ export const serializeMapData = (franchises = [], areas = []) =>
       id: item?._id ?? item?.id,
       name: item?.name,
       distanceKm: item?.distanceKm,
-      geoPoints: item?.geoPoints,
+      radiusKm: item?.radiusKm,
+      lat: item?.lat,
+      lng: item?.lng,
     })),
   });
 
@@ -85,37 +87,44 @@ export const getDistanceKm = (lat1, lng1, lat2, lng2) => {
   return EARTH_RADIUS_KM * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 };
 
-// ray casting against the area corners
-export const isPointInPolygon = (point, geoPoints = []) => {
-  if (geoPoints.length < 3) return false;
+// smooth enough to read as a circle
+const CIRCLE_STEPS = 64;
 
-  let inside = false;
+// the ring a radius draws, never stored
+export const circleRing = (area) => {
+  if (area?.lat == null || area?.lng == null || !(area?.radiusKm > 0)) return [];
 
-  for (let i = 0, j = geoPoints.length - 1; i < geoPoints.length; j = i++) {
-    const xi = geoPoints[i].lng;
-    const yi = geoPoints[i].lat;
-    const xj = geoPoints[j].lng;
-    const yj = geoPoints[j].lat;
+  // longitude degrees shrink towards the poles
+  const latSpan = (area.radiusKm / EARTH_RADIUS_KM) * (180 / Math.PI);
+  const lngSpan = latSpan / Math.max(Math.cos((area.lat * Math.PI) / 180), 0.01);
 
-    const crosses = yi > point.lat !== yj > point.lat;
-    if (crosses && point.lng < ((xj - xi) * (point.lat - yi)) / (yj - yi) + xi) inside = !inside;
-  }
-
-  return inside;
+  return Array.from({ length: CIRCLE_STEPS }, (_, step) => {
+    const angle = (step / CIRCLE_STEPS) * 2 * Math.PI;
+    return { lat: area.lat + latSpan * Math.sin(angle), lng: area.lng + lngSpan * Math.cos(angle) };
+  });
 };
+
+// true distance, not the drawn ring
+export const isPointInArea = (point, area) => {
+  if (point?.lat == null || area?.lat == null || !(area?.radiusKm > 0)) return false;
+  return getDistanceKm(point.lat, point.lng, area.lat, area.lng) <= area.radiusKm;
+};
+
+// the ground a circle covers
+export const circleAreaKm2 = (radiusKm = 0) => Math.PI * radiusKm * radiusKm;
 
 // the area rule this pin breaks
 export const findSpacingViolation = (franchise, franchises = [], areas = []) => {
   if (!franchise || franchise.lat == null || franchise.lng == null) return null;
 
-  const area = areas.find((item) => item.distanceKm > 0 && isPointInPolygon(franchise, item.geoPoints ?? []));
+  const area = areas.find((item) => item.distanceKm > 0 && isPointInArea(franchise, item));
   if (!area) return null;
 
   let nearest = null;
 
   franchises.forEach((item) => {
     if (item.id === franchise.id) return;
-    if (!isPointInPolygon(item, area.geoPoints ?? [])) return;
+    if (!isPointInArea(item, area)) return;
 
     const km = getDistanceKm(franchise.lat, franchise.lng, item.lat, item.lng);
     if (!nearest || km < nearest.km) nearest = { km, item };

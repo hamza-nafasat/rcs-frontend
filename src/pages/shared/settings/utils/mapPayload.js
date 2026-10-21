@@ -9,12 +9,13 @@ const franchisePayload = ({ _id, name, country, state, city, lat, lng }) => ({
   lng,
 });
 
-const areaPayload = ({ _id, name, distanceKm, geoPoints, areaKm2 }) => ({
+const areaPayload = ({ _id, name, distanceKm, radiusKm, lat, lng }) => ({
   ...(_id && { _id }),
   name,
   distanceKm,
-  geoPoints,
-  areaKm2,
+  radiusKm,
+  lat,
+  lng,
 });
 
 export { areaPayload, franchisePayload };
